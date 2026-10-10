@@ -16,6 +16,7 @@ Private, versioned source for Challenger Hub: a localhost desktop catalog of ind
 - Install-Challenger.js, adapters.json, portable-assets.json: sensitive installation boundary.
 - official-icons.json, local-icons/, brand-icon.png: creator-confirmed artwork.
 - platform/windows and platform/macos: launch/native wrapper source, never compiled binaries.
+- platform/shared/Resolve-CraftRelease.js and platform/windows/Install-CraftSuite.ps1 / Install-WordCraft-Portable.ps1: vetted installer source; 2026-10-10 PowerShell exit-code repair and official Atom fallback; see docs/INSTALLER_VERIFICATION_HOTFIX_2026-10-10.md.
 - shader-bundle.js includes licensed third-party code; see THIRD_PARTY_NOTICES.md.
 
 ## Development
