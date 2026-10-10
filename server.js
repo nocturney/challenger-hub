@@ -84,6 +84,53 @@ function readSources(){
   }catch(_){return [];}
 }
 
+// All published applications and curated challengers receive one shared scan cadence.
+// Full GitHub release verification has a separate strict request budget shared by all creators.
+const releaseVerifyTimes=[];
+const sourceScanner=require("./source-scanner");
+const scanner=sourceScanner.makeScanner({
+ root:ROOT,
+ list:()=>[...catalog.apps.map(a=>({id:a.repo,repository:'storytold/'+a.repo,kind:'craft'})),
+            ...readCuratedDiscoveries().map(a=>({id:a.repo,repository:a.repository,kind:"independent"}))],
+ config:()=>challenger.config(),
+ knownTag:entry=>entry.kind==='craft'?catalog.apps.find(a=>a.repo===entry.id)?.releaseTag||null:
+   entry.kind==='independent'?challenger.getMeta(entry.id)?.releaseTag||null:null,
+ logger:(kind,message)=>note(kind,message),
+ discovery:async()=>{
+  // Creator directory discovery is a single ordinary queue job, not a privileged scan of releases.
+  const all=await getAllRepos();
+  const found=all.filter(candidate),known=new Set(catalog.apps.map(a=>a.repo.toLowerCase()));
+  const added=found.filter(a=>!known.has(a.name.toLowerCase())).map(publicRepoMeta);
+  if(added.length){
+   catalog.apps=[...catalog.apps,...added].sort((a,b)=>a.title.localeCompare(b.title,"en"));
+   fs.writeFileSync(CACHE_FILE,JSON.stringify({checkedAt:catalog.checkedAt,apps:catalog.apps},null,2),"utf8");
+   note("discovery",added.length+" new catalog entries discovered; no new installers authorized");
+  }
+  return true;
+ },
+ onChange:async event=>{
+  if(event.type!=='release'||event.sourceHost!=='github.com')return false;
+  const now=Date.now();for(let i=releaseVerifyTimes.length-1;i>=0;i--)if(now-releaseVerifyTimes[i]>3600000)releaseVerifyTimes.splice(i,1);
+  if(releaseVerifyTimes.length>=8)return false;releaseVerifyTimes.push(now);
+  // The same verification budget and release policy apply to every developer.
+  const repo=event.repository;
+  const url='https://api.github.com/repos/'+repo+'/releases/tags/'+encodeURIComponent(event.tag);
+  const {data}=await getGithub(url);
+  if(data.draft||data.prerelease||data.tag_name!==event.tag)return false;
+  if(event.kind==="craft"){
+   const app=catalog.apps.find(a=>a.repo===event.id);if(!app)return false;
+   if(!String(data.html_url||'').startsWith('https://github.com/storytold/'+app.repo+'/releases/tag/'))return false;
+   if(app.publishedAt&&data.published_at&&Date.parse(data.published_at)<Date.parse(app.publishedAt))return false;
+   app.releaseTag=event.tag;app.latestVersion=event.tag.replace(/^v/,"");
+   app.publishedAt=data.published_at||null;app.releaseTitle=String(data.name||"").slice(0,200);
+   app.releaseBody=String(data.body||"").slice(0,45000);app.releaseUrl=data.html_url;
+   releaseAssetStatus(app,data);
+   fs.writeFileSync(CACHE_FILE,JSON.stringify({checkedAt:catalog.checkedAt,apps:catalog.apps},null,2),"utf8");
+   return true;
+  }
+  return challenger.confirmGitHubRelease(event.id,data);
+ }
+});
 function note(kind,msg,repo=''){
   run.history.push({time:new Date().toISOString(),kind,message:String(msg).slice(0,600),repo});
   if(run.history.length>250)run.history.shift();
@@ -613,12 +660,12 @@ const server=http.createServer(async(req,res)=>{
     if(!app){json(res,404,{error:'Unknown application'});return;}
     json(res,200,app.discovery?challenger.history(repo):await recentReleases(app));return;
   }
-  if(req.method==='GET' && route==='/api/health'){json(res,200,{ok:true,app:'Craft Update Center',platform:process.platform,version:'2.5.1'});return;}
+  if(req.method==='GET' && route==='/api/health'){json(res,200,{ok:true,app:'Craft Update Center',platform:process.platform,version:'2.5.2'});return;}
   if(req.method==='GET' && route==='/api/state'){
     json(res,200,{platform:process.platform,computer:os.hostname(),admin:isAdmin,
-      apps:catalog.apps.map(({releaseBody,...meta})=>({...meta,creator:'Storytold',sourceId:'storytold',repository:'storytold/'+meta.repo,challenges:meta.original?[meta.original]:[],...challenger.craftPortableMeta(meta.repo)})),
-      discoveries:readCuratedDiscoveries().map(publicDiscovery),sources:readSources(),sourceStatus:challenger.status(),
-      checkedAt:catalog.checkedAt,scanning:catalog.scanning,scanError:catalog.scanError,
+      apps:catalog.apps.map(({releaseBody,...meta})=>({...meta,creator:'Storytold',sourceId:'storytold',repository:'storytold/'+meta.repo,challenges:meta.original?[meta.original]:[],sourceSignal:scanner.publicSignal(meta.repo),...challenger.craftPortableMeta(meta.repo)})),
+      discoveries:readCuratedDiscoveries().map(a=>publicDiscovery({...a,sourceSignal:scanner.publicSignal(a.repo)})),sources:readSources(),sourceStatus:scanner.status(),
+      checkedAt:scanner.status().lastSyncAt||catalog.checkedAt,scanning:scanner.status().scanning,scanError:scanner.status().error,
       active:run.active,queue:run.queue,history:run.history.slice(-45)});
     return;
   }
@@ -633,9 +680,9 @@ const server=http.createServer(async(req,res)=>{
   let body={};try{body=await readBody(req);}catch(_){json(res,400,{error:'Invalid JSON'});return;}
   try{
     if(route==='/api/scan'){
-      challenger.refresh(true,(kind,msg)=>note(kind,msg)).catch(e=>note('error',e.message));
-      scanCatalog(true).then(syncInstalled).catch(e=>note('error',e.message));
-      json(res,202,{ok:true,scanning:true});return;
+      const work=scanner.requestAll();
+      scanner.tick({force:true}).catch(e=>note("error",e.message));
+      json(res,202,{ok:true,scanning:true,queued:work.queued,cooldown:work.cooldown});return;
     }
     if(route==='/api/preferences'){
       const prefs=challenger.setConfig(body||{});json(res,200,{ok:true,preferences:prefs});return;
@@ -688,12 +735,8 @@ function setup(){
   loadCache();
   server.listen(PORT,HOST,()=>{
     console.log('Craft Update Center: http://'+HOST+':'+PORT+' | platform='+process.platform+' | admin='+isAdmin);
-    scanCatalog(false).then(syncInstalled).catch(e=>note('error',e.message));
-    challenger.refresh(false,(kind,msg)=>note(kind,msg)).catch(e=>note('error',e.message));
-    setInterval(()=>{
-      scanCatalog(false).then(syncInstalled).catch(e=>note('error',e.message));
-      challenger.refresh(false,(kind,msg)=>note(kind,msg)).catch(e=>note('error',e.message));
-    },30*60*1000).unref();
+    syncInstalled().catch(e=>note('error',e.message));
+    scanner.start();
   });
 }
 if(require.main===module)setup();

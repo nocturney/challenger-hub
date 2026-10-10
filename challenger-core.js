@@ -195,6 +195,24 @@ async function refresh(force=false,logger=()=>{}){
  }catch(e){lastSyncError=String(e.message);logger('error','Release tracking: '+lastSyncError);return {error:lastSyncError}}
  finally{scanBusy=false}
 }
+function confirmGitHubRelease(id,rel){
+ const p=projects().find(x=>x.id===id);
+ if(!p||!rel||rel.draft||rel.prerelease||!rel.tag_name)return false;
+ const tag=String(rel.tag_name);
+ if(!/^[A-Za-z0-9][A-Za-z0-9._+/-]{0,100}$/.test(tag))return false;
+ if(!String(rel.html_url||'').startsWith('https://github.com/'+p.repository+'/releases/tag/'))return false;
+ const snapshot=releases();
+ snapshot.repositories=snapshot.repositories||{};
+ const old=snapshot.repositories[id]||{};
+ const normalized=normalizedRelease(rel,p.repository,old);
+ if(old.publishedAt&&normalized.publishedAt&&Date.parse(normalized.publishedAt)<Date.parse(old.publishedAt))return false;
+ snapshot.repositories[id]={...normalized,pendingTag:null};
+ snapshot.collectedAt=new Date().toISOString();
+ const tmp=REL_FILE+'.multisource-tmp';
+ fs.writeFileSync(tmp,JSON.stringify(snapshot,null,2)+'\n','utf8');
+ try{fs.renameSync(tmp,REL_FILE)}catch(e){if(process.platform!=='win32')throw e;fs.copyFileSync(tmp,REL_FILE);fs.rmSync(tmp,{force:true})}
+ return true;
+}
 function status(){return {scanning:scanBusy,lastSyncAt:lastSyncAt||releases().collectedAt||null,error:lastSyncError,pendingUnverified:sourcePending,preferences:config()}}
 function notes(repo){
  const app=getMeta(repo);if(!app)return null;
@@ -209,4 +227,4 @@ function craftPortableMeta(repo){
  const entry=releases().repositories?.[repo],p=portableFor(repo,entry);
  return {downloadablePortable:!!(p&&fs.existsSync(CLIENT_INSTALLER)),portableAsset:p?.name||null,portableBytes:p?.size||null,portableHint:p?.note||null};
 }
-module.exports={catalog,getMeta,refresh,status,config,setConfig,notes,history,managedInfo,craftPortableMeta,APP_ROOT:process.platform==='win32'?WIN_ROOT:MAC_ROOT};
+module.exports={catalog,getMeta,refresh,confirmGitHubRelease,status,config,setConfig,notes,history,managedInfo,craftPortableMeta,APP_ROOT:process.platform==='win32'?WIN_ROOT:MAC_ROOT};

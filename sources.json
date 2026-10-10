@@ -1,24 +1,35 @@
 {
   "schema": "challenger-sources.v1",
-  "updated": "2026-10-09",
+  "updated": "2026-10-10",
+  "policy": {
+    "priority": "Equal per-project scan interval for all applications",
+    "cadenceHours": [
+      6,
+      12,
+      24
+    ],
+    "fetch": "conditional ETag per verified provider",
+    "deployment": "Installation requires separately verified official package, digest, platform and allowlisted adapter",
+    "discovery": "Owner directory uses one standard background queue slot"
+  },
   "sources": [
     {
-      "id": "storytold",
-      "label": "Storytold · Craft desktop applications",
-      "kind": "github-owner",
-      "owner": "storytold",
-      "mode": "automatic-owner-scan-and-cached-releases",
-      "installAdapter": "craft-suite",
-      "note": "12 existing Craft installations and checksum-validated auto-install/update pipeline retained. Separate SHA-256-verified Windows x64 portable ZIP downloads available for each app."
+      "id": "github-atom",
+      "label": "GitHub · published release feeds",
+      "kind": "atom",
+      "mode": "conditional-read-only-release-signal"
     },
     {
-      "id": "research-curated",
-      "label": "Independent software challengers · 35 curated projects",
-      "kind": "curated-registry",
-      "file": "challengers.json",
-      "mode": "manually-curated-with-per-repo-automated-release-tracking",
-      "installAdapter": "vetted-per-platform-sha256-adapters-only",
-      "note": "35 repositories verified from research documents. GitHub releases can be refreshed by supported API endpoints; GitHub Atom fallback flags pending releases for verification. 9 Windows and 8 Mac install adapters; separately allowed portable ZIP/EXE downloads. New repository discovery is curated rather than claiming generalized internet crawling."
+      "id": "gitlab",
+      "label": "GitLab / KDE Invent · verified official sources",
+      "kind": "gitlab",
+      "mode": "official-project-release-or-tag-signal"
+    },
+    {
+      "id": "codeberg",
+      "label": "Codeberg · verified mirror fallback",
+      "kind": "gitea",
+      "mode": "source-tags-only-not-installer-proof"
     }
   ]
 }

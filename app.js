@@ -255,7 +255,7 @@ function getCounters(){
 }
 function renderQueue(){
  const active=state.active,queued=state.queue?.length||0;
- const visible=!!active||queued>0||!!state.scanning;
+ const visible=!!active||queued>0; // Routine source checks are nonblocking background work.
  const panel=$('workQueue');panel.classList.toggle('hidden',!visible);
  if(!visible)return;
  const app=active?state.apps.find(a=>a.repo===active.repo):null;
@@ -275,7 +275,9 @@ function renderCounters(){
  set('metricInstalled',c.installed);set('metricUpdates',c.updates);set('metricNew',c.new);
  set('filterCountUpdates',c.updates);set('filterCountNew',c.new);
  $('navCountUpdates').classList.toggle('zero',!c.updates);
- const scanText=state.scanning?t('scanning'):state.checkedAt?t('lastChecked')+': '+localTime(state.checkedAt):t('noScan');
+ const checked=Number(state.sourceStatus?.checked||0),total=Number(state.sourceStatus?.total||0);
+ const scanText=total?(checked+' / '+total+' sources checked'+(state.checkedAt?' · '+localTime(state.checkedAt):'')):
+   state.checkedAt?t('lastChecked')+': '+localTime(state.checkedAt):t('noScan');
  $('lastScanText').textContent=scanText;$('footerScan').textContent=scanText;
  $('deviceLabel').textContent=(state.platform==='win32'?'Windows':'macOS')+' · '+(state.computer||t('desktop'));
  $('onlineDot').classList.toggle('connected',!state.scanError);
@@ -283,12 +285,12 @@ function renderCounters(){
  document.querySelector('.connection-label [data-t=connected]').textContent=state.scanning?t('statusScanning'):
    state.scanError?t('cachedMode'):t('connected');
  const notices=[];
- if(state.scanError)notices.push(t('scanFailed'));
+ if(state.scanError)notices.push('Some source checks are delayed; cached information remains available.');
  if(state.platform==='win32'&&!state.admin)notices.push(t('requiresAdmin'));
  const rateLimited=state.scanError&&/rate limit|GitHub 403|GitHub 429/i.test(state.scanError);
  $('notice').className=notices.length?'notice'+(state.scanError&&!rateLimited?' error':''):'notice hidden';
  $('notice').textContent=notices.join(' ');
- $('sidebarScan').disabled=state.scanning;
+ $('sidebarScan').disabled=!!state.sourceStatus?.queued;
  $('updateAllButton').disabled=!c.updates||!!state.active||state.queue.length>0||(state.platform==='win32'&&!state.admin);
 }
 function filteredApps(){
@@ -669,6 +671,12 @@ function publicCaveats(value){
    .replace(/needs hands-on verification/gi,'has not been independently tested')
    .replace(/research classification/gi,'reported classification');
 }
+function upstreamSummary(a){
+ const s=a.sourceSignal;
+ if(!s)return 'Waiting for first source check';
+ const type=s.signalType==='release'?'Published release signal':s.signalType==='tag'?'Source tag — not a verified release':'No published release detected';
+ return [s.sourceLabel||s.sourceHost||'Official source',type,s.checkedAt?localDate(s.checkedAt,true):'Not yet checked'].filter(Boolean).join(' · ');
+}
 function renderDetailsTab(a){
  if(a.discovery){
    const items=[
@@ -682,6 +690,8 @@ function renderDetailsTab(a){
      ['GitHub stars (last known)',Number.isFinite(a.stars)?a.stars.toLocaleString('en-US'):'Not checked'],
      ['Known limitations',publicCaveats(a.caveats)],
      ['Latest verified release',a.releaseTag||'Not verified'],
+     ['Source status',upstreamSummary(a)],
+     ['Latest upstream signal',a.sourceSignal?.signalTag?(a.sourceSignal.signalTag+(a.sourceSignal.verificationPending?' · package verification pending':a.sourceSignal.unverified?' · tag only':' · informational')):'Not available'],
      ['Installation',a.installable?'Verified package available after confirmation':a.deploymentType?'Manual '+a.deploymentType+'; no one-click installer approved':'No approved installer']
    ];
       $('detailBody').innerHTML=items.map(x=>detailField(...x)).join('')+similarMarkup(a);
@@ -695,6 +705,8 @@ function renderDetailsTab(a){
   [t('appVersion'),a.installedVersion],
   [t('latest'),a.latestVersion],
   [t('repository'),a.repository||'storytold/'+a.repo],
+  ['Source status',upstreamSummary(a)],
+  ['Latest upstream signal',a.sourceSignal?.signalTag?(a.sourceSignal.signalTag+(a.sourceSignal.verificationPending?' · verification pending':a.sourceSignal.unverified?' · tag only':'')):'Not available'],
   [t('appGroup'),catName(a.group)],
   [t('platform'),state.platform==='win32'?'Windows x64':'macOS'],
   [t('released'),localDate(a.publishedAt)],
@@ -714,7 +726,11 @@ async function renderReleasesTab(a){
      content.innerHTML='<div class="research-release-state"><strong>Official GitHub release</strong><p>'+escapeHTML(a.releaseStatus==='new-release-unverified'?'New tag detected; its package digest still needs verification.':'SHA-256-verified package'+(a.installable?' available on this device.':' not available for automatic installation on this device.'))+'</p></div>'+
        '<div class="release-row"><div><strong>'+escapeHTML(a.releaseTag)+'</strong><small class="release-date">'+escapeHTML(localDate(a.publishedAt,true))+'</small></div>'+
        '<button class="release-link" data-release-url="'+escapeHTML(a.releaseUrl||a.repoUrl+'/releases')+'" aria-label="Open official release">'+glyph('external')+'</button></div>';
-   }else content.innerHTML='<div class="research-release-state"><strong>Release source not connected</strong><p>This repository has no verified GitHub release metadata. Automatic installation remains unavailable.</p></div>';
+   }else{
+    const signal=a.sourceSignal;
+    const pending=signal?.signalTag?'<div class="release-row"><div><strong>'+escapeHTML(signal.signalTag)+'</strong><small class="release-date">'+escapeHTML(signal.signalType==='tag'?'Unverified source tag':'Published source signal (package unverified)')+'</small></div></div>':'';
+    content.innerHTML='<div class="research-release-state"><strong>No package-verified release connected</strong><p>An upstream signal does not authorize a download or an automatic installation.</p></div>'+pending;
+   }
    return;
  }
  const draw=data=>{
