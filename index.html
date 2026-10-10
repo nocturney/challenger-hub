@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" dir="ltr" data-theme="dark" data-app-version="2.5.6">
+<html lang="en" dir="ltr" data-theme="dark" data-app-version="2.5.9">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light dark">
@@ -51,6 +51,7 @@
     </nav>
     <div class="sidebar-category secondary" data-t="general">GENERAL</div>
     <nav class="sidebar-nav nav-secondary">
+      <button class="nav-link" id="queueNavButton" type="button" aria-label="Open installation and update queue"><svg><use href="#i-clock"/></svg><span>Operations queue</span><span class="nav-count" id="queueNavCount">0</span></button>
       <button class="nav-link" id="settingsButton"><svg><use href="#i-settings"/></svg><span data-t="preferences">Preferences</span></button>
       <button class="nav-link" id="aboutButton"><svg><use href="#i-info"/></svg><span data-t="about">About</span></button>
     </nav>
@@ -62,7 +63,7 @@
         <div class="connection-scan" id="lastScanText">Checking releases…</div>
         <button class="sidebar-scan" id="sidebarScan"><svg><use href="#i-sync"/></svg><span data-t="checkUpdates">Check for updates</span></button>
       </div>
-      <div class="sidebar-version"><span>CHALLENGER HUB · MULTI-DOMAIN</span><span>v2.5.6</span></div>
+      <div class="sidebar-version"><span>CHALLENGER HUB · MULTI-DOMAIN</span><span>v2.5.9</span></div>
     </div>
   </aside>
   <div class="sidebar-scrim" id="sidebarScrim"></div>
@@ -71,6 +72,7 @@
       <button class="icon-only mobile-menu" id="mobileMenu" aria-label="Open menu"><svg><use href="#i-menu"/></svg></button>
       <div class="search-wrap"><svg class="search-loupe"><use href="#i-search"/></svg><input id="searchInput" type="search" spellcheck="false" autocomplete="off" placeholder="Search all apps, products and alternatives…" aria-label="Search entire catalog"><button id="searchClear" type="button" class="search-clear" aria-label="Clear search" title="Clear search" hidden>×</button><kbd id="searchShortcut" aria-hidden="true">Ctrl K</kbd></div>
       <div class="topbar-end">
+        <button id="queueToolbarButton" class="queue-toolbar-button" type="button" data-queue-state="idle" aria-label="Open installation and update queue" title="Open queue"><svg><use href="#i-clock"/></svg><span class="queue-toolbar-label">QUEUE</span><span id="queueToolbarCount" class="queue-toolbar-count">0</span><span id="queueToolbarStatus" class="queue-toolbar-state">IDLE</span></button>
         <div class="theme-switch" id="themeSwitch" role="group" aria-label="Appearance">
           <button class="icon-only theme-choice" data-theme-choice="light" aria-label="Light mode" title="Light mode" aria-pressed="false"><svg><use href="#i-sun"/></svg></button>
           <button class="icon-only theme-choice" data-theme-choice="dark" aria-label="Dark mode" title="Dark mode" aria-pressed="false"><svg><use href="#i-moon"/></svg></button>
@@ -99,12 +101,14 @@
           <button type="button" class="challenge-link challenge-apps" data-global-query="Power Apps" aria-label="Find alternatives to Power Apps"><span class="challenge-link-icon" aria-hidden="true">App</span><span class="challenge-copy"><strong>Power Apps</strong><small data-query-count="Power Apps">Explore alternatives</small></span><span class="challenge-arrow" aria-hidden="true">↗</span></button>
         </div>
       </section>
-      <div id="notice" class="notice hidden" role="status"></div>
-      <section id="workQueue" class="work-queue hidden" role="status" aria-live="polite">
-        <div class="queue-indicator"><svg><use href="#i-sync"/></svg></div>
-        <div class="queue-content"><strong id="queueTitle">Processing updates</strong><p id="queueMessage"></p></div>
+      <div id="notice" class="notice hidden" role="status" aria-live="polite"><svg class="notice-icon" aria-hidden="true"><use href="#i-info"/></svg><span id="noticeMessage"></span><button id="noticeDismiss" type="button" class="notice-dismiss" aria-label="Dismiss this notice" title="Dismiss notice"><svg><use href="#i-x"/></svg></button></div>
+      <section id="workQueue" class="work-queue queue-idle" role="status" aria-live="polite" aria-label="Installation and update activity">
+        <div class="queue-indicator"><svg id="queueIndicatorIcon"><use href="#i-sync"/></svg></div>
+        <div class="queue-content"><span class="queue-dock-eyebrow">OPERATIONS MONITOR</span><strong id="queueTitle">Queue is clear</strong><p id="queueMessage">No installations or updates running</p></div>
         <span id="queueCount" class="queue-count"></span>
-        <div class="queue-progress" aria-hidden="true"><span></span></div>
+        <button id="queueDockDismiss" type="button" class="queue-dock-dismiss" aria-label="Dismiss current queue alert" title="Dismiss alert" hidden><svg><use href="#i-x"/></svg></button>
+        <button id="queueDockOpen" type="button" class="queue-dock-button">Open queue ↗</button>
+        <div id="queueProgress" class="queue-progress" role="progressbar" aria-label="Install progress (indeterminate)" aria-valuetext="No current job" hidden><span></span></div>
       </section>
       <div class="main-heading">
         <div class="heading-start"><p class="eyebrow" id="eyebrow" data-t="libraryEyebrow">CHALLENGER CATALOG</p><h2 id="pageTitle" data-t="pageTitle">Applications</h2><p class="heading-subtitle" id="pageSubtitle" data-t="pageSubtitle">Emerging alternatives, mapped by creator, category and the software they challenge.</p></div>
@@ -163,17 +167,47 @@
           <div class="detail-bottom"><span id="detailSourceText">Source: GitHub</span><button class="detail-source" id="detailReleaseLink"><span data-t="fullChangelog">Full changelog</span><svg><use href="#i-external"/></svg></button></div>
         </aside>
       </div>
-      <footer class="main-footer"><div class="device-footer"><span class="footer-dot" id="footerDot"></span><span id="deviceLabel">Local device</span><span class="foot-sep">·</span><span id="footerScan">Not scanned yet</span></div><div class="footer-actions"><button id="verifyButton" data-t="verify">Verify installs</button><button id="activityButton" data-t="activityLog">Activity log</button></div></footer>
+      <footer class="main-footer"><div class="device-footer"><span class="footer-dot" id="footerDot"></span><span id="deviceLabel">Local device</span><span class="foot-sep">·</span><span id="footerScan">Not scanned yet</span></div><div class="footer-actions"><button type="button" id="queueViewButton" class="queue-footer-button" aria-label="View installation and update queue">Queue <span id="queueFooterCount" class="queue-footer-count">0</span></button><button id="verifyButton" data-t="verify">Verify installs</button><button id="activityButton" data-t="activityLog">Activity log</button></div></footer>
     </main>
   </div>
 </div>
+<dialog id="queueDialog" class="modal-dialog queue-dialog" aria-labelledby="queueDialogTitle">
+ <div class="modal-pad">
+  <button type="button" class="modal-close icon-only" data-dialog-close="queueDialog" aria-label="Close queue"><svg><use href="#i-x"/></svg></button>
+  <div class="modal-badge"><svg><use href="#i-sync"/></svg></div>
+  <h2 id="queueDialogTitle">Installation & update queue</h2>
+  <p id="queueDialogSummary" class="modal-help">Loading queue…</p>
+  <div class="queue-dialog-metrics"><div><span class="queue-metric-label">RUNNING</span><strong id="queueMetricActive">0</strong></div><div><span class="queue-metric-label">WAITING</span><strong id="queueMetricWaiting">0</strong></div><div><span class="queue-metric-label">OPEN ISSUES</span><strong id="queueMetricIssues">0</strong></div></div>
+  <h3>Current operation</h3><div id="queueCurrentDetail" class="queue-dialog-current"></div>
+  <h3>Waiting <span id="queuePendingCount">0</span></h3><ol id="queuePendingList" class="queue-dialog-list"></ol>
+  <h3>History <span class="queue-history-hint">Earlier failures stay here even after recovery</span></h3><div id="queueRecentList" class="queue-dialog-history"></div>
+  <p class="queue-safety-note">Jobs run sequentially. Progress is indeterminate unless a worker reports actual data. Only approved installers are permitted.</p>
+  <div class="modal-actions"><button type="button" class="btn-cancel" data-dialog-close="queueDialog">Close</button></div>
+ </div>
+</dialog>
 <dialog id="confirmDialog" class="modal-dialog" aria-labelledby="confirmTitle"><div class="modal-pad"><div class="modal-badge"><svg><use href="#i-shield"/></svg></div><h2 id="confirmTitle" data-t="confirmTitle">Confirm installation</h2><p id="confirmMessage"></p><div class="modal-actions"><button id="confirmCancel" class="btn-cancel" data-t="cancel">Cancel</button><button id="confirmAccept" class="btn-accept" data-t="continue">Continue</button></div></div></dialog>
 <dialog id="prefsDialog" class="modal-dialog" aria-labelledby="prefsTitle"><div class="modal-pad"><button class="modal-close icon-only" data-dialog-close="prefsDialog" aria-label="Close"><svg><use href="#i-x"/></svg></button><div class="modal-badge"><svg><use href="#i-settings"/></svg></div><h2 id="prefsTitle" data-t="preferences">Preferences</h2><p class="modal-help" data-t="prefsDescription">Changes are saved on this device.</p><div class="prefs-line prefs-option"><div><strong>Automatic release checks</strong><small>Track verified project releases in the background</small></div><label class="preference-switch"><input type="checkbox" id="prefsAutoCheck" checked aria-label="Automatically check for release updates"><span aria-hidden="true"></span></label></div>
 <div class="prefs-line prefs-option"><div><strong>Check frequency</strong><small>Applies equally to all listed projects</small></div><select id="prefsInterval" aria-label="Release check frequency"><option value="6">Every 6 hours</option><option value="12" selected>Every 12 hours</option><option value="24">Daily</option></select></div>
 <div class="prefs-line prefs-option"><div><strong>Show early-stage projects</strong><small>Include alpha, pre-alpha and experimental alternatives</small></div><label class="preference-switch"><input type="checkbox" id="prefsEarly" checked aria-label="Include early-stage projects"><span aria-hidden="true"></span></label></div>
 <p class="prefs-source-state" id="prefsSourceState">Project feeds use official release sources and SHA-256 for supported installers.</p></div></dialog>
-<dialog id="aboutDialog" class="modal-dialog" aria-labelledby="aboutTitle"><div class="modal-pad about-content"><button class="modal-close icon-only" data-dialog-close="aboutDialog" aria-label="Close"><svg><use href="#i-x"/></svg></button><img class="about-logo" src="/brand-icon.png" width="82" height="82" alt=""><h2 id="aboutTitle">Challenger Hub</h2><p data-t="aboutDescription">An independent discovery hub for emerging software projects challenging established professional applications. Not affiliated with the featured creators.</p><span class="about-version">Version 2.5.6 (UI update) · Independent alternatives</span></div></dialog>
+<dialog id="aboutDialog" class="modal-dialog" aria-labelledby="aboutTitle"><div class="modal-pad about-content"><button class="modal-close icon-only" data-dialog-close="aboutDialog" aria-label="Close"><svg><use href="#i-x"/></svg></button><img class="about-logo" src="/brand-icon.png" width="82" height="82" alt=""><h2 id="aboutTitle">Challenger Hub</h2><p data-t="aboutDescription">An independent discovery hub for emerging software projects challenging established professional applications. Not affiliated with the featured creators.</p><span class="about-version">Version 2.5.9 (Operations UX)  · Independent alternatives</span></div></dialog>
 <dialog id="activityDialog" class="modal-dialog activity-dialog" aria-labelledby="activityTitle"><div class="modal-pad"><button class="modal-close icon-only" data-dialog-close="activityDialog" aria-label="Close"><svg><use href="#i-x"/></svg></button><div class="modal-badge"><svg><use href="#i-clock"/></svg></div><h2 id="activityTitle" data-t="activityLog">Activity log</h2><div id="activityContent" class="activity-content"></div></div></dialog>
 <dialog id="whatsNewDialog" class="modal-dialog whats-new-dialog" aria-labelledby="whatsNewTitle"><div class="modal-pad"><button class="modal-close icon-only" data-dialog-close="whatsNewDialog" aria-label="Close release notes"><svg><use href="#i-x"/></svg></button><div class="modal-badge"><svg><use href="#i-info"/></svg></div><h2 id="whatsNewTitle">What’s new</h2><p class="modal-help" id="whatsNewSubtitle"></p><div id="whatsNewBody" class="notes-content" role="document"></div></div></dialog>
+<dialog id="setupGuideDialog" class="modal-dialog setup-guide-dialog" aria-labelledby="setupGuideTitle">
+ <div class="modal-pad">
+  <button type="button" class="modal-close icon-only" data-dialog-close="setupGuideDialog" aria-label="Close manual setup guide"><svg><use href="#i-x"/></svg></button>
+  <div class="modal-badge"><svg><use href="#i-info"/></svg></div>
+  <h2 id="setupGuideTitle">Manual setup</h2>
+  <p class="manual-guide-intro">This project does not have an approved automatic installer in Challenger Hub. These are safety checks, not verified installation commands.</p>
+  <div class="manual-guide-meta"><div><span>Reported deployment</span><strong id="setupGuideType">Not verified</strong></div>
+   <div><span>Research / installation status</span><strong id="setupGuideStatus">Not verified</strong></div>
+   <div><span>Reported platforms</span><strong id="setupGuidePlatform">Not verified</strong></div></div>
+  <h3>How to proceed safely</h3><ol id="setupGuideSteps"></ol>
+  <h3>Important considerations</h3><p id="setupGuideCaveats" class="manual-guide-caveats"></p>
+  <p class="manual-guide-source" id="setupGuideSource"></p>
+  <div class="modal-actions"><button type="button" class="btn-cancel" data-dialog-close="setupGuideDialog">Close</button>
+  <button type="button" id="setupGuideOpenSource" class="btn-accept">Open official repository ↗</button></div>
+ </div>
+</dialog>
 <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
 </body></html>

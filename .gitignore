@@ -2,6 +2,8 @@
 catalog-cache.json
 release-index.json
 managed-installs.json
+job-history.json
+release-history-cache.json
 source-preferences.json
 source-signals.json
 .icon-cache/

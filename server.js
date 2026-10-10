@@ -43,7 +43,7 @@ function readCuratedDiscoveries(){
   catch(_){return [];}
   if(data.schema!=='challenger-registry.v1'||!Array.isArray(data.projects))return [];
   const collected=[],seen=new Set();
-  for(const p of data.projects.slice(0,120)){
+  for(const p of data.projects){
     if(!p||!p.id||!/^[a-z][a-z0-9-]{1,79}$/.test(p.id))continue;
     if(!p.repository||!/^[a-z0-9-]{1,39}\/[a-z0-9_.-]{1,100}$/i.test(p.repository))continue;
     if(typeof p.name!=='string'||typeof p.creator!=='string'||!p.name.trim()||!p.creator.trim())continue;
@@ -65,7 +65,9 @@ function readCuratedDiscoveries(){
       priority:[1,2,3].includes(p.priority)?p.priority:3,
       verifiedAt:typeof p.verifiedAt==='string'?p.verifiedAt:null,
       researchSources:Array.isArray(p.sourceReports)?p.sourceReports.filter(x=>typeof x==='string').slice(0,7).map(x=>x.slice(0,120)):[],
-      reviewStatus:'repository-confirmed',releaseStrategy:'unverified',installAdapter:null,installable:false,
+      reviewStatus:p.reviewStatus==='research-candidate-unverified'?'research-candidate-unverified':'repository-confirmed',
+      researchPendingVerification:p.reviewStatus==='research-candidate-unverified',
+      releaseStrategy:'unverified',installAdapter:null,installable:false,
       installedVersion:null,installedPath:null,needsUpdate:false,current:false,
       latestVersion:null,releaseTag:null,releaseUrl:null,publishedAt:null,
       pushedAt:typeof p.githubLastPushAtReview==='string'&&Number.isFinite(Date.parse(p.githubLastPushAtReview))?p.githubLastPushAtReview:null,
@@ -131,10 +133,36 @@ const scanner=sourceScanner.makeScanner({
   return challenger.confirmGitHubRelease(event.id,data);
  }
 });
+const JOB_HISTORY_FILE=path.join(ROOT,'job-history.json');
+function recoverJobHistory(){
+ try{
+  const saved=JSON.parse(fs.readFileSync(JOB_HISTORY_FILE,'utf8'));
+  if(Array.isArray(saved)){run.history=saved.filter(x=>x&&typeof x.time==='string'&&typeof x.kind==='string').slice(-100);return}
+ }catch(_){}
+ // Import prior attempts from the install worker log, without running workers.
+ try{
+  const file=path.join(path.dirname(ROOT),isWin?'install-progress.jsonl':'install-progress.tsv');
+  const lines=fs.readFileSync(file,'utf8').split(/\r?\n/).filter(Boolean).slice(-100);
+  run.history=lines.map(line=>{
+   let rec;
+   try{
+    if(isWin){const x=JSON.parse(line);rec={time:x.date,repo:x.repo,state:x.state,detail:x.detail}}
+    else{const x=line.split('\t');rec={time:x[0],repo:x[1],state:x[3],detail:x.slice(4).join(' ')}}
+   }catch(_){return null}
+   const kind=/error|fail/i.test(rec.state)?'error':/installed|already_current/i.test(rec.state)?'success':'progress';
+   return {time:rec.time||new Date().toISOString(),repo:String(rec.repo||'').slice(0,80),kind,
+     message:String(rec.state||'unknown')+' — '+String(rec.detail||'').slice(0,250)};
+  }).filter(Boolean).slice(-100);
+ }catch(_){}
+}
+recoverJobHistory();
 function note(kind,msg,repo=''){
-  run.history.push({time:new Date().toISOString(),kind,message:String(msg).slice(0,600),repo});
-  if(run.history.length>250)run.history.shift();
-  console.log('['+kind+'] '+repo+' '+String(msg).slice(0,280));
+ run.history.push({time:new Date().toISOString(),kind,message:String(msg).slice(0,600),repo});
+ if(run.history.length>250)run.history.shift();
+ console.log('['+kind+'] '+repo+' '+String(msg).slice(0,280));
+ if(['queue','install','download','success','error','stderr'].includes(kind)){
+  try{fs.writeFileSync(JOB_HISTORY_FILE,JSON.stringify(run.history.slice(-100)),'utf8')}catch(_){}
+ }
 }
 function safeRepo(repo){return /^[a-z][a-z0-9-]{1,79}$/i.test(repo)}
 function candidate(r){
@@ -397,7 +425,7 @@ function launchNext(){
   const isResearch=!!challenger.getMeta(repo);
   const script=isResearch?path.join(ROOT,'Install-Challenger.js'):(isWin?WIN_SCRIPT:MAC_SCRIPT);
   if(!fs.existsSync(script)){note('error','Installation adapter was not found: '+script,repo);setImmediate(launchNext);return;}
-  run.active={repo,startedAt:new Date().toISOString(),state:'running',messages:[]};
+  run.active={repo,startedAt:new Date().toISOString(),state:'running',mode:appFor(repo)?.installedVersion?'update':'install',messages:[]};
   note('install','Starting installation or update',repo);
   const binary=isResearch?process.execPath:(isWin?'powershell.exe':'/bin/bash');
   const args=isResearch?[script,repo]:isWin?['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',script]:[script];
@@ -409,7 +437,7 @@ function launchNext(){
       if(!line.trim())continue;
       let msg=line.trim();
       try {
-        if(isWin||isResearch){const x=JSON.parse(msg);if(x.state){msg=x.state+' — '+x.detail;if(/failed|error/i.test(x.state))detectedError=msg;}}
+        if(isWin||isResearch){const x=JSON.parse(msg);if(x.state){msg=x.state+' — '+x.detail;if(run.active)run.active.state=String(x.state).slice(0,55);if(/failed|error/i.test(x.state))detectedError=msg;}}
         else {const x=msg.split('\t');if(x.length>=5){msg=x[3]+' — '+x.slice(4).join(' ');if(/failed|error/i.test(x[3]))detectedError=msg;}}
       }catch(_){}
       if(run.active){run.active.messages.push(msg.slice(0,300));run.active.messages=run.active.messages.slice(-10);}
@@ -660,7 +688,7 @@ const server=http.createServer(async(req,res)=>{
     if(!app){json(res,404,{error:'Unknown application'});return;}
     json(res,200,app.discovery?challenger.history(repo):await recentReleases(app));return;
   }
-  if(req.method==='GET' && route==='/api/health'){json(res,200,{ok:true,app:'Craft Update Center',platform:process.platform,version:'2.5.2'});return;}
+  if(req.method==='GET' && route==='/api/health'){json(res,200,{ok:true,app:'Craft Update Center',platform:process.platform,version:'2.5.7'});return;}
   if(req.method==='GET' && route==='/api/state'){
     json(res,200,{platform:process.platform,computer:os.hostname(),admin:isAdmin,
       apps:catalog.apps.map(({releaseBody,...meta})=>({...meta,creator:'Storytold',sourceId:'storytold',repository:'storytold/'+meta.repo,challenges:meta.original?[meta.original]:[],sourceSignal:scanner.publicSignal(meta.repo),...challenger.craftPortableMeta(meta.repo)})),

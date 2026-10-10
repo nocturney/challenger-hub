@@ -48,7 +48,7 @@ function getTag(tag){
 function xmlUnescape(s){return String(s||'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'")}
 function atomRelease(xml,repository){
  if(typeof xml!=='string'||!xml.includes('<feed'))throw Error('Invalid Atom feed');
- const entries=[...xml.matchAll(/<entry\b[^>]*>([\s\S]*?)<\/entry>/g)].slice(0,20);
+ const entries=[...xml.matchAll(/<entry\b[^>]*>([\s\S]*?)(?:<\/entry>|(?=<entry\b)|(?=<\/feed>)|$)/g)].slice(0,20);
  const found=[];
  for(const [,body]of entries){
    const links=[...body.matchAll(/\bhref="([^"]+)"/g)].map(m=>xmlUnescape(m[1]));
@@ -90,6 +90,27 @@ function safePersist(file,obj){
   fs.copyFileSync(temp,file);fs.rmSync(temp,{force:true});
  }
 }
+// Atom releases may contain multi-megabyte changelogs. Only the first release
+// tag links are required; never download the entire body just to find a tag.
+const MAX_ATOM_PREFIX=192*1024;
+async function readAtomPrefix(response,url){
+ const repository=url.slice('https://github.com/'.length).split('/releases.atom')[0];
+ const stream=response.body?.getReader?.();
+ if(!stream)return String(await response.text()).slice(0,MAX_ATOM_PREFIX);
+ const decoder=new TextDecoder();let body="",count=0,completed=false;
+ try{
+  while(count<MAX_ATOM_PREFIX){
+   const chunk=await stream.read();
+   if(chunk.done){completed=true;body+=decoder.decode();break}
+   const available=MAX_ATOM_PREFIX-count;
+   const part=chunk.value.byteLength>available?chunk.value.subarray(0,available):chunk.value;
+   count+=part.byteLength;body+=decoder.decode(part,{stream:true});
+   if(body.includes('<entry')&&atomRelease(body,repository).type==='release')break;
+   if(chunk.value.byteLength>available)break;
+  }
+ }finally{if(!completed)try{await stream.cancel()}catch(_){}}
+ return body;
+}
 function makeScanner({root,list,config,fetcher,discovery,onChange,knownTag,logger,clock=()=>Date.now(),disableTimers=false}={}){
  if(!root||typeof list!=='function')throw Error('Scanner needs a root and project supplier');
  const file=path.join(root,'source-signals.json');
@@ -127,14 +148,14 @@ function makeScanner({root,list,config,fetcher,discovery,onChange,knownTag,logge
  function status(){
   const tasks=current(),rows=tasks.filter(x=>x.kind!=='directory'),lastSuccess=rows.map(x=>db.items[x.id]).filter(x=>x?.lastChecked).length;
   const dueCount=rows.filter(x=>due(db.items[x.id],forceIds.has(x.id))).length;
-  const cfg=prefs();
-  return {scanning:active||forceIds.size>0,lastSyncAt:mostRecent||db.lastActivity||null,error:lastError,pendingUnverified:rows.filter(x=>db.items[x.id]?.signalType==='tag').length,
+  const cfg=prefs(),failed=rows.filter(x=>!!db.items[x.id]?.error).length;
+  return {scanning:active||forceIds.size>0,lastSyncAt:mostRecent||db.lastActivity||null,error:failed?failed+' source checks need retry; cached information remains available':lastError==='Could not save source signals'?lastError:'',failed,pendingUnverified:rows.filter(x=>db.items[x.id]?.signalType==='tag').length,
    checked:lastSuccess,total:rows.length,due:dueCount,queued:forceIds.size,intervalHours:cfg.hours,
    sourceProviders:['GitHub Atom','GitLab','KDE Invent','Codeberg'],preferences:config?config():{autoCheck:true,intervalHours:12}};
  }
- async function request(url,host,prev){
+ async function request(url,host,prev,kind){
   if(db.hostBackoff?.[host]>clock())return {kind:'backoff'};
-  const headers={'User-Agent':'ChallengerHub/2.5.2 (+local release monitor)','Accept':'application/json, application/atom+xml;q=0.9'};
+  const headers={'User-Agent':'ChallengerHub/2.5.3 (+local release monitor)','Accept':'application/json, application/atom+xml;q=0.9'};
   if(prev?.etag)headers['If-None-Match']=prev.etag;
   if(prev?.modified)headers['If-Modified-Since']=prev.modified;
   let response;
@@ -148,10 +169,11 @@ function makeScanner({root,list,config,fetcher,discovery,onChange,knownTag,logge
   if(response.status===404||response.status===204)return {kind:'missing'};
   if(!response.ok)return {kind:'network',reason:'HTTP '+response.status};
   const bytes=Number(response.headers.get('content-length')||0);
-  if(bytes>MAX_BODY)return {kind:'network',reason:'Source response too large'};
+  if(kind!=='github-atom'&&bytes>MAX_BODY)return {kind:'network',reason:'Source response too large'};
   let payload;
-  try{payload=await response.text()}catch(e){return {kind:'network',reason:'Could not read source'} }
-  if(Buffer.byteLength(payload)>MAX_BODY)return {kind:'network',reason:'Source response too large'};
+  try{payload=kind==='github-atom'?await readAtomPrefix(response,url):await response.text()}
+  catch(e){return {kind:'network',reason:'Could not read source'} }
+  if(kind!=='github-atom'&&Buffer.byteLength(payload)>MAX_BODY)return {kind:'network',reason:'Source response too large'};
   return {kind:'ok',payload,etag:response.headers.get('etag')||null,modified:response.headers.get('last-modified')||null};
  }
  async function checkOne(entry){
@@ -166,10 +188,15 @@ function makeScanner({root,list,config,fetcher,discovery,onChange,knownTag,logge
    db.items[entry.id]=updated;return;
   }
   let fail=null,got=false,signal=null,used=null;
-  for(const source of sourcesFor(entry)){
+  const choices=sourcesFor(entry);
+  for(let index=0;index<choices.length;index++){
+   const source=choices[index];
    if(!['github.com','gitlab.com','invent.kde.org','codeberg.org'].includes(source.host))throw Error('Unapproved source host');
    const etagKey=source.url;
-   const result=await request(source.url,source.host,updated.etagByHost[etagKey]);
+   const result=await request(source.url,source.host,updated.etagByHost[etagKey],source.kind);
+   if(result.kind==='missing'&&source.kind==='github-atom'){
+    got=true;used=source;signal=old.tag?{type:old.signalType||'none',tag:old.tag,url:old.url||null}:{type:'none',tag:null};break;
+   }
    if(result.kind==='backoff'||result.kind==='blocked'||result.kind==='network'||result.kind==='missing'){
     fail=result.kind==='network'?result.reason:result.kind;continue;
    }
@@ -180,7 +207,7 @@ function makeScanner({root,list,config,fetcher,discovery,onChange,knownTag,logge
    }
    try{signal=parseResponse(source,result.payload)}catch(e){fail=e.message;continue}
    updated.etagByHost[etagKey]={etag:result.etag,modified:result.modified};
-   if(signal.type==='none'&&source!==sourcesFor(entry).at(-1))continue;
+   if(signal.type==='none'&&index<choices.length-1)continue;
    got=true;used=source;break;
   }
   if(got){

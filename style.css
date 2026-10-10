@@ -447,8 +447,9 @@ button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .skeleton-gap{height:32px}
 @keyframes shine{to{background-position-x:-205%}}
 .work-queue{border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));
- border-radius:12px;background:linear-gradient(100deg,var(--accent-bg),var(--surface));margin:0 0 16px;
- padding:13px 16px 14px;display:flex;align-items:center;gap:12px;overflow:hidden;position:relative}
+ border-radius:12px;background:var(--surface);margin:0;
+ padding:13px 16px 14px;display:flex;align-items:center;gap:12px;overflow:hidden;
+ position:fixed;bottom:12px;right:12px;width:min(500px,calc(100vw - 24px));z-index:110;box-shadow:0 16px 36px #10203a55}
 .queue-indicator{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;
  background:color-mix(in srgb,var(--accent) 20%,var(--surface));color:var(--accent-hi);flex:none}
 .queue-indicator svg{width:20px;height:20px;animation:turn 2s linear infinite}
@@ -457,6 +458,22 @@ button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .queue-content strong{display:block;font-size:12px;font-weight:780;margin-bottom:2px}
 .queue-content p{color:var(--muted);font-size:11px;margin:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .queue-count{font-size:11px;color:var(--accent-hi);font-weight:750;white-space:nowrap}
+.queue-dock-button,.queue-footer-button{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:var(--raised);font-size:11px;font-weight:760;color:var(--ink);cursor:pointer}
+.queue-dock-button:hover,.queue-footer-button:hover{border-color:var(--accent-hi);color:var(--accent-hi)}
+.queue-footer-button{display:inline-flex;gap:7px;align-items:center}
+.queue-footer-count{font-size:10px;padding:2px 5px;background:var(--surface);border-radius:5px}
+.queue-dialog{width:min(610px,calc(100vw - 24px));max-height:85vh;overflow-y:auto}
+.queue-dialog h3{margin:15px 0 8px;font-size:12px}
+.queue-dialog-current{padding:12px;background:var(--raised);white-space:pre-line;overflow-wrap:anywhere;border:1px solid var(--line);border-radius:9px;font-size:12px}
+.queue-dialog-list,.queue-dialog-history{max-height:230px;overflow-y:auto}
+.queue-dialog-history{display:grid;gap:6px}
+.queue-history-row{padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--raised)}
+.queue-history-row.queue-failed{border-left:3px solid #d16a5a}
+.queue-history-row p{font-size:11px;color:var(--muted);overflow-wrap:anywhere}
+.queue-history-row small,.queue-safety-note{font-size:10px;color:var(--muted)}
+.queue-progress.queue-progress-idle span{animation:none;width:100%;background:#d16a5a}
+.work-queue.queue-error{border-color:#d16a5a}
+body.queue-dock-visible .main-footer{padding-bottom:108px}
 .queue-progress{position:absolute;bottom:0;inset-inline:0;height:3px;background:var(--line)}
 .queue-progress span{display:block;height:100%;width:38%;background:linear-gradient(90deg,transparent,var(--accent-hi),transparent);
  animation:progress-wander 1.75s cubic-bezier(.35,.7,.6,.45) infinite}
@@ -1199,3 +1216,256 @@ body.view-grid.detail-open .app-card.selected .card-id h3{color:var(--accent-hi)
  .bulk-update-button{width:100%}
 }
 @media(prefers-reduced-motion:reduce){.bulk-update-button{transition:none!important;transform:none!important}}
+
+/* Research intake 2.5.7: real, safe manual setup guidance. */
+.setup-guide-dialog{width:min(560px,calc(100vw - 28px));max-height:min(86vh,790px);overflow-y:auto}
+.setup-guide-dialog .manual-guide-intro{line-height:1.55;margin:8px 0 17px;font-size:12px;color:var(--muted)}
+.manual-guide-meta{display:grid;grid-template-columns:1fr;gap:9px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--raised)}
+.manual-guide-meta>div{display:flex;justify-content:space-between;gap:11px;align-items:flex-start}
+.manual-guide-meta span{font-size:10px;color:var(--faint);min-width:122px}
+.manual-guide-meta strong{text-align:right;font-size:11px;font-weight:700;overflow-wrap:anywhere}
+.setup-guide-dialog h3{font-size:12px;margin:17px 0 7px}
+.setup-guide-dialog ol{display:flex;flex-direction:column;gap:8px;padding-left:21px;margin:0;color:var(--ink);font-size:12px;line-height:1.45}
+.manual-guide-caveats{font-size:11px;color:var(--muted);line-height:1.55;overflow-wrap:anywhere}
+.manual-guide-source{font-size:11px;color:var(--accent-hi);overflow-wrap:anywhere}
+@media(max-width:440px){.manual-guide-meta>div{flex-direction:column;gap:3px}.manual-guide-meta strong{text-align:left}.setup-guide-dialog .modal-actions{flex-wrap:wrap}}
+
+
+/* ===============================================================
+   Challenger Hub · Operations UX 2.5.9
+   Quiet clarity when idle; unmistakable, accurate status in motion.
+   No simulated numerical progress or installer-side writes.
+   =============================================================== */
+:root[data-theme=dark]{
+ --ops-mint:#68e6cd;--ops-sky:#8dc8ff;--ops-violet:#beacff;--ops-amber:#ffd08d;
+}
+:root[data-theme=light]{
+ --ops-mint:#178574;--ops-sky:#1469c7;--ops-violet:#735bc6;--ops-amber:#b26b10;
+}
+.topbar{
+ position:relative;top:auto;z-index:10;
+ background:color-mix(in srgb,var(--bg) 88%,transparent);
+ backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+ border-bottom-color:color-mix(in srgb,var(--line) 78%,var(--accent) 10%);
+}
+.topbar-end{gap:11px;min-width:0}
+.queue-toolbar-button{
+ display:inline-flex;align-items:center;justify-content:center;gap:8px;
+ height:44px;min-width:116px;flex:none;padding:0 12px;
+ color:var(--ink);background:linear-gradient(155deg,var(--raised),var(--surface));
+ border:1px solid var(--line);border-radius:13px;cursor:pointer;
+ box-shadow:inset 0 1px 0 #ffffff08,0 4px 13px #071c3710;
+ transition:border-color .18s,background .18s,box-shadow .18s,transform .18s;
+}
+.queue-toolbar-button>svg{height:16px;width:16px;flex:none;color:var(--ops-sky)}
+.queue-toolbar-button:hover{
+ border-color:var(--accent);transform:translateY(-1px);
+ box-shadow:0 5px 17px color-mix(in srgb,var(--accent) 12%,transparent);
+}
+.queue-toolbar-button:focus-visible,.queue-nav:focus-visible,.queue-dock-dismiss:focus-visible,.notice-dismiss:focus-visible{
+ outline:2px solid var(--accent-hi);outline-offset:3px;
+}
+.queue-toolbar-label{font-size:10px;font-weight:880;letter-spacing:.1em}
+.queue-toolbar-count{
+ min-width:23px;min-height:22px;display:grid;place-items:center;
+ padding:0 5px;color:var(--ink);border-radius:7px;
+ background:var(--card);border:1px solid var(--line);font-size:11px;font-weight:860;font-variant-numeric:tabular-nums;
+}
+.queue-toolbar-state{font-size:9px;letter-spacing:.075em;font-weight:840;color:var(--faint)}
+.queue-toolbar-button[data-queue-state="active"]{
+ border-color:color-mix(in srgb,var(--ops-mint) 60%,var(--line));
+ background:color-mix(in srgb,var(--ops-mint) 9%,var(--card));
+}
+.queue-toolbar-button[data-queue-state="active"] .queue-toolbar-state{color:var(--ops-mint)}
+.queue-toolbar-button[data-queue-state="waiting"]{border-color:color-mix(in srgb,var(--ops-violet) 55%,var(--line))}
+.queue-toolbar-button[data-queue-state="waiting"] .queue-toolbar-state{color:var(--ops-violet)}
+.queue-toolbar-button[data-queue-state="attention"]{border-color:color-mix(in srgb,var(--ops-amber) 55%,var(--line))}
+.queue-toolbar-button[data-queue-state="attention"] .queue-toolbar-state{color:var(--ops-amber)}
+.sidebar-nav #queueNavButton{
+ position:relative;isolation:isolate;
+ border:1px solid color-mix(in srgb,var(--accent) 14%,var(--line));
+ background:linear-gradient(110deg,color-mix(in srgb,var(--accent) 5%,var(--surface)),var(--surface));
+ border-radius:11px;
+}
+.sidebar-nav #queueNavButton svg{color:var(--ops-sky)}
+.sidebar-nav #queueNavButton:hover{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 9%,var(--surface))}
+.sidebar-nav #queueNavButton .nav-count{background:color-mix(in srgb,var(--accent) 12%,var(--raised));border-radius:7px;color:var(--ink)}
+.sidebar-nav #queueNavButton:focus-visible{outline:2px solid var(--accent-hi);outline-offset:2px}
+
+/* A genuine dismissible, non-catastrophic scanner notice. */
+.notice.notice-informational{
+ display:flex;align-items:center;gap:11px;
+ padding:11px 12px 11px 14px;
+ background:linear-gradient(105deg,color-mix(in srgb,var(--ops-sky) 8%,var(--surface)),var(--surface));
+ color:var(--ink);border:1px solid color-mix(in srgb,var(--ops-sky) 31%,var(--line));
+ box-shadow:0 6px 19px #0019340c;
+}
+.notice-icon{height:17px;width:17px;flex:none;color:var(--ops-sky)}
+#noticeMessage{flex:1;min-width:0;overflow-wrap:anywhere;font-size:11px;line-height:1.5}
+.notice-dismiss{
+ display:grid;place-items:center;flex:none;width:29px;height:29px;
+ border:1px solid transparent;border-radius:8px;background:transparent;color:var(--muted);cursor:pointer;
+}
+.notice-dismiss:hover{border-color:var(--line);background:var(--raised);color:var(--ink)}
+.notice-dismiss svg{width:15px;height:15px}
+.notice.error #noticeMessage{color:var(--rose)}
+
+/* Premium card system: match the true job state, never an invented percent. */
+.app-card{
+ isolation:isolate;
+ border-radius:15px;
+ background:linear-gradient(146deg,color-mix(in srgb,var(--card) 92%,var(--raised)),var(--card) 58%,color-mix(in srgb,var(--accent) 2%,var(--card)));
+ box-shadow:inset 0 1px 0 color-mix(in srgb,var(--ink) 6%,transparent),0 4px 16px #00000014;
+ transition:transform .24s cubic-bezier(.2,.75,.25,1),border-color .2s,box-shadow .24s;
+}
+.app-card:hover{
+ border-color:color-mix(in srgb,var(--accent) 42%,var(--line));
+ box-shadow:inset 0 1px 0 #ffffff0a,0 14px 35px #061a3430;
+}
+:root[data-theme=light] .app-card{
+ box-shadow:inset 0 1px 0 #fff,0 4px 18px #16395612;
+}
+:root[data-theme=light] .app-card:hover{box-shadow:inset 0 1px 0 #fff,0 16px 33px #1639561e}
+.app-card[data-job="active"],.app-card[data-job="queued"]{
+ --job-accent:var(--ops-mint);
+ border-color:color-mix(in srgb,var(--job-accent) 63%,var(--line))!important;
+ box-shadow:inset 0 1px 0 color-mix(in srgb,var(--job-accent) 13%,transparent),0 8px 30px color-mix(in srgb,var(--job-accent) 12%,transparent)!important;
+}
+.app-card[data-job="queued"]{--job-accent:var(--ops-violet)}
+.app-card[data-job="active"]::after,.app-card[data-job="queued"]::after{
+ content:"";position:absolute;inset:-2px;z-index:4;
+ border:2px solid color-mix(in srgb,var(--job-accent) 85%,transparent);
+ border-radius:inherit;pointer-events:none;
+}
+.app-card[data-job="active"]::after{
+ animation:operation-outline-pulse 2.6s ease-in-out infinite;
+}
+.app-card[data-job="queued"]::after{border-style:dashed;opacity:.85}
+@keyframes operation-outline-pulse{
+ 0%,100%{opacity:.65;box-shadow:0 0 0 0 color-mix(in srgb,var(--ops-mint) 10%,transparent)}
+ 50%{opacity:1;box-shadow:0 0 0 3px color-mix(in srgb,var(--ops-mint) 8%,transparent)}
+}
+.app-card[data-job="active"] .app-icon{border-color:color-mix(in srgb,var(--ops-mint) 66%,var(--line));box-shadow:0 0 0 3px color-mix(in srgb,var(--ops-mint) 10%,transparent)}
+.app-card[data-job="queued"] .app-icon{border-color:color-mix(in srgb,var(--ops-violet) 56%,var(--line))}
+.status-tag.job-working{color:var(--ops-mint);font-weight:820}
+.status-tag.job-working::before{background:var(--ops-mint);box-shadow:0 0 0 3px color-mix(in srgb,var(--ops-mint) 15%,transparent);animation:operation-dot 1.7s ease-in-out infinite}
+.status-tag.job-waiting{color:var(--ops-violet);font-weight:820}
+.status-tag.job-waiting::before{background:var(--ops-violet);box-shadow:0 0 0 3px color-mix(in srgb,var(--ops-violet) 13%,transparent)}
+@keyframes operation-dot{0%,100%{opacity:.65}50%{opacity:1}}
+.cards:not(.list-view) .app-card[data-job] .card-availability .status-tag{max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.cards.list-view .app-card[data-job="active"],.cards.list-view .app-card[data-job="queued"]{transform:none}
+.cards.list-view .status-tag.job-working,.cards.list-view .status-tag.job-waiting{white-space:normal;line-height:1.25}
+.app-card[data-job="active"] .card-action:disabled,.app-card[data-job="queued"] .card-action:disabled{
+ color:var(--job-accent);background:color-mix(in srgb,var(--job-accent) 9%,var(--surface));
+ border-color:color-mix(in srgb,var(--job-accent) 40%,var(--line));opacity:1;
+}
+
+/* Operations dock remains an affordance even when nothing is happening. */
+.work-queue{
+ width:min(508px,calc(100vw - 24px));min-height:70px;
+ bottom:14px;right:14px;gap:11px;z-index:42;
+ padding:11px 13px 14px;
+ border:1px solid color-mix(in srgb,var(--ops-sky) 40%,var(--line));
+ border-radius:16px;background:linear-gradient(115deg,color-mix(in srgb,var(--surface) 94%,var(--accent)),var(--surface));
+ box-shadow:0 18px 53px #020e2738,0 3px 12px #091c351d,inset 0 1px 0 #ffffff12;
+ backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+ transition:width .2s ease,border-color .2s,box-shadow .2s;
+}
+.work-queue.queue-idle{width:min(330px,calc(100vw - 24px));min-height:65px;opacity:.94;border-color:var(--line)}
+.work-queue.queue-idle:hover{opacity:1;border-color:var(--border-bright)}
+.work-queue.queue-active{border-color:color-mix(in srgb,var(--ops-mint) 70%,var(--line));box-shadow:0 14px 45px #03182a42,0 0 0 1px color-mix(in srgb,var(--ops-mint) 12%,transparent)}
+.work-queue.queue-waiting{border-color:color-mix(in srgb,var(--ops-violet) 65%,var(--line))}
+.work-queue.queue-attention{border-color:color-mix(in srgb,var(--ops-amber) 62%,var(--line))}
+.work-queue.queue-attention .queue-indicator{color:var(--ops-amber);background:color-mix(in srgb,var(--ops-amber) 16%,var(--surface))}
+.work-queue.queue-active .queue-indicator{color:var(--ops-mint);background:color-mix(in srgb,var(--ops-mint) 14%,var(--surface))}
+.work-queue.queue-waiting .queue-indicator{color:var(--ops-violet);background:color-mix(in srgb,var(--ops-violet) 13%,var(--surface))}
+.queue-indicator{height:37px;width:37px;border:1px solid color-mix(in srgb,var(--accent) 15%,var(--line));border-radius:12px;background:var(--raised)}
+.queue-indicator svg{height:18px;width:18px;animation:none}
+.queue-indicator svg.is-working{animation:turn 2.4s linear infinite}
+.queue-dock-eyebrow{display:block;margin:0 0 3px;color:var(--faint);font-size:8px;font-weight:860;letter-spacing:.135em;line-height:1}
+.queue-content strong{font-size:12px;line-height:1.2;letter-spacing:-.01em;font-weight:800}
+.queue-content p{font-size:10px;margin-top:3px;max-width:100%;line-height:1.3}
+.queue-dock-button{flex:none;white-space:nowrap;padding:8px 10px;border-radius:9px;font-weight:780;background:color-mix(in srgb,var(--ops-sky) 8%,var(--raised))}
+.queue-dock-button:hover{border-color:var(--ops-sky);background:color-mix(in srgb,var(--ops-sky) 13%,var(--raised))}
+.queue-dock-dismiss{display:grid;place-items:center;height:28px;width:28px;flex:none;border-radius:8px;border:1px solid var(--line);background:var(--raised);color:var(--muted)}
+.queue-dock-dismiss svg{height:13px;width:13px}
+.queue-dock-dismiss:hover{color:var(--ink);border-color:var(--ops-amber)}
+.queue-count{font-size:10px}
+.queue-idle .queue-count{display:none}
+.queue-progress{height:3px;background:color-mix(in srgb,var(--ops-mint) 15%,var(--line))}
+.queue-progress>span{background:linear-gradient(90deg,transparent,var(--ops-mint),var(--ops-sky),transparent);width:44%}
+.queue-progress.queue-progress-idle>span{width:0;animation:none}
+body.queue-dock-visible .main-footer{padding-bottom:104px}
+.queue-idle .queue-dock-eyebrow{color:var(--faint)}
+.queue-idle .queue-indicator svg{opacity:.7}
+.queue-idle .queue-dock-button{padding:8px}
+.queue-dialog{width:min(680px,calc(100vw - 22px));border:1px solid color-mix(in srgb,var(--accent) 30%,var(--line));border-radius:19px}
+.queue-dialog .modal-pad{padding:clamp(18px,3vw,28px)}
+.queue-dialog h2{font-size:23px;letter-spacing:-.045em}
+.queue-dialog-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:16px 0 22px}
+.queue-dialog-metrics>div{
+ padding:13px 14px;border:1px solid var(--line);border-radius:12px;min-width:0;
+ background:linear-gradient(120deg,var(--raised),var(--surface));
+}
+.queue-dialog-metrics strong{display:block;font-size:23px;font-weight:870;letter-spacing:-.04em;font-variant-numeric:tabular-nums;margin-top:7px}
+.queue-dialog-metrics>div:nth-child(1) strong{color:var(--ops-mint)}
+.queue-dialog-metrics>div:nth-child(2) strong{color:var(--ops-violet)}
+.queue-dialog-metrics>div:nth-child(3) strong{color:var(--ops-amber)}
+.queue-metric-label{font-size:9px;font-weight:840;letter-spacing:.12em;color:var(--faint)}
+.queue-history-hint{font-size:10px;font-weight:490;color:var(--faint);margin-left:8px;white-space:normal}
+.queue-dialog-current{background:linear-gradient(135deg,var(--raised),color-mix(in srgb,var(--ops-sky) 4%,var(--surface)));border-radius:12px;font-size:12px;line-height:1.6}
+.queue-history-row{border-radius:11px;padding:11px 13px;display:grid;gap:3px}
+.queue-history-row strong{font-size:11px}
+.queue-history-row p{margin:0;color:var(--muted);line-height:1.4}
+.queue-history-row small{margin-top:2px}
+.queue-history-row.queue-resolved{border-left:3px solid var(--ops-mint);opacity:.79}
+.queue-history-row.queue-succeeded{border-left:3px solid var(--ops-mint)}
+.queue-dialog-list li{font-size:12px;margin:4px 0}
+:root[data-theme=light] .work-queue{
+ background:linear-gradient(120deg,#fff,color-mix(in srgb,var(--ops-sky) 3%,#f8fbff));
+ box-shadow:0 17px 48px #17385b26,0 4px 13px #142b4b12;
+}
+@media(max-width:950px){
+ .queue-toolbar-state{display:none}
+ .queue-toolbar-button{min-width:0}
+}
+@media(max-width:650px){
+ .topbar-end{gap:7px}
+ .queue-toolbar-button{min-width:0;height:39px;padding:0 9px;gap:6px}
+ .queue-toolbar-label{display:none}
+ .queue-toolbar-count{min-height:19px;min-width:18px;padding:0 3px;font-size:10px}
+ .work-queue{right:9px;bottom:9px;width:min(440px,calc(100vw - 18px));gap:8px;padding:10px 10px 14px}
+ .work-queue.queue-idle{width:min(300px,calc(100vw - 18px))}
+ .queue-indicator{width:30px;height:30px;border-radius:9px}
+ .queue-indicator svg{width:15px;height:15px}
+ .queue-dock-button{padding:7px 8px;font-size:10px}
+ body.queue-dock-visible .main-footer{padding-bottom:96px}
+ .queue-dialog-metrics{gap:6px}
+ .queue-dialog-metrics>div{padding:11px 9px}
+ .queue-dialog-metrics strong{font-size:19px}
+ .queue-metric-label{font-size:8px}
+}
+@media(max-width:380px){
+ .topbar{gap:7px}
+ .queue-toolbar-button{padding:0 6px}
+ .queue-toolbar-count{min-width:17px}
+ .work-queue.queue-active .queue-count,.work-queue.queue-waiting .queue-count{display:none}
+ .queue-dialog-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .queue-dialog-metrics>div{padding:10px 7px}
+}
+@media(prefers-reduced-motion:reduce){
+ .app-card[data-job="active"]::after,.status-tag.job-working::before,
+ .queue-indicator svg.is-working,.queue-progress>span{animation:none!important}
+ .queue-toolbar-button,.app-card,.work-queue{transition:none!important}
+}
+
+/* Keep the floating operations dock clear of results sorting and view toggles. */
+.work-queue{left:267px;right:auto}
+.work-queue.queue-idle{width:min(274px,calc(100vw - 285px))}
+.work-queue.queue-idle .queue-dock-eyebrow{display:none}
+.work-queue.queue-idle .queue-content p{display:none}
+.work-queue.queue-idle .queue-content strong{margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:810px){
+ .work-queue{left:9px;right:auto}
+ .work-queue.queue-idle{width:min(274px,calc(100vw - 18px))}
+}
