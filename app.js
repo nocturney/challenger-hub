@@ -379,7 +379,13 @@ function renderCounters(){
  document.querySelector('.connection-label [data-t=connected]').textContent=state.scanning?t('statusScanning'):
    state.scanError?t('cachedMode'):t('connected');
  const notices=[];
- if(state.scanError)notices.push('Release checks: '+String(state.scanError).slice(0,155)+'. Cached project information remains available.');
+ if(state.scanError){
+  const scanMessage=String(state.scanError).slice(0,155)
+    .replace(/(?:[;,.]\s*)?cached (?:project )?information remains available\.?/ig,'')
+    .replace(/^\s*1 source checks need retry/i,'1 source check needs retry')
+    .trim().replace(/[.,;]+$/,'');
+  notices.push('Release checks · '+scanMessage+'. Cached data remains available.');
+ }
  if(state.platform==='win32'&&!state.admin)notices.push(t('requiresAdmin'));
  activeNoticeKey=notices.join("|");
  const dismissed=activeNoticeKey&&pref('noticeDismissedKey','')===activeNoticeKey;
@@ -480,13 +486,198 @@ function competitorTargets(a){
    });
  return targets.filter(x=>x.product);
 }
+
+/* Challenger Hub 2.6.0 · Catalog-grounded contextual discovery.
+   Uses only already loaded project metadata. No network calls or install actions. */
+let discoverySignature='',heroFeature={type:'daily',repo:null};
+function cleanCompetitorCompany(company){
+ const value=String(company||'').trim();
+ return /^(vendor (to verify|unverified)|unknown|unverified|not verified|tbd|n\/?a)$/i.test(value)?'':value;
+}
+function readableCompetitor(x){
+ const company=cleanCompetitorCompany(x.company),product=String(x.product||'').trim();
+ if(!company)return product;
+ return product.toLowerCase().startsWith(company.toLowerCase()+' ')?product:company+' · '+product;
+}
 function competitorMarkup(a){
  const targets=competitorTargets(a);
- if(!targets.length)return '<span class="vendor-unknown">Comparable incumbent not specified</span>';
- return targets.slice(0,2).map(x=>'<span class="competitor-pair" title="'+escapeHTML((x.company||'Vendor unverified')+' / '+x.product+(x.scope?' · '+x.scope:''))+'">'+
-   '<strong>'+escapeHTML(x.company||'Vendor to verify')+'</strong><span aria-hidden="true">→</span><span>'+
-   (window.ChallengerUX?.highlight(x.product)||escapeHTML(x.product))+'</span></span>').join('')+
-   (targets.length>2?'<small class="competitor-more">+'+(targets.length-2)+' more</small>':'');
+ if(!targets.length)return '';
+ return targets.slice(0,3).map(x=>{
+  const company=cleanCompetitorCompany(x.company),name=readableCompetitor(x);
+  const product=String(x.product||'').trim();
+  const prefixed=company&&product.toLowerCase().startsWith(company.toLowerCase()+' ');
+  const content=company&&!prefixed?
+   '<strong>'+escapeHTML(company)+'</strong> <span class="competitor-product">'+(window.ChallengerUX?.highlight(product)||escapeHTML(product))+'</span>':
+   '<span class="competitor-product">'+(window.ChallengerUX?.highlight(name)||escapeHTML(name))+'</span>';
+  return '<span class="competitor-pair" title="'+escapeHTML(name+(x.scope?' · '+x.scope:''))+'">'+content+'</span>';
+ }).join('')+
+ (targets.length>3?'<small class="competitor-more" title="Open details for the full competitor list">+'+(targets.length-3)+' more in details</small>':'');
+}
+function discoveryDay(){
+ const d=new Date();
+ return {number:Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/86400000),
+  label:new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric',year:'numeric'}).format(d)};
+}
+function dailyRecommendation(dayNumber){
+ const trusted=state.apps.filter(a=>a.discovery&&!a.researchPendingVerification&&a.repoUrl&&a.title);
+ const candidates=trusted.length?trusted:state.apps.filter(a=>a.discovery&&a.repoUrl&&a.title);
+ const pool=candidates.sort((x,y)=>x.title.localeCompare(y.title,'en',{sensitivity:'base'}));
+ return pool.length?pool[((dayNumber%pool.length)+pool.length)%pool.length]:null;
+}
+function discoveryTopics(scope,dayNumber,selected){
+ const items=new Map();
+ function add(candidate,weight){
+  const product=String(candidate?.product||'').trim(),company=cleanCompetitorCompany(candidate?.company);
+  if(!product||product.length>32||/^(unspecified|unknown|other|n\/?a|proprietary)/i.test(product))return;
+  const name=readableCompetitor({company,product});
+  if(name.length>34)return;
+  const query=company&&product.toLowerCase().startsWith(company.toLowerCase()+' ')?product:company?company+' '+product:product;
+  const count=window.ChallengerUX?.globalResults(query)?.length||0;
+  if(!count)return;
+  const key=name.toLowerCase(),previous=items.get(key);
+  if(previous){previous.weight+=weight+1;return}
+  items.set(key,{name,query,company,weight:weight+count});
+ }
+ for(const app of scope)for(const target of competitorTargets(app))add(target,2);
+ if(items.size<7)for(const app of state.apps.filter(a=>a.discovery))for(const target of competitorTargets(app))add(target,0);
+ for(const title of ['Photoshop','After Effects','AutoCAD','Power Apps','Airtable','Figma','Illustrator','Notion','SolidWorks']){
+  if(items.size>=4)break;
+  add({company:null,product:title},0);
+ }
+ const sorted=[...items.values()].sort((x,y)=>y.weight-x.weight||x.name.localeCompare(y.name));
+ if(!sorted.length)return [];
+ const focused=selected?new Set(competitorTargets(selected).map(x=>readableCompetitor(x).toLowerCase())):new Set();
+ const picks=sorted.filter(x=>focused.has(x.name.toLowerCase())).slice(0,2);
+ const remaining=sorted.filter(x=>!picks.includes(x));
+ const start=dayNumber%Math.max(1,remaining.length);
+ for(let i=0;i<remaining.length&&picks.length<4;i++){
+  const choice=remaining[(start+i)%remaining.length];
+  if(!picks.some(x=>x.query.toLowerCase()===choice.query.toLowerCase())&&
+     (!choice.company||!picks.some(x=>x.company===choice.company)))picks.push(choice);
+ }
+ // If a category is too narrow, still fill the row with catalog-supported options.
+ for(let i=0;i<remaining.length&&picks.length<4;i++){
+  const choice=remaining[(start+i)%remaining.length];
+  if(!picks.some(x=>x.query.toLowerCase()===choice.query.toLowerCase()))picks.push(choice);
+ }
+ return picks.slice(0,4);
+}
+function renderDiscoveryStage(list){
+ if(!initialDataLoaded)return;
+ const day=discoveryDay(),daily=dailyRecommendation(day.number),selected=state.apps.find(a=>a.repo===ui.selectedRepo);
+ const signature=[day.number,ui.filter,ui.domain,ui.category,ui.search,ui.selectedRepo||'',state.apps.length,
+  state.apps.filter(a=>a.needsUpdate).length,state.apps.filter(a=>a.installedVersion).length].join('|');
+ if(signature===discoverySignature)return;
+ discoverySignature=signature;
+ let kicker='INDEPENDENT SOFTWARE · CURATED DISCOVERY',headline='Find your next tool.',line='Beyond the usual.';
+ let subtitle='Explore independent projects, compare familiar software and follow upstream activity.';
+ let context='home',actionText='Explore today’s discovery',note='Daily rotation · '+day.label;
+ heroFeature={type:'daily',repo:daily?.repo||null};
+ const search=String(ui.search||'').trim();
+ const updates=state.apps.filter(a=>a.needsUpdate).length,installed=state.apps.filter(a=>a.installedVersion).length;
+ if(selected){
+  context='selected';kicker='IN FOCUS · '+domainLabel(domainOf(selected)).toUpperCase();
+  headline=selected.title;line='Explore the project.';
+  subtitle=nativeAppName(selected)||'Review the source repository and alternatives.';
+  note=selected.researchPendingVerification?'Research candidate · unverified':'Source-tracked project';
+  heroFeature={type:'selected',repo:selected.repo};actionText='View project details';
+ }else if(search){
+  context='search';kicker='LIVE CATALOG SEARCH';
+  headline='Exploring “'+search.slice(0,28)+(search.length>28?'…':'')+'”';
+  line=list.length+' matching project'+(list.length===1?'':'s')+'.';
+  subtitle='Matches across project names, descriptions and competing software from the entire catalog.';
+  heroFeature={type:'project',repo:list[0]?.repo||null};actionText='Inspect first match';note='Results ranked by relevance';
+ }else if(ui.filter==='updates'){
+  context='updates';kicker='YOUR TOOLKIT · AVAILABLE UPDATES';
+  headline=updates+' updates available.';line='Stay in control.';
+  subtitle='Review approved packages first. Updates are only queued after your explicit confirmation.';
+  heroFeature={type:'updates'};actionText='Review available updates';note='Installation requires confirmation';
+ }else if(ui.filter==='installed'){
+  context='installed';kicker='YOUR TOOLKIT · THIS DEVICE';
+  headline=installed+' installed apps.';line='Your creative workspace.';
+  subtitle='Inspect the applications on this computer, check releases and follow changes.';
+  note='Independent discovery continues below';
+ }else if(ui.filter==='new'){
+  context='discoveries';kicker='RESEARCH DESK · INDEPENDENT PROJECTS';
+  headline=state.apps.filter(a=>a.discovery).length+' independent projects.';line='Keep discovering.';
+  subtitle='An independent software landscape from experiments to established alternatives.';
+  note='Research-only entries cannot be installed automatically';
+ }else if(ui.domain!=='all'||ui.category!=='all'){
+  context='category';kicker='YOUR FOCUS · '+(ui.domain!=='all'?'CATEGORY':'SUBCATEGORY');
+  headline=ui.domain!=='all'?domainLabel(ui.domain):catName(ui.category);
+  line=list.length+' projects to explore.';
+  subtitle='Compare related solutions and explore information linked to their source repositories.';
+  note='Category exploration · '+day.label;
+ }else if(ui.filter==='missing'){
+  context='discoveries';kicker='NEW POSSIBILITIES · NOT INSTALLED';
+  headline='Room for new ideas.';line=list.length+' projects to explore.';
+  subtitle='Explore independent alternatives before deciding what is worth trying.';
+  note='Explore first · install only after approval';
+ }
+ $('contextHero').dataset.context=context;
+ $('heroContextKicker').textContent=kicker;
+ $('heroContextLine1').textContent=headline;
+ $('heroContextLine2').textContent=line;
+ $('heroContextSubtitle').textContent=subtitle;
+ $('heroContextNote').textContent=note;
+ $('heroContextAction').querySelector('.hero-action-text').textContent=actionText;
+ $('heroContextAction').disabled=!heroFeature.repo&&heroFeature.type!=='updates';
+ $('dailyPick').hidden=!daily;
+ if(daily){
+  $('dailyPick').setAttribute('aria-busy','false');
+  $('dailyPickOpen').disabled=false;
+  $('dailyPickWhy').disabled=false;
+  $('dailyPickTitle').textContent=daily.title;
+  $('dailyPickSummary').textContent=nativeAppName(daily)||'Explore project information and the official source.';
+  $('dailyPickCategory').textContent=domainLabel(domainOf(daily));
+  $('dailyPickTrust').textContent=daily.researchPendingVerification?'Research · verification pending':
+   'Source-tracked · '+stageOf(daily).label+' (reported)';
+  $('dailyPickDate').textContent=day.label;
+  $('dailyPickEmblem').textContent=daily.title.trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').slice(0,2).toUpperCase();
+  $('dailyPickOpen').dataset.repo=daily.repo;
+  $('dailyPickReason').textContent='Rotates each local calendar day among repository-linked independent projects. This is an exploration prompt, not an endorsement, verification of features, or installation approval.';
+  $('dailyPickReason').hidden=true;
+  $('dailyPickWhy').setAttribute('aria-expanded','false');
+ }
+ const scope=selected?[selected,...state.apps.filter(a=>domainOf(a)===domainOf(selected))]:
+  ui.domain!=='all'?state.apps.filter(a=>domainOf(a)===ui.domain):
+  search?list:ui.filter==='updates'?state.apps.filter(a=>a.needsUpdate):state.apps.filter(a=>a.discovery);
+ const topics=discoveryTopics(scope,day.number,selected);
+ $('challengeEyebrow').textContent=selected?'MORE TOOLS FOR THE SAME NEED':
+  search?'DISCOVER RELATED ALTERNATIVES':ui.domain!=='all'?'COMPARE IN THIS CATEGORY':'FRESH COMPARISONS FROM THE CATALOG';
+ $('challengeHeading').textContent=selected?'Similar needs. Different tools.':search?'Keep exploring.':
+  ui.domain!=='all'?'Go deeper in this field.':'Explore a different direction.';
+ $('challengeCaption').textContent='Catalog-supported comparisons · updated with your context and day.';
+ const shortcuts=[...$('challengeLinks').querySelectorAll('.challenge-link')];
+ shortcuts.forEach((button,index)=>{
+  const data=topics[index];button.hidden=!data;
+  if(!data)return;
+  button.dataset.globalQuery=data.query;
+  button.setAttribute('aria-label','Search challengers for '+data.name);
+  button.querySelector('.challenge-link-icon').textContent=data.name.replace(/[^a-zA-Z0-9 ]/g,'').split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').slice(0,2).toUpperCase();
+  button.querySelector('.challenge-copy strong').textContent=data.name;
+  const count=window.ChallengerUX?.globalResults(data.query)?.length||0;
+  const item=button.querySelector('[data-query-count]');
+  item.dataset.queryCount=data.query;
+  item.textContent=count+' catalog match'+(count===1?'':'es');
+ });
+}
+function openDiscoveryProject(repo){
+ if(!repo||!state.apps.some(a=>a.repo===repo))return;
+ setFilter('all');
+ selectApp(repo);
+ const card=[...$('cards').querySelectorAll('.app-card')].find(x=>x.dataset.repo===repo);
+ if(card)card.scrollIntoView({behavior:'instant',block:'nearest'});
+}
+function activateHeroFeature(){
+ if(heroFeature.type==='updates'){
+  $('bulkUpdateBar').scrollIntoView({block:'center',behavior:'instant'});
+  return;
+ }
+ if(heroFeature.type==='selected'&&ui.selectedRepo){
+  changeDetailTab('details');$('detailPanel').scrollIntoView({block:'nearest'});return;
+ }
+ openDiscoveryProject(heroFeature.repo);
 }
 
 function cardMarkup(a){
@@ -498,6 +689,7 @@ function cardMarkup(a){
  const version=a.installedVersion||a.latestVersion||'';
  const domain=domainOf(a);
  const versionText=version?'v'+version:(a.releaseTag||'Version not verified');
+ const competition=competitorMarkup(a);
  const button='<button class="card-action '+(p.action==='install'?'primary':'')+
   '" data-action="'+p.action+'" data-repo="'+escapeHTML(a.repo)+'"'+(p.disabled?' disabled':'')+'>'+
   (p.action==='launch'?glyph('play'):p.action==='install'||p.action==='portable'?glyph('down'):'')+
@@ -507,7 +699,7 @@ function cardMarkup(a){
  '<div class="card-head">'+productIcon(a)+'<div class="card-id"><h3>'+(window.ChallengerUX?.highlight(a.title)||escapeHTML(a.title))+'</h3>'+
  '<p>'+(window.ChallengerUX?.highlight(nativeAppName(a))||escapeHTML(nativeAppName(a)))+'</p></div>'+
  '</div>'+
- '<div class="card-competitors"><span class="card-field-label">Competes with</span>'+competitorMarkup(a)+'</div>'+
+ (competition?'<div class="card-competitors"><span class="card-field-label">Competes with</span>'+competition+'</div>':'')+
  '<div class="card-area"><span class="card-field-label">Category</span><span class="area-pill">'+escapeHTML(domainLabel(domain))+'</span></div>'+
  '<div class="card-maturity"><span class="card-field-label">Maturity</span>'+maturityMarkup(a)+'</div>'+
  '<div class="card-availability"><span class="card-field-label">Availability</span><span class="status-tag '+s.kind+'">'+escapeHTML(s.label)+'</span>'+
@@ -549,6 +741,7 @@ function renderCards(force=false){
  const html=list.length?list.map(cardMarkup).join(''):empty;
  $('resultSummary').textContent=t('showing')(list.length);
  window.ChallengerUX?.present(list.length);
+ renderDiscoveryStage(list);
  renderBulkUpdateBar();
  $('cards').setAttribute('aria-busy','false');
  if(force||html!==cardSnapshot){cardSnapshot=html;$('cards').innerHTML=html;}
@@ -817,7 +1010,7 @@ function renderDetailsTab(a){
      ['Research status',a.researchPendingVerification?'Candidate · pending verification':'Repository reviewed'],
      ['Creator',a.creator],['Repository',a.repository],['Category',domainLabel(domainOf(a))],
      ['Subcategory',a.group],['Deployment model',a.deploymentType||'Desktop application'],
-     ['Competing companies',[...new Set(competitorTargets(a).map(x=>x.company).filter(Boolean))].join(', ')||'Not verified'],
+     ['Competing companies',[...new Set(competitorTargets(a).map(x=>x.company).filter(Boolean))].join(', ')],
      ['Competing products',competitorTargets(a).map(x=>x.product).join(', ')],
      ['Development stage',stageOf(a).label],
      ['Platforms (reported)',(a.reportedPlatforms||[]).join(', ')||'Not verified'],
@@ -829,12 +1022,12 @@ function renderDetailsTab(a){
      ['Latest upstream signal',a.sourceSignal?.signalTag?(a.sourceSignal.signalTag+(a.sourceSignal.verificationPending?' · package verification pending':a.sourceSignal.unverified?' · tag only':' · informational')):'Not available'],
      ['Installation',a.researchPendingVerification?'Research only — no installation approved':a.installable?'Verified package available after confirmation':a.deploymentType?'Manual '+a.deploymentType+'; no one-click installer approved':'No approved installer']
    ];
-      $('detailBody').innerHTML=items.map(x=>detailField(...x)).join('')+similarMarkup(a);
+      $('detailBody').innerHTML=items.filter(([label,value])=>label!=='Competing companies'||!!value).map(x=>detailField(...x)).join('')+similarMarkup(a);
    return;
  }
  const items=[
   ['Creator',a.creator||'Storytold'],['Domain',domainLabel(domainOf(a))],
-  ['Competing companies',[...new Set(competitorTargets(a).map(x=>x.company).filter(Boolean))].join(', ')||'Vendor to verify'],
+  ['Competing companies',[...new Set(competitorTargets(a).map(x=>x.company).filter(Boolean))].join(', ')],
   ['Competing products',competitorTargets(a).map(x=>x.product).join(', ')],
   ['Availability',a.discovery?'Discovery / tracking only':'Managed app'],
   [t('appVersion'),a.installedVersion],
@@ -852,7 +1045,7 @@ function renderDetailsTab(a){
   [t('issues'),Number.isFinite(a.issues)?a.issues.toLocaleString():null],
   [t('installPath'),a.installedPath]
  ];
- $('detailBody').innerHTML=items.map(x=>detailField(...x)).join('')+similarMarkup(a);
+ $('detailBody').innerHTML=items.filter(([label,value])=>label!=='Competing companies'||!!value).map(x=>detailField(...x)).join('')+similarMarkup(a);
 }
 async function renderReleasesTab(a){
  const content=$('detailBody'),key=a.repo;
@@ -1104,6 +1297,9 @@ function wireEvents(){
    const card=e.target.closest('.app-card');
    if(card)selectApp(card.dataset.repo);
  });
+ $('heroContextAction').addEventListener('click',activateHeroFeature);
+ $('dailyPickOpen').addEventListener('click',()=>openDiscoveryProject($('dailyPickOpen').dataset.repo));
+ $('dailyPickWhy').addEventListener('click',()=>{const info=$('dailyPickReason');info.hidden=!info.hidden;$('dailyPickWhy').setAttribute('aria-expanded',String(!info.hidden));});
  $('cards').addEventListener('keydown',e=>{
    const card=e.target.closest('.app-card');
    if(!card||e.target!==card)return;
