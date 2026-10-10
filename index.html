@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" dir="ltr" data-theme="dark" data-app-version="2.6.0">
+<html lang="en" dir="ltr" data-theme="dark" data-app-version="2.7.0">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light dark">
@@ -63,7 +63,7 @@
         <div class="connection-scan" id="lastScanText">Checking releases…</div>
         <button class="sidebar-scan" id="sidebarScan"><svg><use href="#i-sync"/></svg><span data-t="checkUpdates">Check for updates</span></button>
       </div>
-      <div class="sidebar-version"><span>CHALLENGER HUB · MULTI-DOMAIN</span><span>v2.6.0</span></div>
+      <div class="sidebar-version"><span>CHALLENGER HUB · MULTI-DOMAIN</span><span>v2.7.0</span></div>
     </div>
   </aside>
   <div class="sidebar-scrim" id="sidebarScrim"></div>
@@ -83,6 +83,20 @@
       </div>
     </header>
     <main class="content">
+      <section class="workspace-rail" aria-label="Catalog workspace layout">
+        <div class="workspace-rail-copy">
+          <span class="workspace-rail-emblem" aria-hidden="true">◈</span>
+          <div><span class="workspace-rail-kicker">YOUR SOFTWARE WORKSPACE</span><strong id="workspaceRailCount">Preparing local catalog…</strong></div>
+        </div>
+        <div class="workspace-mode-switch" role="group" aria-label="Workspace layout">
+          <button type="button" data-workspace-mode="explore" aria-pressed="true" title="Show discovery banners and comparisons">Explore</button>
+          <button type="button" data-workspace-mode="focus" aria-pressed="false" title="Focus on catalog, filters and results">Catalog focus</button>
+        </div>
+      </section>
+      <section class="focus-overview" id="focusOverview" aria-label="Focused catalog summary" hidden>
+        <div class="focus-overview-copy"><span>CATALOG FOCUS · LIVE LOCAL RESULTS</span><h1 id="focusOverviewTitle">Your software, without the noise.</h1><p id="focusOverviewDetail">Explore the same verified sources and research entries, with fewer distractions.</p></div>
+        <div class="focus-overview-actions"><span id="focusOverviewCount">Loading results…</span><button type="button" id="focusDailyOpen" disabled>Today's discovery <span aria-hidden="true">↗</span></button></div>
+      </section>
       <div class="discovery-stage" id="discoveryStage">
       <section class="hero context-hero" id="contextHero" data-context="home"><canvas id="heroShaderCanvas" class="hero-shader-canvas" aria-hidden="true"></canvas>
         <div class="hero-decoration" aria-hidden="true"><div class="hero-sun"></div><div class="mountain mountain-far"></div><div class="mountain mountain-mid"></div><div class="mountain mountain-front"></div><div class="hero-lines"></div></div>
@@ -126,7 +140,7 @@
         <div class="heading-start"><p class="eyebrow" id="eyebrow" data-t="libraryEyebrow">CHALLENGER CATALOG</p><h2 id="pageTitle" data-t="pageTitle">Applications</h2><p class="heading-subtitle" id="pageSubtitle" data-t="pageSubtitle">Emerging alternatives, mapped by creator, category and the software they challenge.</p></div>
 
       </div>
-      <section class="domain-section" aria-label="Product categories"><div class="domain-section-heading"><strong>Explore by category</strong><small id="domainTotal">Organizing independent alternatives…</small></div><div class="domain-filters" id="domainFilters" role="group" aria-label="Product categories"></div></section>
+      <section class="domain-section" id="domainSection" aria-label="Product categories"><div class="domain-section-heading"><div class="domain-section-heading-copy"><strong>Explore by category</strong><small id="domainTotal">Organizing independent alternatives…</small></div><button id="domainExpandButton" type="button" class="domain-expand-button" aria-controls="domainFilters" aria-expanded="false">All disciplines ↓</button></div><div class="domain-filters" id="domainFilters" role="group" aria-label="Product categories"></div></section>
       <div class="tabbar"><div class="filter-tools-heading"><div><span class="filter-kicker">PERSONALIZE YOUR DISCOVERY</span><strong>Refine the catalog</strong></div><button type="button" id="clearAllFilters" class="clear-all-filters" title="Reset all filters">Reset filters ↺</button></div>
         <div id="filterChips" class="filter-chips" role="group" aria-label="Filter applications">
           <button class="filter-chip active" data-filter="all" aria-pressed="true" data-t="filterAll">All apps</button>
@@ -135,7 +149,8 @@
           <button class="filter-chip" data-filter="new" aria-pressed="false"><span data-t="filterNew">Discoveries</span><span class="chip-count" id="filterCountNew">0</span></button>
           <button class="filter-chip" data-filter="missing" aria-pressed="false" data-t="filterMissing">Not installed</button>
         </div>
-        <div class="catalog-filters"><div class="category-wrap"><label class="sr-only" for="maturitySelect">Maturity</label><select id="maturitySelect" aria-label="Filter by maturity"><option value="all">Any maturity</option><option value="stable">Stable</option><option value="beta">Beta / RC</option><option value="alpha">Alpha</option><option value="prealpha">Early / experimental</option><option value="dormant">Dormant</option><option value="unknown">Unverified</option></select></div><div class="category-wrap"><label class="sr-only" for="availabilitySelect">Availability</label><select id="availabilitySelect" aria-label="Filter by availability"><option value="all">Any availability</option><option value="install">Install available</option><option value="portable">Portable available</option><option value="deploy">Manual setup / deployment</option><option value="source">Source / unverified</option></select></div><div class="category-wrap"><label class="sr-only" for="platformSelect">Platform</label><select id="platformSelect" aria-label="Filter by platform"><option value="all">Any platform</option><option value="windows">Windows desktop</option><option value="mac">macOS desktop</option><option value="linux">Linux desktop</option><option value="hosted">Self-hosted / web</option></select></div><div class="category-wrap"><label for="categorySelect" class="sr-only" data-t="category">Category</label><select id="categorySelect" aria-label="App category"><option value="all" data-t="allCategories">All categories</option></select><svg><use href="#i-chevron"/></svg></div><div class="category-wrap"><label for="creatorSelect" class="sr-only">Creator</label><select id="creatorSelect" aria-label="Filter by creator"><option value="all">All creators</option></select><svg><use href="#i-chevron"/></svg></div></div>
+        <button type="button" class="facet-toggle" id="facetToggle" aria-controls="catalogFilters" aria-expanded="false">Advanced filters ↓</button>
+        <div class="catalog-filters" id="catalogFilters" hidden><div class="category-wrap"><label class="sr-only" for="maturitySelect">Maturity</label><select id="maturitySelect" aria-label="Filter by maturity"><option value="all">Any maturity</option><option value="stable">Stable</option><option value="beta">Beta / RC</option><option value="alpha">Alpha</option><option value="prealpha">Early / experimental</option><option value="dormant">Dormant</option><option value="unknown">Unverified</option></select></div><div class="category-wrap"><label class="sr-only" for="availabilitySelect">Availability</label><select id="availabilitySelect" aria-label="Filter by availability"><option value="all">Any availability</option><option value="install">Install available</option><option value="portable">Portable available</option><option value="deploy">Manual setup / deployment</option><option value="source">Source / unverified</option></select></div><div class="category-wrap"><label class="sr-only" for="platformSelect">Platform</label><select id="platformSelect" aria-label="Filter by platform"><option value="all">Any platform</option><option value="windows">Windows desktop</option><option value="mac">macOS desktop</option><option value="linux">Linux desktop</option><option value="hosted">Self-hosted / web</option></select></div><div class="category-wrap"><label for="categorySelect" class="sr-only" data-t="category">Category</label><select id="categorySelect" aria-label="App category"><option value="all" data-t="allCategories">All categories</option></select><svg><use href="#i-chevron"/></svg></div><div class="category-wrap"><label for="creatorSelect" class="sr-only">Creator</label><select id="creatorSelect" aria-label="Filter by creator"><option value="all">All creators</option></select><svg><use href="#i-chevron"/></svg></div></div>
       </div>
       <div id="globalSearchContext" class="global-search-context" hidden role="status"><span class="global-search-symbol" aria-hidden="true">⌕</span><div class="global-search-copy"><strong>Global search · <span id="globalSearchMatchCount">0</span> matches</strong><small>Searching all categories. Other filters are temporarily bypassed; clearing search restores them.</small></div><button type="button" id="clearGlobalSearch" class="global-search-reset">Clear search <span aria-hidden="true">×</span></button></div>
       <div class="catalog-with-detail" id="catalogWithDetail">

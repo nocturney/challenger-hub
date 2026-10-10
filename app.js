@@ -84,7 +84,10 @@ const ui={language:'en',creator:'all',
  sort:['activity','name','release','status'].includes(pref('sort','activity'))?pref('sort','activity'):'activity',
  view:['grid','list'].includes(pref('view','list'))?pref('view','list'):'list',
  filter:'all',category:'all',selectedRepo:null,detailTab:'changes',search:'',mobileNav:false,notesExpanded:false,
- showExperimental:pref('showExperimental','true')!=='false',domain:'all',maturity:'all',availability:'all',platform:'all'};
+ showExperimental:pref('showExperimental','true')!=='false',domain:'all',maturity:'all',availability:'all',platform:'all',
+ workspaceMode:pref('workspaceMode','explore')==='focus'?'focus':'explore',
+ domainsExpanded:pref('domainsExpanded','false')==='true',
+ facetsExpanded:pref('facetsExpanded','false')==='true'};
 if(pref('layoutMigration','')!=='2.5'){ui.view='list';savePref('view','list');savePref('layoutMigration','2.5')}
 const t=k=>I18N.en[k]??k;
 let state={apps:[],queue:[],history:[],scanning:false,scanError:'',checkedAt:null,active:null,platform:'',computer:'',admin:false};
@@ -157,6 +160,57 @@ function renderDomains(){
  }).join('');
  if(bar.innerHTML!==markup)bar.innerHTML=markup;
  $('domainTotal').textContent=state.apps.length+' projects across '+(DOMAIN_GROUPS.length-1)+' disciplines';
+ updateWorkspaceControls();
+}
+/* 2.7: user-controlled workspace density, built on the existing live catalog. */
+function updateWorkspaceControls(){
+ const expanded=!!ui.domainsExpanded,facets=!!ui.facetsExpanded;
+ $('domainSection').classList.toggle('domains-expanded',expanded);
+ $('domainExpandButton').setAttribute('aria-expanded',String(expanded));
+ const count=$('domainFilters').querySelectorAll('.domain-pill').length-1;
+ $('domainExpandButton').textContent=expanded?'Show fewer categories ↑':'Show all '+Math.max(0,count)+' categories ↓';
+ $('catalogFilters').hidden=!facets;
+ $('facetToggle').setAttribute('aria-expanded',String(facets));
+ const active=['maturity','availability','platform','category','creator'].filter(k=>ui[k]!=='all').length;
+ $('facetToggle').textContent=facets?'Hide advanced filters ↑':'Advanced filters'+(active?' · '+active+' active':'')+' ↓';
+ for(const button of document.querySelectorAll('[data-workspace-mode]')){
+  const selected=button.dataset.workspaceMode===ui.workspaceMode;
+  button.classList.toggle('active',selected);button.setAttribute('aria-pressed',String(selected));
+ }
+ document.documentElement.dataset.workspaceMode=ui.workspaceMode;
+ $('focusOverview').hidden=ui.workspaceMode!=='focus';
+}
+function setWorkspaceMode(mode){
+ if(mode!=='explore'&&mode!=='focus')return;
+ ui.workspaceMode=mode;savePref('workspaceMode',mode);
+ updateWorkspaceControls();
+}
+function setDomainsExpanded(expanded){
+ ui.domainsExpanded=!!expanded;savePref('domainsExpanded',String(ui.domainsExpanded));
+ updateWorkspaceControls();
+}
+function setFacetsExpanded(expanded){
+ ui.facetsExpanded=!!expanded;savePref('facetsExpanded',String(ui.facetsExpanded));
+ updateWorkspaceControls();
+}
+function renderWorkspaceOverview(list){
+ $('workspaceRailCount').textContent=state.apps.length+' catalogued tools · '+state.apps.filter(a=>!!a.installedVersion).length+' installed';
+ const context=$('contextHero').dataset.context;
+ $('focusOverviewTitle').textContent=context==='home'?'All your tools. One focused view.':
+  [$('heroContextLine1').textContent,$('heroContextLine2').textContent].join(' ');
+ $('focusOverviewDetail').textContent=context==='home'?
+  'Explore '+state.apps.length+' catalogued tools, including '+state.apps.filter(a=>!!a.installedVersion).length+' installed applications. Discovery entries are not automatically approved for installation.':
+  $('heroContextSubtitle').textContent;
+ $('focusOverviewCount').textContent=list.length+' matching project'+(list.length===1?'':'s');
+ $('focusDailyOpen').disabled=$('dailyPickOpen').disabled;
+ updateWorkspaceControls();
+}
+function initializeWorkspaceNavigation(){
+ updateWorkspaceControls();
+ for(const button of document.querySelectorAll('[data-workspace-mode]'))button.addEventListener('click',()=>setWorkspaceMode(button.dataset.workspaceMode));
+ $('domainExpandButton').addEventListener('click',()=>setDomainsExpanded(!ui.domainsExpanded));
+ $('facetToggle').addEventListener('click',()=>setFacetsExpanded(!ui.facetsExpanded));
+ $('focusDailyOpen').addEventListener('click',()=>{if(!$('dailyPickOpen').disabled)$('dailyPickOpen').click()});
 }
 function stageOf(app){
  const text=String(app.reportedMaturity||'').toLowerCase();
@@ -742,6 +796,7 @@ function renderCards(force=false){
  $('resultSummary').textContent=t('showing')(list.length);
  window.ChallengerUX?.present(list.length);
  renderDiscoveryStage(list);
+ renderWorkspaceOverview(list);
  renderBulkUpdateBar();
  $('cards').setAttribute('aria-busy','false');
  if(force||html!==cardSnapshot){cardSnapshot=html;$('cards').innerHTML=html;}
@@ -1359,7 +1414,7 @@ function wireEvents(){
 function start(){
  $('sortSelect').value=ui.sort;
  document.documentElement.lang='en';document.documentElement.dir='ltr';
- wireEvents();resetInspector();window.ChallengerUX?.initialize();applyLanguage();setView(ui.view);poll();
+ wireEvents();initializeWorkspaceNavigation();resetInspector();window.ChallengerUX?.initialize();applyLanguage();setView(ui.view);poll();
  setInterval(poll,6500);
 }
 document.addEventListener('DOMContentLoaded',start);
