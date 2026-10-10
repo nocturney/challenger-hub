@@ -435,9 +435,8 @@ function renderCards(force=false){
    return;
  }
  const list=filteredApps();
- const chosen=list.some(a=>a.repo===ui.selectedRepo)?ui.selectedRepo:(list[0]?.repo||null);
- const changed=chosen!==ui.selectedRepo;
- if(changed){ui.selectedRepo=chosen;ui.notesExpanded=false;detailSnapshot='';}
+ // Inspector selection is explicit, never the first search/filter result.
+ if(ui.selectedRepo&&!list.some(a=>a.repo===ui.selectedRepo))resetInspector();
  document.body.classList.toggle('detail-empty',!list.length);
  const isUpdates=ui.filter==='updates',isNew=ui.filter==='new';
  const title=isUpdates?t('allCurrent'):isNew?t('newEmpty'):t('filterEmpty');
@@ -450,7 +449,6 @@ function renderCards(force=false){
  window.ChallengerUX?.present(list.length);
  $('cards').setAttribute('aria-busy','false');
  if(force||html!==cardSnapshot){cardSnapshot=html;$('cards').innerHTML=html;}
- if(changed&&chosen)renderDetail(true,true);
  $('cards').classList.toggle('list-view',ui.view==='list');
  document.body.classList.toggle('view-list',ui.view==='list');
  document.body.classList.toggle('view-grid',ui.view==='grid');
@@ -489,6 +487,7 @@ function setFilter(filter){
  // Status quick scopes are catalog-wide navigation, so previous refinements
  // must not silently hide Installed, Updates, Discoveries or Not installed.
  window.ChallengerUX?.leaveSearch();
+ resetInspector();
  ui.filter=filter;
  ui.domain='all';ui.category='all';ui.creator='all';
  ui.maturity='all';ui.availability='all';ui.platform='all';
@@ -509,21 +508,42 @@ function setView(value){
 }
 function setSort(value){
  if(!['name','release','activity','status'].includes(value))return;
- ui.sort=value;savePref('sort',value);cardSnapshot='';renderCards(true);
+ resetInspector();ui.sort=value;savePref('sort',value);cardSnapshot='';renderCards(true);
+}
+function resetInspector(){
+ ui.selectedRepo=null;ui.notesExpanded=false;detailSnapshot='';
+ document.body.classList.remove('detail-open','detail-collapsed');
+ const panel=$('detailPanel');
+ panel.removeAttribute('aria-modal');
+ panel.setAttribute('aria-hidden','true');
+ panel.setAttribute('role','region');
+ panel.setAttribute('aria-label','Application details (closed)');
 }
 function selectApp(repo,openOnMobile=true){
- if(!state.apps.some(a=>a.repo===repo))return;
- document.body.classList.remove('detail-collapsed');
+ const app=state.apps.find(a=>a.repo===repo);
+ if(!app)return;
  ui.selectedRepo=repo;ui.detailTab='changes';ui.notesExpanded=false;detailSnapshot='';
+ const panel=$('detailPanel');
+ document.body.classList.remove('detail-collapsed');
+ document.body.classList.add('detail-open');
+ panel.setAttribute('aria-hidden','false');
+ panel.setAttribute('aria-label','Details for '+app.title);
+ const overlay=(window.innerWidth<=1250||ui.view==='list')&&openOnMobile;
+ panel.setAttribute('role',overlay?'dialog':'region');
+ if(overlay)panel.setAttribute('aria-modal','true');else panel.removeAttribute('aria-modal');
  renderCards(true);renderDetail(true,true);
- if(openOnMobile&&(window.innerWidth<=1250||ui.view==='list')){
-   document.body.classList.add('detail-open');
-   $('detailPanel').setAttribute('aria-modal','true');
- }else $('detailPanel').removeAttribute('aria-modal');
+ $('closeDetail').focus({preventScroll:true});
 }
-function closeDetail(){
- document.body.classList.remove('detail-open');$('detailPanel').removeAttribute('aria-modal');
- if(window.innerWidth>1250)document.body.classList.add('detail-collapsed');
+function closeDetail(restoreFocus=true){
+ const repo=ui.selectedRepo;
+ const wasOpen=document.body.classList.contains('detail-open')||!!repo;
+ resetInspector();
+ if(!wasOpen)return;
+ if(initialDataLoaded){cardSnapshot='';renderCards(true);}
+ if(restoreFocus&&repo){
+   const card=[...$('cards').querySelectorAll('.app-card')].find(node=>node.dataset.repo===repo);
+   if(card)card.focus({preventScroll:true});
+ }
 }
 function getSelected(){return state.apps.find(a=>a.repo===ui.selectedRepo)||null}
 function detailField(label,value){
@@ -858,7 +878,7 @@ async function poll(){
    const data=await api('GET','/api/state');
    data.apps=[...data.apps,...(Array.isArray(data.discoveries)?data.discoveries:[])];
    state=data;initialDataLoaded=true;
-   if(ui.selectedRepo&&!state.apps.some(a=>a.repo===ui.selectedRepo)){ui.selectedRepo=null;detailSnapshot='';}
+   if(ui.selectedRepo&&!state.apps.some(a=>a.repo===ui.selectedRepo))resetInspector();
    render();if($('activityDialog').open)renderActivity();
  }catch(e){
    $('onlineDot').classList.remove('connected');$('footerDot').classList.remove('connected');
@@ -883,13 +903,13 @@ function wireEvents(){
  $('verifyButton').addEventListener('click',doVerify);
  $('updateAllButton').addEventListener('click',doBulkUpdate);
  $('sortSelect').addEventListener('change',e=>setSort(e.target.value));
- $('gridButton').addEventListener('click',()=>{document.body.classList.remove('detail-open');setView('grid')});
- $('listButton').addEventListener('click',()=>{document.body.classList.remove('detail-open');setView('list')});
- $('categorySelect').addEventListener('change',e=>{window.ChallengerUX?.leaveSearch();ui.category=e.target.value;cardSnapshot='';renderCards(true)});
- for(const [id,field] of [['maturitySelect','maturity'],['availabilitySelect','availability'],['platformSelect','platform']])$(id).addEventListener('change',e=>{window.ChallengerUX?.leaveSearch();ui[field]=e.target.value;cardSnapshot='';renderCards(true)});
- $('domainFilters').addEventListener('click',e=>{const b=e.target.closest('[data-domain]');if(!b)return;window.ChallengerUX?.leaveSearch();ui.domain=b.dataset.domain;ui.category='all';categorySignature='';updateCategoryList();cardSnapshot='';renderDomains();renderCards(true);});
- $('creatorSelect').addEventListener('change',e=>{window.ChallengerUX?.leaveSearch();ui.creator=e.target.value;cardSnapshot='';renderCards(true)});
- $('searchInput').addEventListener('input',e=>{if(window.ChallengerUX)window.ChallengerUX.setSearch(e.target.value);else{ui.search=e.target.value;cardSnapshot='';renderCards(true)}});
+ $('gridButton').addEventListener('click',()=>{resetInspector();setView('grid')});
+ $('listButton').addEventListener('click',()=>{resetInspector();setView('list')});
+ $('categorySelect').addEventListener('change',e=>{resetInspector();window.ChallengerUX?.leaveSearch();ui.category=e.target.value;cardSnapshot='';renderCards(true)});
+ for(const [id,field] of [['maturitySelect','maturity'],['availabilitySelect','availability'],['platformSelect','platform']]) $(id).addEventListener('change',e=>{resetInspector();window.ChallengerUX?.leaveSearch();ui[field]=e.target.value;cardSnapshot='';renderCards(true)});
+ $('domainFilters').addEventListener('click',e=>{const b=e.target.closest('[data-domain]'); if(!b)return;resetInspector();window.ChallengerUX?.leaveSearch();ui.domain=b.dataset.domain;ui.category='all';categorySignature='';updateCategoryList();cardSnapshot='';renderDomains();renderCards(true);});
+ $('creatorSelect').addEventListener('change',e=>{resetInspector();window.ChallengerUX?.leaveSearch();ui.creator=e.target.value;cardSnapshot='';renderCards(true)});
+ $('searchInput').addEventListener('input',e=>{resetInspector();if(window.ChallengerUX)window.ChallengerUX.setSearch(e.target.value);else{ui.search=e.target.value;cardSnapshot='';renderCards(true)}});
  for(const btn of document.querySelectorAll('[data-theme-choice]'))btn.addEventListener('click',()=>setTheme(btn.dataset.themeChoice));
  osTheme.addEventListener('change',()=>{if(ui.theme==='system')applyTheme()});
  $('settingsButton').addEventListener('click',()=>{
@@ -1000,7 +1020,7 @@ function wireEvents(){
 function start(){
  $('sortSelect').value=ui.sort;
  document.documentElement.lang='en';document.documentElement.dir='ltr';
- wireEvents();window.ChallengerUX?.initialize();applyLanguage();setView(ui.view);poll();
+ wireEvents();resetInspector();window.ChallengerUX?.initialize();applyLanguage();setView(ui.view);poll();
  setInterval(poll,6500);
 }
 document.addEventListener('DOMContentLoaded',start);

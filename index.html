@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" dir="ltr" data-theme="dark" data-app-version="2.5.4">
+<html lang="en" dir="ltr" data-theme="dark" data-app-version="2.5.5">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light dark">
@@ -62,7 +62,7 @@
         <div class="connection-scan" id="lastScanText">Checking releases…</div>
         <button class="sidebar-scan" id="sidebarScan"><svg><use href="#i-sync"/></svg><span data-t="checkUpdates">Check for updates</span></button>
       </div>
-      <div class="sidebar-version"><span>CHALLENGER HUB · MULTI-DOMAIN</span><span>v2.5.4</span></div>
+      <div class="sidebar-version"><span>CHALLENGER HUB · MULTI-DOMAIN</span><span>v2.5.5</span></div>
     </div>
   </aside>
   <div class="sidebar-scrim" id="sidebarScrim"></div>
@@ -139,8 +139,8 @@
           <div class="catalog-footer"><svg><use href="#i-shield"/></svg><span data-t="verifiedSource">Install and update only with reviewed, source-verified adapters.</span></div>
         </div>
         <div class="panel-scrim" id="detailScrim"></div>
-        <aside class="detail-panel" id="detailPanel" aria-label="Selected application inspector" role="region">
-          <div class="detail-top"><span>APPLICATION INSPECTOR</span><button type="button" id="openWhatsNew" class="detail-whats-new">What’s new ↗</button><button id="closeDetail" class="icon-only" aria-label="Close details" title="Close details"><svg><use href="#i-x"/></svg></button></div>
+        <aside class="detail-panel" id="detailPanel" aria-label="Application details (closed)" role="region" aria-hidden="true">
+          <div class="detail-top"><span>APPLICATION INSPECTOR</span><button type="button" id="openWhatsNew" class="detail-whats-new">What’s new ↗</button><button id="closeDetail" class="icon-only" aria-label="Close application details" title="Close application details"><svg><use href="#i-x"/></svg></button></div>
           <div class="detail-app-id"><div id="detailIcon" class="detail-app-icon"></div><span class="detail-status" id="detailStatus">—</span><h2 id="detailName">Select an application</h2><p id="detailDescription"></p><div class="detail-maturity" id="detailMaturity"></div></div>
           <div class="detail-action-row"><button class="detail-primary" id="detailAction" disabled><svg><use href="#i-play"/></svg><span id="detailActionText">Open</span></button><button class="detail-extras icon-only" id="detailGithub" aria-label="Open repository" title="Open repository"><svg><use href="#i-external"/></svg></button></div><div class="portable-action-row" id="detailPortableRow" hidden><button type="button" id="detailPortable" class="portable-button" title="Download a verified portable release; does not install anything"><svg><use href="#i-down"/></svg><span>Download portable</span></button><small id="detailPortableNote">SHA-256 checked · Manual extraction</small></div>
           <div class="detail-tabs" role="tablist" aria-label="App details tabs">
@@ -161,7 +161,7 @@
 <div class="prefs-line prefs-option"><div><strong>Check frequency</strong><small>Applies equally to all listed projects</small></div><select id="prefsInterval" aria-label="Release check frequency"><option value="6">Every 6 hours</option><option value="12" selected>Every 12 hours</option><option value="24">Daily</option></select></div>
 <div class="prefs-line prefs-option"><div><strong>Show early-stage projects</strong><small>Include alpha, pre-alpha and experimental alternatives</small></div><label class="preference-switch"><input type="checkbox" id="prefsEarly" checked aria-label="Include early-stage projects"><span aria-hidden="true"></span></label></div>
 <p class="prefs-source-state" id="prefsSourceState">Project feeds use official release sources and SHA-256 for supported installers.</p></div></dialog>
-<dialog id="aboutDialog" class="modal-dialog" aria-labelledby="aboutTitle"><div class="modal-pad about-content"><button class="modal-close icon-only" data-dialog-close="aboutDialog" aria-label="Close"><svg><use href="#i-x"/></svg></button><img class="about-logo" src="/brand-icon.png" width="82" height="82" alt=""><h2 id="aboutTitle">Challenger Hub</h2><p data-t="aboutDescription">An independent discovery hub for emerging software projects challenging established professional applications. Not affiliated with the featured creators.</p><span class="about-version">Version 2.5.4 (UI update) · Independent alternatives</span></div></dialog>
+<dialog id="aboutDialog" class="modal-dialog" aria-labelledby="aboutTitle"><div class="modal-pad about-content"><button class="modal-close icon-only" data-dialog-close="aboutDialog" aria-label="Close"><svg><use href="#i-x"/></svg></button><img class="about-logo" src="/brand-icon.png" width="82" height="82" alt=""><h2 id="aboutTitle">Challenger Hub</h2><p data-t="aboutDescription">An independent discovery hub for emerging software projects challenging established professional applications. Not affiliated with the featured creators.</p><span class="about-version">Version 2.5.5 (UI update) · Independent alternatives</span></div></dialog>
 <dialog id="activityDialog" class="modal-dialog activity-dialog" aria-labelledby="activityTitle"><div class="modal-pad"><button class="modal-close icon-only" data-dialog-close="activityDialog" aria-label="Close"><svg><use href="#i-x"/></svg></button><div class="modal-badge"><svg><use href="#i-clock"/></svg></div><h2 id="activityTitle" data-t="activityLog">Activity log</h2><div id="activityContent" class="activity-content"></div></div></dialog>
 <dialog id="whatsNewDialog" class="modal-dialog whats-new-dialog" aria-labelledby="whatsNewTitle"><div class="modal-pad"><button class="modal-close icon-only" data-dialog-close="whatsNewDialog" aria-label="Close release notes"><svg><use href="#i-x"/></svg></button><div class="modal-badge"><svg><use href="#i-info"/></svg></div><h2 id="whatsNewTitle">What’s new</h2><p class="modal-help" id="whatsNewSubtitle"></p><div id="whatsNewBody" class="notes-content" role="document"></div></div></dialog>
 <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
