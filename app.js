@@ -251,7 +251,7 @@ function getCounters(){
  return {all:state.apps.length,installed:state.apps.filter(a=>!!a.installedVersion).length,
  updates:state.apps.filter(a=>!!a.needsUpdate).length,
  new:state.apps.filter(a=>!!a.isNew).length,
- missing:state.apps.filter(a=>!a.installedVersion&&!a.discovery).length};
+ missing:state.apps.filter(a=>!a.installedVersion).length};
 }
 function renderQueue(){
  const active=state.active,queued=state.queue?.length||0;
@@ -301,7 +301,7 @@ function filteredApps(){
    if(ui.filter==='installed'&&!a.installedVersion)return false;
    if(ui.filter==='updates'&&!a.needsUpdate)return false;
    if(ui.filter==='new'&&!a.isNew)return false;
-   if(ui.filter==='missing'&&(a.installedVersion||a.discovery))return false;
+   if(ui.filter==='missing'&&a.installedVersion)return false;
    if(ui.category!=='all'&&a.group!==ui.category)return false;
    if(ui.maturity!=='all'&&stageOf(a).key!==ui.maturity)return false;
    if(ui.availability!=='all'&&capabilityOf(a)!==ui.availability)return false;
@@ -453,6 +453,7 @@ function renderCards(force=false){
  if(changed&&chosen)renderDetail(true,true);
  $('cards').classList.toggle('list-view',ui.view==='list');
  document.body.classList.toggle('view-list',ui.view==='list');
+ document.body.classList.toggle('view-grid',ui.view==='grid');
  $('catalogTableHead').hidden=ui.view!=='list'||!list.length;
  $('gridButton').classList.toggle('active',ui.view==='grid');$('listButton').classList.toggle('active',ui.view==='list');
  $('gridButton').setAttribute('aria-pressed',String(ui.view==='grid'));
@@ -485,8 +486,18 @@ function render(force=false){
 }
 function setFilter(filter){
  if(!['all','installed','updates','missing','new'].includes(filter))return;
+ // Status quick scopes are catalog-wide navigation, so previous refinements
+ // must not silently hide Installed, Updates, Discoveries or Not installed.
  window.ChallengerUX?.leaveSearch();
  ui.filter=filter;
+ ui.domain='all';ui.category='all';ui.creator='all';
+ ui.maturity='all';ui.availability='all';ui.platform='all';
+ categorySignature='';updateCategoryList();
+ for(const id of ['categorySelect','creatorSelect','maturitySelect','availabilitySelect','platformSelect']){
+   const control=$(id);if(control)control.value='all';
+ }
+ window.ChallengerUX?.syncFacets();
+ renderDomains();
  ui.mobileNav=false;document.body.classList.remove('mobile-nav-open');
  const pageTitles={all:'pageTitle',updates:'navUpdates',installed:'navInstalled',new:'navNew',missing:'filterMissing'};
  $('pageTitle').textContent=t(pageTitles[filter]||'pageTitle');
@@ -864,6 +875,10 @@ function wireEvents(){
    });
  }
  for(const button of document.querySelectorAll('[data-nav]'))button.addEventListener('click',()=>setFilter(button.dataset.nav));
+ $('filterChips').addEventListener('click',event=>{
+   const chip=event.target.closest('button[data-filter]');
+   if(chip&&event.currentTarget.contains(chip))setFilter(chip.dataset.filter);
+ });
  $('sidebarScan').addEventListener('click',doScan);
  $('verifyButton').addEventListener('click',doVerify);
  $('updateAllButton').addEventListener('click',doBulkUpdate);
