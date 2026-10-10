@@ -41,12 +41,12 @@ function makeMock(){
  return {fetcher,calls,verified,setVersion:v=>version=v,setGitHubDown:v=>gitHubDown=v};
 }
 function tmp(){return fs.mkdtempSync(path.join(os.tmpdir(),'challenger-fair-'));}
-test('all 91 products receive one uniform source queue slot',()=>{
+test('all 164 products receive one equal-priority source queue slot',()=>{
  const tasks=allTasks(rows);
- assert.equal(rows.length,91);
- assert.equal(tasks.length,92);
+ assert.equal(rows.length,164);
+ assert.equal(tasks.length,165);
  assert.equal(tasks.filter(x=>x.kind==='craft').length,12);
- assert.equal(tasks.filter(x=>x.kind==='independent').length,79);
+ assert.equal(tasks.filter(x=>x.kind==='independent').length,152);
  assert.equal(tasks.filter(x=>x.kind==='directory').length,1);
  assert.equal(new Set(tasks.map(x=>x.id)).size,tasks.length);
  for(const t of tasks.filter(x=>x.kind!=='directory'))assert.ok(sourcesFor(t).length);
@@ -75,10 +75,10 @@ test('round-robin scans all projects once before any repeats; changed versions g
    onChange:async event=>{mock.verified.push(event);return false}
   });
   const first=[];
-  for(let i=0;i<92;i++){const x=await scanner.tick();assert.equal(x.skipped,undefined);first.push(x.id)}
-  assert.equal(new Set(first).size,92);
+  for(let i=0;i<165;i++){const x=await scanner.tick();assert.equal(x.skipped,undefined);first.push(x.id)}
+  assert.equal(new Set(first).size,165);
   assert.equal(mock.verified.length,0,'Do not hit GitHub API to verify an unchanged baseline');
-  assert.equal(scanner.status().checked,91);
+  assert.equal(scanner.status().checked,164);
   assert.equal(scanner.status().due,0);
   assert.equal((await scanner.tick()).skipped,true);
   assert.equal(scanner.publicSignal('glaxnimate').signalType,'release');
@@ -88,15 +88,15 @@ test('round-robin scans all projects once before any repeats; changed versions g
   clock+=13*3600*1000;
   mock.setVersion('v1.1.0');
   const second=[];
-  for(let i=0;i<92;i++){const x=await scanner.tick();assert.equal(x.skipped,undefined);second.push(x.id)}
-  assert.equal(new Set(second).size,92);
+  for(let i=0;i<165;i++){const x=await scanner.tick();assert.equal(x.skipped,undefined);second.push(x.id)}
+  assert.equal(new Set(second).size,165);
   assert.equal(scanner.status().due,0);
   assert.ok(mock.verified.some(x=>x.id==='photocraft'&&x.tag==='v1.1.0'));
   assert.ok(scanner.publicSignal('photocraft').verificationPending);
   assert.equal(scanner.publicSignal('zrythm').signalTag,'v1.9.0');
   assert.equal(mock.calls.some(x=>x.url.includes('api.github.com')),false);
   const replay=scanner.requestAll();
-  assert.equal(replay.queued,92);
+  assert.equal(replay.queued,165);
   assert.equal(scanner.requestAll().cooldown,true);
  }finally{fs.rmSync(root,{recursive:true,force:true})}
 });

@@ -92,6 +92,7 @@ const notesCache=new Map(),historyCache=new Map();
 const osTheme=window.matchMedia('(prefers-color-scheme: dark)');
 let workingPoll=false,cardSnapshot='',detailSnapshot='',toastTimer=null,confirmResolve=null;
 let initialDataLoaded=false,categorySignature='',lastFocusedCard=null;
+let activeNoticeKey='';
 const htmlDate=iso=>{const ms=Date.parse(iso||'');return Number.isFinite(ms)?ms:0};
 function localDate(iso,full=false){
  if(!htmlDate(iso))return '—';
@@ -108,11 +109,15 @@ const DOMAIN_GROUPS=[
  ['all','Everything','Every challenger','#6faeff'],
  ['Design & Imaging','Design & Imaging','Images, typography and UI','#ae8bff'],
  ['Video & Animation','Video & Motion','Editing, compositing, animation','#ff9c94'],
+ ['Live Production','Live Production','Broadcast, show control and lighting','#f1a876'],
  ['3D & Manufacturing','3D & CAD','Modeling, engineering and makers','#65d4c6'],
+ ['Science & GIS','Science & GIS','Mapping, scientific research and analysis','#96b9f2'],
  ['Audio & Music','Audio & Music','Production, instruments and sound','#ebb56b'],
+ ['Game Creation','Game Creation','Engines and interactive experiences','#7ac9b4'],
  ['Office & Productivity','Office & Productivity','Documents, PDF and spreadsheets','#94c2ff'],
  ['CRM & Sales','CRM & Sales','Customers and sales pipelines','#88e3b3'],
  ['ERP & Operations','ERP & Operations','Manufacturing, inventory and ops','#edb26e'],
+ ['Business & Legal','Business & Legal','Business workflows and legal documents','#d5a9ee'],
  ['Data & Internal Tools','Data & Apps','Databases, low-code, dashboards','#88c6fc'],
  ['Marketing & Publishing','Marketing','Social scheduling and content','#e6a9ff'],
  ['AI & Agents','AI & Agents','Memory, RAG and agent runtimes','#c59cfd'],
@@ -182,6 +187,7 @@ function platformFits(a,p){
  return false;
 }
 function statusOf(app){
+ if(app.researchPendingVerification)return {kind:'new',label:'Research only · unverified'};
  if(app.needsUpdate)return {kind:'update',label:'Update available'};
  if(app.installedVersion)return {kind:'ok',label:app.current?'Up to date':'Installed'};
  if(app.installable)return {kind:'ready',label:'Install available'};
@@ -253,18 +259,88 @@ function getCounters(){
  new:state.apps.filter(a=>!!a.isNew).length,
  missing:state.apps.filter(a=>!a.installedVersion).length};
 }
+function queueLabel(repo){
+ return state.apps.find(a=>a.repo===repo)?.title||repo||'Unknown application';
+}
+function latestQueueOutcomes(){
+ const result=new Map();
+ for(const row of state.history||[])if(row&&row.repo&&(row.kind==='success'||row.kind==='error'))result.set(row.repo,row);
+ return result;
+}
+function queueErrors(){
+ // An older failed attempt is not a current failure if this product succeeded afterwards.
+ return [...latestQueueOutcomes().values()].filter(e=>e.kind==="error"&&/install|download|forbidden|403|failed|error/i.test(e.message||"")).sort((a,b)=>htmlDate(a.time)-htmlDate(b.time));
+}
+function queueErrorKey(e){return e?[e.repo,e.time,e.message].join("|"):""}
+function queueStage(active){
+ if(!active)return "Idle";
+ const message=String(active.state||active.messages?.at(-1)||'').toLowerCase();
+ if(/download/.test(message))return 'Downloading';
+ if(/verif|checksum|sha256|signature/.test(message))return 'Verifying';
+ if(/install|unpack|copy/.test(message))return 'Installing';
+ if(active.mode==='portable')return 'Preparing portable download';
+ return active.mode==='update'?'Updating':'Installing';
+}
+function renderQueueDialog(){
+ const active=state.active,pending=state.queue||[],errors=queueErrors();
+ const outcomes=latestQueueOutcomes();
+ $('queueDialogSummary').textContent=(active?'1 running · ':'')+pending.length+' waiting · '+errors.length+' unresolved issue'+(errors.length===1?'':'s')+'. Previous attempts remain in History.';
+ $('queueMetricActive').textContent=active?'1':'0';
+ $('queueMetricWaiting').textContent=String(pending.length);
+ $('queueMetricIssues').textContent=String(errors.length);
+ const messages=active?.messages?.slice(-4)||[];
+ $('queueCurrentDetail').textContent=active?queueLabel(active.repo)+' · '+queueStage(active)+(messages.length?'\n'+messages.join('\n'):'\nWaiting for installer output'):'Nothing is running. The queue is ready for new tasks.';
+ $('queuePendingCount').textContent=String(pending.length);
+ const pendingList=$('queuePendingList');pendingList.replaceChildren();
+ if(!pending.length){const empty=document.createElement('li');empty.textContent='No pending tasks';pendingList.appendChild(empty)}
+ pending.forEach((repo,index)=>{
+  const item=document.createElement('li');item.textContent=String(index+1).padStart(2,'0')+' · '+queueLabel(repo);pendingList.appendChild(item);
+ });
+ const recent=$('queueRecentList');recent.replaceChildren();
+ const previous=(state.history||[]).filter(e=>e.repo&&(e.kind==='error'||e.kind==='success')).slice(-24).reverse();
+ if(!previous.length){const row=document.createElement('p');row.textContent='No completed installs or updates recorded yet';recent.appendChild(row)}
+ for(const entry of previous){
+  const followedBySuccess=entry.kind==='error'&&outcomes.get(entry.repo)?.kind==='success'&&htmlDate(outcomes.get(entry.repo).time)>=htmlDate(entry.time);
+  const isOutstanding=entry.kind==='error'&&!followedBySuccess;
+  const row=document.createElement('div');row.className='queue-history-row'+(isOutstanding?' queue-failed':followedBySuccess?' queue-resolved':' queue-succeeded');
+  const label=document.createElement('strong');label.textContent=queueLabel(entry.repo)+' · '+(followedBySuccess?'Past failure · recovered':isOutstanding?'Needs attention':'Completed');
+  const message=document.createElement('p');message.textContent=String(entry.message||'').slice(0,310);
+  const when=document.createElement('small');when.textContent=localTime(entry.time);
+  row.append(label,message,when);recent.appendChild(row);
+ }
+}
 function renderQueue(){
- const active=state.active,queued=state.queue?.length||0;
- const visible=!!active||queued>0; // Routine source checks are nonblocking background work.
- const panel=$('workQueue');panel.classList.toggle('hidden',!visible);
- if(!visible)return;
- const app=active?state.apps.find(a=>a.repo===active.repo):null;
- $('queueTitle').textContent=active?(active.mode==='portable'?'Downloading portable':t('queueRunning'))+' · '+(app?.title||active.repo):
-    queued?t('queueWaiting'):t('queueScanning');
- $('queueMessage').textContent=active?String(active.messages?.slice(-1)[0]||t('queueNoMessage')).slice(0,220):
-    state.scanning?t('syncing'):t('queueNoMessage');
- $('queueCount').textContent=queued?t('waitingCount')(queued):'';
- panel.setAttribute('aria-label',$('queueTitle').textContent);
+ const active=state.active,pending=state.queue||[],issues=queueErrors();
+ const latest=issues.at(-1);
+ const key=queueErrorKey(latest);
+ const recentIssue=!!latest&&Date.now()-htmlDate(latest.time)<30*60*1000&&pref('queueDismissedFailure','')!==key;
+ const isRunning=!!active,isWaiting=!active&&pending.length>0;
+ const activity=isRunning?"active":isWaiting?"waiting":recentIssue?"attention":"idle";
+ const panel=$('workQueue');panel.classList.remove('hidden','queue-error');
+ panel.classList.toggle('queue-idle',activity==='idle');
+ panel.classList.toggle('queue-active',isRunning);
+ panel.classList.toggle('queue-waiting',isWaiting);
+ panel.classList.toggle('queue-attention',activity==='attention');
+ panel.dataset.errorKey=recentIssue?key:'';
+ document.body.classList.add('queue-dock-visible');
+ const total=(active?1:0)+pending.length;
+ const number=String(total);
+ $('queueFooterCount').textContent=number;
+ $('queueToolbarCount').textContent=number;
+ $('queueNavCount').textContent=number;
+ $('queueToolbarStatus').textContent=isRunning?'RUNNING':isWaiting?'WAITING':recentIssue?'REVIEW':'IDLE';
+ $('queueToolbarButton').dataset.queueState=activity;
+ $('queueToolbarButton').title=total?total+' active/waiting job(s) · Open queue':recentIssue?'An update needs attention · Open queue':'Open installations, updates and history';
+ $('queueNavButton').setAttribute('aria-label','Open installation and update queue · '+(total?total+' active or waiting':'idle'));
+ $('queueTitle').textContent=isRunning?queueStage(active)+' · '+queueLabel(active.repo):isWaiting?pending.length+' task'+(pending.length===1?'':'s')+' waiting':recentIssue?'An update needs attention':'Queue is clear';
+ $('queueMessage').textContent=isRunning?String(active.messages?.at(-1)||'Waiting for installer output').slice(0,140):isWaiting?'Processing sequentially · '+queueLabel(pending[0]):recentIssue?queueLabel(latest.repo)+' · '+String(latest.message||'Review the latest error').slice(0,110):'No installations or updates running';
+ $('queueCount').textContent=pending.length?pending.length+' waiting':isRunning?'1 running':'';
+ $('queueProgress').hidden=!isRunning;
+ $('queueProgress').classList.toggle('queue-progress-idle',!isRunning);
+ $('queueProgress').setAttribute('aria-valuetext',isRunning?queueStage(active)+'; installer has not reported an exact percentage':'No job currently progressing');
+ $('queueDockDismiss').hidden=!recentIssue||!!active||pending.length>0;
+ $('queueIndicatorIcon').classList.toggle('is-working',isRunning);
+ if($('queueDialog').open)renderQueueDialog();
 }
 function renderBulkUpdateBar(){
  const bar=$('bulkUpdateBar');if(!bar)return;
@@ -303,11 +379,14 @@ function renderCounters(){
  document.querySelector('.connection-label [data-t=connected]').textContent=state.scanning?t('statusScanning'):
    state.scanError?t('cachedMode'):t('connected');
  const notices=[];
- if(state.scanError)notices.push('Some source checks are delayed; cached information remains available.');
+ if(state.scanError)notices.push('Release checks: '+String(state.scanError).slice(0,155)+'. Cached project information remains available.');
  if(state.platform==='win32'&&!state.admin)notices.push(t('requiresAdmin'));
- const rateLimited=state.scanError&&/rate limit|GitHub 403|GitHub 429/i.test(state.scanError);
- $('notice').className=notices.length?'notice'+(state.scanError&&!rateLimited?' error':''):'notice hidden';
- $('notice').textContent=notices.join(' ');
+ activeNoticeKey=notices.join("|");
+ const dismissed=activeNoticeKey&&pref('noticeDismissedKey','')===activeNoticeKey;
+ $('notice').className=notices.length&&!dismissed?'notice notice-informational':'notice hidden';
+ $('notice').dataset.noticeKey=activeNoticeKey;
+ $('noticeMessage').textContent=notices.join(' ');
+ $('noticeDismiss').hidden=!notices.length;
  $('sidebarScan').disabled=!!state.sourceStatus?.queued;
  renderBulkUpdateBar();
 }
@@ -355,7 +434,8 @@ function primaryAction(a){
  if(a.installedVersion)return {verb:'Open',action:'launch',disabled:false};
  if(a.installable)return {verb:'Install',action:'install',disabled:state.platform==='win32'&&!state.admin};
  if(a.downloadablePortable)return {verb:'Portable',action:'portable',disabled:!!state.active};
- return {verb:capabilityOf(a)==='deploy'?'Setup guide':'Details',action:'details',disabled:false};
+ if(a.researchPendingVerification)return {verb:'Details',action:'details',disabled:false};
+ return capabilityOf(a)==='deploy'?{verb:'Setup guide',action:'guide',disabled:false}:{verb:'Details',action:'details',disabled:false};
 }
 
 const COMMERCIAL_VENDORS=[
@@ -410,7 +490,11 @@ function competitorMarkup(a){
 }
 
 function cardMarkup(a){
- const s=statusOf(a),p=primaryAction(a),selected=ui.selectedRepo===a.repo;
+ const working=state.active?.repo===a.repo;
+ const place=state.queue.indexOf(a.repo);
+ const job=working?'active':place>=0?'queued':'';
+ const jobStatus=working?{kind:'job-working',label:queueStage(state.active)}:place>=0?{kind:'job-waiting',label:'Queued · #'+(place+1)}:null;
+ const s=jobStatus||statusOf(a),p=primaryAction(a),selected=ui.selectedRepo===a.repo;
  const version=a.installedVersion||a.latestVersion||'';
  const domain=domainOf(a);
  const versionText=version?'v'+version:(a.releaseTag||'Version not verified');
@@ -418,8 +502,8 @@ function cardMarkup(a){
   '" data-action="'+p.action+'" data-repo="'+escapeHTML(a.repo)+'"'+(p.disabled?' disabled':'')+'>'+
   (p.action==='launch'?glyph('play'):p.action==='install'||p.action==='portable'?glyph('down'):'')+
   escapeHTML(p.verb)+'</button>';
- return '<article class="app-card'+(selected?' selected':'')+'" data-repo="'+escapeHTML(a.repo)+
- '" tabindex="0" role="group" title="Click to view application details" aria-label="'+escapeHTML(a.title)+'">'+
+ return '<article class="app-card'+(selected?' selected':'')+'" data-job="'+(job||'none')+'" data-repo="'+escapeHTML(a.repo)+
+ '" tabindex="0" role="group" title="Click to view application details" aria-label="'+escapeHTML(a.title+(job?', '+s.label:''))+'">'+
  '<div class="card-head">'+productIcon(a)+'<div class="card-id"><h3>'+(window.ChallengerUX?.highlight(a.title)||escapeHTML(a.title))+'</h3>'+
  '<p>'+(window.ChallengerUX?.highlight(nativeAppName(a))||escapeHTML(nativeAppName(a)))+'</p></div>'+
  '</div>'+
@@ -646,12 +730,12 @@ function notesMarkup(text){
 async function renderNotesTab(a){
  const content=$('detailBody');
  if(a.discovery){
-   content.innerHTML='<div class="detail-release-head"><strong>Project overview</strong><span class="release-latest">Public repository</span></div>'+
+   content.innerHTML='<div class="detail-release-head"><strong>'+(a.researchPendingVerification?'Research candidate · pending verification':'Project overview')+'</strong><span class="release-latest">Public repository</span></div>'+
      '<div class="notes-content research-notes"><h4>What the project is building</h4><p>'+escapeHTML(a.summary||a.description||'No summary available')+'</p>'+
      '<h4>Competes with</h4><p>'+escapeHTML((a.challenges||[]).join(', ')||'Unspecified')+'</p>'+
      '<h4>Development and scope</h4><p>'+escapeHTML([a.replacementType,a.reportedMaturity].filter(Boolean).join(' · '))+'</p>'+
      '<h4>Known limitations</h4><p>'+escapeHTML(publicCaveats(a.caveats))+'</p>'+
-     '<p class="research-note-foot">Public project information is summarized here; please confirm platform compatibility and feature completeness before deploying.</p>'+
+     '<p class="research-note-foot">'+(a.researchPendingVerification?'Imported research claim, not independently verified. Review current licensing, source activity and platform compatibility before use.':'Public project information is summarized here; please confirm platform compatibility and feature completeness before deploying.')+'</p>'+
      (a.releaseTag?'<div class="research-official-release"><h4>Latest published release · '+escapeHTML(a.releaseTag)+'</h4>'+
        '<small>GitHub snapshot checked '+escapeHTML(localDate(a.releaseCheckedAt,true))+'</small>'+notesMarkup(a.releaseBody||'No changelog text provided for this release.')+'</div>':
        '<p class="research-note-foot">No official release feed is connected yet.</p>')+'</div>';
@@ -730,6 +814,7 @@ function upstreamSummary(a){
 function renderDetailsTab(a){
  if(a.discovery){
    const items=[
+     ['Research status',a.researchPendingVerification?'Candidate · pending verification':'Repository reviewed'],
      ['Creator',a.creator],['Repository',a.repository],['Category',domainLabel(domainOf(a))],
      ['Subcategory',a.group],['Deployment model',a.deploymentType||'Desktop application'],
      ['Competing companies',[...new Set(competitorTargets(a).map(x=>x.company).filter(Boolean))].join(', ')||'Not verified'],
@@ -742,7 +827,7 @@ function renderDetailsTab(a){
      ['Latest verified release',a.releaseTag||'Not verified'],
      ['Source status',upstreamSummary(a)],
      ['Latest upstream signal',a.sourceSignal?.signalTag?(a.sourceSignal.signalTag+(a.sourceSignal.verificationPending?' · package verification pending':a.sourceSignal.unverified?' · tag only':' · informational')):'Not available'],
-     ['Installation',a.installable?'Verified package available after confirmation':a.deploymentType?'Manual '+a.deploymentType+'; no one-click installer approved':'No approved installer']
+     ['Installation',a.researchPendingVerification?'Research only — no installation approved':a.installable?'Verified package available after confirmation':a.deploymentType?'Manual '+a.deploymentType+'; no one-click installer approved':'No approved installer']
    ];
       $('detailBody').innerHTML=items.map(x=>detailField(...x)).join('')+similarMarkup(a);
    return;
@@ -826,6 +911,30 @@ function resolveConfirm(yes){
  if(!confirmResolve)return;
  const resolve=confirmResolve;confirmResolve=null;closeDialog('confirmDialog');resolve(yes);
 }
+function showSetupGuide(a){
+ if(!a)return;
+ const dialog=$('setupGuideDialog');
+ $('setupGuideTitle').textContent='Manual setup · '+a.title;
+ const mode=String(a.deploymentType||'').trim();
+ $('setupGuideType').textContent=mode||'Installation type not independently confirmed';
+ $('setupGuideStatus').textContent=a.researchPendingVerification?'Research candidate · setup and compatibility not verified':
+   a.installable?'Verified installer available separately':'No approved one-click installer';
+ $('setupGuidePlatform').textContent=(a.reportedPlatforms||[]).length?
+   (a.reportedPlatforms||[]).join(', '):'Platform compatibility has not been independently verified';
+ $('setupGuideCaveats').textContent=publicCaveats(a.caveats)||'Check project requirements and compatibility in upstream documentation.';
+ $('setupGuideSource').textContent='github.com/'+a.repository;
+ $('setupGuideOpenSource').disabled=!safeGitHubUrl(a.repoUrl);
+ $('setupGuideOpenSource').dataset.url=safeGitHubUrl(a.repoUrl)||'';
+ $('setupGuideSteps').replaceChildren();
+ const steps=[
+   'Open the official project repository and find its README or installation documentation.',
+   'Confirm the current installation instructions, dependencies and operating-system support directly with the developer.',
+   'Review release status, licensing and security before choosing a manual deployment method.',
+   'Follow the project’s current upstream instructions. Challenger Hub will not download, install or execute anything for this project.'
+ ];
+ for(const step of steps){const li=document.createElement('li');li.textContent=step;$('setupGuideSteps').appendChild(li)}
+ openDialog('setupGuideDialog');
+}
 async function doAppAction(a,action){
  if(!a)return;
  if(action==='launch'){
@@ -906,7 +1015,8 @@ async function poll(){
    render();if($('activityDialog').open)renderActivity();
  }catch(e){
    $('onlineDot').classList.remove('connected');$('footerDot').classList.remove('connected');
-   $('notice').className='notice error';$('notice').textContent=t('notConnected')+' · '+e.message;
+   $('notice').className='notice error';$('noticeMessage').textContent=t('notConnected')+' · '+e.message;
+   $('noticeDismiss').hidden=true;
  }finally{workingPoll=false}
 }
 function wireEvents(){
@@ -960,13 +1070,21 @@ function wireEvents(){
    ui.mobileNav=false;document.body.classList.remove('mobile-nav-open');openDialog('aboutDialog')
  });
  $('activityButton').addEventListener('click',()=>{renderActivity();openDialog('activityDialog')});
+ const openQueue=()=>{renderQueueDialog();openDialog('queueDialog')};
+ $('queueViewButton').addEventListener('click',openQueue);
+ $('queueToolbarButton').addEventListener('click',openQueue);
+ $('queueNavButton').addEventListener('click',()=>{ui.mobileNav=false;document.body.classList.remove('mobile-nav-open');openQueue()});
+ $('noticeDismiss').addEventListener('click',()=>{if(activeNoticeKey){savePref('noticeDismissedKey',activeNoticeKey);renderCounters()}});
+ $('queueDockDismiss').addEventListener('click',()=>{const key=$('workQueue').dataset.errorKey;if(key){savePref('queueDismissedFailure',key);renderQueue()}});
+ $('queueDockOpen').addEventListener('click',openQueue);
  for(const button of document.querySelectorAll('[data-dialog-close]'))button.addEventListener('click',()=>closeDialog(button.dataset.dialogClose));
  $('confirmCancel').addEventListener('click',()=>resolveConfirm(false));
  $('confirmAccept').addEventListener('click',()=>resolveConfirm(true));
  $('confirmDialog').addEventListener('close',()=>{
    if(confirmResolve){const resolve=confirmResolve;confirmResolve=null;resolve(false)}
  });
- for(const name of ['prefsDialog','aboutDialog','activityDialog','whatsNewDialog']){
+ $('setupGuideOpenSource').addEventListener('click',()=>openGithub($('setupGuideOpenSource').dataset.url));
+ for(const name of ['prefsDialog','aboutDialog','activityDialog','whatsNewDialog','setupGuideDialog','queueDialog']){
    $(name).addEventListener('click',e=>{if(e.target===$(name))closeDialog(name)});
  }
  $('cards').addEventListener('click',e=>{
@@ -978,6 +1096,7 @@ function wireEvents(){
      if(button.disabled)return;
      const app=state.apps.find(a=>a.repo===button.dataset.repo);
      if(button.dataset.action==='details')selectApp(app?.repo);
+     else if(button.dataset.action==='guide')showSetupGuide(app);
      else if(button.dataset.action==='portable')doPortableDownload(app);
      else doAppAction(app,button.dataset.action);
      return;
@@ -1001,7 +1120,7 @@ function wireEvents(){
  },true);
  $('detailAction').addEventListener('click',()=>{
    const app=getSelected();const p=primaryAction(app);if(p.disabled)return;
-   if(p.action==='details')changeDetailTab('details');else if(p.action==='portable')doPortableDownload(app);
+   if(p.action==='details')changeDetailTab('details');else if(p.action==='guide')showSetupGuide(app);else if(p.action==='portable')doPortableDownload(app);
    else doAppAction(app,p.action);
  });
  $('detailPortable').addEventListener('click',()=>doPortableDownload(getSelected()));
