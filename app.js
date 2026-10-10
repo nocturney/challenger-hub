@@ -109,24 +109,24 @@ function localTime(iso){
 function nativeAppName(app){return app.summary||PRODUCT_DESC[app.repo.toLowerCase()]?.en||app.description||''}
 function catName(group){return CATEGORY_NAMES[group]?.en||group||t('unknown')}
 const DOMAIN_GROUPS=[
- ['all','Everything','Every challenger','#6faeff'],
- ['Design & Imaging','Design & Imaging','Images, typography and UI','#ae8bff'],
- ['Video & Animation','Video & Motion','Editing, compositing, animation','#ff9c94'],
- ['Live Production','Live Production','Broadcast, show control and lighting','#f1a876'],
- ['3D & Manufacturing','3D & CAD','Modeling, engineering and makers','#65d4c6'],
- ['Science & GIS','Science & GIS','Mapping, scientific research and analysis','#96b9f2'],
- ['Audio & Music','Audio & Music','Production, instruments and sound','#ebb56b'],
- ['Game Creation','Game Creation','Engines and interactive experiences','#7ac9b4'],
- ['Office & Productivity','Office & Productivity','Documents, PDF and spreadsheets','#94c2ff'],
- ['CRM & Sales','CRM & Sales','Customers and sales pipelines','#88e3b3'],
- ['ERP & Operations','ERP & Operations','Manufacturing, inventory and ops','#edb26e'],
- ['Business & Legal','Business & Legal','Business workflows and legal documents','#d5a9ee'],
- ['Data & Internal Tools','Data & Apps','Databases, low-code, dashboards','#88c6fc'],
- ['Marketing & Publishing','Marketing','Social scheduling and content','#e6a9ff'],
- ['AI & Agents','AI & Agents','Memory, RAG and agent runtimes','#c59cfd'],
- ['Developer & Automation','Dev & Automation','Workflows, runtimes, APIs','#6ebeee'],
- ['Security & Infrastructure','Security & Infra','Credentials, gateways and control','#88d1ba'],
- ['Finance & Accounting','Finance','Bookkeeping and finance','#eac58c']
+ ['all','Everything','Every challenger','#d6fa69'],
+ ['Design & Imaging','Design & Imaging','Images, typography and UI','#ff8976'],
+ ['Video & Animation','Video & Motion','Editing, compositing, animation','#ff997a'],
+ ['Live Production','Live Production','Broadcast, show control and lighting','#f4b577'],
+ ['3D & Manufacturing','3D & CAD','Modeling, engineering and makers','#ff8a59'],
+ ['Science & GIS','Science & GIS','Mapping, scientific research and analysis','#abd49a'],
+ ['Audio & Music','Audio & Music','Production, instruments and sound','#f4d889'],
+ ['Game Creation','Game Creation','Engines and interactive experiences','#91d1a5'],
+ ['Office & Productivity','Office & Productivity','Documents, PDF and spreadsheets','#a8c7ac'],
+ ['CRM & Sales','CRM & Sales','Customers and sales pipelines','#b0e0b1'],
+ ['ERP & Operations','ERP & Operations','Manufacturing, inventory and ops','#eed091'],
+ ['Business & Legal','Business & Legal','Business workflows and legal documents','#dfb9c4'],
+ ['Data & Internal Tools','Data & Apps','Databases, low-code, dashboards','#89ccae'],
+ ['Marketing & Publishing','Marketing','Social scheduling and content','#edb2b5'],
+ ['AI & Agents','AI & Agents','Memory, RAG and agent runtimes','#c4adf5'],
+ ['Developer & Automation','Dev & Automation','Workflows, runtimes, APIs','#a5d6af'],
+ ['Security & Infrastructure','Security & Infra','Credentials, gateways and control','#acd878'],
+ ['Finance & Accounting','Finance','Bookkeeping and finance','#f2d9a8']
 ];
 function domainOf(a){
  if(a.category&&DOMAIN_GROUPS.some(g=>g[0]===a.category))return a.category;
@@ -151,10 +151,14 @@ function renderDomains(){
  const counts=new Map(DOMAIN_GROUPS.map(g=>[g[0],0]));
  for(const a of state.apps){const domain=domainOf(a);counts.set(domain,(counts.get(domain)||0)+1)}
  counts.set('all',state.apps.length);
- const markup=DOMAIN_GROUPS.filter(g=>g[0]==='all'||counts.get(g[0])>0).map(g=>{
+ const sortedDomains=DOMAIN_GROUPS.filter(g=>g[0]==='all'||counts.get(g[0])>0).sort((a,b)=>
+  a[0]==='all'?-1:b[0]==='all'?1:
+  a[0]===ui.domain?-1:b[0]===ui.domain?1:
+  (counts.get(b[0])||0)-(counts.get(a[0])||0));
+ const markup=sortedDomains.map(g=>{
    const [id,name,desc,color]=g,active=ui.domain===id;
    return '<button type="button" class="domain-pill'+(active?' active':'')+'" data-domain="'+escapeHTML(id)+'"'+
-     ' aria-pressed="'+active+'" title="'+escapeHTML(desc)+'">'+
+     ' aria-pressed="'+active+'" style="--sector-color:'+escapeHTML(color)+'" title="'+escapeHTML(desc)+'">'+
      '<span class="domain-dot" aria-hidden="true"></span><span class="domain-label">'+escapeHTML(name)+'</span>'+
      '<span class="domain-count">'+(counts.get(id)||0)+'</span></button>';
  }).join('');
@@ -403,7 +407,7 @@ function renderCounters(){
  const c=getCounters();
  $('sourceSummary').textContent=[...new Set(state.apps.map(a=>a.creator||'Storytold'))].length+' creators';
  const set=(id,n)=>{const target=$(id);if(target)target.textContent=n};
- set('navCountAll',c.all);set('navCountInstalled',c.installed);
+ set('navCountAll',c.all);set('signalLiveCount',c.all);set('navCountInstalled',c.installed);
  set('navCountUpdates',c.updates);set('navCountNew',c.new);
  set('metricInstalled',c.installed);set('metricUpdates',c.updates);set('metricNew',c.new);
  set('filterCountUpdates',c.updates);set('filterCountNew',c.new);
@@ -608,9 +612,9 @@ function renderDiscoveryStage(list){
   state.apps.filter(a=>a.needsUpdate).length,state.apps.filter(a=>a.installedVersion).length].join('|');
  if(signature===discoverySignature)return;
  discoverySignature=signature;
- let kicker='THE INDEPENDENT SOFTWARE OBSERVATORY',headline='Think outside',line='the usual.';
- let subtitle='A universe of independent tools, real sources and smarter alternatives to familiar software.';
- let context='home',actionText='Explore today’s discovery',note='REPOSITORY-LINKED · RESEARCH FIRST';
+ let kicker='FIELD GUIDE / INDEPENDENT SOFTWARE',headline='NO MORE',line='DEFAULTS.';
+ let subtitle='Actual projects. Real source repositories. An entirely different way to find the tools that belong in your creative workspace.';
+ let context='home',actionText='Explore today’s discovery',note='REAL SOURCES / RESEARCH FIRST';
  heroFeature={type:'daily',repo:daily?.repo||null};
  const search=String(ui.search||'').trim();
  const updates=state.apps.filter(a=>a.needsUpdate).length,installed=state.apps.filter(a=>a.installedVersion).length;
@@ -719,7 +723,7 @@ function activateHeroFeature(){
  openDiscoveryProject(heroFeature.repo);
 }
 
-function cardMarkup(a){
+function cardMarkup(a,index=0){
  const working=state.active?.repo===a.repo;
  const place=state.queue.indexOf(a.repo);
  const job=working?'active':place>=0?'queued':'';
@@ -735,6 +739,7 @@ function cardMarkup(a){
   escapeHTML(p.verb)+'</button>';
  return '<article class="app-card'+(selected?' selected':'')+'" data-job="'+(job||'none')+'" data-repo="'+escapeHTML(a.repo)+
  '" tabindex="0" role="group" title="Click to view application details" aria-label="'+escapeHTML(a.title+(job?', '+s.label:''))+'">'+
+ '<span class="field-card-index" aria-hidden="true">'+String(index+1).padStart(3,'0')+'</span>'+
  '<div class="card-head">'+productIcon(a)+'<div class="card-id"><h3>'+(window.ChallengerUX?.highlight(a.title)||escapeHTML(a.title))+'</h3>'+
  '<p>'+(window.ChallengerUX?.highlight(nativeAppName(a))||escapeHTML(nativeAppName(a)))+'</p></div>'+
  '</div>'+

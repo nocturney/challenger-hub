@@ -7,7 +7,7 @@ const app=fs.readFileSync(path.join(root,'app.js'),'utf8');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const css=fs.readFileSync(path.join(root,'style.css'),'utf8');
 function context(apps=[]){
- const start=app.indexOf('let discoverySignature='),end=app.indexOf('function cardMarkup(a){',start);
+ const start=app.indexOf('let discoverySignature='),end=app.indexOf('function cardMarkup(a,index=0){',start);
  assert.ok(start>0&&end>start,'Discovery functions not found');
  const ctx={
   state:{apps},window:{ChallengerUX:{highlight:s=>String(s),globalResults:s=>[s]}},
@@ -68,7 +68,7 @@ test('hero and daily buttons only navigate within existing catalog',()=>{
  assert.match(app,/\$\('heroContextAction'\)\.addEventListener\('click',activateHeroFeature\)/);
  assert.match(app,/\$\('dailyPickOpen'\)\.addEventListener/);
  assert.match(app,/setFilter\('all'\);\s*selectApp\(repo\)/);
- assert.doesNotMatch(app.slice(app.indexOf('function activateHeroFeature(){'),app.indexOf('function cardMarkup(a){')),/api\('POST'|\/api\/install|\/api\/update-all/);
+ assert.doesNotMatch(app.slice(app.indexOf('function activateHeroFeature(){'),app.indexOf('function cardMarkup(a,index=0){')),/api\('POST'|\/api\/install|\/api\/update-all/);
 });
 test('daily loading state is accessible and actions disabled until data arrives',()=>{
  assert.match(html,/id="dailyPick"[^>]*aria-busy="true"/);
