@@ -2,7 +2,7 @@
 Private, versioned source for Challenger Hub: a localhost desktop catalog of independent software alternatives, on Windows and macOS.
 
 ## Status
-- **UI v2.5.5:** deployed and browser-tested on Windows and macOS on 2026-10-10.
+- **UI v2.5.6:** deployed and browser-tested on Windows and macOS on 2026-10-10.
 - **Backend versions:** Windows 2.5.3, macOS 2.5.2. This UI-only update intentionally preserves the existing scanner/runtime code on each host.
 - **Catalog:** 12 Craft applications + 79 independent projects (91 catalog entries).
 - **Source checks:** all 91 entries use one equal-priority queue and a 12-hour cadence.
@@ -25,7 +25,7 @@ Run staging with CHALLENGER_DISABLE_SCAN=1 and CRAFT_CENTER_PORT=17876; on Windo
 Never execute deployment jobs or install unverified research-only software during tests.
 
 ## Git branches
-main contains the current reviewed UI source (2.5.5), including explicit open/close behavior for application details. Backend scanner parity is tracked separately; see docs/UI_RELEASE_2.5.5.md.
+main contains the reviewed UI source (2.5.6): contextual Update all with explicit approval, no misleading ellipsis, and explicit inspector open/close. Backend scanner parity is tracked separately; see docs/UI_RELEASE_2.5.6.md.
 develop is the integration branch for upcoming changes; never deploy an untested commit.
 Private repository: https://github.com/nocturney/challenger-hub
 
