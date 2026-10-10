@@ -40,12 +40,13 @@ test('exact job labels rely on reported installation phase, not invented percent
  assert.equal(f({mode:'portable',state:'running'}),'Preparing portable download');
  assert.equal(f(null),'Idle');
 });
-test('operations queue is reachable independent of a running installation',()=>{
- for(const id of ['queueNavButton','queueToolbarButton','queueDockOpen','queueViewButton','queueDialog','queueMetricActive','queueMetricWaiting','queueMetricIssues'])
-  assert.match(html,new RegExp('id="'+id+'"'));
- assert.match(app,/\$\('queueToolbarButton'\)\.addEventListener\('click',openQueue\)/);
- assert.match(app,/\$\('queueNavButton'\)\.addEventListener/);
- assert.match(html,/id="queueProgress"[^>]*aria-valuetext=/);
+test('Activity queue is reachable through one canonical navigation route',()=>{
+ assert.match(html,/id="queueNavButton"/);
+ assert.match(html,/id="activityWorkspace"/);
+ for(const id of ['queueToolbarButton','queueDockOpen','queueViewButton','workQueue'])
+  assert.doesNotMatch(html,new RegExp('id="'+id+'"'));
+ assert.match(app,/\$\('queueNavButton'\)\.addEventListener\('click'/);
+ assert.match(app,/ui\.activityOpen=true/);
  assert.doesNotMatch(html,/aria-valuenow/);
 });
 test('queued and active applications use separate border semantics',()=>{
@@ -55,11 +56,12 @@ test('queued and active applications use separate border semantics',()=>{
  assert.match(css,/\.app-card\[data-job="queued"\]::after\{border-style:dashed/);
  assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
 });
-test('scanner warning acknowledgement does not erase operational history',()=>{
+test('scanner warnings and historical failure recovery remain distinct',()=>{
  assert.match(app,/noticeDismissedKey/);
- assert.match(app,/queueDismissedFailure/);
  assert.match(app,/queueErrors\(\)/);
  assert.match(app,/Past failure · recovered/);
+ assert.match(app,/function renderActivityWorkspace\(\)/);
+ assert.match(app,/state\.history/);
 });
 test('unverified new research candidates never gain installation approval',()=>{
  const reg=JSON.parse(fs.readFileSync(path.join(root,'challengers.json'),'utf8'));

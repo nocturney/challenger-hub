@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" dir="ltr" data-theme="dark" data-app-version="2.7.0">
+<html lang="en" dir="ltr" data-theme="dark" data-app-version="3.0.0">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light dark">
@@ -39,74 +39,73 @@
   <aside class="sidebar" id="sidebar">
     <div class="brand">
       <img class="brand-logo" src="/brand-icon.png" width="62" height="62" alt="">
-      <div class="brand-wordmark"><strong>Challenger<span> Hub</span></strong><small>DISCOVER · TRACK · MANAGE</small></div>
+      <div class="brand-wordmark"><strong>Challenger<span> Hub</span></strong><small>INDEPENDENT SOFTWARE / OS</small></div>
       <button class="close-mobile icon-only" id="mobileClose" title="Close navigation" aria-label="Close navigation"><svg><use href="#i-x"/></svg></button>
     </div>
-    <div class="sidebar-category" data-t="workspace">WORKSPACE</div>
-    <nav class="sidebar-nav" aria-label="Primary navigation">
-      <button class="nav-link active" data-nav="all" aria-current="page"><svg><use href="#i-apps"/></svg><span data-t="navApps">Applications</span><span class="nav-count" id="navCountAll">—</span></button>
-      <button class="nav-link" data-nav="updates"><svg><use href="#i-sync"/></svg><span data-t="navUpdates">Updates</span><span class="nav-count warm" id="navCountUpdates">0</span></button>
-      <button class="nav-link" data-nav="new"><svg><use href="#i-spark"/></svg><span data-t="navNew">Discoveries</span><span class="nav-count" id="navCountNew">0</span></button>
-      <button class="nav-link" data-nav="installed"><svg><use href="#i-package"/></svg><span data-t="navInstalled">Installed</span><span class="nav-count" id="navCountInstalled">0</span></button>
+    <div class="sidebar-category">NAVIGATION <span>01 / 04</span></div>
+    <nav class="sidebar-nav" aria-label="Primary destinations">
+      <button class="nav-link active" data-nav="all" aria-current="page"><svg><use href="#i-spark"/></svg><span>Discover</span><span class="nav-count" id="navCountAll">—</span></button>
+      <button class="nav-link" data-nav="installed"><svg><use href="#i-package"/></svg><span>My toolkit</span><span class="nav-count" id="navCountInstalled">0</span></button>
+      <button class="nav-link" data-nav="updates"><svg><use href="#i-sync"/></svg><span>Updates</span><span class="nav-count warm" id="navCountUpdates">0</span></button>
+      <button class="nav-link" id="queueNavButton" type="button" aria-label="Open activity and queue"><svg><use href="#i-clock"/></svg><span>Activity</span><span class="nav-count" id="queueNavCount" hidden>0</span></button>
     </nav>
-    <div class="sidebar-category secondary" data-t="general">GENERAL</div>
-    <nav class="sidebar-nav nav-secondary">
-      <button class="nav-link" id="queueNavButton" type="button" aria-label="Open installation and update queue"><svg><use href="#i-clock"/></svg><span>Operations queue</span><span class="nav-count" id="queueNavCount">0</span></button>
-      <button class="nav-link" id="settingsButton"><svg><use href="#i-settings"/></svg><span data-t="preferences">Preferences</span></button>
-      <button class="nav-link" id="aboutButton"><svg><use href="#i-info"/></svg><span data-t="about">About</span></button>
+    <div class="sidebar-category secondary">PREFERENCES</div>
+    <nav class="sidebar-nav nav-secondary" aria-label="Utilities">
+      <button class="nav-link" id="settingsButton"><svg><use href="#i-settings"/></svg><span>Settings</span></button>
+      <button class="nav-link" id="aboutButton"><svg><use href="#i-info"/></svg><span>About</span></button>
     </nav>
     <div class="sidebar-spacer"></div>
     <div class="sidebar-bottom">
       <div class="connection-card">
-        <div class="connection-label"><span class="online-dot" id="onlineDot"></span><span data-t="connected">CONNECTED TO GITHUB</span></div>
+        <div class="connection-label"><span class="online-dot" id="onlineDot"></span><span data-t="connected">GITHUB SOURCE STATUS</span></div>
         <div class="github-identity"><svg><use href="#i-github"/></svg><span id="sourceSummary">1 creator</span></div>
         <div class="connection-scan" id="lastScanText">Checking releases…</div>
-        <button class="sidebar-scan" id="sidebarScan"><svg><use href="#i-sync"/></svg><span data-t="checkUpdates">Check for updates</span></button>
+
       </div>
-      <div class="sidebar-version"><span>CHALLENGER HUB · MULTI-DOMAIN</span><span>v2.7.0</span></div>
+      <div class="sidebar-version"><span>CHALLENGER HUB · MULTI-DOMAIN</span><span>v3.0.0</span></div>
     </div>
   </aside>
   <div class="sidebar-scrim" id="sidebarScrim"></div>
   <div class="app-main">
     <header class="topbar">
       <button class="icon-only mobile-menu" id="mobileMenu" aria-label="Open menu"><svg><use href="#i-menu"/></svg></button>
-      <div class="search-wrap"><svg class="search-loupe"><use href="#i-search"/></svg><input id="searchInput" type="search" spellcheck="false" autocomplete="off" placeholder="Search all apps, products and alternatives…" aria-label="Search entire catalog"><button id="searchClear" type="button" class="search-clear" aria-label="Clear search" title="Clear search" hidden>×</button><kbd id="searchShortcut" aria-hidden="true">Ctrl K</kbd></div>
+      <div class="search-wrap"><svg class="search-loupe"><use href="#i-search"/></svg><input id="searchInput" type="search" spellcheck="false" autocomplete="off" placeholder="Search software, competitors, categories…" aria-label="Search entire catalog"><button id="searchClear" type="button" class="search-clear" aria-label="Clear search" title="Clear search" hidden>×</button><kbd id="searchShortcut" aria-hidden="true">Ctrl K</kbd></div>
       <div class="topbar-end">
-        <button id="queueToolbarButton" class="queue-toolbar-button" type="button" data-queue-state="idle" aria-label="Open installation and update queue" title="Open queue"><svg><use href="#i-clock"/></svg><span class="queue-toolbar-label">QUEUE</span><span id="queueToolbarCount" class="queue-toolbar-count">0</span><span id="queueToolbarStatus" class="queue-toolbar-state">IDLE</span></button>
-        <div class="theme-switch" id="themeSwitch" role="group" aria-label="Appearance">
-          <button class="icon-only theme-choice" data-theme-choice="light" aria-label="Light mode" title="Light mode" aria-pressed="false"><svg><use href="#i-sun"/></svg></button>
-          <button class="icon-only theme-choice" data-theme-choice="dark" aria-label="Dark mode" title="Dark mode" aria-pressed="false"><svg><use href="#i-moon"/></svg></button>
-          <button class="icon-only theme-choice" data-theme-choice="system" aria-label="Follow system" title="Follow system" aria-pressed="false"><svg><use href="#i-monitor"/></svg></button>
-        </div>
-        
-        
+
+
+
+
       </div>
     </header>
     <main class="content">
-      <section class="workspace-rail" aria-label="Catalog workspace layout">
-        <div class="workspace-rail-copy">
-          <span class="workspace-rail-emblem" aria-hidden="true">◈</span>
-          <div><span class="workspace-rail-kicker">YOUR SOFTWARE WORKSPACE</span><strong id="workspaceRailCount">Preparing local catalog…</strong></div>
+      <section id="activityWorkspace" class="activity-workspace" aria-label="Activity and installation history" hidden>
+        <div class="activity-stage"><div class="activity-stage-copy"><span>OPERATIONS / REAL DEVICE STATE</span><h1>Activity, without the noise.</h1><p>One place to see what is running, what's waiting, and which past attempts need attention. No invented progress or hidden failures.</p></div><div class="activity-stage-art" aria-hidden="true"><span></span><span></span></div></div>
+        <div class="activity-metrics">
+          <div><span>RUNNING NOW</span><strong id="activityRunningCount">0</strong></div>
+          <div><span>WAITING</span><strong id="activityWaitingCount">0</strong></div>
+          <div><span>UNRESOLVED ISSUES</span><strong id="activityIssueCount">0</strong></div>
         </div>
-        <div class="workspace-mode-switch" role="group" aria-label="Workspace layout">
-          <button type="button" data-workspace-mode="explore" aria-pressed="true" title="Show discovery banners and comparisons">Explore</button>
-          <button type="button" data-workspace-mode="focus" aria-pressed="false" title="Focus on catalog, filters and results">Catalog focus</button>
+        <div class="activity-columns">
+          <section class="activity-panel"><div class="activity-panel-heading"><span>01 / NOW</span><h2>Current operation</h2></div><p class="activity-current-text" id="activityCurrentText">Checking local status…</p><h3>Waiting queue</h3><ol id="activityWaitingRows" class="activity-waiting-rows"></ol></section>
+          <section class="activity-panel"><div class="activity-panel-heading"><span>02 / HISTORY</span><h2>Recent outcomes</h2></div><div id="activityHistoryRows" class="activity-history-rows"></div></section>
         </div>
+        <p class="activity-disclaimer">Only vetted, source-verified installers may be queued. Current-job progress is not expressed as a percentage unless a worker reports one. Historical failures remain visible after recovery.</p>
       </section>
-      <section class="focus-overview" id="focusOverview" aria-label="Focused catalog summary" hidden>
-        <div class="focus-overview-copy"><span>CATALOG FOCUS · LIVE LOCAL RESULTS</span><h1 id="focusOverviewTitle">Your software, without the noise.</h1><p id="focusOverviewDetail">Explore the same verified sources and research entries, with fewer distractions.</p></div>
-        <div class="focus-overview-actions"><span id="focusOverviewCount">Loading results…</span><button type="button" id="focusDailyOpen" disabled>Today's discovery <span aria-hidden="true">↗</span></button></div>
+      <section id="workspaceContext" class="workspace-context" aria-label="Workspace section" hidden>
+        <div class="workspace-context-copy"><span id="workspaceContextKicker">YOUR WORKSPACE</span><h1 id="workspaceContextTitle">Your creative toolkit.</h1><p id="workspaceContextDescription">Know what's installed, and control what changes.</p></div>
+        <div class="workspace-context-actions">
+          <button id="verifyButton" type="button" class="workspace-action"><svg><use href="#i-check"/></svg><span>Verify installations</span></button>
+          <button id="sidebarScan" type="button" class="workspace-action"><svg><use href="#i-sync"/></svg><span>Check release sources</span></button>
+        </div>
+        <div class="workspace-context-art" aria-hidden="true"><span></span><span></span><span></span></div>
       </section>
+
+
       <div class="discovery-stage" id="discoveryStage">
       <section class="hero context-hero" id="contextHero" data-context="home"><canvas id="heroShaderCanvas" class="hero-shader-canvas" aria-hidden="true"></canvas>
-        <div class="hero-decoration" aria-hidden="true"><div class="hero-sun"></div><div class="mountain mountain-far"></div><div class="mountain mountain-mid"></div><div class="mountain mountain-front"></div><div class="hero-lines"></div></div>
-        <div class="hero-copy"><div class="hero-kicker"><span class="hero-kicker-dot"></span><span id="heroContextKicker">INDEPENDENT SOFTWARE · CURATED DISCOVERY</span></div><h1><span id="heroContextLine1">Find your next tool.</span><br><em id="heroContextLine2">Beyond the usual.</em></h1><p id="heroContextSubtitle">Explore independent software and compare familiar tools.</p><div class="hero-action-row"><button type="button" class="hero-primary-action" id="heroContextAction"><span class="hero-action-text">Explore today’s discovery</span><span aria-hidden="true">↗</span></button><span class="hero-context-note" id="heroContextNote">A new daily rotation</span></div></div>
-        <div class="hero-metrics">
-          <button type="button" class="hero-metric" data-stat-filter="installed" aria-label="Show installed applications"><svg><use href="#i-package"/></svg><div><strong id="metricInstalled">—</strong><span data-t="appsInstalled">Apps installed</span></div></button>
-          <button type="button" class="hero-metric" data-stat-filter="updates" aria-label="Show available updates"><svg><use href="#i-sync"/></svg><div><strong id="metricUpdates">—</strong><span data-t="updatesAvailable">Updates available</span></div></button>
-          <button type="button" class="hero-metric" data-stat-filter="new" aria-label="Show new apps"><svg><use href="#i-spark"/></svg><div><strong id="metricNew">—</strong><span data-t="newDiscovered">New discoveries</span></div></button>
-        </div>
-      </section>
+        <div class="hero-visual" aria-hidden="true"><span class="hero-visual-ring hero-visual-ring-one"></span><span class="hero-visual-ring hero-visual-ring-two"></span><span class="hero-visual-ring hero-visual-ring-three"></span><span class="hero-visual-core"></span><span class="hero-visual-caption">UNCOMMON / BY DESIGN</span></div><div class="hero-decoration" aria-hidden="true"><div class="hero-sun"></div><div class="mountain mountain-far"></div><div class="mountain mountain-mid"></div><div class="mountain mountain-front"></div><div class="hero-lines"></div></div>
+        <div class="hero-copy"><div class="hero-kicker"><span class="hero-kicker-dot"></span><span id="heroContextKicker">INDEPENDENT SOFTWARE · CURATED DISCOVERY</span></div><h1><span id="heroContextLine1">Find your next tool.</span><br><em id="heroContextLine2">Beyond the usual.</em></h1><p id="heroContextSubtitle">Explore independent software and compare familiar tools.</p><div class="hero-action-row"><span class="hero-context-note" id="heroContextNote">Beyond the default — discover what comes next.</span><button type="button" id="heroContextAction" class="hero-primary-action" hidden tabindex="-1"><span class="hero-action-text">Explore today's discovery</span><span aria-hidden="true">↗</span></button></div></div>
+        </section>
       <aside class="daily-pick" id="dailyPick" aria-label="Daily independent project discovery" aria-busy="true">
         <div class="daily-pick-top"><span class="daily-pick-kicker"><span class="daily-pick-spark" aria-hidden="true">✦</span> DAILY DISCOVERY</span><span id="dailyPickDate" class="daily-pick-date">Today</span></div>
         <div class="daily-pick-graphic" aria-hidden="true"><span class="daily-orbit daily-orbit-outer"></span><span class="daily-orbit daily-orbit-inner"></span><span class="daily-pick-emblem" id="dailyPickEmblem">✦</span></div>
@@ -128,26 +127,17 @@
         </div>
       </section>
       <div id="notice" class="notice hidden" role="status" aria-live="polite"><svg class="notice-icon" aria-hidden="true"><use href="#i-info"/></svg><span id="noticeMessage"></span><button id="noticeDismiss" type="button" class="notice-dismiss" aria-label="Dismiss this notice" title="Dismiss notice"><svg><use href="#i-x"/></svg></button></div>
-      <section id="workQueue" class="work-queue queue-idle" role="status" aria-live="polite" aria-label="Installation and update activity">
-        <div class="queue-indicator"><svg id="queueIndicatorIcon"><use href="#i-sync"/></svg></div>
-        <div class="queue-content"><span class="queue-dock-eyebrow">OPERATIONS MONITOR</span><strong id="queueTitle">Queue is clear</strong><p id="queueMessage">No installations or updates running</p></div>
-        <span id="queueCount" class="queue-count"></span>
-        <button id="queueDockDismiss" type="button" class="queue-dock-dismiss" aria-label="Dismiss current queue alert" title="Dismiss alert" hidden><svg><use href="#i-x"/></svg></button>
-        <button id="queueDockOpen" type="button" class="queue-dock-button">Open queue ↗</button>
-        <div id="queueProgress" class="queue-progress" role="progressbar" aria-label="Install progress (indeterminate)" aria-valuetext="No current job" hidden><span></span></div>
-      </section>
+
       <div class="main-heading">
-        <div class="heading-start"><p class="eyebrow" id="eyebrow" data-t="libraryEyebrow">CHALLENGER CATALOG</p><h2 id="pageTitle" data-t="pageTitle">Applications</h2><p class="heading-subtitle" id="pageSubtitle" data-t="pageSubtitle">Emerging alternatives, mapped by creator, category and the software they challenge.</p></div>
+        <div class="heading-start"><p class="eyebrow" id="eyebrow" data-t="libraryEyebrow">CHALLENGER CATALOG</p><h2 id="pageTitle">The index.</h2><p class="heading-subtitle" id="pageSubtitle" data-t="pageSubtitle">Emerging alternatives, mapped by creator, category and the software they challenge.</p></div>
 
       </div>
       <section class="domain-section" id="domainSection" aria-label="Product categories"><div class="domain-section-heading"><div class="domain-section-heading-copy"><strong>Explore by category</strong><small id="domainTotal">Organizing independent alternatives…</small></div><button id="domainExpandButton" type="button" class="domain-expand-button" aria-controls="domainFilters" aria-expanded="false">All disciplines ↓</button></div><div class="domain-filters" id="domainFilters" role="group" aria-label="Product categories"></div></section>
       <div class="tabbar"><div class="filter-tools-heading"><div><span class="filter-kicker">PERSONALIZE YOUR DISCOVERY</span><strong>Refine the catalog</strong></div><button type="button" id="clearAllFilters" class="clear-all-filters" title="Reset all filters">Reset filters ↺</button></div>
-        <div id="filterChips" class="filter-chips" role="group" aria-label="Filter applications">
-          <button class="filter-chip active" data-filter="all" aria-pressed="true" data-t="filterAll">All apps</button>
-          <button class="filter-chip" data-filter="installed" aria-pressed="false" data-t="filterInstalled">Installed</button>
-          <button class="filter-chip" data-filter="updates" aria-pressed="false"><span data-t="filterUpdates">Updates</span><span class="chip-count" id="filterCountUpdates">0</span></button>
-          <button class="filter-chip" data-filter="new" aria-pressed="false"><span data-t="filterNew">Discoveries</span><span class="chip-count" id="filterCountNew">0</span></button>
-          <button class="filter-chip" data-filter="missing" aria-pressed="false" data-t="filterMissing">Not installed</button>
+        <div id="filterChips" class="filter-chips" role="group" aria-label="Discover catalog subset">
+          <button class="filter-chip active" data-filter="all" aria-pressed="true">All projects</button>
+          <button class="filter-chip" data-filter="new" aria-pressed="false">Independent <span class="chip-count" id="filterCountNew">0</span></button>
+          <button class="filter-chip" data-filter="missing" aria-pressed="false">Not installed</button>
         </div>
         <button type="button" class="facet-toggle" id="facetToggle" aria-controls="catalogFilters" aria-expanded="false">Advanced filters ↓</button>
         <div class="catalog-filters" id="catalogFilters" hidden><div class="category-wrap"><label class="sr-only" for="maturitySelect">Maturity</label><select id="maturitySelect" aria-label="Filter by maturity"><option value="all">Any maturity</option><option value="stable">Stable</option><option value="beta">Beta / RC</option><option value="alpha">Alpha</option><option value="prealpha">Early / experimental</option><option value="dormant">Dormant</option><option value="unknown">Unverified</option></select></div><div class="category-wrap"><label class="sr-only" for="availabilitySelect">Availability</label><select id="availabilitySelect" aria-label="Filter by availability"><option value="all">Any availability</option><option value="install">Install available</option><option value="portable">Portable available</option><option value="deploy">Manual setup / deployment</option><option value="source">Source / unverified</option></select></div><div class="category-wrap"><label class="sr-only" for="platformSelect">Platform</label><select id="platformSelect" aria-label="Filter by platform"><option value="all">Any platform</option><option value="windows">Windows desktop</option><option value="mac">macOS desktop</option><option value="linux">Linux desktop</option><option value="hosted">Self-hosted / web</option></select></div><div class="category-wrap"><label for="categorySelect" class="sr-only" data-t="category">Category</label><select id="categorySelect" aria-label="App category"><option value="all" data-t="allCategories">All categories</option></select><svg><use href="#i-chevron"/></svg></div><div class="category-wrap"><label for="creatorSelect" class="sr-only">Creator</label><select id="creatorSelect" aria-label="Filter by creator"><option value="all">All creators</option></select><svg><use href="#i-chevron"/></svg></div></div>
@@ -194,7 +184,7 @@
           <div class="detail-bottom"><span id="detailSourceText">Source: GitHub</span><button class="detail-source" id="detailReleaseLink"><span data-t="fullChangelog">Full changelog</span><svg><use href="#i-external"/></svg></button></div>
         </aside>
       </div>
-      <footer class="main-footer"><div class="device-footer"><span class="footer-dot" id="footerDot"></span><span id="deviceLabel">Local device</span><span class="foot-sep">·</span><span id="footerScan">Not scanned yet</span></div><div class="footer-actions"><button type="button" id="queueViewButton" class="queue-footer-button" aria-label="View installation and update queue">Queue <span id="queueFooterCount" class="queue-footer-count">0</span></button><button id="verifyButton" data-t="verify">Verify installs</button><button id="activityButton" data-t="activityLog">Activity log</button></div></footer>
+      <footer class="main-footer"><div class="device-footer"><span class="footer-dot" id="footerDot"></span><span id="deviceLabel">Local device</span><span class="foot-sep">·</span><span id="footerScan">Not scanned yet</span></div><span class="footer-signature">CHALLENGER HUB / SYSTEM STATUS</span></footer>
     </main>
   </div>
 </div>
@@ -213,7 +203,11 @@
  </div>
 </dialog>
 <dialog id="confirmDialog" class="modal-dialog" aria-labelledby="confirmTitle"><div class="modal-pad"><div class="modal-badge"><svg><use href="#i-shield"/></svg></div><h2 id="confirmTitle" data-t="confirmTitle">Confirm installation</h2><p id="confirmMessage"></p><div class="modal-actions"><button id="confirmCancel" class="btn-cancel" data-t="cancel">Cancel</button><button id="confirmAccept" class="btn-accept" data-t="continue">Continue</button></div></div></dialog>
-<dialog id="prefsDialog" class="modal-dialog" aria-labelledby="prefsTitle"><div class="modal-pad"><button class="modal-close icon-only" data-dialog-close="prefsDialog" aria-label="Close"><svg><use href="#i-x"/></svg></button><div class="modal-badge"><svg><use href="#i-settings"/></svg></div><h2 id="prefsTitle" data-t="preferences">Preferences</h2><p class="modal-help" data-t="prefsDescription">Changes are saved on this device.</p><div class="prefs-line prefs-option"><div><strong>Automatic release checks</strong><small>Track verified project releases in the background</small></div><label class="preference-switch"><input type="checkbox" id="prefsAutoCheck" checked aria-label="Automatically check for release updates"><span aria-hidden="true"></span></label></div>
+<dialog id="prefsDialog" class="modal-dialog" aria-labelledby="prefsTitle"><div class="modal-pad"><button class="modal-close icon-only" data-dialog-close="prefsDialog" aria-label="Close"><svg><use href="#i-x"/></svg></button><div class="modal-badge"><svg><use href="#i-settings"/></svg></div><h2 id="prefsTitle" data-t="preferences">Preferences</h2><p class="modal-help" data-t="prefsDescription">Changes are saved on this device.</p><div class="prefs-theme-row"><div class="prefs-theme-label"><strong>Appearance</strong><small>Choose the interface theme for this computer</small></div><div class="theme-switch" id="themeSwitch" role="group" aria-label="Appearance">
+          <button class="icon-only theme-choice" data-theme-choice="light" aria-label="Light mode" title="Light mode" aria-pressed="false"><svg><use href="#i-sun"/></svg></button>
+          <button class="icon-only theme-choice" data-theme-choice="dark" aria-label="Dark mode" title="Dark mode" aria-pressed="false"><svg><use href="#i-moon"/></svg></button>
+          <button class="icon-only theme-choice" data-theme-choice="system" aria-label="Follow system" title="Follow system" aria-pressed="false"><svg><use href="#i-monitor"/></svg></button>
+        </div></div><div class="prefs-line prefs-option"><div><strong>Automatic release checks</strong><small>Track verified project releases in the background</small></div><label class="preference-switch"><input type="checkbox" id="prefsAutoCheck" checked aria-label="Automatically check for release updates"><span aria-hidden="true"></span></label></div>
 <div class="prefs-line prefs-option"><div><strong>Check frequency</strong><small>Applies equally to all listed projects</small></div><select id="prefsInterval" aria-label="Release check frequency"><option value="6">Every 6 hours</option><option value="12" selected>Every 12 hours</option><option value="24">Daily</option></select></div>
 <div class="prefs-line prefs-option"><div><strong>Show early-stage projects</strong><small>Include alpha, pre-alpha and experimental alternatives</small></div><label class="preference-switch"><input type="checkbox" id="prefsEarly" checked aria-label="Include early-stage projects"><span aria-hidden="true"></span></label></div>
 <p class="prefs-source-state" id="prefsSourceState">Project feeds use official release sources and SHA-256 for supported installers.</p></div></dialog>
