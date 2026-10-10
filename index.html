@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" dir="ltr" data-theme="dark" data-app-version="2.5.9">
+<html lang="en" dir="ltr" data-theme="dark" data-app-version="2.6.0">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light dark">
@@ -63,7 +63,7 @@
         <div class="connection-scan" id="lastScanText">Checking releases…</div>
         <button class="sidebar-scan" id="sidebarScan"><svg><use href="#i-sync"/></svg><span data-t="checkUpdates">Check for updates</span></button>
       </div>
-      <div class="sidebar-version"><span>CHALLENGER HUB · MULTI-DOMAIN</span><span>v2.5.9</span></div>
+      <div class="sidebar-version"><span>CHALLENGER HUB · MULTI-DOMAIN</span><span>v2.6.0</span></div>
     </div>
   </aside>
   <div class="sidebar-scrim" id="sidebarScrim"></div>
@@ -83,18 +83,30 @@
       </div>
     </header>
     <main class="content">
-      <section class="hero"><canvas id="heroShaderCanvas" class="hero-shader-canvas" aria-hidden="true"></canvas>
+      <div class="discovery-stage" id="discoveryStage">
+      <section class="hero context-hero" id="contextHero" data-context="home"><canvas id="heroShaderCanvas" class="hero-shader-canvas" aria-hidden="true"></canvas>
         <div class="hero-decoration" aria-hidden="true"><div class="hero-sun"></div><div class="mountain mountain-far"></div><div class="mountain mountain-mid"></div><div class="mountain mountain-front"></div><div class="hero-lines"></div></div>
-        <div class="hero-copy"><div class="hero-kicker"><span class="hero-kicker-dot"></span><span data-t="heroKicker">INDEPENDENT SOFTWARE · MADE TO CHALLENGE</span></div><h1><span data-t="heroLine1">Meet the challengers.</span><br><em data-t="heroLine2">Beyond the big names.</em></h1><p data-t="heroSubtitle">Discover bold, independent alternatives to expensive professional software. Track the projects worth watching.</p></div>
+        <div class="hero-copy"><div class="hero-kicker"><span class="hero-kicker-dot"></span><span id="heroContextKicker">INDEPENDENT SOFTWARE · CURATED DISCOVERY</span></div><h1><span id="heroContextLine1">Find your next tool.</span><br><em id="heroContextLine2">Beyond the usual.</em></h1><p id="heroContextSubtitle">Explore independent software and compare familiar tools.</p><div class="hero-action-row"><button type="button" class="hero-primary-action" id="heroContextAction"><span class="hero-action-text">Explore today’s discovery</span><span aria-hidden="true">↗</span></button><span class="hero-context-note" id="heroContextNote">A new daily rotation</span></div></div>
         <div class="hero-metrics">
           <button type="button" class="hero-metric" data-stat-filter="installed" aria-label="Show installed applications"><svg><use href="#i-package"/></svg><div><strong id="metricInstalled">—</strong><span data-t="appsInstalled">Apps installed</span></div></button>
           <button type="button" class="hero-metric" data-stat-filter="updates" aria-label="Show available updates"><svg><use href="#i-sync"/></svg><div><strong id="metricUpdates">—</strong><span data-t="updatesAvailable">Updates available</span></div></button>
           <button type="button" class="hero-metric" data-stat-filter="new" aria-label="Show new apps"><svg><use href="#i-spark"/></svg><div><strong id="metricNew">—</strong><span data-t="newDiscovered">New discoveries</span></div></button>
         </div>
       </section>
+      <aside class="daily-pick" id="dailyPick" aria-label="Daily independent project discovery" aria-busy="true">
+        <div class="daily-pick-top"><span class="daily-pick-kicker"><span class="daily-pick-spark" aria-hidden="true">✦</span> DAILY DISCOVERY</span><span id="dailyPickDate" class="daily-pick-date">Today</span></div>
+        <div class="daily-pick-graphic" aria-hidden="true"><span class="daily-orbit daily-orbit-outer"></span><span class="daily-orbit daily-orbit-inner"></span><span class="daily-pick-emblem" id="dailyPickEmblem">✦</span></div>
+        <div class="daily-pick-info"><span class="daily-pick-strap">TODAY’S PROJECT</span><h2 id="dailyPickTitle">Preparing today’s pick…</h2><p id="dailyPickSummary">Loading the independent catalog.</p>
+          <div class="daily-pick-tags"><span id="dailyPickCategory">Independent tools</span><span id="dailyPickTrust">Source-linked project</span></div>
+        </div>
+        <p id="dailyPickReason" class="daily-pick-reason" hidden>Rotates daily. Not an installation recommendation.</p>
+        <div class="daily-pick-actions"><button type="button" id="dailyPickOpen" class="daily-pick-open" disabled>View project <span aria-hidden="true">↗</span></button>
+          <button type="button" id="dailyPickWhy" class="daily-pick-why" disabled aria-expanded="false" aria-controls="dailyPickReason">Why this pick?</button></div>
+      </aside>
+      </div>
       <section class="challenge-workflows" id="challengeWorkflows" aria-label="Discover alternatives by familiar software">
-        <div class="challenge-intro"><span class="challenge-eyebrow">DISCOVER BY THE TOOL YOU KNOW</span><strong>What are you replacing?</strong><small>Start with familiar software.</small></div>
-        <div class="challenge-links">
+        <div class="challenge-intro"><span class="challenge-eyebrow" id="challengeEyebrow">FRESH COMPARISONS</span><strong id="challengeHeading">Explore a different direction.</strong><small id="challengeCaption">Projects from the live catalog.</small></div>
+        <div class="challenge-links" id="challengeLinks">
           <button type="button" class="challenge-link challenge-photo" data-global-query="Photoshop" aria-label="Find alternatives to Photoshop"><span class="challenge-link-icon" aria-hidden="true">Ps</span><span class="challenge-copy"><strong>Photoshop</strong><small data-query-count="Photoshop">Explore alternatives</small></span><span class="challenge-arrow" aria-hidden="true">↗</span></button>
           <button type="button" class="challenge-link challenge-video" data-global-query="After Effects" aria-label="Find alternatives to After Effects"><span class="challenge-link-icon" aria-hidden="true">Fx</span><span class="challenge-copy"><strong>After Effects</strong><small data-query-count="After Effects">Explore alternatives</small></span><span class="challenge-arrow" aria-hidden="true">↗</span></button>
           <button type="button" class="challenge-link challenge-cad" data-global-query="AutoCAD" aria-label="Find alternatives to AutoCAD"><span class="challenge-link-icon" aria-hidden="true">3D</span><span class="challenge-copy"><strong>AutoCAD</strong><small data-query-count="AutoCAD">Explore alternatives</small></span><span class="challenge-arrow" aria-hidden="true">↗</span></button>
@@ -190,7 +202,7 @@
 <div class="prefs-line prefs-option"><div><strong>Check frequency</strong><small>Applies equally to all listed projects</small></div><select id="prefsInterval" aria-label="Release check frequency"><option value="6">Every 6 hours</option><option value="12" selected>Every 12 hours</option><option value="24">Daily</option></select></div>
 <div class="prefs-line prefs-option"><div><strong>Show early-stage projects</strong><small>Include alpha, pre-alpha and experimental alternatives</small></div><label class="preference-switch"><input type="checkbox" id="prefsEarly" checked aria-label="Include early-stage projects"><span aria-hidden="true"></span></label></div>
 <p class="prefs-source-state" id="prefsSourceState">Project feeds use official release sources and SHA-256 for supported installers.</p></div></dialog>
-<dialog id="aboutDialog" class="modal-dialog" aria-labelledby="aboutTitle"><div class="modal-pad about-content"><button class="modal-close icon-only" data-dialog-close="aboutDialog" aria-label="Close"><svg><use href="#i-x"/></svg></button><img class="about-logo" src="/brand-icon.png" width="82" height="82" alt=""><h2 id="aboutTitle">Challenger Hub</h2><p data-t="aboutDescription">An independent discovery hub for emerging software projects challenging established professional applications. Not affiliated with the featured creators.</p><span class="about-version">Version 2.5.9 (Operations UX)  · Independent alternatives</span></div></dialog>
+<dialog id="aboutDialog" class="modal-dialog" aria-labelledby="aboutTitle"><div class="modal-pad about-content"><button class="modal-close icon-only" data-dialog-close="aboutDialog" aria-label="Close"><svg><use href="#i-x"/></svg></button><img class="about-logo" src="/brand-icon.png" width="82" height="82" alt=""><h2 id="aboutTitle">Challenger Hub</h2><p data-t="aboutDescription">An independent discovery hub for emerging software projects challenging established professional applications. Not affiliated with the featured creators.</p><span class="about-version">Version 2.6.0 (Discovery UX)  · Independent alternatives</span></div></dialog>
 <dialog id="activityDialog" class="modal-dialog activity-dialog" aria-labelledby="activityTitle"><div class="modal-pad"><button class="modal-close icon-only" data-dialog-close="activityDialog" aria-label="Close"><svg><use href="#i-x"/></svg></button><div class="modal-badge"><svg><use href="#i-clock"/></svg></div><h2 id="activityTitle" data-t="activityLog">Activity log</h2><div id="activityContent" class="activity-content"></div></div></dialog>
 <dialog id="whatsNewDialog" class="modal-dialog whats-new-dialog" aria-labelledby="whatsNewTitle"><div class="modal-pad"><button class="modal-close icon-only" data-dialog-close="whatsNewDialog" aria-label="Close release notes"><svg><use href="#i-x"/></svg></button><div class="modal-badge"><svg><use href="#i-info"/></svg></div><h2 id="whatsNewTitle">What’s new</h2><p class="modal-help" id="whatsNewSubtitle"></p><div id="whatsNewBody" class="notes-content" role="document"></div></div></dialog>
 <dialog id="setupGuideDialog" class="modal-dialog setup-guide-dialog" aria-labelledby="setupGuideTitle">

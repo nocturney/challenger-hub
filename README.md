@@ -2,7 +2,7 @@
 Private, versioned source for Challenger Hub: a localhost desktop catalog of independent software alternatives, on Windows and macOS.
 
 ## Status
-- **UI v2.5.9:** deployed and browser-tested on Windows and macOS on 2026-10-10.
+- **UI v2.6.0:** contextual discovery hero, daily project spotlight, rotating competitor-based suggestions and readable non-truncated competitor names. Independently QA-tested on Windows and macOS on 2026-10-10.
 - **Backend health versions:** Windows and macOS report 2.5.7. Their source-scanner implementations still differ (Windows has a bounded Atom-prefix optimization); scanner parity requires a separate reviewed deployment. The 2.5.9 UI rollout did not modify API/scanner/installer runtime.
 - **Catalog:** 12 Craft applications + 152 independent projects (164 entries); the 73 newly imported research candidates are explicitly unverified and have no installer approval.
 - **Source checks:** all 164 entries use one equal-priority queue and a 12-hour cadence.
@@ -26,7 +26,7 @@ Run staging with CHALLENGER_DISABLE_SCAN=1 and CRAFT_CENTER_PORT=17876; on Windo
 Never execute deployment jobs or install unverified research-only software during tests.
 
 ## Git branches
-main contains the reviewed production catalog/server/scanner source (2.5.7) and Operations UX UI 2.5.9, including contextual Update all, explicit inspector selection, persistent operations queue, truthful active/waiting card states, and dismissible notices. See docs/OPERATIONS_UI_2.5.9.md.
+main contains the reviewed production catalog/server/scanner source (2.5.7), Operations UX 2.5.9 and contextual discovery UI 2.6.0. Competitor names are readable, daily picks rotate deterministically and the hero reflects the current user context. See docs/DISCOVERY_UI_2.6.0.md and docs/OPERATIONS_UI_2.5.9.md.
 develop is the integration branch for upcoming changes; never deploy an untested commit.
 Private repository: https://github.com/nocturney/challenger-hub
 
