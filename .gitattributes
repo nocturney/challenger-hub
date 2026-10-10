@@ -1,0 +1,13 @@
+*.js -text
+*.json -text
+*.css -text
+*.html -text
+*.md -text
+*.ps1 -text
+*.sh -text
+*.swift -text
+*.cs -text
+*.csproj -text
+*.png binary
+*.ico binary
+*.webp binary

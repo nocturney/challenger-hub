@@ -1,0 +1,4284 @@
+{
+  "schema": "challenger-registry.v1",
+  "updated": "2026-10-10",
+  "purpose": "A cross-industry challenger directory for desktop apps, independent business software, CRM/ERP, AI, automation, development and infrastructure. Deployment modes are separated from native installer eligibility.",
+  "licenseNote": "license reflects GitHub SPDX metadata only; null indicates unverified, NOT an assumption of open-source rights.",
+  "criteria": {
+    "excludeObviousEstablished": true,
+    "preferIndependentApplications": true,
+    "includeExperimental": true,
+    "allImportsResearchOnly": true,
+    "osFeaturesNotVerified": true,
+    "releaseFeedsNotConfigured": true,
+    "includeFocusedSpecialists": true,
+    "includeBusinessAndAI": true,
+    "includeSelfHosted": true
+  },
+  "projects": [
+    {
+      "id": "compositor",
+      "name": "Compositor",
+      "creator": "Robbie Tilton",
+      "repository": "robbietilton/Compositor",
+      "group": "Image editing",
+      "challenges": [
+        "Adobe Photoshop"
+      ],
+      "summary": "Mac-native image editor with Photoshop-style layers, masks, adjustments, and agent-friendly project files.",
+      "replacementType": "Direct recreation",
+      "reportedMaturity": "Usable beta / frequent releases",
+      "reportedPlatforms": [
+        "macOS 26+, Apple silicon"
+      ],
+      "license": "MIT",
+      "githubStarsAtReview": 14680,
+      "githubLastPushAtReview": "2026-10-09T05:44:41Z",
+      "sourceReports": [
+        "grok_report.pdf"
+      ],
+      "caveats": "Mac-only. Requires macOS 26 or later and Apple silicon; PSD round-trip and professional parity require testing.",
+      "priority": 1,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "Design & Imaging",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Adobe",
+          "product": "Photoshop",
+          "scope": "Direct recreation"
+        }
+      ]
+    },
+    {
+      "id": "composa",
+      "name": "Composa",
+      "creator": "dvdstelt / Composa contributors",
+      "repository": "dvdstelt/Composa",
+      "group": "Image editing",
+      "challenges": [
+        "Adobe Photoshop"
+      ],
+      "summary": "Cross-platform .NET/Avalonia recreation of Compositor's layered image-editing workflow.",
+      "replacementType": "Direct recreation",
+      "reportedMaturity": "Experimental / verify",
+      "reportedPlatforms": [
+        "Linux",
+        "Windows (less tested)"
+      ],
+      "license": null,
+      "githubStarsAtReview": 93,
+      "githubLastPushAtReview": "2026-10-03T00:53:15Z",
+      "sourceReports": [
+        "GitHub project README, independently checked 2026-10-09"
+      ],
+      "caveats": "Not the original Compositor. Linux is primary; Windows builds are newer; macOS planned. GitHub license classification unverified.",
+      "priority": 1,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "releaseChannel": "bleeding-edge",
+      "releaseChannelNote": "Research-labeled experimental / fast-changing preview; not independently production-certified.",
+      "category": "Design & Imaging",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Adobe",
+          "product": "Photoshop",
+          "scope": "Direct recreation"
+        }
+      ]
+    },
+    {
+      "id": "infinite",
+      "name": "Infinite",
+      "creator": "Naman Soni",
+      "repository": "n1m21n/Infinite",
+      "group": "Audio, nodes & compositing",
+      "challenges": [
+        "Ableton Live",
+        "TouchDesigner",
+        "Adobe After Effects"
+      ],
+      "summary": "Node-based audiovisual workstation spanning modular audio, real-time compositing, procedural 3D and plugins.",
+      "replacementType": "Reimagining",
+      "reportedMaturity": "Usable beta (research claim)",
+      "reportedPlatforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "license": null,
+      "githubStarsAtReview": 270,
+      "githubLastPushAtReview": "2026-10-09T10:32:36Z",
+      "sourceReports": [
+        "grok_report.pdf"
+      ],
+      "caveats": "Small team, ambitious scope. Repository license needs full audit; plugin binaries may use distinct terms.",
+      "priority": 1,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "releaseChannel": "bleeding-edge",
+      "releaseChannelNote": "Research-labeled experimental / fast-changing preview; not independently production-certified.",
+      "category": "Audio & Music",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Ableton",
+          "product": "Ableton Live",
+          "scope": "Reimagining"
+        },
+        {
+          "company": "Derivative",
+          "product": "TouchDesigner",
+          "scope": "Reimagining"
+        },
+        {
+          "company": "Adobe",
+          "product": "After Effects",
+          "scope": "Reimagining"
+        }
+      ]
+    },
+    {
+      "id": "friction",
+      "name": "Friction",
+      "creator": "Ole André Rodlie and contributors",
+      "repository": "friction2d/friction",
+      "group": "Motion graphics",
+      "challenges": [
+        "Adobe After Effects",
+        "Adobe Animate"
+      ],
+      "summary": "Open-source 2D vector and raster animation and motion-graphics editor with experimental effects.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Beta / release candidate (reports differ)",
+      "reportedPlatforms": [
+        "Windows",
+        "Linux"
+      ],
+      "license": "GPL-3.0",
+      "githubStarsAtReview": 1835,
+      "githubLastPushAtReview": "2026-10-09T12:25:24Z",
+      "sourceReports": [
+        "grok_report.pdf",
+        "מחקר ג'מיני.pdf",
+        "מאתגרי Open Source לתוכנות מקצועיות — מחקר מאומת.pdf"
+      ],
+      "caveats": "macOS support is inconsistent across research reports and is NOT confirmed here. Not feature-parity with After Effects.",
+      "priority": 1,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "Video & Animation",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Adobe",
+          "product": "After Effects",
+          "scope": "Focused alternative"
+        },
+        {
+          "company": "Adobe",
+          "product": "Animate",
+          "scope": "Focused alternative"
+        }
+      ]
+    },
+    {
+      "id": "grida",
+      "name": "Grida",
+      "creator": "Grida contributors",
+      "repository": "gridaco/grida",
+      "group": "Vector & UI design",
+      "challenges": [
+        "Figma",
+        "Adobe Illustrator"
+      ],
+      "summary": "Canvas and SVG design editor with Rust/Skia/WASM rendering, document format and headless export.",
+      "replacementType": "Reimagining",
+      "reportedMaturity": "Early desktop / partial editor",
+      "reportedPlatforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Web"
+      ],
+      "license": "Apache-2.0",
+      "githubStarsAtReview": 2662,
+      "githubLastPushAtReview": "2026-10-09T13:47:00Z",
+      "sourceReports": [
+        "grok_report.pdf"
+      ],
+      "caveats": "Aims broadly at design workflows, not full Figma or Illustrator parity; project also contains forms/CMS modules.",
+      "priority": 1,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "releaseChannel": "bleeding-edge",
+      "releaseChannelNote": "Research-labeled experimental / fast-changing preview; not independently production-certified.",
+      "category": "Design & Imaging",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Figma",
+          "product": "Figma",
+          "scope": "Reimagining"
+        },
+        {
+          "company": "Adobe",
+          "product": "Illustrator",
+          "scope": "Reimagining"
+        }
+      ]
+    },
+    {
+      "id": "limo-cad",
+      "name": "Limo CAD",
+      "creator": "limo-cad contributors",
+      "repository": "limo-cad/Limo-CAD",
+      "group": "CAD & engineering",
+      "challenges": [
+        "SolidWorks",
+        "Autodesk Fusion"
+      ],
+      "summary": "Early-stage local-first parametric mechanical CAD project exploring assemblies, STEP and agent integration.",
+      "replacementType": "Direct alternative",
+      "reportedMaturity": "Pre-alpha / experimental",
+      "reportedPlatforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "license": "LGPL-2.1",
+      "githubStarsAtReview": 15,
+      "githubLastPushAtReview": "2026-10-09T16:52:06Z",
+      "sourceReports": [
+        "grok_report.pdf"
+      ],
+      "caveats": "Very early development with small public footprint. Reported platform features and MCP claims still need hands-on verification.",
+      "priority": 1,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "releaseChannel": "bleeding-edge",
+      "releaseChannelNote": "Research-labeled experimental / fast-changing preview; not independently production-certified.",
+      "category": "3D & Manufacturing",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Dassault Systèmes",
+          "product": "SolidWorks",
+          "scope": "Direct alternative"
+        },
+        {
+          "company": "Autodesk",
+          "product": "Fusion",
+          "scope": "Direct alternative"
+        }
+      ]
+    },
+    {
+      "id": "dune3d",
+      "name": "Dune 3D",
+      "creator": "Dune 3D contributors",
+      "repository": "dune3d/dune3d",
+      "group": "CAD & engineering",
+      "challenges": [
+        "SolidWorks",
+        "Autodesk Fusion"
+      ],
+      "summary": "Independent 3D constraint-driven CAD editor using Open CASCADE and a SolveSpace-style solver.",
+      "replacementType": "Direct alternative",
+      "reportedMaturity": "Developer tool / reported usable",
+      "reportedPlatforms": [],
+      "license": "GPL-3.0",
+      "githubStarsAtReview": 2099,
+      "githubLastPushAtReview": "2026-10-09T14:56:50Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff(1).md"
+      ],
+      "caveats": "Real workflow coverage, OS builds, STEP round trip and manufacturing suitability require local tests.",
+      "priority": 1,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "3D & Manufacturing",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Dassault Systèmes",
+          "product": "SolidWorks",
+          "scope": "Direct alternative"
+        },
+        {
+          "company": "Autodesk",
+          "product": "Fusion",
+          "scope": "Direct alternative"
+        }
+      ]
+    },
+    {
+      "id": "material-maker",
+      "name": "Material Maker",
+      "creator": "RodZill4",
+      "repository": "RodZill4/material-maker",
+      "group": "3D materials",
+      "challenges": [
+        "Adobe Substance 3D Designer"
+      ],
+      "summary": "Node-based procedural material and texture authoring tool built on Godot.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Usable project / verify release",
+      "reportedPlatforms": [],
+      "license": "MIT",
+      "githubStarsAtReview": 5974,
+      "githubLastPushAtReview": "2026-10-07T05:09:54Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff(1).md"
+      ],
+      "caveats": "A specialized material workflow, not a full Substance 3D suite. Import/export validation is pending.",
+      "priority": 1,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "3D & Manufacturing",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Adobe",
+          "product": "Substance 3D Designer",
+          "scope": "Focused alternative"
+        }
+      ]
+    },
+    {
+      "id": "godsvg",
+      "name": "GodSVG",
+      "creator": "MewPurPur",
+      "repository": "MewPurPur/GodSVG",
+      "group": "Vector & UI design",
+      "challenges": [
+        "Adobe Illustrator",
+        "Affinity Designer"
+      ],
+      "summary": "Structured SVG editor with a direct source-editing workflow, on desktop and web.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Late alpha (research report)",
+      "reportedPlatforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Web"
+      ],
+      "license": "MIT",
+      "githubStarsAtReview": 2771,
+      "githubLastPushAtReview": "2026-10-09T05:56:06Z",
+      "sourceReports": [
+        "מאתגרי Open Source לתוכנות מקצועיות — מחקר מאומת.pdf"
+      ],
+      "caveats": "Young and intentionally focused; not a complete Illustrator-class suite.",
+      "priority": 1,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "releaseChannel": "bleeding-edge",
+      "releaseChannelNote": "Research-labeled experimental / fast-changing preview; not independently production-certified.",
+      "category": "Design & Imaging",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Adobe",
+          "product": "Illustrator",
+          "scope": "Focused alternative"
+        },
+        {
+          "company": null,
+          "product": "Affinity Designer",
+          "scope": "Focused alternative"
+        }
+      ]
+    },
+    {
+      "id": "vgc",
+      "name": "VGC",
+      "creator": "Boris Dalstein / VGC contributors",
+      "repository": "vgc/vgc",
+      "group": "Vector animation",
+      "challenges": [
+        "Adobe Illustrator",
+        "Adobe Animate"
+      ],
+      "summary": "Vector graphics and 2D animation research application built around Vector Graphics Complex data structures.",
+      "replacementType": "Reimagining",
+      "reportedMaturity": "Alpha (research report)",
+      "reportedPlatforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "license": "Apache-2.0",
+      "githubStarsAtReview": 338,
+      "githubLastPushAtReview": "2025-01-31T16:48:41Z",
+      "sourceReports": [
+        "מחקר ג'מיני.pdf"
+      ],
+      "caveats": "GitHub last push is Jan 2025; current canonical development location and packaged app maturity need rechecking.",
+      "priority": 2,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "Video & Animation",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Adobe",
+          "product": "Illustrator",
+          "scope": "Reimagining"
+        },
+        {
+          "company": "Adobe",
+          "product": "Animate",
+          "scope": "Reimagining"
+        }
+      ]
+    },
+    {
+      "id": "glaxnimate",
+      "name": "Glaxnimate",
+      "creator": "KDE / Glaxnimate contributors",
+      "repository": "KDE/glaxnimate",
+      "group": "Vector animation",
+      "challenges": [
+        "Adobe Animate",
+        "Lottie workflow tools"
+      ],
+      "summary": "Vector animation editor supporting Lottie/TGS and other 2D animation workflows.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Stable (research report)",
+      "reportedPlatforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "license": null,
+      "githubStarsAtReview": 40,
+      "githubLastPushAtReview": "2026-10-05T04:08:51Z",
+      "sourceReports": [
+        "מחקר ג'מיני.pdf"
+      ],
+      "caveats": "KDE GitHub repository may mirror upstream development; GitHub license metadata is inconclusive.",
+      "priority": 2,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "Video & Animation",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Adobe",
+          "product": "Animate",
+          "scope": "Focused alternative"
+        },
+        {
+          "company": null,
+          "product": "Lottie workflow tools",
+          "scope": "Focused alternative"
+        }
+      ]
+    },
+    {
+      "id": "mfek-glif",
+      "name": "MFEKglif",
+      "creator": "Modular Font Editor K",
+      "repository": "MFEK/glif",
+      "group": "Fonts & typography",
+      "challenges": [
+        "Glyphs",
+        "RoboFont"
+      ],
+      "summary": "Independent UFO .glif glyph editor and font-tooling building block.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Beta (research report)",
+      "reportedPlatforms": [],
+      "license": "Apache-2.0",
+      "githubStarsAtReview": 211,
+      "githubLastPushAtReview": "2026-07-22T05:36:19Z",
+      "sourceReports": [
+        "מאתגרי Open Source לתוכנות מקצועיות — מחקר מאומת.pdf"
+      ],
+      "caveats": "Not a complete end-to-end font editor; workflows rely on a wider collection of tools.",
+      "priority": 2,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "Design & Imaging",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Glyphs",
+          "product": "Glyphs",
+          "scope": "Focused alternative"
+        },
+        {
+          "company": "RoboFont",
+          "product": "RoboFont",
+          "scope": "Focused alternative"
+        }
+      ]
+    },
+    {
+      "id": "zrythm",
+      "name": "Zrythm",
+      "creator": "Zrythm contributors",
+      "repository": "zrythm/zrythm",
+      "group": "Audio & music",
+      "challenges": [
+        "FL Studio",
+        "Steinberg Cubase"
+      ],
+      "summary": "Open-source digital audio workstation focused on timeline production and workflow automation.",
+      "replacementType": "Direct alternative",
+      "reportedMaturity": "Usable beta (research report)",
+      "reportedPlatforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "license": null,
+      "githubStarsAtReview": 3149,
+      "githubLastPushAtReview": "2026-10-04T07:48:21Z",
+      "sourceReports": [
+        "מחקר ג'מיני.pdf"
+      ],
+      "caveats": "GitHub is an official mirror. License and distributed binary terms must be verified at source.",
+      "priority": 1,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "Audio & Music",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Image-Line",
+          "product": "FL Studio",
+          "scope": "Direct alternative"
+        },
+        {
+          "company": "Steinberg",
+          "product": "Cubase",
+          "scope": "Direct alternative"
+        }
+      ]
+    },
+    {
+      "id": "bespoke-synth",
+      "name": "Bespoke Synth",
+      "creator": "Bespoke Synth contributors",
+      "repository": "BespokeSynth/BespokeSynth",
+      "group": "Audio & music",
+      "challenges": [
+        "Ableton Live",
+        "Bitwig Studio",
+        "VCV Rack Pro"
+      ],
+      "summary": "Highly modular audiovisual patching environment for synthesis, sequencing and live performance.",
+      "replacementType": "Reimagining",
+      "reportedMaturity": "Stable (research report)",
+      "reportedPlatforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "license": "GPL-3.0",
+      "githubStarsAtReview": 4735,
+      "githubLastPushAtReview": "2026-10-08T04:15:40Z",
+      "sourceReports": [
+        "מאתגרי Open Source לתוכנות מקצועיות — מחקר מאומת.pdf"
+      ],
+      "caveats": "Unconventional modular workflow; not a substitute for every multitrack DAW task.",
+      "priority": 1,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "Audio & Music",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Ableton",
+          "product": "Ableton Live",
+          "scope": "Reimagining"
+        },
+        {
+          "company": "Bitwig",
+          "product": "Bitwig Studio",
+          "scope": "Reimagining"
+        },
+        {
+          "company": "VCV",
+          "product": "VCV Rack Pro",
+          "scope": "Reimagining"
+        }
+      ]
+    },
+    {
+      "id": "stargate-daw",
+      "name": "Stargate DAW",
+      "creator": "Stargate DAW contributors",
+      "repository": "stargatedaw/stargate",
+      "group": "Audio & music",
+      "challenges": [
+        "FL Studio",
+        "Ableton Live"
+      ],
+      "summary": "Independent workstation with audio editing, instrumentation and effect plugins.",
+      "replacementType": "Direct alternative",
+      "reportedMaturity": "Usable beta (research report)",
+      "reportedPlatforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "license": "GPL-3.0",
+      "githubStarsAtReview": 880,
+      "githubLastPushAtReview": "2025-04-21T17:51:22Z",
+      "sourceReports": [
+        "מאתגרי Open Source לתוכנות מקצועיות — מחקר מאומת.pdf"
+      ],
+      "caveats": "Last observed GitHub push was Apr 2025; current maintenance status requires review.",
+      "priority": 2,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "Audio & Music",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Image-Line",
+          "product": "FL Studio",
+          "scope": "Direct alternative"
+        },
+        {
+          "company": "Ableton",
+          "product": "Ableton Live",
+          "scope": "Direct alternative"
+        }
+      ]
+    },
+    {
+      "id": "horizon-eda",
+      "name": "Horizon EDA",
+      "creator": "Horizon EDA contributors",
+      "repository": "horizon-eda/horizon",
+      "group": "Electronics & PCB",
+      "challenges": [
+        "Altium Designer",
+        "Autodesk EAGLE"
+      ],
+      "summary": "Integrated electronics schematic capture and PCB design application.",
+      "replacementType": "Direct alternative",
+      "reportedMaturity": "Stable (research report)",
+      "reportedPlatforms": [
+        "Windows",
+        "Linux"
+      ],
+      "license": "GPL-3.0",
+      "githubStarsAtReview": 1320,
+      "githubLastPushAtReview": "2026-10-04T19:23:57Z",
+      "sourceReports": [
+        "מאתגרי Open Source לתוכנות מקצועיות — מחקר מאומת.pdf"
+      ],
+      "caveats": "Do not assume macOS binaries or full commercial tool parity. Component ecosystem must be assessed.",
+      "priority": 1,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "3D & Manufacturing",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Altium",
+          "product": "Altium Designer",
+          "scope": "Direct alternative"
+        },
+        {
+          "company": "Autodesk",
+          "product": "EAGLE",
+          "scope": "Direct alternative"
+        }
+      ]
+    },
+    {
+      "id": "kiri-moto",
+      "name": "Kiri:Moto",
+      "creator": "GridSpace contributors",
+      "repository": "GridSpace/grid-apps",
+      "group": "Manufacturing & CAM",
+      "challenges": [
+        "Autodesk Fusion CAM",
+        "Simplify3D"
+      ],
+      "summary": "Browser-first production interface for FDM slicing, CNC operations and laser workflows.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Established project / research report",
+      "reportedPlatforms": [
+        "Web",
+        "Desktop builds",
+        "Docker"
+      ],
+      "license": "MIT",
+      "githubStarsAtReview": 913,
+      "githubLastPushAtReview": "2026-10-04T16:42:46Z",
+      "sourceReports": [
+        "מאתגרי Open Source לתוכנות מקצועיות — מחקר מאומת.pdf"
+      ],
+      "caveats": "One application inside the grid-apps repository; machine profiles and output G-code require validation.",
+      "priority": 1,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "3D & Manufacturing",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Autodesk",
+          "product": "Fusion CAM",
+          "scope": "Focused alternative"
+        },
+        {
+          "company": "Simplify3D",
+          "product": "Simplify3D",
+          "scope": "Focused alternative"
+        }
+      ]
+    },
+    {
+      "id": "inochi-creator",
+      "name": "Inochi Creator",
+      "creator": "Inochi2D contributors",
+      "repository": "Inochi2D/inochi-creator",
+      "group": "2D character rigging",
+      "challenges": [
+        "Live2D Cubism"
+      ],
+      "summary": "2D layered-character rigging and puppet-animation tool with a dedicated runtime ecosystem.",
+      "replacementType": "Direct alternative",
+      "reportedMaturity": "Usable / verify",
+      "reportedPlatforms": [],
+      "license": "BSD-2-Clause",
+      "githubStarsAtReview": 1240,
+      "githubLastPushAtReview": "2025-06-16T20:39:43Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff(1).md"
+      ],
+      "caveats": "Not guaranteed to import/export native Live2D project formats; activity needs checking.",
+      "priority": 2,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "Video & Animation",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Live2D",
+          "product": "Live2D Cubism",
+          "scope": "Direct alternative"
+        }
+      ]
+    },
+    {
+      "id": "pixieditor",
+      "name": "PixiEditor",
+      "creator": "PixiEditor contributors",
+      "repository": "PixiEditor/PixiEditor",
+      "group": "Image editing",
+      "challenges": [
+        "Adobe Photoshop",
+        "Aseprite"
+      ],
+      "summary": "Independent multifunction 2D editor covering pixels, sprites, illustration and design.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Active / verify maturity",
+      "reportedPlatforms": [],
+      "license": "LGPL-3.0",
+      "githubStarsAtReview": 8093,
+      "githubLastPushAtReview": "2026-10-09T14:39:10Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff(1).md"
+      ],
+      "caveats": "Broad 2D scope but not Photoshop feature parity; installer/source distribution needs vetting.",
+      "priority": 2,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "Design & Imaging",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Adobe",
+          "product": "Photoshop",
+          "scope": "Focused alternative"
+        },
+        {
+          "company": "Aseprite",
+          "product": "Aseprite",
+          "scope": "Focused alternative"
+        }
+      ]
+    },
+    {
+      "id": "photodemon",
+      "name": "PhotoDemon",
+      "creator": "Tanner Helland",
+      "repository": "tannerhelland/PhotoDemon",
+      "group": "Image editing",
+      "challenges": [
+        "Adobe Photoshop",
+        "PaintShop Pro"
+      ],
+      "summary": "Portable Windows image editor emphasizing advanced editing features and small footprint.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Usable / long-running indie project",
+      "reportedPlatforms": [
+        "Windows"
+      ],
+      "license": null,
+      "githubStarsAtReview": 2372,
+      "githubLastPushAtReview": "2026-08-18T17:17:58Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff(1).md"
+      ],
+      "caveats": "Windows-only. GitHub SPDX metadata did not confirm a license; review original source terms.",
+      "priority": 2,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "Design & Imaging",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Adobe",
+          "product": "Photoshop",
+          "scope": "Focused alternative"
+        },
+        {
+          "company": null,
+          "product": "PaintShop Pro",
+          "scope": "Focused alternative"
+        }
+      ]
+    },
+    {
+      "id": "real-video-enhancer",
+      "name": "REAL Video Enhancer",
+      "creator": "TNTwise",
+      "repository": "TNTwise/REAL-Video-Enhancer",
+      "group": "Video post-production",
+      "challenges": [
+        "Topaz Video AI"
+      ],
+      "summary": "Local video upscaling, frame interpolation, denoising and decompression with optional GPU acceleration.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Active / verify release",
+      "reportedPlatforms": [
+        "Windows",
+        "Linux",
+        "macOS"
+      ],
+      "license": "AGPL-3.0",
+      "githubStarsAtReview": 2308,
+      "githubLastPushAtReview": "2026-09-02T03:21:31Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff(1).md"
+      ],
+      "caveats": "GPU backend, Mac support and model dependencies vary; compare quality and performance against the commercial tool.",
+      "priority": 1,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "Video & Animation",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Topaz Labs",
+          "product": "Topaz Video AI",
+          "scope": "Focused alternative"
+        }
+      ]
+    },
+    {
+      "id": "oak-video-editor",
+      "name": "Oak Video Editor",
+      "creator": "Oak Video Editor Community",
+      "repository": "OakVideoEditorCommunity/oak",
+      "group": "Video editing",
+      "challenges": [
+        "Adobe Premiere Pro"
+      ],
+      "summary": "Small community fork of Olive pursuing nonlinear video editing, familiar shortcuts and effects.",
+      "replacementType": "Direct alternative",
+      "reportedMaturity": "Experimental fork",
+      "reportedPlatforms": [],
+      "license": "GPL-3.0",
+      "githubStarsAtReview": 86,
+      "githubLastPushAtReview": "2026-10-02T11:14:46Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff(1).md"
+      ],
+      "caveats": "Early community fork. Builds, release cadence, compatibility and maintainership require close monitoring.",
+      "priority": 1,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "releaseChannel": "bleeding-edge",
+      "releaseChannelNote": "Research-labeled experimental / fast-changing preview; not independently production-certified.",
+      "category": "Video & Animation",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Adobe",
+          "product": "Premiere Pro",
+          "scope": "Direct alternative"
+        }
+      ]
+    },
+    {
+      "id": "armorpaint",
+      "name": "ArmorPaint",
+      "creator": "Armory3D contributors",
+      "repository": "armory3d/armorpaint",
+      "group": "3D materials",
+      "challenges": [
+        "Adobe Substance 3D Painter"
+      ],
+      "summary": "Dedicated 3D model texture-painting and PBR material-editing application.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Active project / verify distribution",
+      "reportedPlatforms": [],
+      "license": null,
+      "githubStarsAtReview": 5346,
+      "githubLastPushAtReview": "2026-10-08T20:01:26Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff(1).md"
+      ],
+      "caveats": "Official built distributions may be paid. License and distribution/asset rights not confirmed by GitHub SPDX metadata.",
+      "priority": 2,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "3D & Manufacturing",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Adobe",
+          "product": "Substance 3D Painter",
+          "scope": "Focused alternative"
+        }
+      ]
+    },
+    {
+      "id": "solvespace",
+      "name": "SolveSpace",
+      "creator": "SolveSpace contributors",
+      "repository": "solvespace/solvespace",
+      "group": "CAD & engineering",
+      "challenges": [
+        "AutoCAD",
+        "SolidWorks"
+      ],
+      "summary": "Compact constraint-based parametric 2D/3D CAD application with sketches and assemblies.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Mature / niche",
+      "reportedPlatforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "license": "GPL-3.0",
+      "githubStarsAtReview": 4187,
+      "githubLastPushAtReview": "2026-10-09T14:27:39Z",
+      "sourceReports": [
+        "מחקר ג'מיני.pdf",
+        "מאתגרי Open Source לתוכנות מקצועיות — מחקר מאומת.pdf"
+      ],
+      "caveats": "Older niche project included for substantive CAD approach, not claimed as new or a full SolidWorks replacement.",
+      "priority": 3,
+      "reviewStatus": "repository-confirmed",
+      "verifiedAt": "2026-10-09",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "3D & Manufacturing",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": null,
+          "product": "AutoCAD",
+          "scope": "Focused alternative"
+        },
+        {
+          "company": "Dassault Systèmes",
+          "product": "SolidWorks",
+          "scope": "Focused alternative"
+        }
+      ]
+    },
+    {
+      "id": "losslesscut",
+      "name": "LosslessCut",
+      "creator": "Mifi",
+      "repository": "mifi/lossless-cut",
+      "group": "Video editing",
+      "challenges": [
+        "Adobe Premiere Pro",
+        "Final Cut Pro"
+      ],
+      "summary": "Fast lossless cutting, merging and remuxing for video/audio, not a full timeline NLE.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Stable (research report)",
+      "reportedPlatforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "license": "GPL-2.0",
+      "githubStarsAtReview": 44406,
+      "githubLastPushAtReview": "2026-09-30T22:09:42Z",
+      "sourceReports": [
+        "מאתגרי Open Source לתוכנות מקצועיות — מחקר מאומת.pdf"
+      ],
+      "caveats": "Mature, relatively well known video companion; not a Premiere replacement.",
+      "priority": 3,
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "Video & Animation",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Adobe",
+          "product": "Premiere Pro",
+          "scope": "Focused alternative"
+        },
+        {
+          "company": "Apple",
+          "product": "Final Cut Pro",
+          "scope": "Focused alternative"
+        }
+      ]
+    },
+    {
+      "id": "gyroflow",
+      "name": "Gyroflow",
+      "creator": "Gyroflow contributors",
+      "repository": "gyroflow/gyroflow",
+      "group": "Video post-production",
+      "challenges": [
+        "DaVinci Resolve Stabilizer",
+        "Adobe Premiere Pro"
+      ],
+      "summary": "Gyroscope-based video stabilization with desktop GUI, GPU acceleration and plugins.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Stable (research report)",
+      "reportedPlatforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "license": "GPL-3.0",
+      "githubStarsAtReview": 9578,
+      "githubLastPushAtReview": "2026-10-08T01:33:59Z",
+      "sourceReports": [
+        "מאתגרי Open Source לתוכנות מקצועיות — מחקר מאומת.pdf"
+      ],
+      "caveats": "Focused stabilization companion; plugin license and model dependencies differ.",
+      "priority": 2,
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "Video & Animation",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Blackmagic Design",
+          "product": "DaVinci Resolve Stabilizer",
+          "scope": "Focused alternative"
+        },
+        {
+          "company": "Adobe",
+          "product": "Premiere Pro",
+          "scope": "Focused alternative"
+        }
+      ]
+    },
+    {
+      "id": "synfig",
+      "name": "Synfig Studio",
+      "creator": "Synfig contributors",
+      "repository": "synfig/synfig",
+      "group": "Vector animation",
+      "challenges": [
+        "Adobe Animate",
+        "Toon Boom Harmony"
+      ],
+      "summary": "2D vector animation workstation with tweening and compositing.",
+      "replacementType": "Direct alternative",
+      "reportedMaturity": "Stable (research report)",
+      "reportedPlatforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "license": "GPL-3.0",
+      "githubStarsAtReview": 2312,
+      "githubLastPushAtReview": "2026-10-03T17:07:57Z",
+      "sourceReports": [
+        "מאתגרי Open Source לתוכנות מקצועיות — מחקר מאומת.pdf"
+      ],
+      "caveats": "Workflow differs from Animate; feature parity and interoperability require testing.",
+      "priority": 2,
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "Video & Animation",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Adobe",
+          "product": "Animate",
+          "scope": "Direct alternative"
+        },
+        {
+          "company": "Toon Boom",
+          "product": "Toon Boom Harmony",
+          "scope": "Direct alternative"
+        }
+      ]
+    },
+    {
+      "id": "helio",
+      "name": "Helio Sequencer",
+      "creator": "Helio FM / Peter Rudenko",
+      "repository": "helio-fm/helio-sequencer",
+      "group": "Audio & music",
+      "challenges": [
+        "Logic Pro",
+        "Ableton Live"
+      ],
+      "summary": "Minimalist music and MIDI sequencer with composition-focused desktop workflow.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Stable (research report)",
+      "reportedPlatforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android",
+        "iOS"
+      ],
+      "license": "GPL-3.0",
+      "githubStarsAtReview": 3559,
+      "githubLastPushAtReview": "2026-09-22T16:18:32Z",
+      "sourceReports": [
+        "מאתגרי Open Source לתוכנות מקצועיות — מחקר מאומת.pdf"
+      ],
+      "caveats": "Not a full audio recording and mixing DAW.",
+      "priority": 1,
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "Audio & Music",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Apple",
+          "product": "Logic Pro",
+          "scope": "Focused alternative"
+        },
+        {
+          "company": "Ableton",
+          "product": "Ableton Live",
+          "scope": "Focused alternative"
+        }
+      ]
+    },
+    {
+      "id": "cardinal",
+      "name": "Cardinal",
+      "creator": "DISTRHO contributors",
+      "repository": "DISTRHO/Cardinal",
+      "group": "Audio & music",
+      "challenges": [
+        "VCV Rack Pro",
+        "Native Instruments Reaktor"
+      ],
+      "summary": "Standalone virtual modular synthesizer, also available as plugin formats.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Stable (research report)",
+      "reportedPlatforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "FreeBSD",
+        "Web"
+      ],
+      "license": "GPL-3.0",
+      "githubStarsAtReview": 3217,
+      "githubLastPushAtReview": "2026-07-28T11:06:35Z",
+      "sourceReports": [
+        "מאתגרי Open Source לתוכנות מקצועיות — מחקר מאומת.pdf"
+      ],
+      "caveats": "Modular synthesis workflow; plugins and modules have their own requirements.",
+      "priority": 1,
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "Audio & Music",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "VCV",
+          "product": "VCV Rack Pro",
+          "scope": "Focused alternative"
+        },
+        {
+          "company": "Native Instruments",
+          "product": "Native Instruments Reaktor",
+          "scope": "Focused alternative"
+        }
+      ]
+    },
+    {
+      "id": "goxel",
+      "name": "Goxel",
+      "creator": "Guillaume Chereau",
+      "repository": "guillaumechereau/goxel",
+      "group": "3D voxel modeling",
+      "challenges": [
+        "MagicaVoxel"
+      ],
+      "summary": "Independent cross-platform voxel modeling editor for pixel-like 3D art.",
+      "replacementType": "Direct alternative",
+      "reportedMaturity": "Stable; slower release cadence (research report)",
+      "reportedPlatforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android",
+        "iOS"
+      ],
+      "license": "GPL-3.0",
+      "githubStarsAtReview": 3206,
+      "githubLastPushAtReview": "2026-07-26T03:18:33Z",
+      "sourceReports": [
+        "מאתגרי Open Source לתוכנות מקצועיות — מחקר מאומת.pdf"
+      ],
+      "caveats": "Voxel-only modeling niche; not a full 3D DCC suite.",
+      "priority": 1,
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "3D & Manufacturing",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "MagicaVoxel",
+          "product": "MagicaVoxel",
+          "scope": "Direct alternative"
+        }
+      ]
+    },
+    {
+      "id": "cloudcompare",
+      "name": "CloudCompare",
+      "creator": "CloudCompare contributors",
+      "repository": "CloudCompare/CloudCompare",
+      "group": "3D scanning & point clouds",
+      "challenges": [
+        "Autodesk ReCap",
+        "Leica Cyclone"
+      ],
+      "summary": "Desktop point-cloud registration, inspection, measurement and mesh processing.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Stable (research report)",
+      "reportedPlatforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "license": null,
+      "githubStarsAtReview": 4788,
+      "githubLastPushAtReview": "2026-10-09T07:54:39Z",
+      "sourceReports": [
+        "מאתגרי Open Source לתוכנות מקצועיות — מחקר מאומת.pdf"
+      ],
+      "caveats": "Specialist workflow. GitHub license metadata inconclusive; audit source license.",
+      "priority": 2,
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "3D & Manufacturing",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Autodesk",
+          "product": "ReCap",
+          "scope": "Focused alternative"
+        },
+        {
+          "company": "Leica Geosystems",
+          "product": "Leica Cyclone",
+          "scope": "Focused alternative"
+        }
+      ]
+    },
+    {
+      "id": "meshlab",
+      "name": "MeshLab",
+      "creator": "Visual Computing Lab",
+      "repository": "cnr-isti-vclab/meshlab",
+      "group": "3D mesh processing",
+      "challenges": [
+        "Autodesk Meshmixer",
+        "Geomagic Wrap"
+      ],
+      "summary": "3D mesh cleanup, inspection and filters for scan workflows.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Stable (research report)",
+      "reportedPlatforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "license": "GPL-3.0",
+      "githubStarsAtReview": 5858,
+      "githubLastPushAtReview": "2026-08-25T20:38:52Z",
+      "sourceReports": [
+        "מאתגרי Open Source לתוכנות מקצועיות — מחקר מאומת.pdf"
+      ],
+      "caveats": "Not a full sculpting/CAD authoring suite.",
+      "priority": 2,
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "ERP & Operations",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Autodesk",
+          "product": "Meshmixer",
+          "scope": "Focused alternative"
+        },
+        {
+          "company": null,
+          "product": "Geomagic Wrap",
+          "scope": "Focused alternative"
+        }
+      ]
+    },
+    {
+      "id": "f3d",
+      "name": "F3D",
+      "creator": "F3D contributors",
+      "repository": "f3d-app/f3d",
+      "group": "3D viewers & conversion",
+      "challenges": [
+        "Autodesk Viewer",
+        "commercial CAD viewers"
+      ],
+      "summary": "Fast standalone 3D viewer with headless rendering and CLI.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Stable (research report)",
+      "reportedPlatforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "license": "BSD-3-Clause",
+      "githubStarsAtReview": 4747,
+      "githubLastPushAtReview": "2026-10-09T16:25:29Z",
+      "sourceReports": [
+        "מאתגרי Open Source לתוכנות מקצועיות — מחקר מאומת.pdf"
+      ],
+      "caveats": "Viewer rather than authoring tool; file formats depend on plugins/build.",
+      "priority": 1,
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "3D & Manufacturing",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Autodesk",
+          "product": "Viewer",
+          "scope": "Focused alternative"
+        },
+        {
+          "company": null,
+          "product": "commercial CAD viewers",
+          "scope": "Focused alternative"
+        }
+      ]
+    },
+    {
+      "id": "mayo",
+      "name": "Mayo",
+      "creator": "Fougue contributors",
+      "repository": "fougue/mayo",
+      "group": "CAD & engineering",
+      "challenges": [
+        "Autodesk Viewer",
+        "commercial STEP/IGES converters"
+      ],
+      "summary": "Independent CAD viewer and format converter for STEP and IGES, with MayoConv CLI.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Stable (research report)",
+      "reportedPlatforms": [
+        "Windows",
+        "Linux"
+      ],
+      "license": "BSD-2-Clause",
+      "githubStarsAtReview": 2283,
+      "githubLastPushAtReview": "2026-10-09T12:15:21Z",
+      "sourceReports": [
+        "מאתגרי Open Source לתוכנות מקצועיות — מחקר מאומת.pdf"
+      ],
+      "caveats": "Not a CAD authoring editor; no macOS packaging verified.",
+      "priority": 1,
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "3D & Manufacturing",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Autodesk",
+          "product": "Viewer",
+          "scope": "Focused alternative"
+        },
+        {
+          "company": null,
+          "product": "commercial STEP/IGES converters",
+          "scope": "Focused alternative"
+        }
+      ]
+    },
+    {
+      "id": "olive",
+      "name": "Olive Editor",
+      "creator": "Olive contributors",
+      "repository": "olive-editor/olive",
+      "group": "Video editing",
+      "challenges": [
+        "Adobe Premiere Pro",
+        "DaVinci Resolve"
+      ],
+      "summary": "Experimental node-based NLE with uncertain maintenance continuity.",
+      "replacementType": "Direct alternative",
+      "reportedMaturity": "Alpha; last repository activity observed December 2024",
+      "reportedPlatforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "license": "GPL-3.0",
+      "githubStarsAtReview": 9132,
+      "githubLastPushAtReview": "2024-12-05T10:34:17Z",
+      "sourceReports": [
+        "מאתגרי Open Source לתוכנות מקצועיות — מחקר מאומת.pdf"
+      ],
+      "caveats": "Dormant / legacy research watchlist, NOT a current bleeding-edge build.",
+      "priority": 3,
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "developmentStage": "dormant",
+      "developmentSignal": "Dormant / watchlist",
+      "category": "Video & Animation",
+      "deploymentType": "Desktop application",
+      "competition": [
+        {
+          "company": "Adobe",
+          "product": "Premiere Pro",
+          "scope": "Direct alternative"
+        },
+        {
+          "company": "Blackmagic Design",
+          "product": "DaVinci Resolve",
+          "scope": "Direct alternative"
+        }
+      ]
+    },
+    {
+      "id": "twenty",
+      "name": "Twenty CRM",
+      "creator": "Twenty",
+      "repository": "twentyhq/twenty",
+      "category": "CRM & Sales",
+      "group": "CRM",
+      "summary": "Open-source CRM with customizable data models and pipeline workflows.",
+      "replacementType": "Direct alternative",
+      "deploymentType": "Docker / self-host",
+      "reportedMaturity": "Active development; maturity not independently verified",
+      "license": null,
+      "challenges": [
+        "Salesforce Sales Cloud",
+        "HubSpot Sales Hub"
+      ],
+      "competition": [
+        {
+          "company": "Salesforce",
+          "product": "Sales Cloud",
+          "scope": "Direct alternative"
+        },
+        {
+          "company": "HubSpot",
+          "product": "Sales Hub",
+          "scope": "Direct alternative"
+        }
+      ],
+      "reportedPlatforms": [
+        "Docker",
+        "Linux",
+        "Windows via Docker/WSL",
+        "macOS via Docker"
+      ],
+      "caveats": "Community and hosted editions differ; review licensing and commercial modules.",
+      "priority": 2,
+      "githubStarsAtReview": 58151,
+      "githubLastPushAtReview": "2026-10-10T06:03:54Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "officialIconStatus": "discovery-pending"
+    },
+    {
+      "id": "frappe-crm",
+      "name": "Frappe CRM",
+      "creator": "Frappe",
+      "repository": "frappe/crm",
+      "category": "CRM & Sales",
+      "group": "CRM",
+      "summary": "Open-source sales pipeline, leads and customer relationship management.",
+      "replacementType": "Direct alternative",
+      "deploymentType": "Docker / self-host",
+      "reportedMaturity": "Active development; maturity not independently verified",
+      "license": "AGPL-3.0",
+      "challenges": [
+        "Salesforce Sales Cloud",
+        "HubSpot Smart CRM"
+      ],
+      "competition": [
+        {
+          "company": "Salesforce",
+          "product": "Sales Cloud",
+          "scope": "Direct alternative"
+        },
+        {
+          "company": "HubSpot",
+          "product": "Smart CRM",
+          "scope": "Direct alternative"
+        }
+      ],
+      "reportedPlatforms": [
+        "Docker",
+        "Linux",
+        "Windows via Docker/WSL",
+        "macOS via Docker"
+      ],
+      "caveats": "ERPNext integration may require a Frappe environment.",
+      "priority": 2,
+      "githubStarsAtReview": 3764,
+      "githubLastPushAtReview": "2026-10-10T04:18:49Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "officialIconStatus": "discovery-pending"
+    },
+    {
+      "id": "carbon-erp",
+      "name": "Carbon",
+      "creator": "Carbon",
+      "repository": "crbnos/carbon",
+      "category": "ERP & Operations",
+      "group": "Manufacturing ERP",
+      "summary": "Manufacturing ERP, MRP, MES and quality management for modern workshops.",
+      "replacementType": "Comparable workflows",
+      "deploymentType": "Docker / self-host",
+      "reportedMaturity": "Active; production maturity reported in user research",
+      "license": null,
+      "challenges": [
+        "SAP Business One manufacturing",
+        "Oracle NetSuite manufacturing"
+      ],
+      "competition": [
+        {
+          "company": "SAP",
+          "product": "Business One manufacturing",
+          "scope": "Comparable workflows"
+        },
+        {
+          "company": "Oracle",
+          "product": "NetSuite manufacturing",
+          "scope": "Comparable workflows"
+        }
+      ],
+      "reportedPlatforms": [
+        "Docker",
+        "Linux",
+        "Windows via Docker/WSL",
+        "macOS via Docker"
+      ],
+      "caveats": "Complex self-host deployment; verify community versus commercial license and API support.",
+      "priority": 2,
+      "githubStarsAtReview": 2709,
+      "githubLastPushAtReview": "2026-10-10T04:24:54Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "officialIconStatus": "discovery-pending"
+    },
+    {
+      "id": "filaops",
+      "name": "FilaOps",
+      "creator": "BLB3DPrinting",
+      "repository": "BLB3DPrinting/filaops",
+      "category": "ERP & Operations",
+      "group": "3D print farm ERP",
+      "summary": "Niche manufacturing resource planning for additive manufacturing.",
+      "replacementType": "Focused capability overlap",
+      "deploymentType": "Docker / self-host",
+      "reportedMaturity": "Early-stage; verify deployment maturity",
+      "license": null,
+      "challenges": [
+        "Autodesk Fusion Operations",
+        "Siemens Opcenter Execution"
+      ],
+      "competition": [
+        {
+          "company": "Autodesk",
+          "product": "Fusion Operations",
+          "scope": "Focused capability overlap"
+        },
+        {
+          "company": "Siemens",
+          "product": "Opcenter Execution",
+          "scope": "Focused capability overlap"
+        }
+      ],
+      "reportedPlatforms": [
+        "Docker",
+        "Linux",
+        "Windows via Docker/WSL",
+        "macOS via Docker"
+      ],
+      "caveats": "Small ecosystem; business deployment and source license need review.",
+      "priority": 2,
+      "githubStarsAtReview": 79,
+      "githubLastPushAtReview": "2026-10-08T19:53:48Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "officialIconStatus": "discovery-pending"
+    },
+    {
+      "id": "inventree",
+      "name": "InvenTree",
+      "creator": "InvenTree",
+      "repository": "inventree/InvenTree",
+      "category": "ERP & Operations",
+      "group": "Inventory management",
+      "summary": "Inventory, part tracking, suppliers and bill-of-materials for manufacturing.",
+      "replacementType": "Focused capability overlap",
+      "deploymentType": "Docker / self-host",
+      "reportedMaturity": "Established; verify current release",
+      "license": "MIT",
+      "challenges": [
+        "Oracle NetSuite inventory",
+        "SAP Business One inventory"
+      ],
+      "competition": [
+        {
+          "company": "Oracle",
+          "product": "NetSuite inventory",
+          "scope": "Focused capability overlap"
+        },
+        {
+          "company": "SAP",
+          "product": "Business One inventory",
+          "scope": "Focused capability overlap"
+        }
+      ],
+      "reportedPlatforms": [
+        "Docker",
+        "Linux",
+        "Windows via Docker/WSL",
+        "macOS via Docker"
+      ],
+      "caveats": "Needs backend, database and setup; not a one-click native desktop installation.",
+      "priority": 2,
+      "githubStarsAtReview": 7689,
+      "githubLastPushAtReview": "2026-10-10T07:24:09Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "officialIconStatus": "discovery-pending"
+    },
+    {
+      "id": "nocobase",
+      "name": "NocoBase",
+      "creator": "NocoBase",
+      "repository": "nocobase/nocobase",
+      "category": "Data & Internal Tools",
+      "group": "No-code business apps",
+      "summary": "Extensible platform for building internal business applications with no-code and AI features.",
+      "replacementType": "Direct alternative",
+      "deploymentType": "Docker / self-host",
+      "reportedMaturity": "Established; verify current release",
+      "license": null,
+      "challenges": [
+        "Microsoft Power Apps",
+        "Airtable Enterprise"
+      ],
+      "competition": [
+        {
+          "company": "Microsoft",
+          "product": "Power Apps",
+          "scope": "Direct alternative"
+        },
+        {
+          "company": "Airtable",
+          "product": "Enterprise",
+          "scope": "Direct alternative"
+        }
+      ],
+      "reportedPlatforms": [
+        "Docker",
+        "Linux",
+        "Windows via Docker/WSL",
+        "macOS via Docker"
+      ],
+      "caveats": "Some modules have separate licensing; not a desktop program.",
+      "priority": 2,
+      "githubStarsAtReview": 24513,
+      "githubLastPushAtReview": "2026-10-10T07:53:18Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "officialIconStatus": "discovery-pending"
+    },
+    {
+      "id": "baserow",
+      "name": "Baserow",
+      "creator": "Baserow",
+      "repository": "baserow/baserow",
+      "category": "Data & Internal Tools",
+      "group": "No-code database",
+      "summary": "Collaborative database, automations, app building and AI agent workflows.",
+      "replacementType": "Direct alternative",
+      "deploymentType": "Docker / self-host",
+      "reportedMaturity": "Established; verify current release",
+      "license": null,
+      "challenges": [
+        "Airtable Platform",
+        "Microsoft Power Apps"
+      ],
+      "competition": [
+        {
+          "company": "Airtable",
+          "product": "Platform",
+          "scope": "Direct alternative"
+        },
+        {
+          "company": "Microsoft",
+          "product": "Power Apps",
+          "scope": "Direct alternative"
+        }
+      ],
+      "reportedPlatforms": [
+        "Docker",
+        "Linux",
+        "Windows via Docker/WSL",
+        "macOS via Docker"
+      ],
+      "caveats": "Cloud and self-host plan features differ; audit licensing.",
+      "priority": 2,
+      "githubStarsAtReview": 6109,
+      "githubLastPushAtReview": "2026-10-09T16:04:05Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "officialIconStatus": "discovery-pending"
+    },
+    {
+      "id": "directus",
+      "name": "Directus",
+      "creator": "Directus",
+      "repository": "directus/directus",
+      "category": "Data & Internal Tools",
+      "group": "Headless data platform",
+      "summary": "Connect existing databases to admin panels, APIs and content workflows.",
+      "replacementType": "Focused capability overlap",
+      "deploymentType": "Docker / self-host",
+      "reportedMaturity": "Established; verify current release",
+      "license": null,
+      "challenges": [
+        "Contentful Content platform",
+        "Sanity Content Lake"
+      ],
+      "competition": [
+        {
+          "company": "Contentful",
+          "product": "Content platform",
+          "scope": "Focused capability overlap"
+        },
+        {
+          "company": "Sanity",
+          "product": "Content Lake",
+          "scope": "Focused capability overlap"
+        }
+      ],
+      "reportedPlatforms": [
+        "Docker",
+        "Linux",
+        "Windows via Docker/WSL",
+        "macOS via Docker"
+      ],
+      "caveats": "Check licensing for organization size and production usage.",
+      "priority": 2,
+      "githubStarsAtReview": 38372,
+      "githubLastPushAtReview": "2026-10-09T21:45:12Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "officialIconStatus": "discovery-pending"
+    },
+    {
+      "id": "erpnext",
+      "name": "ERPNext",
+      "creator": "Frappe",
+      "repository": "frappe/erpnext",
+      "category": "ERP & Operations",
+      "group": "ERP",
+      "summary": "Business ERP covering stock, finance, buying, selling and manufacturing.",
+      "replacementType": "Direct alternative",
+      "deploymentType": "Docker / self-host",
+      "reportedMaturity": "Stable (research report)",
+      "license": "GPL-3.0",
+      "challenges": [
+        "Oracle NetSuite",
+        "SAP Business One"
+      ],
+      "competition": [
+        {
+          "company": "Oracle",
+          "product": "NetSuite",
+          "scope": "Direct alternative"
+        },
+        {
+          "company": "SAP",
+          "product": "Business One",
+          "scope": "Direct alternative"
+        }
+      ],
+      "reportedPlatforms": [
+        "Docker",
+        "Linux",
+        "Windows via Docker/WSL",
+        "macOS via Docker"
+      ],
+      "caveats": "Large deployment; ERP modules require initial configuration and accounting checks.",
+      "priority": 2,
+      "githubStarsAtReview": 39965,
+      "githubLastPushAtReview": "2026-10-10T06:19:43Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "officialIconStatus": "discovery-pending"
+    },
+    {
+      "id": "akaunting",
+      "name": "Akaunting",
+      "creator": "Akaunting",
+      "repository": "akaunting/akaunting",
+      "category": "Finance & Accounting",
+      "group": "Accounting",
+      "summary": "Self-hostable accounting and bookkeeping software for small businesses.",
+      "replacementType": "Direct alternative",
+      "deploymentType": "Docker / self-host",
+      "reportedMaturity": "Established; verify current release",
+      "license": null,
+      "challenges": [
+        "Intuit QuickBooks Online",
+        "Xero Accounting"
+      ],
+      "competition": [
+        {
+          "company": "Intuit",
+          "product": "QuickBooks Online",
+          "scope": "Direct alternative"
+        },
+        {
+          "company": "Xero",
+          "product": "Accounting",
+          "scope": "Direct alternative"
+        }
+      ],
+      "reportedPlatforms": [
+        "Docker",
+        "Linux",
+        "Windows via Docker/WSL",
+        "macOS via Docker"
+      ],
+      "caveats": "Community/paid app differences; financial use requires regional compliance review.",
+      "priority": 2,
+      "githubStarsAtReview": 10172,
+      "githubLastPushAtReview": "2026-10-08T17:43:07Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "officialIconStatus": "discovery-pending"
+    },
+    {
+      "id": "postiz",
+      "name": "Postiz",
+      "creator": "Postiz",
+      "repository": "gitroomhq/postiz-app",
+      "category": "Marketing & Publishing",
+      "group": "Social media management",
+      "summary": "Open-source social scheduling, publishing and analytics with automation.",
+      "replacementType": "Direct alternative",
+      "deploymentType": "Docker / self-host",
+      "reportedMaturity": "Established; verify current release",
+      "license": "AGPL-3.0",
+      "challenges": [
+        "Hootsuite Platform",
+        "Buffer Publish"
+      ],
+      "competition": [
+        {
+          "company": "Hootsuite",
+          "product": "Platform",
+          "scope": "Direct alternative"
+        },
+        {
+          "company": "Buffer",
+          "product": "Publish",
+          "scope": "Direct alternative"
+        }
+      ],
+      "reportedPlatforms": [
+        "Docker",
+        "Linux",
+        "Windows via Docker/WSL",
+        "macOS via Docker"
+      ],
+      "caveats": "Requires account credentials / platform API integrations; publishing permissions must be reviewed.",
+      "priority": 2,
+      "githubStarsAtReview": 36965,
+      "githubLastPushAtReview": "2026-10-09T08:37:29Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "officialIconStatus": "discovery-pending"
+    },
+    {
+      "id": "bifrost",
+      "name": "Bifrost",
+      "creator": "Maxim",
+      "repository": "maximhq/bifrost",
+      "category": "AI & Agents",
+      "group": "AI gateway",
+      "summary": "LLM and tool gateway with traffic routing, guards and provider integrations.",
+      "replacementType": "Focused capability overlap",
+      "deploymentType": "Server / CLI",
+      "reportedMaturity": "Active; growing fast",
+      "license": "Apache-2.0",
+      "challenges": [
+        "Microsoft Azure AI Foundry gateway",
+        "Amazon Bedrock routing"
+      ],
+      "competition": [
+        {
+          "company": "Microsoft",
+          "product": "Azure AI Foundry gateway",
+          "scope": "Focused capability overlap"
+        },
+        {
+          "company": "Amazon",
+          "product": "Bedrock routing",
+          "scope": "Focused capability overlap"
+        }
+      ],
+      "reportedPlatforms": [
+        "Linux",
+        "Windows via Docker/WSL",
+        "macOS",
+        "Linux servers"
+      ],
+      "caveats": "Gateway framework; not a desktop AI chat product.",
+      "priority": 2,
+      "githubStarsAtReview": 8677,
+      "githubLastPushAtReview": "2026-10-10T07:39:14Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "officialIconStatus": "discovery-pending"
+    },
+    {
+      "id": "restate",
+      "name": "Restate",
+      "creator": "Restate",
+      "repository": "restatedev/restate",
+      "category": "Developer & Automation",
+      "group": "Workflow engine",
+      "summary": "Durable execution engine and stateful workflows for applications and agents.",
+      "replacementType": "Direct alternative",
+      "deploymentType": "Server / CLI",
+      "reportedMaturity": "Production use reported in research",
+      "license": null,
+      "challenges": [
+        "Amazon AWS Step Functions",
+        "Temporal Cloud"
+      ],
+      "competition": [
+        {
+          "company": "Amazon",
+          "product": "AWS Step Functions",
+          "scope": "Direct alternative"
+        },
+        {
+          "company": "Temporal",
+          "product": "Cloud",
+          "scope": "Direct alternative"
+        }
+      ],
+      "reportedPlatforms": [
+        "Linux",
+        "Windows via Docker/WSL",
+        "macOS",
+        "Linux servers"
+      ],
+      "caveats": "Server engine; validate license and operational assumptions.",
+      "priority": 2,
+      "githubStarsAtReview": 4538,
+      "githubLastPushAtReview": "2026-10-10T00:17:12Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "officialIconStatus": "discovery-pending"
+    },
+    {
+      "id": "hatchet",
+      "name": "Hatchet",
+      "creator": "Hatchet",
+      "repository": "hatchet-dev/hatchet",
+      "category": "Developer & Automation",
+      "group": "Workflow orchestration",
+      "summary": "Durable workflows, jobs and queues for AI agents and background workers.",
+      "replacementType": "Direct alternative",
+      "deploymentType": "Docker / self-host",
+      "reportedMaturity": "Active; production use reported",
+      "license": "MIT",
+      "challenges": [
+        "Temporal Cloud",
+        "Amazon AWS Step Functions"
+      ],
+      "competition": [
+        {
+          "company": "Temporal",
+          "product": "Cloud",
+          "scope": "Direct alternative"
+        },
+        {
+          "company": "Amazon",
+          "product": "AWS Step Functions",
+          "scope": "Direct alternative"
+        }
+      ],
+      "reportedPlatforms": [
+        "Docker",
+        "Linux",
+        "Windows via Docker/WSL",
+        "macOS via Docker"
+      ],
+      "caveats": "Requires backend infrastructure and database configuration.",
+      "priority": 2,
+      "githubStarsAtReview": 8091,
+      "githubLastPushAtReview": "2026-10-09T20:01:31Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "officialIconStatus": "discovery-pending"
+    },
+    {
+      "id": "hindsight",
+      "name": "Hindsight",
+      "creator": "Vectorize",
+      "repository": "vectorize-io/hindsight",
+      "category": "AI & Agents",
+      "group": "Agent memory",
+      "summary": "Memory engine for AI agents, with retrieval and self-hosted pipelines.",
+      "replacementType": "Focused capability overlap",
+      "deploymentType": "Docker / self-host",
+      "reportedMaturity": "Active; benchmark claims in source require replication",
+      "license": "MIT",
+      "challenges": [
+        "Zep Cloud Memory",
+        "Mem0 Platform"
+      ],
+      "competition": [
+        {
+          "company": "Zep",
+          "product": "Cloud Memory",
+          "scope": "Focused capability overlap"
+        },
+        {
+          "company": "Mem0",
+          "product": "Platform",
+          "scope": "Focused capability overlap"
+        }
+      ],
+      "reportedPlatforms": [
+        "Docker",
+        "Linux",
+        "Windows via Docker/WSL",
+        "macOS via Docker"
+      ],
+      "caveats": "Benchmarks from publishers should not be treated as independently verified.",
+      "priority": 2,
+      "githubStarsAtReview": 47837,
+      "githubLastPushAtReview": "2026-10-09T18:39:34Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "officialIconStatus": "discovery-pending"
+    },
+    {
+      "id": "graphiti",
+      "name": "Graphiti",
+      "creator": "Zep",
+      "repository": "getzep/graphiti",
+      "category": "AI & Agents",
+      "group": "Knowledge graph memory",
+      "summary": "Temporal knowledge graph engine for agent memory and changing relationships.",
+      "replacementType": "Focused capability overlap",
+      "deploymentType": "Server / CLI",
+      "reportedMaturity": "Active development; maturity not independently verified",
+      "license": "Apache-2.0",
+      "challenges": [
+        "Microsoft Azure AI Search knowledge graph",
+        "Neo4j GraphRAG services"
+      ],
+      "competition": [
+        {
+          "company": "Microsoft",
+          "product": "Azure AI Search knowledge graph",
+          "scope": "Focused capability overlap"
+        },
+        {
+          "company": "Neo4j",
+          "product": "GraphRAG services",
+          "scope": "Focused capability overlap"
+        }
+      ],
+      "reportedPlatforms": [
+        "Linux",
+        "Windows via Docker/WSL",
+        "macOS",
+        "Linux servers"
+      ],
+      "caveats": "Graph engine for developers, not an out-of-box assistant.",
+      "priority": 2,
+      "githubStarsAtReview": 31603,
+      "githubLastPushAtReview": "2026-10-09T16:47:28Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "officialIconStatus": "discovery-pending"
+    },
+    {
+      "id": "letta",
+      "name": "Letta",
+      "creator": "Letta",
+      "repository": "letta-ai/letta",
+      "category": "AI & Agents",
+      "group": "Agent runtime",
+      "summary": "Runtime for long-lived, stateful AI agents with persistent memory.",
+      "replacementType": "Focused capability overlap",
+      "deploymentType": "Server / CLI",
+      "reportedMaturity": "Active development; maturity not independently verified",
+      "license": "Apache-2.0",
+      "challenges": [
+        "Microsoft Copilot Studio",
+        "Google Vertex AI Agent Builder"
+      ],
+      "competition": [
+        {
+          "company": "Microsoft",
+          "product": "Copilot Studio",
+          "scope": "Focused capability overlap"
+        },
+        {
+          "company": "Google",
+          "product": "Vertex AI Agent Builder",
+          "scope": "Focused capability overlap"
+        }
+      ],
+      "reportedPlatforms": [
+        "Linux",
+        "Windows via Docker/WSL",
+        "macOS",
+        "Linux servers"
+      ],
+      "caveats": "Requires model provider and application integration.",
+      "priority": 2,
+      "githubStarsAtReview": 25093,
+      "githubLastPushAtReview": "2026-09-10T17:59:08Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "officialIconStatus": "discovery-pending"
+    },
+    {
+      "id": "agent-vault",
+      "name": "Infisical Agent Vault",
+      "creator": "Infisical",
+      "repository": "Infisical/agent-vault",
+      "category": "Security & Infrastructure",
+      "group": "Agent credentials",
+      "summary": "Credential broker and policy gateway that prevents agents from holding raw secrets.",
+      "replacementType": "Focused capability overlap",
+      "deploymentType": "Server / CLI",
+      "reportedMaturity": "Research preview (source report)",
+      "license": null,
+      "challenges": [
+        "HashiCorp Vault",
+        "1Password Secrets Automation"
+      ],
+      "competition": [
+        {
+          "company": "HashiCorp",
+          "product": "Vault",
+          "scope": "Focused capability overlap"
+        },
+        {
+          "company": "1Password",
+          "product": "Secrets Automation",
+          "scope": "Focused capability overlap"
+        }
+      ],
+      "reportedPlatforms": [
+        "Linux",
+        "Windows via Docker/WSL",
+        "macOS",
+        "Linux servers"
+      ],
+      "caveats": "Handle secrets carefully; no unattended automatic deployment by catalog.",
+      "priority": 2,
+      "githubStarsAtReview": 2334,
+      "githubLastPushAtReview": "2026-10-04T01:53:50Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "officialIconStatus": "discovery-pending"
+    },
+    {
+      "id": "dify",
+      "name": "Dify",
+      "creator": "Dify",
+      "repository": "langgenius/dify",
+      "category": "AI & Agents",
+      "group": "Agent app builder",
+      "summary": "Visual AI agent workflows, retrieval pipelines and developer application platform.",
+      "replacementType": "Focused capability overlap",
+      "deploymentType": "Docker / self-host",
+      "reportedMaturity": "Established; verify current release",
+      "license": null,
+      "challenges": [
+        "Microsoft Copilot Studio",
+        "Google Vertex AI Agent Builder"
+      ],
+      "competition": [
+        {
+          "company": "Microsoft",
+          "product": "Copilot Studio",
+          "scope": "Focused capability overlap"
+        },
+        {
+          "company": "Google",
+          "product": "Vertex AI Agent Builder",
+          "scope": "Focused capability overlap"
+        }
+      ],
+      "reportedPlatforms": [
+        "Docker",
+        "Linux",
+        "Windows via Docker/WSL",
+        "macOS via Docker"
+      ],
+      "caveats": "Popular mainstream option included for comparison, not featured as underdog.",
+      "priority": 2,
+      "githubStarsAtReview": 158054,
+      "githubLastPushAtReview": "2026-10-10T07:48:39Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "officialIconStatus": "discovery-pending"
+    },
+    {
+      "id": "ragflow",
+      "name": "RAGFlow",
+      "creator": "InfiniFlow",
+      "repository": "infiniflow/ragflow",
+      "category": "AI & Agents",
+      "group": "RAG platform",
+      "summary": "Self-hosted retrieval and document knowledge pipeline for LLM applications.",
+      "replacementType": "Focused capability overlap",
+      "deploymentType": "Docker / self-host",
+      "reportedMaturity": "Established; verify current release",
+      "license": "Apache-2.0",
+      "challenges": [
+        "Microsoft Azure AI Search",
+        "Glean Enterprise Search"
+      ],
+      "competition": [
+        {
+          "company": "Microsoft",
+          "product": "Azure AI Search",
+          "scope": "Focused capability overlap"
+        },
+        {
+          "company": "Glean",
+          "product": "Enterprise Search",
+          "scope": "Focused capability overlap"
+        }
+      ],
+      "reportedPlatforms": [
+        "Docker",
+        "Linux",
+        "Windows via Docker/WSL",
+        "macOS via Docker"
+      ],
+      "caveats": "Requires significant compute and document ingestion infrastructure.",
+      "priority": 2,
+      "githubStarsAtReview": 91940,
+      "githubLastPushAtReview": "2026-10-10T07:33:52Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "officialIconStatus": "discovery-pending"
+    },
+    {
+      "id": "appsmith",
+      "name": "Appsmith",
+      "creator": "Appsmith",
+      "repository": "appsmithorg/appsmith",
+      "category": "Data & Internal Tools",
+      "group": "Internal app builder",
+      "summary": "Build admin panels and internal software on databases, APIs and custom workflows.",
+      "replacementType": "Direct alternative",
+      "deploymentType": "Docker / self-host",
+      "reportedMaturity": "Established; verify current release",
+      "license": "Apache-2.0",
+      "challenges": [
+        "Retool App builder",
+        "Microsoft Power Apps"
+      ],
+      "competition": [
+        {
+          "company": "Retool",
+          "product": "App builder",
+          "scope": "Direct alternative"
+        },
+        {
+          "company": "Microsoft",
+          "product": "Power Apps",
+          "scope": "Direct alternative"
+        }
+      ],
+      "reportedPlatforms": [
+        "Docker",
+        "Linux",
+        "Windows via Docker/WSL",
+        "macOS via Docker"
+      ],
+      "caveats": "Established option included as benchmark; community/enterprise features differ.",
+      "priority": 2,
+      "githubStarsAtReview": 41045,
+      "githubLastPushAtReview": "2026-10-10T03:26:57Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "officialIconStatus": "discovery-pending"
+    },
+    {
+      "id": "espocrm",
+      "name": "EspoCRM",
+      "creator": "EspoCRM",
+      "repository": "espocrm/espocrm",
+      "sector": "Business",
+      "group": "CRM & sales",
+      "challenges": [
+        "Salesforce Sales Cloud",
+        "HubSpot Smart CRM"
+      ],
+      "summary": "Modular self-hosted CRM for leads, accounts, opportunities, sales and customer records.",
+      "replacementType": "Direct alternative",
+      "reportedMaturity": "Established / exact release stage unverified",
+      "reportedPlatforms": [
+        "Self-hosted web"
+      ],
+      "license": "AGPL-3.0",
+      "caveats": "Requires PHP/database hosting; extension licensing and migration workflows require verification.",
+      "priority": 1,
+      "githubStarsAtReview": 3467,
+      "githubLastPushAtReview": "2026-10-08T12:29:55Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff.md",
+        "GitHub repository metadata verified 2026-10-09"
+      ],
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "licenseClass": "open-source",
+      "releaseChannel": null,
+      "releaseChannelNote": null,
+      "deliveryMode": "self-hosted-or-hybrid",
+      "installAdapter": null,
+      "installable": false,
+      "comparisons": [
+        {
+          "company": "Salesforce",
+          "product": "Sales Cloud",
+          "label": "Salesforce → Sales Cloud",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        },
+        {
+          "company": "HubSpot",
+          "product": "Smart CRM",
+          "label": "HubSpot → Smart CRM",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Salesforce",
+        "HubSpot"
+      ],
+      "primaryIncumbent": "Salesforce",
+      "primaryCommercialProduct": "Sales Cloud",
+      "comparisonCoverage": "Company and commercial product mapped",
+      "category": "CRM & Sales",
+      "competition": [
+        {
+          "company": "Salesforce",
+          "product": "Sales Cloud",
+          "scope": "Compared workflow"
+        },
+        {
+          "company": "HubSpot",
+          "product": "Smart CRM",
+          "scope": "Compared workflow"
+        }
+      ],
+      "deploymentType": "Docker / self-host"
+    },
+    {
+      "id": "plane",
+      "name": "Plane",
+      "creator": "Plane",
+      "repository": "makeplane/plane",
+      "sector": "Business",
+      "group": "Project management",
+      "challenges": [
+        "Atlassian Jira Software",
+        "Linear",
+        "monday.com Work Management",
+        "ClickUp"
+      ],
+      "summary": "Project and issue tracking with cycles, modules, documentation, boards and workflow views.",
+      "replacementType": "Direct alternative",
+      "reportedMaturity": "Active / exact production maturity unverified",
+      "reportedPlatforms": [
+        "Self-hosted web",
+        "Cloud"
+      ],
+      "license": "AGPL-3.0",
+      "caveats": "Web-service installation, not a simple desktop binary; paid features and enterprise integrations differ.",
+      "priority": 2,
+      "githubStarsAtReview": 60595,
+      "githubLastPushAtReview": "2026-10-09T12:23:53Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff.md",
+        "GitHub repository metadata verified 2026-10-09"
+      ],
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "licenseClass": "open-source",
+      "releaseChannel": null,
+      "releaseChannelNote": null,
+      "deliveryMode": "self-hosted-or-hybrid",
+      "installAdapter": null,
+      "installable": false,
+      "comparisons": [
+        {
+          "company": "Atlassian",
+          "product": "Jira Software",
+          "label": "Atlassian → Jira Software",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        },
+        {
+          "company": "Linear",
+          "product": "Linear",
+          "label": "Linear → Linear",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        },
+        {
+          "company": "monday.com",
+          "product": "Work Management",
+          "label": "monday.com → Work Management",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        },
+        {
+          "company": "ClickUp",
+          "product": "ClickUp",
+          "label": "ClickUp → ClickUp",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Atlassian",
+        "Linear",
+        "monday.com",
+        "ClickUp"
+      ],
+      "primaryIncumbent": "Atlassian",
+      "primaryCommercialProduct": "Jira Software",
+      "comparisonCoverage": "Company and commercial product mapped",
+      "category": "Office & Productivity",
+      "competition": [
+        {
+          "company": "Atlassian",
+          "product": "Jira Software",
+          "scope": "Compared workflow"
+        },
+        {
+          "company": "Linear",
+          "product": "Linear",
+          "scope": "Compared workflow"
+        },
+        {
+          "company": "monday.com",
+          "product": "Work Management",
+          "scope": "Compared workflow"
+        },
+        {
+          "company": "ClickUp",
+          "product": "ClickUp",
+          "scope": "Compared workflow"
+        }
+      ],
+      "deploymentType": "Docker / self-host"
+    },
+    {
+      "id": "affine",
+      "name": "AFFiNE",
+      "creator": "toeverything",
+      "repository": "toeverything/AFFiNE",
+      "sector": "Productivity",
+      "group": "Knowledge & collaboration",
+      "challenges": [
+        "Notion",
+        "Miro"
+      ],
+      "summary": "Local-first documents, connected knowledge and whiteboard workspace.",
+      "replacementType": "Reimagining",
+      "reportedMaturity": "Active / release stability not independently checked",
+      "reportedPlatforms": [
+        "Desktop",
+        "Web",
+        "Self-hosted"
+      ],
+      "license": null,
+      "caveats": "Collaboration and sync stack differs from Notion; repository license requires separate component-by-component review.",
+      "priority": 2,
+      "githubStarsAtReview": 73344,
+      "githubLastPushAtReview": "2026-10-09T09:43:21Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff.md",
+        "GitHub repository metadata verified 2026-10-09"
+      ],
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "licenseClass": "needs-review",
+      "releaseChannel": null,
+      "releaseChannelNote": null,
+      "deliveryMode": "self-hosted-or-hybrid",
+      "installAdapter": null,
+      "installable": false,
+      "comparisons": [
+        {
+          "company": "Notion",
+          "product": "Notion",
+          "label": "Notion → Notion",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        },
+        {
+          "company": "Miro",
+          "product": "Miro",
+          "label": "Miro → Miro",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Notion",
+        "Miro"
+      ],
+      "primaryIncumbent": "Notion",
+      "primaryCommercialProduct": "Notion",
+      "comparisonCoverage": "Company and commercial product mapped",
+      "category": "Office & Productivity",
+      "competition": [
+        {
+          "company": "Notion",
+          "product": "Notion",
+          "scope": "Compared workflow"
+        },
+        {
+          "company": "Miro",
+          "product": "Miro",
+          "scope": "Compared workflow"
+        }
+      ],
+      "deploymentType": "Desktop application"
+    },
+    {
+      "id": "appflowy",
+      "name": "AppFlowy",
+      "creator": "AppFlowy",
+      "repository": "AppFlowy-IO/AppFlowy",
+      "sector": "Productivity",
+      "group": "Knowledge & collaboration",
+      "challenges": [
+        "Notion"
+      ],
+      "summary": "AI-enabled collaborative documents, project management and knowledge workspace.",
+      "replacementType": "Direct alternative",
+      "reportedMaturity": "Active / exact release maturity unverified",
+      "reportedPlatforms": [
+        "Desktop",
+        "Mobile",
+        "Self-hosted"
+      ],
+      "license": "AGPL-3.0",
+      "caveats": "Cloud/sync backend and platform packages require specific release assessment.",
+      "priority": 2,
+      "githubStarsAtReview": 77207,
+      "githubLastPushAtReview": "2026-10-08T11:00:14Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff.md",
+        "GitHub repository metadata verified 2026-10-09"
+      ],
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "licenseClass": "open-source",
+      "releaseChannel": null,
+      "releaseChannelNote": null,
+      "deliveryMode": "self-hosted-or-hybrid",
+      "installAdapter": null,
+      "installable": false,
+      "comparisons": [
+        {
+          "company": "Notion",
+          "product": "Notion",
+          "label": "Notion → Notion",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Notion"
+      ],
+      "primaryIncumbent": "Notion",
+      "primaryCommercialProduct": "Notion",
+      "comparisonCoverage": "Company and commercial product mapped",
+      "category": "Office & Productivity",
+      "competition": [
+        {
+          "company": "Notion",
+          "product": "Notion",
+          "scope": "Compared workflow"
+        }
+      ],
+      "deploymentType": "Desktop application"
+    },
+    {
+      "id": "activepieces",
+      "name": "Activepieces",
+      "creator": "Activepieces",
+      "repository": "activepieces/activepieces",
+      "sector": "Business",
+      "group": "Workflow automation",
+      "challenges": [
+        "Zapier",
+        "Make"
+      ],
+      "summary": "Visual automation with integrations, triggers, AI agents and MCP tools.",
+      "replacementType": "Direct alternative",
+      "reportedMaturity": "Active / version maturity unverified",
+      "reportedPlatforms": [
+        "Self-hosted web",
+        "Cloud"
+      ],
+      "license": null,
+      "caveats": "Some features may carry commercial licensing; deployment requires server services, not just a desktop app.",
+      "priority": 1,
+      "githubStarsAtReview": 24966,
+      "githubLastPushAtReview": "2026-10-09T18:36:32Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff.md",
+        "GitHub repository metadata verified 2026-10-09"
+      ],
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "licenseClass": "needs-review",
+      "releaseChannel": null,
+      "releaseChannelNote": null,
+      "deliveryMode": "self-hosted-or-hybrid",
+      "installAdapter": null,
+      "installable": false,
+      "comparisons": [
+        {
+          "company": "Zapier",
+          "product": "Zapier",
+          "label": "Zapier → Zapier",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        },
+        {
+          "company": "Make",
+          "product": "Make.com",
+          "label": "Make → Make.com",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Zapier",
+        "Make"
+      ],
+      "primaryIncumbent": "Zapier",
+      "primaryCommercialProduct": "Zapier",
+      "comparisonCoverage": "Company and commercial product mapped",
+      "category": "Developer & Automation",
+      "competition": [
+        {
+          "company": "Zapier",
+          "product": "Zapier",
+          "scope": "Compared workflow"
+        },
+        {
+          "company": "Make",
+          "product": "Make.com",
+          "scope": "Compared workflow"
+        }
+      ],
+      "deploymentType": "Docker / self-host"
+    },
+    {
+      "id": "docuseal",
+      "name": "DocuSeal",
+      "creator": "DocuSeal",
+      "repository": "docusealco/docuseal",
+      "sector": "Business",
+      "group": "eSign & documents",
+      "challenges": [
+        "DocuSign eSignature"
+      ],
+      "summary": "Document preparation, forms and electronic-signature workflows.",
+      "replacementType": "Direct alternative",
+      "reportedMaturity": "Active / version maturity unverified",
+      "reportedPlatforms": [
+        "Self-hosted web",
+        "Cloud"
+      ],
+      "license": "AGPL-3.0",
+      "caveats": "Legal signature jurisdiction, templates and enterprise compliance require individual assessment.",
+      "priority": 1,
+      "githubStarsAtReview": 18684,
+      "githubLastPushAtReview": "2026-10-05T09:44:20Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff.md",
+        "GitHub repository metadata verified 2026-10-09"
+      ],
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "licenseClass": "open-source",
+      "releaseChannel": null,
+      "releaseChannelNote": null,
+      "deliveryMode": "self-hosted-or-hybrid",
+      "installAdapter": null,
+      "installable": false,
+      "comparisons": [
+        {
+          "company": "DocuSign",
+          "product": "eSignature",
+          "label": "DocuSign → eSignature",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "DocuSign"
+      ],
+      "primaryIncumbent": "DocuSign",
+      "primaryCommercialProduct": "eSignature",
+      "comparisonCoverage": "Company and commercial product mapped",
+      "category": "Office & Productivity",
+      "competition": [
+        {
+          "company": "DocuSign",
+          "product": "eSignature",
+          "scope": "Compared workflow"
+        }
+      ],
+      "deploymentType": "Docker / self-host"
+    },
+    {
+      "id": "paperless",
+      "name": "Paperless-ngx",
+      "creator": "Paperless-ngx community",
+      "repository": "paperless-ngx/paperless-ngx",
+      "sector": "Business",
+      "group": "Document management",
+      "challenges": [
+        "M-Files Document Management",
+        "Laserfiche"
+      ],
+      "summary": "Self-hosted document ingestion, OCR, tags, search, archival and automation.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Established / exact release stability unverified",
+      "reportedPlatforms": [
+        "Self-hosted web"
+      ],
+      "license": "GPL-3.0",
+      "caveats": "Not equivalent to enterprise compliance and DMS suites; OCR and backups need operations planning.",
+      "priority": 2,
+      "githubStarsAtReview": 46442,
+      "githubLastPushAtReview": "2026-10-09T12:30:34Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff.md",
+        "GitHub repository metadata verified 2026-10-09"
+      ],
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "licenseClass": "open-source",
+      "releaseChannel": null,
+      "releaseChannelNote": null,
+      "deliveryMode": "self-hosted-or-hybrid",
+      "installAdapter": null,
+      "installable": false,
+      "comparisons": [
+        {
+          "company": "M-Files",
+          "product": "Document Management",
+          "label": "M-Files → Document Management",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        },
+        {
+          "company": "Laserfiche",
+          "product": "Document Management",
+          "label": "Laserfiche → Document Management",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "M-Files",
+        "Laserfiche"
+      ],
+      "primaryIncumbent": "M-Files",
+      "primaryCommercialProduct": "Document Management",
+      "comparisonCoverage": "Company and commercial product mapped",
+      "category": "Office & Productivity",
+      "competition": [
+        {
+          "company": "M-Files",
+          "product": "Document Management",
+          "scope": "Compared workflow"
+        },
+        {
+          "company": "Laserfiche",
+          "product": "Document Management",
+          "scope": "Compared workflow"
+        }
+      ],
+      "deploymentType": "Docker / self-host"
+    },
+    {
+      "id": "meshcentral",
+      "name": "MeshCentral",
+      "creator": "Ylian Saint-Hilaire",
+      "repository": "Ylianst/MeshCentral",
+      "sector": "IT & infrastructure",
+      "group": "Remote IT management",
+      "challenges": [
+        "TeamViewer Remote Management",
+        "ConnectWise RMM"
+      ],
+      "summary": "Browser-based remote access, monitoring and agent control for device fleets.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Established / exact release stage unverified",
+      "reportedPlatforms": [
+        "Self-hosted web",
+        "Device agents"
+      ],
+      "license": "Apache-2.0",
+      "caveats": "Agent installation and server-side security hardening required; partial replacement for enterprise RMM.",
+      "priority": 1,
+      "githubStarsAtReview": 7375,
+      "githubLastPushAtReview": "2026-09-24T00:51:46Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff.md",
+        "GitHub repository metadata verified 2026-10-09"
+      ],
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "licenseClass": "open-source",
+      "releaseChannel": null,
+      "releaseChannelNote": null,
+      "deliveryMode": "self-hosted-or-hybrid",
+      "installAdapter": null,
+      "installable": false,
+      "comparisons": [
+        {
+          "company": "TeamViewer",
+          "product": "Remote Management",
+          "label": "TeamViewer → Remote Management",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        },
+        {
+          "company": "ConnectWise",
+          "product": "RMM",
+          "label": "ConnectWise → RMM",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "TeamViewer",
+        "ConnectWise"
+      ],
+      "primaryIncumbent": "TeamViewer",
+      "primaryCommercialProduct": "Remote Management",
+      "comparisonCoverage": "Company and commercial product mapped",
+      "category": "Security & Infrastructure",
+      "competition": [
+        {
+          "company": "TeamViewer",
+          "product": "Remote Management",
+          "scope": "Compared workflow"
+        },
+        {
+          "company": "ConnectWise",
+          "product": "RMM",
+          "scope": "Compared workflow"
+        }
+      ],
+      "deploymentType": "Docker / self-host"
+    },
+    {
+      "id": "rustdesk",
+      "name": "RustDesk",
+      "creator": "RustDesk",
+      "repository": "rustdesk/rustdesk",
+      "sector": "IT & infrastructure",
+      "group": "Remote desktop",
+      "challenges": [
+        "TeamViewer Remote",
+        "AnyDesk"
+      ],
+      "summary": "Remote desktop client with optional self-hosted relay and rendezvous server.",
+      "replacementType": "Direct alternative",
+      "reportedMaturity": "Established / exact release stage unverified",
+      "reportedPlatforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Mobile",
+        "Self-hosted relay"
+      ],
+      "license": "AGPL-3.0",
+      "caveats": "More established and widely known than the underdog priority; optional commercial features exist.",
+      "priority": 3,
+      "githubStarsAtReview": 125307,
+      "githubLastPushAtReview": "2026-10-09T16:21:17Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff.md",
+        "GitHub repository metadata verified 2026-10-09"
+      ],
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "licenseClass": "open-source",
+      "releaseChannel": null,
+      "releaseChannelNote": null,
+      "deliveryMode": "self-hosted-or-hybrid",
+      "installAdapter": null,
+      "installable": false,
+      "comparisons": [
+        {
+          "company": "TeamViewer",
+          "product": "Remote",
+          "label": "TeamViewer → Remote",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        },
+        {
+          "company": "AnyDesk",
+          "product": "AnyDesk",
+          "label": "AnyDesk → AnyDesk",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "TeamViewer",
+        "AnyDesk"
+      ],
+      "primaryIncumbent": "TeamViewer",
+      "primaryCommercialProduct": "Remote",
+      "comparisonCoverage": "Company and commercial product mapped",
+      "category": "Security & Infrastructure",
+      "competition": [
+        {
+          "company": "TeamViewer",
+          "product": "Remote",
+          "scope": "Compared workflow"
+        },
+        {
+          "company": "AnyDesk",
+          "product": "AnyDesk",
+          "scope": "Compared workflow"
+        }
+      ],
+      "deploymentType": "Desktop application"
+    },
+    {
+      "id": "sim",
+      "name": "Sim Studio",
+      "creator": "Sim",
+      "repository": "simstudioai/sim",
+      "sector": "AI & development",
+      "group": "AI agents & workflows",
+      "challenges": [
+        "Microsoft Copilot Studio",
+        "Zapier AI Agents"
+      ],
+      "summary": "Visual builder and operations workspace for AI agents and automation pipelines.",
+      "replacementType": "Reimagining",
+      "reportedMaturity": "Rapid / bleeding-edge development; maturity unverified",
+      "reportedPlatforms": [
+        "Self-hosted web",
+        "Cloud"
+      ],
+      "license": "Apache-2.0",
+      "caveats": "Agent capabilities change quickly; model API costs and tool permissions remain separate concerns.",
+      "priority": 1,
+      "githubStarsAtReview": 29792,
+      "githubLastPushAtReview": "2026-10-09T18:43:03Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff.md",
+        "GitHub repository metadata verified 2026-10-09"
+      ],
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "licenseClass": "open-source",
+      "releaseChannel": "bleeding-edge",
+      "releaseChannelNote": "Experimental, high-change preview project",
+      "deliveryMode": "self-hosted-or-hybrid",
+      "installAdapter": null,
+      "installable": false,
+      "comparisons": [
+        {
+          "company": "Microsoft",
+          "product": "Copilot Studio",
+          "label": "Microsoft → Copilot Studio",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        },
+        {
+          "company": "Zapier",
+          "product": "AI Agents",
+          "label": "Zapier → AI Agents",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Microsoft",
+        "Zapier"
+      ],
+      "primaryIncumbent": "Microsoft",
+      "primaryCommercialProduct": "Copilot Studio",
+      "comparisonCoverage": "Company and commercial product mapped",
+      "category": "AI & Agents",
+      "competition": [
+        {
+          "company": "Microsoft",
+          "product": "Copilot Studio",
+          "scope": "Compared workflow"
+        },
+        {
+          "company": "Zapier",
+          "product": "AI Agents",
+          "scope": "Compared workflow"
+        }
+      ],
+      "deploymentType": "Docker / self-host"
+    },
+    {
+      "id": "zed",
+      "name": "Zed",
+      "creator": "Zed Industries",
+      "repository": "zed-industries/zed",
+      "sector": "AI & development",
+      "group": "Code editors",
+      "challenges": [
+        "JetBrains IntelliJ IDEA",
+        "Cursor"
+      ],
+      "summary": "High-performance collaborative code editor with modern development and AI workflows.",
+      "replacementType": "Reimagining",
+      "reportedMaturity": "Active editor / maturity requires release review",
+      "reportedPlatforms": [
+        "macOS",
+        "Linux",
+        "Windows (verify)"
+      ],
+      "license": null,
+      "caveats": "Free/open-source VS Code also competes; AI provider usage and distribution terms differ.",
+      "priority": 2,
+      "githubStarsAtReview": 91497,
+      "githubLastPushAtReview": "2026-10-09T18:38:08Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff.md",
+        "GitHub repository metadata verified 2026-10-09"
+      ],
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "licenseClass": "needs-review",
+      "releaseChannel": null,
+      "releaseChannelNote": null,
+      "deliveryMode": "desktop-or-service",
+      "installAdapter": null,
+      "installable": false,
+      "comparisons": [
+        {
+          "company": "JetBrains",
+          "product": "IntelliJ IDEA",
+          "label": "JetBrains → IntelliJ IDEA",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        },
+        {
+          "company": "Cursor",
+          "product": "Cursor editor",
+          "label": "Cursor → Cursor editor",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "JetBrains",
+        "Cursor"
+      ],
+      "primaryIncumbent": "JetBrains",
+      "primaryCommercialProduct": "IntelliJ IDEA",
+      "comparisonCoverage": "Company and commercial product mapped",
+      "category": "Developer & Automation",
+      "competition": [
+        {
+          "company": "JetBrains",
+          "product": "IntelliJ IDEA",
+          "scope": "Compared workflow"
+        },
+        {
+          "company": "Cursor",
+          "product": "Cursor editor",
+          "scope": "Compared workflow"
+        }
+      ],
+      "deploymentType": "Desktop application"
+    },
+    {
+      "id": "openhands",
+      "name": "OpenHands",
+      "creator": "OpenHands",
+      "repository": "OpenHands/OpenHands",
+      "sector": "AI & development",
+      "group": "AI coding agents",
+      "challenges": [
+        "Cursor Agent",
+        "Replit Agent",
+        "GitHub Copilot"
+      ],
+      "summary": "Open agentic development environment for code edits, testing and multi-step software work.",
+      "replacementType": "Reimagining",
+      "reportedMaturity": "Active / production maturity varies by runtime",
+      "reportedPlatforms": [
+        "Self-hosted web",
+        "Container"
+      ],
+      "license": "MIT",
+      "caveats": "Requires model backend and sandbox; not equivalent to a simple desktop IDE. Model/API usage may cost money.",
+      "priority": 1,
+      "githubStarsAtReview": 90383,
+      "githubLastPushAtReview": "2026-10-09T18:42:01Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff.md",
+        "GitHub repository metadata verified 2026-10-09"
+      ],
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "licenseClass": "open-source",
+      "releaseChannel": null,
+      "releaseChannelNote": null,
+      "deliveryMode": "self-hosted-or-hybrid",
+      "installAdapter": null,
+      "installable": false,
+      "comparisons": [
+        {
+          "company": "Cursor",
+          "product": "Cursor Agent",
+          "label": "Cursor → Cursor Agent",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        },
+        {
+          "company": "Replit",
+          "product": "Agent",
+          "label": "Replit → Agent",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        },
+        {
+          "company": "GitHub",
+          "product": "Copilot",
+          "label": "GitHub → Copilot",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Cursor",
+        "Replit",
+        "GitHub"
+      ],
+      "primaryIncumbent": "Cursor",
+      "primaryCommercialProduct": "Cursor Agent",
+      "comparisonCoverage": "Company and commercial product mapped",
+      "category": "AI & Agents",
+      "competition": [
+        {
+          "company": "Cursor",
+          "product": "Cursor Agent",
+          "scope": "Compared workflow"
+        },
+        {
+          "company": "Replit",
+          "product": "Agent",
+          "scope": "Compared workflow"
+        },
+        {
+          "company": "GitHub",
+          "product": "Copilot",
+          "scope": "Compared workflow"
+        }
+      ],
+      "deploymentType": "Docker / self-host"
+    },
+    {
+      "id": "librechat",
+      "name": "LibreChat",
+      "creator": "LibreChat",
+      "repository": "LibreChat-AI/LibreChat",
+      "sector": "AI & development",
+      "group": "AI assistants",
+      "challenges": [
+        "OpenAI ChatGPT",
+        "Anthropic Claude"
+      ],
+      "summary": "Self-hostable multimodel assistant interface with agents, MCP tools and chat workflows.",
+      "replacementType": "Direct alternative",
+      "reportedMaturity": "Established / exact release stage unverified",
+      "reportedPlatforms": [
+        "Self-hosted web"
+      ],
+      "license": "MIT",
+      "caveats": "Not a foundation model; real capabilities and costs depend on model provider and tool integrations.",
+      "priority": 1,
+      "githubStarsAtReview": 45453,
+      "githubLastPushAtReview": "2026-10-09T18:42:56Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff.md",
+        "GitHub repository metadata verified 2026-10-09"
+      ],
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "licenseClass": "open-source",
+      "releaseChannel": null,
+      "releaseChannelNote": null,
+      "deliveryMode": "self-hosted-or-hybrid",
+      "installAdapter": null,
+      "installable": false,
+      "comparisons": [
+        {
+          "company": "OpenAI",
+          "product": "ChatGPT",
+          "label": "OpenAI → ChatGPT",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        },
+        {
+          "company": "Anthropic",
+          "product": "Claude",
+          "label": "Anthropic → Claude",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "OpenAI",
+        "Anthropic"
+      ],
+      "primaryIncumbent": "OpenAI",
+      "primaryCommercialProduct": "ChatGPT",
+      "comparisonCoverage": "Company and commercial product mapped",
+      "category": "AI & Agents",
+      "competition": [
+        {
+          "company": "OpenAI",
+          "product": "ChatGPT",
+          "scope": "Compared workflow"
+        },
+        {
+          "company": "Anthropic",
+          "product": "Claude",
+          "scope": "Compared workflow"
+        }
+      ],
+      "deploymentType": "Docker / self-host"
+    },
+    {
+      "id": "anythingllm",
+      "name": "AnythingLLM",
+      "creator": "Mintplex Labs",
+      "repository": "Mintplex-Labs/anything-llm",
+      "sector": "AI & development",
+      "group": "AI assistants",
+      "challenges": [
+        "OpenAI ChatGPT Projects",
+        "Microsoft Copilot"
+      ],
+      "summary": "Local-first AI workspace for documents, RAG and task-oriented agents.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Active / verify desktop distribution",
+      "reportedPlatforms": [
+        "Desktop",
+        "Self-hosted web"
+      ],
+      "license": "MIT",
+      "caveats": "RAG and local model behavior depend on provider/models; not direct equivalence to hosted assistants.",
+      "priority": 1,
+      "githubStarsAtReview": 66861,
+      "githubLastPushAtReview": "2026-10-09T15:18:53Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff.md",
+        "GitHub repository metadata verified 2026-10-09"
+      ],
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "licenseClass": "open-source",
+      "releaseChannel": null,
+      "releaseChannelNote": null,
+      "deliveryMode": "self-hosted-or-hybrid",
+      "installAdapter": null,
+      "installable": false,
+      "comparisons": [
+        {
+          "company": "OpenAI",
+          "product": "ChatGPT Projects",
+          "label": "OpenAI → ChatGPT Projects",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        },
+        {
+          "company": "Microsoft",
+          "product": "Copilot",
+          "label": "Microsoft → Copilot",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "OpenAI",
+        "Microsoft"
+      ],
+      "primaryIncumbent": "OpenAI",
+      "primaryCommercialProduct": "ChatGPT Projects",
+      "comparisonCoverage": "Company and commercial product mapped",
+      "category": "AI & Agents",
+      "competition": [
+        {
+          "company": "OpenAI",
+          "product": "ChatGPT Projects",
+          "scope": "Compared workflow"
+        },
+        {
+          "company": "Microsoft",
+          "product": "Copilot",
+          "scope": "Compared workflow"
+        }
+      ],
+      "deploymentType": "Desktop application"
+    },
+    {
+      "id": "hoppscotch",
+      "name": "Hoppscotch",
+      "creator": "Hoppscotch",
+      "repository": "hoppscotch/hoppscotch",
+      "sector": "AI & development",
+      "group": "API development",
+      "challenges": [
+        "Postman",
+        "Insomnia"
+      ],
+      "summary": "API development and testing ecosystem spanning web, desktop and CLI.",
+      "replacementType": "Direct alternative",
+      "reportedMaturity": "Established / version-stage unverified",
+      "reportedPlatforms": [
+        "Web",
+        "Desktop",
+        "CLI"
+      ],
+      "license": "MIT",
+      "caveats": "API client scope, workspace sync and advanced enterprise features differ from Postman.",
+      "priority": 2,
+      "githubStarsAtReview": 80589,
+      "githubLastPushAtReview": "2026-10-07T05:46:25Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff.md",
+        "GitHub repository metadata verified 2026-10-09"
+      ],
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "licenseClass": "open-source",
+      "releaseChannel": null,
+      "releaseChannelNote": null,
+      "deliveryMode": "desktop-or-service",
+      "installAdapter": null,
+      "installable": false,
+      "comparisons": [
+        {
+          "company": "Postman",
+          "product": "Postman",
+          "label": "Postman → Postman",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        },
+        {
+          "company": "Kong",
+          "product": "Insomnia",
+          "label": "Kong → Insomnia",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Postman",
+        "Kong"
+      ],
+      "primaryIncumbent": "Postman",
+      "primaryCommercialProduct": "Postman",
+      "comparisonCoverage": "Company and commercial product mapped",
+      "category": "Developer & Automation",
+      "competition": [
+        {
+          "company": "Postman",
+          "product": "Postman",
+          "scope": "Compared workflow"
+        },
+        {
+          "company": "Kong",
+          "product": "Insomnia",
+          "scope": "Compared workflow"
+        }
+      ],
+      "deploymentType": "Docker / self-host"
+    },
+    {
+      "id": "n8n",
+      "name": "n8n",
+      "creator": "n8n GmbH",
+      "repository": "n8n-io/n8n",
+      "sector": "Business",
+      "group": "Workflow automation",
+      "challenges": [
+        "Zapier",
+        "Make"
+      ],
+      "summary": "Source-available workflow automation system with AI integrations and self-hosted operation.",
+      "replacementType": "Direct alternative",
+      "reportedMaturity": "Established / commercially restricted license",
+      "reportedPlatforms": [
+        "Self-hosted web",
+        "Cloud"
+      ],
+      "license": null,
+      "caveats": "NOT OSI open source: Sustainable Use / fair-code restrictions; cannot assume free commercial redistribution.",
+      "priority": 3,
+      "githubStarsAtReview": 206817,
+      "githubLastPushAtReview": "2026-10-09T18:19:46Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff.md",
+        "GitHub repository metadata verified 2026-10-09"
+      ],
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "licenseClass": "source-available-restricted",
+      "releaseChannel": null,
+      "releaseChannelNote": null,
+      "deliveryMode": "self-hosted-or-hybrid",
+      "installAdapter": null,
+      "installable": false,
+      "comparisons": [
+        {
+          "company": "Zapier",
+          "product": "Zapier",
+          "label": "Zapier → Zapier",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        },
+        {
+          "company": "Make",
+          "product": "Make.com",
+          "label": "Make → Make.com",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Zapier",
+        "Make"
+      ],
+      "primaryIncumbent": "Zapier",
+      "primaryCommercialProduct": "Zapier",
+      "comparisonCoverage": "Company and commercial product mapped",
+      "category": "Developer & Automation",
+      "competition": [
+        {
+          "company": "Zapier",
+          "product": "Zapier",
+          "scope": "Compared workflow"
+        },
+        {
+          "company": "Make",
+          "product": "Make.com",
+          "scope": "Compared workflow"
+        }
+      ],
+      "deploymentType": "Docker / self-host"
+    },
+    {
+      "id": "flowise",
+      "name": "Flowise (archived)",
+      "creator": "FlowiseAI",
+      "repository": "FlowiseAI/Flowise",
+      "sector": "AI & development",
+      "group": "AI agents & workflows",
+      "challenges": [
+        "Microsoft Copilot Studio",
+        "Google Vertex AI Agent Builder"
+      ],
+      "summary": "Visual AI agent workflow builder; repository now archived and read-only.",
+      "replacementType": "Focused alternative",
+      "reportedMaturity": "Archived (GitHub, 2026-08-13)",
+      "reportedPlatforms": [
+        "Self-hosted web"
+      ],
+      "license": null,
+      "caveats": "Repository archived; verify any active successor before adoption. No unattended installation.",
+      "priority": 3,
+      "developmentStage": "dormant",
+      "developmentSignal": "Archived / watchlist",
+      "githubStarsAtReview": 55493,
+      "githubLastPushAtReview": "2026-08-13T12:38:19Z",
+      "sourceReports": [
+        "open_source_challengers_conversation_handoff.md",
+        "GitHub repository metadata verified 2026-10-09"
+      ],
+      "verifiedAt": "2026-10-09",
+      "reviewStatus": "repository-confirmed",
+      "licenseClass": "needs-review",
+      "releaseChannel": null,
+      "releaseChannelNote": null,
+      "deliveryMode": "self-hosted-or-hybrid",
+      "installAdapter": null,
+      "installable": false,
+      "comparisons": [
+        {
+          "company": "Microsoft",
+          "product": "Copilot Studio",
+          "label": "Microsoft → Copilot Studio",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        },
+        {
+          "company": "Google Cloud",
+          "product": "Vertex AI Agent Builder",
+          "label": "Google Cloud → Vertex AI Agent Builder",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "research comparison",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Microsoft",
+        "Google Cloud"
+      ],
+      "primaryIncumbent": "Microsoft",
+      "primaryCommercialProduct": "Copilot Studio",
+      "comparisonCoverage": "Company and commercial product mapped",
+      "category": "AI & Agents",
+      "competition": [
+        {
+          "company": "Microsoft",
+          "product": "Copilot Studio",
+          "scope": "Compared workflow"
+        },
+        {
+          "company": "Google Cloud",
+          "product": "Vertex AI Agent Builder",
+          "scope": "Compared workflow"
+        }
+      ],
+      "deploymentType": "Docker / self-host"
+    },
+    {
+      "id": "mastra",
+      "name": "Mastra",
+      "creator": "mastra-ai",
+      "repository": "mastra-ai/mastra",
+      "domain": "ai",
+      "group": "Agent frameworks",
+      "challenges": [
+        "Microsoft Copilot Studio",
+        "Google Cloud Vertex AI Agent Builder"
+      ],
+      "competesWith": [
+        {
+          "vendor": "Microsoft",
+          "product": "Copilot Studio",
+          "scope": "workflow overlap"
+        },
+        {
+          "vendor": "Google Cloud",
+          "product": "Vertex AI Agent Builder",
+          "scope": "workflow overlap"
+        }
+      ],
+      "summary": "TypeScript agent development, tool use, workflows and evaluation.",
+      "reportedMaturity": "Stage unverified",
+      "reportedPlatforms": [
+        "Self-hosted / see upstream requirements"
+      ],
+      "deploymentType": "Server / CLI",
+      "license": null,
+      "githubStarsAtReview": 28675,
+      "githubLastPushAtReview": "2026-10-10T07:12:43Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "caveats": "Requires a separately evaluated deployment or developer setup; no desktop installer has been approved. Scope of commercial competitor overlap is not necessarily full feature parity. Discovery only: deployment, packages, editions and source license require verification. No automatic installation.",
+      "priority": 2,
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "AI & Agents",
+      "competition": [
+        {
+          "company": "Microsoft",
+          "product": "Copilot Studio",
+          "scope": "Workflow comparison"
+        },
+        {
+          "company": "Google Cloud",
+          "product": "Vertex AI Agent Builder",
+          "scope": "Workflow comparison"
+        }
+      ]
+    },
+    {
+      "id": "peta-core",
+      "name": "Peta",
+      "creator": "dunialabs",
+      "repository": "dunialabs/peta-core",
+      "domain": "ai",
+      "group": "Agent security",
+      "challenges": [
+        "HashiCorp Vault",
+        "Aembit Workload Identity"
+      ],
+      "competesWith": [
+        {
+          "vendor": "HashiCorp",
+          "product": "Vault",
+          "scope": "workflow overlap"
+        },
+        {
+          "vendor": "Aembit",
+          "product": "Workload Identity",
+          "scope": "workflow overlap"
+        }
+      ],
+      "summary": "MCP access control, credential vaulting, policies and approvals.",
+      "reportedMaturity": "Early / experimental",
+      "reportedPlatforms": [
+        "Self-hosted / see upstream requirements"
+      ],
+      "deploymentType": "Server / CLI",
+      "license": null,
+      "githubStarsAtReview": 58,
+      "githubLastPushAtReview": "2026-09-05T12:22:52Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "caveats": "Requires a separately evaluated deployment or developer setup; no desktop installer has been approved. Scope of commercial competitor overlap is not necessarily full feature parity. Discovery only: deployment, packages, editions and source license require verification. No automatic installation.",
+      "priority": 2,
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "Security & Infrastructure",
+      "competition": [
+        {
+          "company": "HashiCorp",
+          "product": "Vault",
+          "scope": "Workflow comparison"
+        },
+        {
+          "company": "Aembit",
+          "product": "Workload Identity",
+          "scope": "Workflow comparison"
+        }
+      ]
+    },
+    {
+      "id": "agentgateway",
+      "name": "agentgateway",
+      "creator": "agentgateway",
+      "repository": "agentgateway/agentgateway",
+      "domain": "ai",
+      "group": "AI gateways",
+      "challenges": [
+        "Kong AI Gateway",
+        "Portkey AI Gateway"
+      ],
+      "competesWith": [
+        {
+          "vendor": "Kong",
+          "product": "AI Gateway",
+          "scope": "workflow overlap"
+        },
+        {
+          "vendor": "Portkey",
+          "product": "AI Gateway",
+          "scope": "workflow overlap"
+        }
+      ],
+      "summary": "Gateway/proxy for MCP, A2A and model requests.",
+      "reportedMaturity": "Stage unverified",
+      "reportedPlatforms": [
+        "Self-hosted / see upstream requirements"
+      ],
+      "deploymentType": "Server / CLI",
+      "license": "Apache-2.0",
+      "githubStarsAtReview": 5269,
+      "githubLastPushAtReview": "2026-10-10T02:21:57Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "caveats": "Requires a separately evaluated deployment or developer setup; no desktop installer has been approved. Scope of commercial competitor overlap is not necessarily full feature parity. Discovery only: deployment, packages, editions and source license require verification. No automatic installation.",
+      "priority": 2,
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "AI & Agents",
+      "competition": [
+        {
+          "company": "Kong",
+          "product": "AI Gateway",
+          "scope": "Workflow comparison"
+        },
+        {
+          "company": "Portkey",
+          "product": "AI Gateway",
+          "scope": "Workflow comparison"
+        }
+      ]
+    },
+    {
+      "id": "contextforge",
+      "name": "ContextForge",
+      "creator": "IBM",
+      "repository": "IBM/mcp-context-forge",
+      "domain": "ai",
+      "group": "AI gateways",
+      "challenges": [
+        "Kong Konnect",
+        "Portkey AI Gateway"
+      ],
+      "competesWith": [
+        {
+          "vendor": "Kong",
+          "product": "Konnect",
+          "scope": "workflow overlap"
+        },
+        {
+          "vendor": "Portkey",
+          "product": "AI Gateway",
+          "scope": "workflow overlap"
+        }
+      ],
+      "summary": "MCP and A2A registry, API federation and security gateway.",
+      "reportedMaturity": "Stage unverified",
+      "reportedPlatforms": [
+        "Self-hosted / see upstream requirements"
+      ],
+      "deploymentType": "Docker / self-host",
+      "license": "Apache-2.0",
+      "githubStarsAtReview": 4593,
+      "githubLastPushAtReview": "2026-10-09T16:30:15Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "caveats": "Requires a separately evaluated deployment or developer setup; no desktop installer has been approved. Scope of commercial competitor overlap is not necessarily full feature parity. Discovery only: deployment, packages, editions and source license require verification. No automatic installation.",
+      "priority": 2,
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "Security & Infrastructure",
+      "competition": [
+        {
+          "company": "Kong",
+          "product": "Konnect",
+          "scope": "Workflow comparison"
+        },
+        {
+          "company": "Portkey",
+          "product": "AI Gateway",
+          "scope": "Workflow comparison"
+        }
+      ]
+    },
+    {
+      "id": "langfuse",
+      "name": "Langfuse",
+      "creator": "langfuse",
+      "repository": "langfuse/langfuse",
+      "domain": "ai",
+      "group": "AI observability",
+      "challenges": [
+        "LangChain LangSmith",
+        "Arize AI Observability"
+      ],
+      "competesWith": [
+        {
+          "vendor": "LangChain",
+          "product": "LangSmith",
+          "scope": "workflow overlap"
+        },
+        {
+          "vendor": "Arize",
+          "product": "AI Observability",
+          "scope": "workflow overlap"
+        }
+      ],
+      "summary": "AI and LLM tracing, feedback and evaluation dashboards.",
+      "reportedMaturity": "Stage unverified",
+      "reportedPlatforms": [
+        "Self-hosted / see upstream requirements"
+      ],
+      "deploymentType": "Docker / self-host",
+      "license": null,
+      "githubStarsAtReview": 35587,
+      "githubLastPushAtReview": "2026-10-10T02:55:57Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "caveats": "Requires a separately evaluated deployment or developer setup; no desktop installer has been approved. Scope of commercial competitor overlap is not necessarily full feature parity. Discovery only: deployment, packages, editions and source license require verification. No automatic installation.",
+      "priority": 2,
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "AI & Agents",
+      "competition": [
+        {
+          "company": "LangChain",
+          "product": "LangSmith",
+          "scope": "Workflow comparison"
+        },
+        {
+          "company": "Arize",
+          "product": "AI Observability",
+          "scope": "Workflow comparison"
+        }
+      ]
+    },
+    {
+      "id": "windmill",
+      "name": "Windmill",
+      "creator": "windmill-labs",
+      "repository": "windmill-labs/windmill",
+      "domain": "developer",
+      "group": "Workflow automation",
+      "challenges": [
+        "Retool Workflows",
+        "Pipedream Connect"
+      ],
+      "competesWith": [
+        {
+          "vendor": "Retool",
+          "product": "Workflows",
+          "scope": "workflow overlap"
+        },
+        {
+          "vendor": "Pipedream",
+          "product": "Connect",
+          "scope": "workflow overlap"
+        }
+      ],
+      "summary": "Scripts-to-workflows, internal apps and orchestration for developers.",
+      "reportedMaturity": "Stage unverified",
+      "reportedPlatforms": [
+        "Self-hosted / see upstream requirements"
+      ],
+      "deploymentType": "Docker / self-host",
+      "license": null,
+      "githubStarsAtReview": 18151,
+      "githubLastPushAtReview": "2026-10-09T22:05:55Z",
+      "sourceReports": [
+        "VelvetOS_Office_v2_Deep_Research_Report2.md",
+        "מחקר ארכיטקטורת מערכת VelvetOS.md"
+      ],
+      "caveats": "Requires a separately evaluated deployment or developer setup; no desktop installer has been approved. Scope of commercial competitor overlap is not necessarily full feature parity. Discovery only: deployment, packages, editions and source license require verification. No automatic installation.",
+      "priority": 2,
+      "verifiedAt": "2026-10-10",
+      "reviewStatus": "repository-confirmed",
+      "releaseStrategy": "unverified",
+      "installAdapter": null,
+      "installable": false,
+      "category": "Developer & Automation",
+      "competition": [
+        {
+          "company": "Retool",
+          "product": "Workflows",
+          "scope": "Workflow comparison"
+        },
+        {
+          "company": "Pipedream",
+          "product": "Connect",
+          "scope": "Workflow comparison"
+        }
+      ]
+    }
+  ],
+  "mergeNotes": "RC 2.5: deduplicated by canonical GitHub repository; no unreviewed install adapters."
+}

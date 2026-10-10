@@ -1,0 +1,24 @@
+{
+  "schema": "challenger-sources.v1",
+  "updated": "2026-10-09",
+  "sources": [
+    {
+      "id": "storytold",
+      "label": "Storytold · Craft desktop applications",
+      "kind": "github-owner",
+      "owner": "storytold",
+      "mode": "automatic-owner-scan-and-cached-releases",
+      "installAdapter": "craft-suite",
+      "note": "12 existing Craft installations and checksum-validated auto-install/update pipeline retained. Separate SHA-256-verified Windows x64 portable ZIP downloads available for each app."
+    },
+    {
+      "id": "research-curated",
+      "label": "Independent software challengers · 35 curated projects",
+      "kind": "curated-registry",
+      "file": "challengers.json",
+      "mode": "manually-curated-with-per-repo-automated-release-tracking",
+      "installAdapter": "vetted-per-platform-sha256-adapters-only",
+      "note": "35 repositories verified from research documents. GitHub releases can be refreshed by supported API endpoints; GitHub Atom fallback flags pending releases for verification. 9 Windows and 8 Mac install adapters; separately allowed portable ZIP/EXE downloads. New repository discovery is curated rather than claiming generalized internet crawling."
+    }
+  ]
+}

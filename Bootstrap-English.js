@@ -1,0 +1,25 @@
+'use strict';
+const fs=require('node:fs');
+const path=require('node:path');
+const root=__dirname;
+const source=fs.readFileSync(path.join(root,'app.js'),'utf8');
+const start=source.indexOf('const I18N=');
+const end=source.indexOf('function readPreference',start);
+if(start<0||end<0)throw Error('Cannot extract localization strings');
+const expr=source.slice(start+'const I18N='.length,end).trim().replace(/;\s*$/,'');
+const en=require('node:vm').runInNewContext('('+expr+')').en;
+const file=path.join(root,'index.html');
+let html=fs.readFileSync(file,'utf8');
+let count=0;
+html=html.replace(/(<([A-Za-z][A-Za-z0-9-]*)\b[^>]*\bdata-t="([^"]+)"[^>]*>)([^<]*)(<\/\2>)/g,(all,opening,tag,key,existing,closing)=>{
+  if(typeof en[key]!=='string')return all;
+  count++;
+  const val=en[key].replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  return opening+val+closing;
+});
+html=html.replace('placeholder="חפש תוכנה או תחליף..."','placeholder="Search apps or alternatives..."');
+html=html.replace('aria-label="Language"','aria-label="Language"');
+html=html.replace('<div class="empty">טוען קטלוג...</div>','<div class="empty">Loading catalog...</div>');
+html=html.replace('<html lang="he" dir="rtl"','<html lang="en" dir="ltr"');
+fs.writeFileSync(file,html,'utf8');
+console.log('ENGLISH_BOOTSTRAP_TRANSLATED='+count);

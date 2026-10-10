@@ -1,0 +1,125 @@
+{
+  "schema": "challenger-adapters.v1",
+  "reviewedAt": "2026-10-09",
+  "policy": "Only exact allowlisted GitHub Release assets with a GitHub-published SHA-256 digest; no arbitrary executable setup scripts. Platform adapter can still reject unsupported/malformed/unsigned content. Every install requires confirmation.",
+  "projects": {
+    "compositor": {
+      "darwin": {
+        "kind": "dmg",
+        "asset": "^Compositor\\.dmg$",
+        "appHint": "Compositor"
+      }
+    },
+    "composa": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^composa-[0-9.]+-win-x64\\.zip$",
+        "exeHint": "Composa"
+      }
+    },
+    "infinite": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^Infinite-windows-x64\\.zip$",
+        "exeHint": "Infinite"
+      },
+      "darwin": {
+        "kind": "dmg",
+        "asset": "^Infinite\\.dmg$",
+        "appHint": "Infinite"
+      }
+    },
+    "friction": {},
+    "grida": {
+      "darwin": {
+        "kind": "dmg",
+        "asset": "^Grida-[^/]+-arm64\\.dmg$",
+        "appHint": "Grida"
+      }
+    },
+    "limo-cad": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^noBS-CAD-[^/]+-windows-x64\\.zip$",
+        "exeHint": "noBS"
+      },
+      "darwin": {
+        "kind": "dmg",
+        "asset": "^noBS\\.CAD_[^/]+_aarch64\\.dmg$",
+        "appHint": "noBS"
+      }
+    },
+    "material-maker": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^material_maker_[^/]+_windows\\.zip$",
+        "exeHint": "material_maker"
+      },
+      "darwin": {
+        "kind": "dmg",
+        "asset": "^material_maker_[^/]+\\.dmg$",
+        "appHint": "Material"
+      }
+    },
+    "godsvg": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^GodSVG_v[^/]+\\.Windows\\.zip$",
+        "exeHint": "GodSVG"
+      }
+    },
+    "kiri-moto": {
+      "darwin": {
+        "kind": "dmg",
+        "asset": "^KiriMoto-mac-arm64\\.dmg$",
+        "appHint": "Kiri"
+      }
+    },
+    "pixieditor": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^PixiEditor\\.[^/]+\\.x64-win\\.zip$",
+        "exeHint": "PixiEditor"
+      }
+    },
+    "photodemon": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^PhotoDemon-[^/]+\\.zip$",
+        "exeHint": "PhotoDemon"
+      }
+    },
+    "real-video-enhancer": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^REAL-Video-Enhancer-[^/]+-Windows-portable_x86_64\\.zip$",
+        "exeHint": "REAL"
+      }
+    },
+    "oak-video-editor": {
+      "darwin": {
+        "kind": "dmg",
+        "asset": "^Oak-macOS-arm64\\.dmg$",
+        "appHint": "Oak"
+      }
+    },
+    "solvespace": {
+      "win32": {
+        "kind": "exe-portable",
+        "asset": "^solvespace_x64\\.exe$",
+        "exeHint": "solvespace"
+      },
+      "darwin": {
+        "kind": "dmg",
+        "asset": "^SolveSpace\\.dmg$",
+        "appHint": "SolveSpace"
+      }
+    }
+  },
+  "knownLimitations": [
+    "GodSVG macOS ZIP is not an .app bundle; Mac auto-install disabled pending a dedicated package adapter.",
+    "REAL Video Enhancer macOS arm64 ZIP has no .app bundle; manual packaging support is pending.",
+    "PixiEditor macOS ZIP contains unsigned nested code; signature verification rejected the package. Auto-install disabled.",
+    "Friction macOS DMG contains an unsigned .app; automatic Mac installation rejected by codesign."
+  ]
+}

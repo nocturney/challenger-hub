@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-theme="dark" data-app-version="2.5.0">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Challenger Hub · Independent Software</title>
+<link rel="icon" href="/brand-icon.png" type="image/png">
+<link rel="stylesheet" href="/style.css">
+<script src="/app.js" defer></script><script src="/ux-experience.js" defer></script><script src="/shader-loader.js" type="module"></script>
+</head>
+<body>
+<svg class="sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<symbol id="i-apps" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+<symbol id="i-sync" viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.7 9A7 7 0 0 1 18 6l2 1M4 17l2 1a7 7 0 0 0 12.3-3"/></symbol>
+<symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 2 1.9 6.1L20 10l-6.1 1.9L12 18l-1.9-6.1L4 10l6.1-1.9L12 2Zm6 12 1.2 2.8L22 18l-2.8 1.2L18 22l-1.2-2.8L14 18l2.8-1.2L18 14Z"/></symbol>
+<symbol id="i-package" viewBox="0 0 24 24"><path d="m12 2 9 5v10l-9 5-9-5V7l9-5Zm0 10 9-5M12 12 3 7m9 5v10"/></symbol>
+<symbol id="i-settings" viewBox="0 0 24 24"><path d="M12 2.5 14.2 4l2.6-.4.8 2.5 2.5.8-.4 2.6 1.5 2.2-1.5 2.2.4 2.6-2.5.8-.8 2.5-2.6-.4-2.2 1.5-2.2-1.5-2.6.4-.8-2.5-2.5-.8.4-2.6-1.5-2.2 1.5-2.2-.4-2.6 2.5-.8.8-2.5 2.6.4L12 2.5Z"/><circle cx="12" cy="12" r="3"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10h.01"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16.2 16.2 5 5"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.1"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.7 15.6A8.9 8.9 0 0 1 8.4 3.3a8.9 8.9 0 1 0 12.3 12.3Z"/></symbol>
+<symbol id="i-monitor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+<symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+<symbol id="i-down" viewBox="0 0 24 24"><path d="M12 3v13m0 0 5-5m-5 5-5-5M4 18v3h16v-3"/></symbol>
+<symbol id="i-external" viewBox="0 0 24 24"><path d="M12 4H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-7M14 3h7v7m0-7L10 14"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7L8 5Z"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></symbol>
+<symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="m5 5 14 14M19 5 5 19"/></symbol>
+<symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="var(--surface)"/><circle cx="16" cy="12" r="2" fill="var(--surface)"/><circle cx="8" cy="18" r="2" fill="var(--surface)"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 24 24"><path d="m13 2-9 11h7l-1 9 10-12h-7l1-8Z"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 2 9 4v6c0 5-3.5 8-9 10-5.5-2-9-5-9-10V6l9-4Zm-4 10 3 3 5-6"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+<symbol id="i-github" viewBox="0 0 24 24"><path d="M9 19c-5.2 1.7-5.2-2.7-7-3M16 21v-4a3.4 3.4 0 0 0-.9-2.7c2.8-.3 5.9-1.3 5.9-6.2A4.9 4.9 0 0 0 19.7 5a4.6 4.6 0 0 0-.1-3s-1.1-.3-3.5 1.5a12 12 0 0 0-6.3 0C7.4 1.7 6.3 2 6.3 2A4.6 4.6 0 0 0 6.2 5 4.9 4.9 0 0 0 5 8.1c0 4.9 3.1 5.9 5.9 6.2A3.4 3.4 0 0 0 10 17v4"/></symbol>
+</svg>
+<div class="app-shell" id="appShell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <img class="brand-logo" src="/brand-icon.png" width="62" height="62" alt="">
+      <div class="brand-wordmark"><strong>Challenger<span> Hub</span></strong><small>DISCOVER · TRACK · MANAGE</small></div>
+      <button class="close-mobile icon-only" id="mobileClose" title="Close navigation" aria-label="Close navigation"><svg><use href="#i-x"/></svg></button>
+    </div>
+    <div class="sidebar-category" data-t="workspace">WORKSPACE</div>
+    <nav class="sidebar-nav" aria-label="Primary navigation">
+      <button class="nav-link active" data-nav="all" aria-current="page"><svg><use href="#i-apps"/></svg><span data-t="navApps">Applications</span><span class="nav-count" id="navCountAll">—</span></button>
+      <button class="nav-link" data-nav="updates"><svg><use href="#i-sync"/></svg><span data-t="navUpdates">Updates</span><span class="nav-count warm" id="navCountUpdates">0</span></button>
+      <button class="nav-link" data-nav="new"><svg><use href="#i-spark"/></svg><span data-t="navNew">Discoveries</span><span class="nav-count" id="navCountNew">0</span></button>
+      <button class="nav-link" data-nav="installed"><svg><use href="#i-package"/></svg><span data-t="navInstalled">Installed</span><span class="nav-count" id="navCountInstalled">0</span></button>
+    </nav>
+    <div class="sidebar-category secondary" data-t="general">GENERAL</div>
+    <nav class="sidebar-nav nav-secondary">
+      <button class="nav-link" id="settingsButton"><svg><use href="#i-settings"/></svg><span data-t="preferences">Preferences</span></button>
+      <button class="nav-link" id="aboutButton"><svg><use href="#i-info"/></svg><span data-t="about">About</span></button>
+    </nav>
+    <div class="sidebar-spacer"></div>
+    <div class="sidebar-bottom">
+      <div class="connection-card">
+        <div class="connection-label"><span class="online-dot" id="onlineDot"></span><span data-t="connected">CONNECTED TO GITHUB</span></div>
+        <div class="github-identity"><svg><use href="#i-github"/></svg><span id="sourceSummary">1 creator</span></div>
+        <div class="connection-scan" id="lastScanText">Checking releases…</div>
+        <button class="sidebar-scan" id="sidebarScan"><svg><use href="#i-sync"/></svg><span data-t="checkUpdates">Check for updates</span></button>
+      </div>
+      <div class="sidebar-version"><span>CHALLENGER HUB · MULTI-DOMAIN</span><span>v2.5.1</span></div>
+    </div>
+  </aside>
+  <div class="sidebar-scrim" id="sidebarScrim"></div>
+  <div class="app-main">
+    <header class="topbar">
+      <button class="icon-only mobile-menu" id="mobileMenu" aria-label="Open menu"><svg><use href="#i-menu"/></svg></button>
+      <div class="search-wrap"><svg class="search-loupe"><use href="#i-search"/></svg><input id="searchInput" type="search" spellcheck="false" autocomplete="off" placeholder="Search all apps, products and alternatives…" aria-label="Search entire catalog"><button id="searchClear" type="button" class="search-clear" aria-label="Clear search" title="Clear search" hidden>×</button><kbd id="searchShortcut" aria-hidden="true">Ctrl K</kbd></div>
+      <div class="topbar-end">
+        <div class="theme-switch" id="themeSwitch" role="group" aria-label="Appearance">
+          <button class="icon-only theme-choice" data-theme-choice="light" aria-label="Light mode" title="Light mode" aria-pressed="false"><svg><use href="#i-sun"/></svg></button>
+          <button class="icon-only theme-choice" data-theme-choice="dark" aria-label="Dark mode" title="Dark mode" aria-pressed="false"><svg><use href="#i-moon"/></svg></button>
+          <button class="icon-only theme-choice" data-theme-choice="system" aria-label="Follow system" title="Follow system" aria-pressed="false"><svg><use href="#i-monitor"/></svg></button>
+        </div>
+        
+        
+      </div>
+    </header>
+    <main class="content">
+      <section class="hero"><canvas id="heroShaderCanvas" class="hero-shader-canvas" aria-hidden="true"></canvas>
+        <div class="hero-decoration" aria-hidden="true"><div class="hero-sun"></div><div class="mountain mountain-far"></div><div class="mountain mountain-mid"></div><div class="mountain mountain-front"></div><div class="hero-lines"></div></div>
+        <div class="hero-copy"><div class="hero-kicker"><span class="hero-kicker-dot"></span><span data-t="heroKicker">INDEPENDENT SOFTWARE · MADE TO CHALLENGE</span></div><h1><span data-t="heroLine1">Meet the challengers.</span><br><em data-t="heroLine2">Beyond the big names.</em></h1><p data-t="heroSubtitle">Discover bold, independent alternatives to expensive professional software. Track the projects worth watching.</p></div>
+        <div class="hero-metrics">
+          <button type="button" class="hero-metric" data-stat-filter="installed" aria-label="Show installed applications"><svg><use href="#i-package"/></svg><div><strong id="metricInstalled">—</strong><span data-t="appsInstalled">Apps installed</span></div></button>
+          <button type="button" class="hero-metric" data-stat-filter="updates" aria-label="Show available updates"><svg><use href="#i-sync"/></svg><div><strong id="metricUpdates">—</strong><span data-t="updatesAvailable">Updates available</span></div></button>
+          <button type="button" class="hero-metric" data-stat-filter="new" aria-label="Show new apps"><svg><use href="#i-spark"/></svg><div><strong id="metricNew">—</strong><span data-t="newDiscovered">New discoveries</span></div></button>
+        </div>
+      </section>
+      <section class="challenge-workflows" id="challengeWorkflows" aria-label="Discover alternatives by familiar software">
+        <div class="challenge-intro"><span class="challenge-eyebrow">DISCOVER BY THE TOOL YOU KNOW</span><strong>What are you replacing?</strong><small>Start with familiar software.</small></div>
+        <div class="challenge-links">
+          <button type="button" class="challenge-link challenge-photo" data-global-query="Photoshop" aria-label="Find alternatives to Photoshop"><span class="challenge-link-icon" aria-hidden="true">Ps</span><span class="challenge-copy"><strong>Photoshop</strong><small data-query-count="Photoshop">Explore alternatives</small></span><span class="challenge-arrow" aria-hidden="true">↗</span></button>
+          <button type="button" class="challenge-link challenge-video" data-global-query="After Effects" aria-label="Find alternatives to After Effects"><span class="challenge-link-icon" aria-hidden="true">Fx</span><span class="challenge-copy"><strong>After Effects</strong><small data-query-count="After Effects">Explore alternatives</small></span><span class="challenge-arrow" aria-hidden="true">↗</span></button>
+          <button type="button" class="challenge-link challenge-cad" data-global-query="AutoCAD" aria-label="Find alternatives to AutoCAD"><span class="challenge-link-icon" aria-hidden="true">3D</span><span class="challenge-copy"><strong>AutoCAD</strong><small data-query-count="AutoCAD">Explore alternatives</small></span><span class="challenge-arrow" aria-hidden="true">↗</span></button>
+          <button type="button" class="challenge-link challenge-apps" data-global-query="Power Apps" aria-label="Find alternatives to Power Apps"><span class="challenge-link-icon" aria-hidden="true">App</span><span class="challenge-copy"><strong>Power Apps</strong><small data-query-count="Power Apps">Explore alternatives</small></span><span class="challenge-arrow" aria-hidden="true">↗</span></button>
+        </div>
+      </section>
+      <div id="notice" class="notice hidden" role="status"></div>
+      <section id="workQueue" class="work-queue hidden" role="status" aria-live="polite">
+        <div class="queue-indicator"><svg><use href="#i-sync"/></svg></div>
+        <div class="queue-content"><strong id="queueTitle">Processing updates</strong><p id="queueMessage"></p></div>
+        <span id="queueCount" class="queue-count"></span>
+        <div class="queue-progress" aria-hidden="true"><span></span></div>
+      </section>
+      <div class="main-heading">
+        <div class="heading-start"><p class="eyebrow" id="eyebrow" data-t="libraryEyebrow">CHALLENGER CATALOG</p><h2 id="pageTitle" data-t="pageTitle">Applications</h2><p class="heading-subtitle" id="pageSubtitle" data-t="pageSubtitle">Emerging alternatives, mapped by creator, category and the software they challenge.</p></div>
+        <div class="heading-controls">
+          <label class="sort-control"><span data-t="sortBy">Sort by</span><select id="sortSelect" aria-label="Sort applications"><option value="activity" data-t="sortActivity">Repository activity</option><option value="name" data-t="sortName">Name</option><option value="release" data-t="sortRelease">Latest release</option><option value="status" data-t="sortStatus">Updates first</option></select><svg><use href="#i-chevron"/></svg></label>
+          <div class="view-toggle" role="group" aria-label="Display view"><button id="gridButton" class="icon-only active" aria-label="Grid view" title="Grid view" aria-pressed="true"><svg><use href="#i-apps"/></svg></button><button id="listButton" class="icon-only" aria-label="List view" title="List view" aria-pressed="false"><svg><use href="#i-list"/></svg></button></div>
+        </div>
+      </div>
+      <section class="domain-section" aria-label="Product categories"><div class="domain-section-heading"><strong>Explore by category</strong><small id="domainTotal">Organizing independent alternatives…</small></div><div class="domain-filters" id="domainFilters" role="group" aria-label="Product categories"></div></section>
+      <div class="tabbar"><div class="filter-tools-heading"><div><span class="filter-kicker">PERSONALIZE YOUR DISCOVERY</span><strong>Refine the catalog</strong></div><button type="button" id="clearAllFilters" class="clear-all-filters" title="Reset all filters">Reset filters ↺</button></div>
+        <div class="filter-chips" role="group" aria-label="Filter applications">
+          <button class="filter-chip active" data-filter="all" aria-pressed="true" data-t="filterAll">All apps</button>
+          <button class="filter-chip" data-filter="installed" aria-pressed="false" data-t="filterInstalled">Installed</button>
+          <button class="filter-chip" data-filter="updates" aria-pressed="false"><span data-t="filterUpdates">Updates</span><span class="chip-count" id="filterCountUpdates">0</span></button>
+          <button class="filter-chip" data-filter="new" aria-pressed="false"><span data-t="filterNew">Discoveries</span><span class="chip-count" id="filterCountNew">0</span></button>
+          <button class="filter-chip" data-filter="missing" aria-pressed="false" data-t="filterMissing">Not installed</button>
+        </div>
+        <div class="catalog-filters"><div class="category-wrap"><label class="sr-only" for="maturitySelect">Maturity</label><select id="maturitySelect" aria-label="Filter by maturity"><option value="all">Any maturity</option><option value="stable">Stable</option><option value="beta">Beta / RC</option><option value="alpha">Alpha</option><option value="prealpha">Early / experimental</option><option value="dormant">Dormant</option><option value="unknown">Unverified</option></select></div><div class="category-wrap"><label class="sr-only" for="availabilitySelect">Availability</label><select id="availabilitySelect" aria-label="Filter by availability"><option value="all">Any availability</option><option value="install">Install available</option><option value="portable">Portable available</option><option value="deploy">Manual setup / deployment</option><option value="source">Source / unverified</option></select></div><div class="category-wrap"><label class="sr-only" for="platformSelect">Platform</label><select id="platformSelect" aria-label="Filter by platform"><option value="all">Any platform</option><option value="windows">Windows desktop</option><option value="mac">macOS desktop</option><option value="linux">Linux desktop</option><option value="hosted">Self-hosted / web</option></select></div><div class="category-wrap"><label for="categorySelect" class="sr-only" data-t="category">Category</label><select id="categorySelect" aria-label="App category"><option value="all" data-t="allCategories">All categories</option></select><svg><use href="#i-chevron"/></svg></div><div class="category-wrap"><label for="creatorSelect" class="sr-only">Creator</label><select id="creatorSelect" aria-label="Filter by creator"><option value="all">All creators</option></select><svg><use href="#i-chevron"/></svg></div></div>
+      </div>
+      <div id="globalSearchContext" class="global-search-context" hidden role="status"><span class="global-search-symbol" aria-hidden="true">⌕</span><div class="global-search-copy"><strong>Global search · <span id="globalSearchMatchCount">0</span> matches</strong><small>Searching all categories. Other filters are temporarily bypassed; clearing search restores them.</small></div><button type="button" id="clearGlobalSearch" class="global-search-reset">Clear search <span aria-hidden="true">×</span></button></div>
+      <div class="catalog-with-detail" id="catalogWithDetail">
+        <div class="catalog-main">
+          <div class="result-summary" id="resultSummary" role="status">Loading applications…</div>
+          <div id="catalogTableHead" class="catalog-table-head" role="row" hidden><span role="columnheader">Application</span><span role="columnheader">Competes with</span><span role="columnheader">Category</span><span role="columnheader">Maturity</span><span role="columnheader">Availability</span><span role="columnheader">Latest release</span><span role="columnheader">Action</span></div>
+          <div id="cards" class="cards" aria-live="polite" aria-busy="true"></div>
+          <div class="catalog-footer"><svg><use href="#i-shield"/></svg><span data-t="verifiedSource">Install and update only with reviewed, source-verified adapters.</span></div>
+        </div>
+        <div class="panel-scrim" id="detailScrim"></div>
+        <aside class="detail-panel" id="detailPanel" aria-label="Application details" role="region">
+          <div class="detail-top"><span data-t="appDetails">APP DETAILS</span><button type="button" id="openWhatsNew" class="detail-whats-new">What’s new ↗</button><button id="closeDetail" class="icon-only" aria-label="Close details" title="Close details"><svg><use href="#i-x"/></svg></button></div>
+          <div class="detail-app-id"><div id="detailIcon" class="detail-app-icon"></div><span class="detail-status" id="detailStatus">—</span><h2 id="detailName">Select an application</h2><p id="detailDescription"></p><div class="detail-maturity" id="detailMaturity"></div></div>
+          <div class="detail-action-row"><button class="detail-primary" id="detailAction" disabled><svg><use href="#i-play"/></svg><span id="detailActionText">Open</span></button><button class="detail-extras icon-only" id="detailGithub" aria-label="Open repository" title="Open repository"><svg><use href="#i-external"/></svg></button></div><div class="portable-action-row" id="detailPortableRow" hidden><button type="button" id="detailPortable" class="portable-button" title="Download a verified portable release; does not install anything"><svg><use href="#i-down"/></svg><span>Download portable</span></button><small id="detailPortableNote">SHA-256 checked · Manual extraction</small></div>
+          <div class="detail-tabs" role="tablist" aria-label="App details tabs">
+            <button class="detail-tab active" role="tab" aria-selected="true" data-detail-tab="changes" data-t="detailWhatsNew">What's new</button>
+            <button class="detail-tab" role="tab" aria-selected="false" data-detail-tab="details" data-t="detailInfo">Details</button>
+            <button class="detail-tab" role="tab" aria-selected="false" data-detail-tab="releases" data-t="detailReleases">Releases</button>
+          </div>
+          <div id="detailBody" class="detail-body" role="tabpanel"></div>
+          <div class="detail-bottom"><span id="detailSourceText">Source: GitHub</span><button class="detail-source" id="detailReleaseLink"><span data-t="fullChangelog">Full changelog</span><svg><use href="#i-external"/></svg></button></div>
+        </aside>
+      </div>
+      <footer class="main-footer"><div class="device-footer"><span class="footer-dot" id="footerDot"></span><span id="deviceLabel">Local device</span><span class="foot-sep">·</span><span id="footerScan">Not scanned yet</span></div><div class="footer-actions"><button id="verifyButton" data-t="verify">Verify installs</button><button id="updateAllButton" data-t="updateAll">Update all</button><button id="activityButton" data-t="activityLog">Activity log</button></div></footer>
+    </main>
+  </div>
+</div>
+<dialog id="confirmDialog" class="modal-dialog" aria-labelledby="confirmTitle"><div class="modal-pad"><div class="modal-badge"><svg><use href="#i-shield"/></svg></div><h2 id="confirmTitle" data-t="confirmTitle">Confirm installation</h2><p id="confirmMessage"></p><div class="modal-actions"><button id="confirmCancel" class="btn-cancel" data-t="cancel">Cancel</button><button id="confirmAccept" class="btn-accept" data-t="continue">Continue</button></div></div></dialog>
+<dialog id="prefsDialog" class="modal-dialog" aria-labelledby="prefsTitle"><div class="modal-pad"><button class="modal-close icon-only" data-dialog-close="prefsDialog" aria-label="Close"><svg><use href="#i-x"/></svg></button><div class="modal-badge"><svg><use href="#i-settings"/></svg></div><h2 id="prefsTitle" data-t="preferences">Preferences</h2><p class="modal-help" data-t="prefsDescription">Changes are saved on this device.</p><div class="prefs-line prefs-option"><div><strong>Automatic release checks</strong><small>Track verified project releases in the background</small></div><label class="preference-switch"><input type="checkbox" id="prefsAutoCheck" checked aria-label="Automatically check for release updates"><span aria-hidden="true"></span></label></div>
+<div class="prefs-line prefs-option"><div><strong>Check frequency</strong><small>Applies to independent project release feeds</small></div><select id="prefsInterval" aria-label="Release check frequency"><option value="6">Every 6 hours</option><option value="12" selected>Every 12 hours</option><option value="24">Daily</option></select></div>
+<div class="prefs-line prefs-option"><div><strong>Show early-stage projects</strong><small>Include alpha, pre-alpha and experimental alternatives</small></div><label class="preference-switch"><input type="checkbox" id="prefsEarly" checked aria-label="Include early-stage projects"><span aria-hidden="true"></span></label></div>
+<p class="prefs-source-state" id="prefsSourceState">Project feeds use official release sources and SHA-256 for supported installers.</p></div></dialog>
+<dialog id="aboutDialog" class="modal-dialog" aria-labelledby="aboutTitle"><div class="modal-pad about-content"><button class="modal-close icon-only" data-dialog-close="aboutDialog" aria-label="Close"><svg><use href="#i-x"/></svg></button><img class="about-logo" src="/brand-icon.png" width="82" height="82" alt=""><h2 id="aboutTitle">Challenger Hub</h2><p data-t="aboutDescription">An independent discovery hub for lesser-known open-source projects challenging expensive professional applications. Not affiliated with the featured creators.</p><span class="about-version">Version 2.5.1 · Independent alternatives</span></div></dialog>
+<dialog id="activityDialog" class="modal-dialog activity-dialog" aria-labelledby="activityTitle"><div class="modal-pad"><button class="modal-close icon-only" data-dialog-close="activityDialog" aria-label="Close"><svg><use href="#i-x"/></svg></button><div class="modal-badge"><svg><use href="#i-clock"/></svg></div><h2 id="activityTitle" data-t="activityLog">Activity log</h2><div id="activityContent" class="activity-content"></div></div></dialog>
+<dialog id="whatsNewDialog" class="modal-dialog whats-new-dialog" aria-labelledby="whatsNewTitle"><div class="modal-pad"><button class="modal-close icon-only" data-dialog-close="whatsNewDialog" aria-label="Close release notes"><svg><use href="#i-x"/></svg></button><div class="modal-badge"><svg><use href="#i-info"/></svg></div><h2 id="whatsNewTitle">What’s new</h2><p class="modal-help" id="whatsNewSubtitle"></p><div id="whatsNewBody" class="notes-content" role="document"></div></div></dialog>
+<div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
+</body></html>

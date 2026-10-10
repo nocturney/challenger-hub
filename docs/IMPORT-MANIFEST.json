@@ -1,0 +1,146 @@
+{
+  "date": "2026-10-10T12:20:22.518Z",
+  "source": "existing validated production v2.5.1",
+  "files": [
+    {
+      "path": "app.js",
+      "sha256": "02c3440a1a38cd934e552cc57a95aa05e3eba56fdd9a1ef9e03f726af50cab34",
+      "bytes": 62581
+    },
+    {
+      "path": "index.html",
+      "sha256": "99b4c332a2f39bac9b95e16ea10d6cdc8e8ff6800c71cd9e2de50c8330f3d6eb",
+      "bytes": 24657
+    },
+    {
+      "path": "style.css",
+      "sha256": "54084024c0dcd4afcf4e2257e3cecbb14e629a18c10b5f30d571d153cfa10fed",
+      "bytes": 82457
+    },
+    {
+      "path": "server.js",
+      "sha256": "f2dc4f6d609a63742f4029844365ae0745de35c076f500a7403f1d2c5348bb95",
+      "bytes": 39579
+    },
+    {
+      "path": "challenger-core.js",
+      "sha256": "80dcb8468989067cbc86c4a5428f7237a4db7d1b34f4f511c0c339a1753b7d94",
+      "bytes": 12587
+    },
+    {
+      "path": "challengers.json",
+      "sha256": "7fbd0d198bcc9ba75b2871cafcd8fb26e1d7c7424f09af2ea6fccb7c40aa3a05",
+      "bytes": 142525
+    },
+    {
+      "path": "commercial-targets.json",
+      "sha256": "5a431e23db9901feda3cc6f7a289c9fdd1eae5e06be492480f1e342649396a35",
+      "bytes": 6714
+    },
+    {
+      "path": "official-icons.js",
+      "sha256": "278a06a4e1d2d5221387b48ca1f12ec7451b009bd00605b8ead59dfad89c922f",
+      "bytes": 5001
+    },
+    {
+      "path": "official-icons.json",
+      "sha256": "8dd27e5f6833ef01e4b0d4d3679e18c812c6b06a97c285cac9437ce955df526d",
+      "bytes": 30328
+    },
+    {
+      "path": "shader-bundle.js",
+      "sha256": "9570453266b50d0ac7bfd7b45c4de3b7b219663fe4c3f2527379cbdab0e39f94",
+      "bytes": 2581035
+    },
+    {
+      "path": "shader-loader.js",
+      "sha256": "b8948eb4aa4e078807dc65b56236135c497c90db25b81049d29d152ccdf312fc",
+      "bytes": 997
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "29f5c86cce2b30f3c6ea0150479f2e76d03922d0db8ca881b46cb2653cb00675",
+      "bytes": 380
+    },
+    {
+      "path": "brand-icon.png",
+      "sha256": "4ee89ce10d5387f33cf88c6d5b54784110cd83eb4a8f5df859a67e64443c019e",
+      "bytes": 335334
+    },
+    {
+      "path": "Install-Challenger.js",
+      "sha256": "8a32f1d39a9cb11011281d12cbfefda20a1a42deebc924f82945af25daaade82",
+      "bytes": 13219
+    },
+    {
+      "path": "adapters.json",
+      "sha256": "9104dbff1235602006bc81ec6418e8ad892d02d98a85a3e88a61acee6a812a81",
+      "bytes": 3359
+    },
+    {
+      "path": "portable-assets.json",
+      "sha256": "59f144708b2ce5de241bc9886ac45ad44503c7b0ffc306fd299c76386b6057c1",
+      "bytes": 3831
+    },
+    {
+      "path": "sources.json",
+      "sha256": "fae0ae893f762b06c09d7517010d054fa9079df9b6efc34a45552e7f61ca563a",
+      "bytes": 1224
+    },
+    {
+      "path": "RELEASE_NOTES_2.4.md",
+      "sha256": "8c337ee5ea023fb83f73f362b889115bfdb6c14776d87e3ea40a932105f443b7",
+      "bytes": 4754
+    },
+    {
+      "path": "Bootstrap-English.js",
+      "sha256": "c66d11d014184b5c44aeca6c1e27a1dff33273a2d549abd5dcb73114e6ce1e21",
+      "bytes": 1328
+    },
+    {
+      "path": "Generate-Brand-Icon.py",
+      "sha256": "edaa29a83ddc7c2ccbcfe23b85c2f843de1c46977fb818f0027d66be0ae55497",
+      "bytes": 5929
+    },
+    {
+      "path": "platform/windows/Start-Center.ps1",
+      "sha256": "cc3cb7317fdec8822d5a07e29b9ebc735dbeaf87166d733459f827663e4b1585",
+      "bytes": 1111
+    },
+    {
+      "path": "platform/windows/CraftUpdateCenter.vbs",
+      "sha256": "623f1bb5336c0a9e659d5ba82c2b29ec7f94cdd72f74f968e9e637e0c4c88120",
+      "bytes": 485
+    },
+    {
+      "path": "platform/windows/Program.cs",
+      "sha256": "ac6c2b051d2ca5625bccf7942cca53e657653de5eb42b46111266ae9bef11e86",
+      "bytes": 12823
+    },
+    {
+      "path": "platform/windows/CraftUpdateCenter.csproj",
+      "sha256": "5089ce8d2b754bc41caf6828ca16cf8cc1be113d29c77b02fa18330207804d02",
+      "bytes": 801
+    },
+    {
+      "path": "platform/windows/Make-Icon.ps1",
+      "sha256": "57c53a619152e32b9dc0123a3139795583090221b9bdb618b45bf461734f5ecd",
+      "bytes": 2096
+    },
+    {
+      "path": "platform/windows/icon.ico",
+      "sha256": "197fd8c105a2678ecb10e9d1886c1f781109c568fac0521c33908201808df671",
+      "bytes": 82742
+    },
+    {
+      "path": "local-icons/synfig.png",
+      "sha256": "24c1b46ca0ae722ff97ae31b733d8a4735b89c7d8729636ba0685b8c54396584",
+      "bytes": 39553
+    },
+    {
+      "path": "ux-experience.js",
+      "sha256": "d8863d7e23cc1b9fd5b222bcc7ea8f20ae077b28fd8e9ee82b365cb71a291567",
+      "bytes": 10436
+    }
+  ]
+}

@@ -1,0 +1,148 @@
+{
+  "schema": "challenger-portable.v1",
+  "policy": "Explicit per-platform GitHub release asset allowlist, SHA-256 digest REQUIRED. Downloads are not executed, extracted, installed, or placed over existing managed application.",
+  "projects": {
+    "composa": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^composa-[0-9.]+-win-x64\\.zip$"
+      }
+    },
+    "infinite": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^Infinite-windows-x64\\.zip$"
+      }
+    },
+    "limo-cad": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^noBS-CAD-[^/]+-windows-x64\\.zip$"
+      }
+    },
+    "material-maker": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^material_maker_[^/]+_windows\\.zip$"
+      }
+    },
+    "godsvg": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^GodSVG_v[^/]+\\.Windows\\.zip$"
+      },
+      "darwin": {
+        "kind": "zip-app",
+        "asset": "^GodSVG_v[^/]+\\.MacOS\\.zip$",
+        "note": "Mac archive is not an .app bundle; requires manual review/launch"
+      }
+    },
+    "pixieditor": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^PixiEditor\\.[^/]+\\.x64-win\\.zip$"
+      },
+      "darwin": {
+        "kind": "zip-app",
+        "asset": "^PixiEditor-[^/]+-universal-macos\\.zip$",
+        "note": "Mac .app has unsigned nested code; no automatic installation"
+      }
+    },
+    "photodemon": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^PhotoDemon-[^/]+\\.zip$"
+      }
+    },
+    "real-video-enhancer": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^REAL-Video-Enhancer-[^/]+-Windows-portable_x86_64\\.zip$"
+      },
+      "darwin": {
+        "kind": "zip-app",
+        "asset": "^REAL-Video-Enhancer-[^/]+-MacOS_arm64\\.zip$",
+        "note": "Manual installation required; ZIP has no .app bundle"
+      }
+    },
+    "solvespace": {
+      "win32": {
+        "kind": "exe-portable",
+        "asset": "^solvespace_x64\\.exe$"
+      }
+    },
+    "photocraft": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^photocraft-[^/]+-windows-x64-portable\\.zip$"
+      }
+    },
+    "vectorcraft": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^vectorcraft-[^/]+-windows-x64-portable\\.zip$"
+      }
+    },
+    "lightcraft": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^lightcraft-[^/]+-windows-x64-portable\\.zip$"
+      }
+    },
+    "filmcraft": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^filmcraft-[^/]+-windows-x64-portable\\.zip$"
+      }
+    },
+    "effectcraft": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^effectcraft-[^/]+-windows-x64-portable\\.zip$"
+      }
+    },
+    "designcraft": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^designcraft-[^/]+-windows-x64-portable\\.zip$"
+      }
+    },
+    "pdfcraft": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^pdfcraft-[^/]+-windows-x64-portable\\.zip$"
+      }
+    },
+    "wordcraft": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^wordcraft-[^/]+-windows-x64-portable\\.zip$"
+      }
+    },
+    "gridcraft": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^gridcraft-[^/]+-windows-x64-portable\\.zip$"
+      }
+    },
+    "deckcraft": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^deckcraft-[^/]+-windows-x64-portable\\.zip$"
+      }
+    },
+    "cadcraft": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^cadcraft-[^/]+-windows-x64-portable\\.zip$"
+      }
+    },
+    "soundcraft": {
+      "win32": {
+        "kind": "zip",
+        "asset": "^soundcraft-[^/]+-windows-x64-portable\\.zip$"
+      }
+    }
+  },
+  "notes": "Windows Storytold GUI portable ZIPs included; macOS CLI ZIPs do not count as portable GUI apps. Other project portable downloads may require manual extraction."
+}

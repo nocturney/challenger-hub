@@ -1,0 +1,841 @@
+{
+  "schema": "challenger-official-icons.v1",
+  "checkedAt": "2026-10-10T08:24:24.435Z",
+  "policy": "Each icon is taken from its original developer/project official repository or official sibling site. Synfig PNG derived from upstream Mac ICNS. Creator/source icons are not generated.",
+  "projects": {
+    "compositor": {
+      "icon": {
+        "repository": "robbietilton/Compositor",
+        "path": "Compositor/Assets.xcassets/AppIcon.appiconset/app-icon-1024.png",
+        "rawUrl": "https://raw.githubusercontent.com/robbietilton/Compositor/main/Compositor/Assets.xcassets/AppIcon.appiconset/app-icon-1024.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 93
+      },
+      "status": "source-confirmed"
+    },
+    "composa": {
+      "icon": {
+        "repository": "dvdstelt/Composa",
+        "path": "src/Composa.App/Assets/icon.png",
+        "rawUrl": "https://raw.githubusercontent.com/dvdstelt/Composa/main/src/Composa.App/Assets/icon.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 229
+      },
+      "status": "source-confirmed"
+    },
+    "infinite": {
+      "icon": {
+        "repository": "n1m21n/Infinite",
+        "path": "website/assets/icon.png",
+        "rawUrl": "https://raw.githubusercontent.com/n1m21n/Infinite/main/website/assets/icon.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 294
+      },
+      "status": "source-confirmed"
+    },
+    "friction": {
+      "icon": {
+        "repository": "friction2d/friction",
+        "path": "src/app/pixmaps/enve.ico",
+        "rawUrl": "https://raw.githubusercontent.com/friction2d/friction/main/src/app/pixmaps/enve.ico",
+        "extension": "ico",
+        "source": "curated official project icon resource",
+        "score": 999
+      },
+      "status": "official-file-confirmed"
+    },
+    "grida": {
+      "icon": {
+        "repository": "gridaco/grida",
+        "path": "desktop/images/icon.png",
+        "rawUrl": "https://raw.githubusercontent.com/gridaco/grida/main/desktop/images/icon.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 294
+      },
+      "status": "source-confirmed"
+    },
+    "limo-cad": {
+      "icon": {
+        "repository": "limo-cad/Limo-CAD",
+        "path": "src-tauri/icons/icon.png",
+        "rawUrl": "https://raw.githubusercontent.com/limo-cad/Limo-CAD/main/src-tauri/icons/icon.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 294
+      },
+      "status": "source-confirmed"
+    },
+    "dune3d": {
+      "icon": {
+        "repository": "dune3d/dune3d",
+        "path": "src/icons/scalable/apps/dune3d.svg",
+        "rawUrl": "https://raw.githubusercontent.com/dune3d/dune3d/main/src/icons/scalable/apps/dune3d.svg",
+        "extension": "svg",
+        "source": "curated official project icon resource",
+        "score": 999
+      },
+      "status": "official-file-confirmed"
+    },
+    "material-maker": {
+      "icon": {
+        "repository": "RodZill4/material-maker",
+        "path": "icon.png",
+        "rawUrl": "https://raw.githubusercontent.com/RodZill4/material-maker/master/icon.png",
+        "extension": "png",
+        "source": "curated official project icon resource",
+        "score": 999
+      },
+      "status": "official-file-confirmed"
+    },
+    "godsvg": {
+      "icon": {
+        "repository": "MewPurPur/GodSVG",
+        "path": "assets/logos/icon.png",
+        "rawUrl": "https://raw.githubusercontent.com/MewPurPur/GodSVG/main/assets/logos/icon.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 293
+      },
+      "status": "source-confirmed"
+    },
+    "vgc": {
+      "icon": {
+        "repository": "vgc/vgc",
+        "path": "tools/windows/setuplogo.png",
+        "rawUrl": "https://raw.githubusercontent.com/vgc/vgc/master/tools/windows/setuplogo.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 183
+      },
+      "status": "source-confirmed"
+    },
+    "glaxnimate": {
+      "icon": {
+        "repository": "KDE/glaxnimate",
+        "path": "data/images/logo.svg",
+        "rawUrl": "https://raw.githubusercontent.com/KDE/glaxnimate/master/data/images/logo.svg",
+        "extension": "svg",
+        "source": "official repository file",
+        "score": 266
+      },
+      "status": "source-confirmed"
+    },
+    "mfek-glif": {
+      "icon": {
+        "repository": "MFEK/glif",
+        "path": "resources/icon.png",
+        "rawUrl": "https://raw.githubusercontent.com/MFEK/glif/master/resources/icon.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 293
+      },
+      "status": "source-confirmed"
+    },
+    "zrythm": {
+      "icon": {
+        "repository": "zrythm/zrythm",
+        "path": "data/platform/windows/zrythm.ico",
+        "rawUrl": "https://raw.githubusercontent.com/zrythm/zrythm/master/data/platform/windows/zrythm.ico",
+        "extension": "ico",
+        "source": "curated official project icon resource",
+        "score": 999
+      },
+      "status": "official-file-confirmed"
+    },
+    "bespoke-synth": {
+      "icon": {
+        "repository": "BespokeSynth/BespokeSynth",
+        "path": "bespoke_icon.png",
+        "rawUrl": "https://raw.githubusercontent.com/BespokeSynth/BespokeSynth/main/bespoke_icon.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 183
+      },
+      "status": "source-confirmed"
+    },
+    "stargate-daw": {
+      "icon": {
+        "repository": "stargatedaw/stargate",
+        "path": "src/files/themes/default/assets/icon.svg",
+        "rawUrl": "https://raw.githubusercontent.com/stargatedaw/stargate/main/src/files/themes/default/assets/icon.svg",
+        "extension": "svg",
+        "source": "official repository file",
+        "score": 193
+      },
+      "status": "source-confirmed"
+    },
+    "horizon-eda": {
+      "icon": {
+        "repository": "horizon-eda/horizon",
+        "path": "src/icons/256x256/apps/horizon-eda.png",
+        "rawUrl": "https://raw.githubusercontent.com/horizon-eda/horizon/master/src/icons/256x256/apps/horizon-eda.png",
+        "extension": "png",
+        "source": "curated official project icon resource",
+        "score": 999
+      },
+      "status": "official-file-confirmed"
+    },
+    "kiri-moto": {
+      "icon": {
+        "repository": "GridSpace/grid-apps",
+        "path": "web/kiri/logo-cube-256.png",
+        "rawUrl": "https://raw.githubusercontent.com/GridSpace/grid-apps/master/web/kiri/logo-cube-256.png",
+        "extension": "png",
+        "source": "curated official project icon resource",
+        "score": 999
+      },
+      "status": "official-file-confirmed"
+    },
+    "inochi-creator": {
+      "icon": {
+        "repository": "Inochi2D/inochi-creator",
+        "path": "res/icon.png",
+        "rawUrl": "https://raw.githubusercontent.com/Inochi2D/inochi-creator/v0_8/res/icon.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 268
+      },
+      "status": "source-confirmed"
+    },
+    "pixieditor": {
+      "icon": {
+        "repository": "PixiEditor/PixiEditor",
+        "path": "src/PixiEditor.UI.Common/Assets/PixiEditorLogo.png",
+        "rawUrl": "https://raw.githubusercontent.com/PixiEditor/PixiEditor/master/src/PixiEditor.UI.Common/Assets/PixiEditorLogo.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 248
+      },
+      "status": "source-confirmed"
+    },
+    "photodemon": {
+      "icon": {
+        "repository": "tannerhelland/PhotoDemon",
+        "path": "Resources/Assets/pd_icons_new.ico",
+        "rawUrl": "https://raw.githubusercontent.com/tannerhelland/PhotoDemon/main/Resources/Assets/pd_icons_new.ico",
+        "extension": "ico",
+        "source": "curated official project icon resource",
+        "score": 999
+      },
+      "status": "official-file-confirmed"
+    },
+    "real-video-enhancer": {
+      "icon": {
+        "repository": "TNTwise/REAL-Video-Enhancer",
+        "path": "icons/logo-v2.svg",
+        "rawUrl": "https://raw.githubusercontent.com/TNTwise/REAL-Video-Enhancer/v2-main/icons/logo-v2.svg",
+        "extension": "svg",
+        "source": "official repository file",
+        "score": 155
+      },
+      "status": "source-confirmed"
+    },
+    "oak-video-editor": {
+      "icon": {
+        "repository": "OakVideoEditorCommunity/oak",
+        "path": "assets/app-icon.png",
+        "rawUrl": "https://raw.githubusercontent.com/OakVideoEditorCommunity/oak/main/assets/app-icon.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 293
+      },
+      "status": "source-confirmed"
+    },
+    "armorpaint": {
+      "icon": {
+        "repository": "armory3d/armorpaint",
+        "path": "base/icon.png",
+        "rawUrl": "https://raw.githubusercontent.com/armory3d/armorpaint/main/base/icon.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 268
+      },
+      "status": "source-confirmed"
+    },
+    "solvespace": {
+      "icon": {
+        "repository": "solvespace/solvespace",
+        "path": "res/cocoa/AppIcon.iconset/icon_128x128.png",
+        "rawUrl": "https://raw.githubusercontent.com/solvespace/solvespace/master/res/cocoa/AppIcon.iconset/icon_128x128.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 93
+      },
+      "status": "source-confirmed"
+    },
+    "losslesscut": {
+      "icon": {
+        "repository": "mifi/lossless-cut",
+        "path": "src/renderer/src/icon.svg",
+        "rawUrl": "https://raw.githubusercontent.com/mifi/lossless-cut/master/src/renderer/src/icon.svg",
+        "extension": "svg",
+        "source": "official repository file",
+        "score": 175
+      },
+      "status": "source-confirmed"
+    },
+    "gyroflow": {
+      "icon": {
+        "repository": "gyroflow/gyroflow",
+        "path": "resources/icon.png",
+        "rawUrl": "https://raw.githubusercontent.com/gyroflow/gyroflow/master/resources/icon.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 293
+      },
+      "status": "source-confirmed"
+    },
+    "synfig": {
+      "icon": {
+        "repository": "synfig/synfig",
+        "path": "autobuild/osx/app-template/Contents/Resources/SynfigStudio.icns",
+        "rawUrl": "https://raw.githubusercontent.com/synfig/synfig/master/autobuild/osx/app-template/Contents/Resources/SynfigStudio.icns",
+        "extension": "icns",
+        "source": "curated official project icon resource",
+        "score": 999,
+        "localDerived": "local-icons/synfig.png",
+        "derivedHashes": {
+          "win32": "24c1b46ca0ae722ff97ae31b733d8a4735b89c7d8729636ba0685b8c54396584",
+          "darwin": "f86b4f0951afba717346e6fc1ca7319637bc2837c391b8564d5fe62f48fe85ff"
+        }
+      },
+      "status": "official-file-confirmed"
+    },
+    "helio": {
+      "icon": {
+        "repository": "helio-fm/helio-sequencer",
+        "path": "Docs/favicon.png",
+        "rawUrl": "https://raw.githubusercontent.com/helio-fm/helio-sequencer/develop/Docs/favicon.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 216
+      },
+      "status": "source-confirmed"
+    },
+    "cardinal": {
+      "icon": {
+        "repository": "DISTRHO/Cardinal-Website",
+        "path": "favicon.ico",
+        "rawUrl": "https://raw.githubusercontent.com/DISTRHO/Cardinal-Website/main/favicon.ico",
+        "extension": "ico",
+        "source": "curated official project icon resource",
+        "score": 999
+      },
+      "status": "official-file-confirmed"
+    },
+    "goxel": {
+      "icon": {
+        "repository": "guillaumechereau/goxel",
+        "path": "icon.png",
+        "rawUrl": "https://raw.githubusercontent.com/guillaumechereau/goxel/master/icon.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 268
+      },
+      "status": "source-confirmed"
+    },
+    "cloudcompare": {
+      "icon": {
+        "repository": "CloudCompare/CloudCompare",
+        "path": "ccViewer/images/cc.png",
+        "rawUrl": "https://raw.githubusercontent.com/CloudCompare/CloudCompare/master/ccViewer/images/cc.png",
+        "extension": "png",
+        "source": "curated official project icon resource",
+        "score": 999
+      },
+      "status": "official-file-confirmed"
+    },
+    "meshlab": {
+      "icon": {
+        "repository": "cnr-isti-vclab/meshlab",
+        "path": "src/meshlab/images/logo.png",
+        "rawUrl": "https://raw.githubusercontent.com/cnr-isti-vclab/meshlab/main/src/meshlab/images/logo.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 229
+      },
+      "status": "source-confirmed"
+    },
+    "f3d": {
+      "icon": {
+        "repository": "f3d-app/f3d",
+        "path": "resources/logo.svg",
+        "rawUrl": "https://raw.githubusercontent.com/f3d-app/f3d/master/resources/logo.svg",
+        "extension": "svg",
+        "source": "official repository file",
+        "score": 265
+      },
+      "status": "source-confirmed"
+    },
+    "mayo": {
+      "icon": {
+        "repository": "fougue/mayo",
+        "path": "images/appicon.svg",
+        "rawUrl": "https://raw.githubusercontent.com/fougue/mayo/develop/images/appicon.svg",
+        "extension": "svg",
+        "source": "official repository file",
+        "score": 265
+      },
+      "status": "source-confirmed"
+    },
+    "olive": {
+      "icon": {
+        "repository": "olive-editor/olive",
+        "path": "app/packaging/linux/icons/512x512/org.olivevideoeditor.Olive.png",
+        "rawUrl": "https://raw.githubusercontent.com/olive-editor/olive/master/app/packaging/linux/icons/512x512/org.olivevideoeditor.Olive.png",
+        "extension": "png",
+        "source": "curated official project icon resource",
+        "score": 999
+      },
+      "status": "official-file-confirmed"
+    },
+    "twenty": {
+      "icon": {
+        "repository": "twentyhq/twenty",
+        "path": "packages/twenty-ui/logo.png",
+        "rawUrl": "https://raw.githubusercontent.com/twentyhq/twenty/main/packages/twenty-ui/logo.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 268
+      },
+      "status": "source-confirmed"
+    },
+    "espocrm": {
+      "icon": {
+        "repository": "espocrm/espocrm",
+        "path": "client/img/logo.png",
+        "rawUrl": "https://raw.githubusercontent.com/espocrm/espocrm/master/client/img/logo.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 294
+      },
+      "status": "source-confirmed"
+    },
+    "plane": {
+      "icon": {
+        "repository": "makeplane/plane",
+        "path": "apps/api/plane/static/logos/Logo.png",
+        "rawUrl": "https://raw.githubusercontent.com/makeplane/plane/preview/apps/api/plane/static/logos/Logo.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 195
+      },
+      "status": "source-confirmed"
+    },
+    "affine": {
+      "icon": {
+        "repository": "toeverything/AFFiNE",
+        "path": "packages/frontend/apps/electron/resources/icons/icon.png",
+        "rawUrl": "https://raw.githubusercontent.com/toeverything/AFFiNE/canary/packages/frontend/apps/electron/resources/icons/icon.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 217
+      },
+      "status": "source-confirmed"
+    },
+    "appflowy": {
+      "icon": {
+        "repository": "AppFlowy-IO/AppFlowy",
+        "path": "frontend/appflowy_flutter/linux/packaging/assets/logo.png",
+        "rawUrl": "https://raw.githubusercontent.com/AppFlowy-IO/AppFlowy/main/frontend/appflowy_flutter/linux/packaging/assets/logo.png",
+        "extension": "png",
+        "source": "curated official project icon resource",
+        "score": 999
+      },
+      "status": "official-file-confirmed"
+    },
+    "activepieces": {
+      "icon": {
+        "repository": "activepieces/activepieces",
+        "path": "docs/favicon.png",
+        "rawUrl": "https://raw.githubusercontent.com/activepieces/activepieces/main/docs/favicon.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 216
+      },
+      "status": "source-confirmed"
+    },
+    "docuseal": {
+      "icon": {
+        "repository": "docusealco/docuseal",
+        "path": "public/logo.svg",
+        "rawUrl": "https://raw.githubusercontent.com/docusealco/docuseal/master/public/logo.svg",
+        "extension": "svg",
+        "source": "curated official project icon resource",
+        "score": 999
+      },
+      "status": "official-file-confirmed"
+    },
+    "paperless": {
+      "icon": {
+        "repository": "paperless-ngx/paperless-ngx",
+        "path": "docs/assets/favicon.png",
+        "rawUrl": "https://raw.githubusercontent.com/paperless-ngx/paperless-ngx/dev/docs/assets/favicon.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 242
+      },
+      "status": "source-confirmed"
+    },
+    "meshcentral": {
+      "icon": {
+        "repository": "Ylianst/MeshCentral",
+        "path": "public/favicon-303x303.png",
+        "rawUrl": "https://raw.githubusercontent.com/Ylianst/MeshCentral/master/public/favicon-303x303.png",
+        "extension": "png",
+        "source": "curated official project icon resource",
+        "score": 999
+      },
+      "status": "official-file-confirmed"
+    },
+    "rustdesk": {
+      "icon": {
+        "repository": "rustdesk/rustdesk",
+        "path": "res/icon.png",
+        "rawUrl": "https://raw.githubusercontent.com/rustdesk/rustdesk/master/res/icon.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 268
+      },
+      "status": "source-confirmed"
+    },
+    "erpnext": {
+      "icon": {
+        "repository": "frappe/erpnext",
+        "path": "erpnext/public/images/erpnext-logo.png",
+        "rawUrl": "https://raw.githubusercontent.com/frappe/erpnext/develop/erpnext/public/images/erpnext-logo.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 214
+      },
+      "status": "source-confirmed"
+    },
+    "nocobase": {
+      "icon": {
+        "repository": "nocobase/nocobase",
+        "path": "packages/core/app/client/public/nocobase.png",
+        "rawUrl": "https://raw.githubusercontent.com/nocobase/nocobase/main/packages/core/app/client/public/nocobase.png",
+        "extension": "png",
+        "source": "curated official project icon resource",
+        "score": 999
+      },
+      "status": "official-file-confirmed"
+    },
+    "baserow": {
+      "icon": {
+        "repository": "Baserow/baserow",
+        "path": "web-frontend/modules/core/static/img/baserow-icon.svg",
+        "rawUrl": "https://raw.githubusercontent.com/baserow/baserow/develop/web-frontend/modules/core/static/img/baserow-icon.svg",
+        "extension": "svg",
+        "source": "curated official project icon resource",
+        "score": 999
+      },
+      "status": "official-file-confirmed"
+    },
+    "sim": {
+      "icon": {
+        "repository": "simstudioai/sim",
+        "path": "apps/docs/public/static/logo.png",
+        "rawUrl": "https://raw.githubusercontent.com/simstudioai/sim/main/apps/docs/public/static/logo.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 225
+      },
+      "status": "source-confirmed"
+    },
+    "zed": {
+      "icon": {
+        "repository": "zed-industries/zed",
+        "path": "crates/zed/resources/app-icon.png",
+        "rawUrl": "https://raw.githubusercontent.com/zed-industries/zed/main/crates/zed/resources/app-icon.png",
+        "extension": "png",
+        "source": "curated official project icon resource",
+        "score": 999
+      },
+      "status": "official-file-confirmed"
+    },
+    "openhands": {
+      "icon": {
+        "repository": "OpenHands/OpenHands",
+        "path": "electron/build-resources/icon.png",
+        "rawUrl": "https://raw.githubusercontent.com/OpenHands/OpenHands/main/electron/build-resources/icon.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 268
+      },
+      "status": "source-confirmed"
+    },
+    "librechat": {
+      "icon": {
+        "repository": "LibreChat-AI/LibreChat",
+        "path": "client/public/assets/logo.svg",
+        "rawUrl": "https://raw.githubusercontent.com/LibreChat-AI/LibreChat/main/client/public/assets/logo.svg",
+        "extension": "svg",
+        "source": "official repository file",
+        "score": 201
+      },
+      "status": "source-confirmed"
+    },
+    "anythingllm": {
+      "icon": {
+        "repository": "Mintplex-Labs/anything-llm",
+        "path": "frontend/public/favicon.png",
+        "rawUrl": "https://raw.githubusercontent.com/Mintplex-Labs/anything-llm/master/frontend/public/favicon.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 242
+      },
+      "status": "source-confirmed"
+    },
+    "dify": {
+      "icon": {
+        "repository": "langgenius/dify",
+        "path": "web/public/logo/logo.svg",
+        "rawUrl": "https://raw.githubusercontent.com/langgenius/dify/main/web/public/logo/logo.svg",
+        "extension": "svg",
+        "source": "curated official project icon resource",
+        "score": 999
+      },
+      "status": "official-file-confirmed"
+    },
+    "hoppscotch": {
+      "icon": {
+        "repository": "hoppscotch/hoppscotch",
+        "path": "packages/hoppscotch-desktop/src-tauri/icons/icon.png",
+        "rawUrl": "https://raw.githubusercontent.com/hoppscotch/hoppscotch/main/packages/hoppscotch-desktop/src-tauri/icons/icon.png",
+        "extension": "png",
+        "source": "curated official project icon resource",
+        "score": 999
+      },
+      "status": "official-file-confirmed"
+    },
+    "n8n": {
+      "icon": {
+        "repository": "n8n-io/n8n",
+        "path": "assets/n8n-logo.png",
+        "rawUrl": "https://raw.githubusercontent.com/n8n-io/n8n/master/assets/n8n-logo.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 208
+      },
+      "status": "source-confirmed"
+    },
+    "flowise": {
+      "icon": {
+        "repository": "FlowiseAI/Flowise",
+        "path": "packages/ui/src/assets/images/flowise_logo.png",
+        "rawUrl": "https://raw.githubusercontent.com/FlowiseAI/Flowise/main/packages/ui/src/assets/images/flowise_logo.png",
+        "extension": "png",
+        "source": "official repository file",
+        "score": 206
+      },
+      "status": "source-confirmed"
+    },
+    "frappe-crm": {
+      "status": "source-confirmed",
+      "icon": {
+        "repository": "frappe/crm",
+        "rawUrl": "https://raw.githubusercontent.com/frappe/crm/develop/frontend/public/favicon.png",
+        "path": "frontend/public/favicon.png",
+        "extension": "png",
+        "source": "creator-controlled repository resource",
+        "score": 220
+      }
+    },
+    "carbon-erp": {
+      "status": "source-confirmed",
+      "icon": {
+        "repository": "crbnos/carbon",
+        "rawUrl": "https://raw.githubusercontent.com/crbnos/carbon/main/apps/academy/public/apple-touch-icon.png",
+        "path": "apps/academy/public/apple-touch-icon.png",
+        "extension": "png",
+        "source": "creator-controlled repository resource",
+        "score": 170
+      }
+    },
+    "filaops": {
+      "status": "source-confirmed",
+      "icon": {
+        "repository": "BLB3DPrinting/filaops",
+        "rawUrl": "https://raw.githubusercontent.com/BLB3DPrinting/filaops/main/frontend/public/favicon.png",
+        "path": "frontend/public/favicon.png",
+        "extension": "png",
+        "source": "creator-controlled repository resource",
+        "score": 220
+      }
+    },
+    "inventree": {
+      "status": "source-confirmed",
+      "icon": {
+        "repository": "inventree/InvenTree",
+        "rawUrl": "https://raw.githubusercontent.com/inventree/InvenTree/master/assets/images/logo/inventree.png",
+        "path": "assets/images/logo/inventree.png",
+        "extension": "png",
+        "source": "Official project source verified on GitHub"
+      }
+    },
+    "directus": {
+      "status": "source-confirmed",
+      "icon": {
+        "repository": "directus/directus",
+        "rawUrl": "https://raw.githubusercontent.com/directus/directus/main/app/public/favicon.ico",
+        "path": "app/public/favicon.ico",
+        "extension": "ico",
+        "source": "creator-controlled repository resource",
+        "score": 100
+      }
+    },
+    "akaunting": {
+      "status": "source-confirmed",
+      "icon": {
+        "repository": "akaunting/akaunting",
+        "rawUrl": "https://raw.githubusercontent.com/akaunting/akaunting/master/public/img/pwa/icon-512x512-maskable.png",
+        "path": "public/img/pwa/icon-512x512-maskable.png",
+        "extension": "png",
+        "source": "creator-controlled repository resource",
+        "score": 170
+      }
+    },
+    "postiz": {
+      "status": "source-confirmed",
+      "icon": {
+        "repository": "gitroomhq/postiz-app",
+        "rawUrl": "https://raw.githubusercontent.com/gitroomhq/postiz-app/main/apps/frontend/public/favicon.png",
+        "path": "apps/frontend/public/favicon.png",
+        "extension": "png",
+        "source": "creator-controlled repository resource",
+        "score": 220
+      }
+    },
+    "bifrost": {
+      "status": "source-confirmed",
+      "icon": {
+        "repository": "maximhq/bifrost",
+        "rawUrl": "https://raw.githubusercontent.com/maximhq/bifrost/dev/docs/favicon.png",
+        "path": "docs/favicon.png",
+        "extension": "png",
+        "source": "creator-controlled repository resource",
+        "score": 220
+      }
+    },
+    "restate": {
+      "status": "not-verified",
+      "reason": "No safe creator-controlled icon file verified"
+    },
+    "hatchet": {
+      "status": "source-confirmed",
+      "icon": {
+        "repository": "hatchet-dev/hatchet",
+        "rawUrl": "https://raw.githubusercontent.com/hatchet-dev/hatchet/main/frontend/app/public/favicon.svg",
+        "path": "frontend/app/public/favicon.svg",
+        "extension": "svg",
+        "source": "Official project source verified on GitHub"
+      }
+    },
+    "hindsight": {
+      "status": "source-confirmed",
+      "icon": {
+        "repository": "vectorize-io/hindsight",
+        "rawUrl": "https://raw.githubusercontent.com/vectorize-io/hindsight/main/hindsight-control-plane/public/favicon.png",
+        "path": "hindsight-control-plane/public/favicon.png",
+        "extension": "png",
+        "source": "creator-controlled repository resource",
+        "score": 220
+      }
+    },
+    "graphiti": {
+      "status": "not-verified",
+      "reason": "No safe creator-controlled icon file verified"
+    },
+    "letta": {
+      "status": "not-verified",
+      "reason": "No safe creator-controlled icon file verified"
+    },
+    "agent-vault": {
+      "status": "source-confirmed",
+      "icon": {
+        "repository": "Infisical/agent-vault",
+        "rawUrl": "https://raw.githubusercontent.com/Infisical/agent-vault/main/web/public/favicon.png",
+        "path": "web/public/favicon.png",
+        "extension": "png",
+        "source": "creator-controlled repository resource",
+        "score": 220
+      }
+    },
+    "ragflow": {
+      "status": "source-confirmed",
+      "icon": {
+        "repository": "infiniflow/ragflow",
+        "rawUrl": "https://raw.githubusercontent.com/infiniflow/ragflow/main/web/src/assets/logo-with-text.svg",
+        "path": "web/src/assets/logo-with-text.svg",
+        "extension": "svg",
+        "source": "creator-controlled repository resource",
+        "score": 95
+      }
+    },
+    "appsmith": {
+      "status": "source-confirmed",
+      "icon": {
+        "repository": "appsmithorg/appsmith",
+        "rawUrl": "https://raw.githubusercontent.com/appsmithorg/appsmith/release/app/client/src/assets/images/appsmith_logo_square.png",
+        "path": "app/client/src/assets/images/appsmith_logo_square.png",
+        "extension": "png",
+        "source": "Official project source verified on GitHub"
+      }
+    },
+    "mastra": {
+      "status": "source-confirmed",
+      "icon": {
+        "repository": "mastra-ai/mastra",
+        "rawUrl": "https://raw.githubusercontent.com/mastra-ai/mastra/main/docs/static/img/favicon.ico",
+        "path": "docs/static/img/favicon.ico",
+        "extension": "ico",
+        "source": "Official project source verified on GitHub"
+      }
+    },
+    "agentgateway": {
+      "status": "source-confirmed",
+      "icon": {
+        "repository": "agentgateway/agentgateway",
+        "rawUrl": "https://raw.githubusercontent.com/agentgateway/agentgateway/main/ui/public/favicon.svg",
+        "path": "ui/public/favicon.svg",
+        "extension": "svg",
+        "source": "Official project source verified on GitHub"
+      }
+    },
+    "contextforge": {
+      "status": "source-confirmed",
+      "icon": {
+        "repository": "IBM/mcp-context-forge",
+        "rawUrl": "https://raw.githubusercontent.com/IBM/mcp-context-forge/main/mcpgateway/static/contextforge-logo.png",
+        "path": "mcpgateway/static/contextforge-logo.png",
+        "extension": "png",
+        "source": "Official project source verified on GitHub"
+      }
+    },
+    "langfuse": {
+      "status": "source-confirmed",
+      "icon": {
+        "repository": "langfuse/langfuse",
+        "rawUrl": "https://raw.githubusercontent.com/langfuse/langfuse/main/web/public/favicon-32x32.png",
+        "path": "web/public/favicon-32x32.png",
+        "extension": "png",
+        "source": "Official project source verified on GitHub"
+      }
+    },
+    "windmill": {
+      "status": "source-confirmed",
+      "icon": {
+        "repository": "windmill-labs/windmill",
+        "rawUrl": "https://raw.githubusercontent.com/windmill-labs/windmill/main/frontend/static/logo.svg",
+        "path": "frontend/static/logo.svg",
+        "extension": "svg",
+        "source": "Official project source verified on GitHub"
+      }
+    }
+  }
+}

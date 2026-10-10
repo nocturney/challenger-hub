@@ -1,0 +1,16 @@
+name: Manual source verification
+on:
+  workflow_dispatch:
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node --check server.js
+      - run: node --check app.js
+      - run: node --check challenger-core.js
+      - run: node --check Install-Challenger.js
+      - run: node --test tests/*.test.js || test ! -d tests

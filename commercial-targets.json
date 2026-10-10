@@ -1,0 +1,223 @@
+{
+  "schema": "challenger-commercial-comparisons.v1",
+  "updated": "2026-10-09",
+  "note": "Comparisons reflect overlapping workflows, not verified feature parity, official affiliation or guaranteed ability to import proprietary project files.",
+  "projects": {
+    "photocraft": {
+      "comparisons": [
+        {
+          "company": "Adobe",
+          "product": "Photoshop",
+          "label": "Adobe → Photoshop",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "Craft product positioning",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Adobe"
+      ],
+      "primaryIncumbent": "Adobe",
+      "primaryCommercialProduct": "Photoshop"
+    },
+    "vectorcraft": {
+      "comparisons": [
+        {
+          "company": "Adobe",
+          "product": "Illustrator",
+          "label": "Adobe → Illustrator",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "Craft product positioning",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Adobe"
+      ],
+      "primaryIncumbent": "Adobe",
+      "primaryCommercialProduct": "Illustrator"
+    },
+    "lightcraft": {
+      "comparisons": [
+        {
+          "company": "Adobe",
+          "product": "Lightroom Classic",
+          "label": "Adobe → Lightroom Classic",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "Craft product positioning",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Adobe"
+      ],
+      "primaryIncumbent": "Adobe",
+      "primaryCommercialProduct": "Lightroom Classic"
+    },
+    "filmcraft": {
+      "comparisons": [
+        {
+          "company": "Adobe",
+          "product": "Premiere Pro",
+          "label": "Adobe → Premiere Pro",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "Craft product positioning",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Adobe"
+      ],
+      "primaryIncumbent": "Adobe",
+      "primaryCommercialProduct": "Premiere Pro"
+    },
+    "effectcraft": {
+      "comparisons": [
+        {
+          "company": "Adobe",
+          "product": "After Effects",
+          "label": "Adobe → After Effects",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "Craft product positioning",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Adobe"
+      ],
+      "primaryIncumbent": "Adobe",
+      "primaryCommercialProduct": "After Effects"
+    },
+    "designcraft": {
+      "comparisons": [
+        {
+          "company": "Adobe",
+          "product": "InDesign",
+          "label": "Adobe → InDesign",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "Craft product positioning",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Adobe"
+      ],
+      "primaryIncumbent": "Adobe",
+      "primaryCommercialProduct": "InDesign"
+    },
+    "pdfcraft": {
+      "comparisons": [
+        {
+          "company": "Adobe",
+          "product": "Acrobat Pro",
+          "label": "Adobe → Acrobat Pro",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "Craft product positioning",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Adobe"
+      ],
+      "primaryIncumbent": "Adobe",
+      "primaryCommercialProduct": "Acrobat Pro"
+    },
+    "wordcraft": {
+      "comparisons": [
+        {
+          "company": "Microsoft",
+          "product": "Word",
+          "label": "Microsoft → Word",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "Craft product positioning",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Microsoft"
+      ],
+      "primaryIncumbent": "Microsoft",
+      "primaryCommercialProduct": "Word"
+    },
+    "gridcraft": {
+      "comparisons": [
+        {
+          "company": "Microsoft",
+          "product": "Excel",
+          "label": "Microsoft → Excel",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "Craft product positioning",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Microsoft"
+      ],
+      "primaryIncumbent": "Microsoft",
+      "primaryCommercialProduct": "Excel"
+    },
+    "deckcraft": {
+      "comparisons": [
+        {
+          "company": "Microsoft",
+          "product": "PowerPoint",
+          "label": "Microsoft → PowerPoint",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "Craft product positioning",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Microsoft"
+      ],
+      "primaryIncumbent": "Microsoft",
+      "primaryCommercialProduct": "PowerPoint"
+    },
+    "cadcraft": {
+      "comparisons": [
+        {
+          "company": "Autodesk",
+          "product": "AutoCAD",
+          "label": "Autodesk → AutoCAD",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "Craft product positioning",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Autodesk"
+      ],
+      "primaryIncumbent": "Autodesk",
+      "primaryCommercialProduct": "AutoCAD"
+    },
+    "soundcraft": {
+      "comparisons": [
+        {
+          "company": "Avid",
+          "product": "Pro Tools",
+          "label": "Avid → Pro Tools",
+          "relationship": "Compared workflow",
+          "confidence": "research-mapped",
+          "source": "Craft product positioning",
+          "caveat": "Scope overlaps; feature parity is not assured"
+        }
+      ],
+      "competesWithCompanies": [
+        "Avid"
+      ],
+      "primaryIncumbent": "Avid",
+      "primaryCommercialProduct": "Pro Tools"
+    }
+  }
+}

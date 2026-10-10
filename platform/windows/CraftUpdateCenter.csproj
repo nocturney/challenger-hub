@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>CraftUpdateCenter</AssemblyName>
+    <RootNamespace>CraftUpdateCenter</RootNamespace>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <Version>2.4.0</Version>
+    <Company>VelvetOS Community Tools</Company>
+    <Product>Craft Update Center</Product>
+    <Description>Native desktop shell for discovering and managing independent professional software alternatives</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3179.45" />
+  </ItemGroup>
+</Project>
