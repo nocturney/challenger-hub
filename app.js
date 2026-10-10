@@ -266,6 +266,24 @@ function renderQueue(){
  $('queueCount').textContent=queued?t('waitingCount')(queued):'';
  panel.setAttribute('aria-label',$('queueTitle').textContent);
 }
+function renderBulkUpdateBar(){
+ const bar=$('bulkUpdateBar');if(!bar)return;
+ const shown=initialDataLoaded&&ui.filter==='updates'&&!(window.ChallengerUX?.hasSearch?.());
+ bar.hidden=!shown;
+ const updates=state.apps.filter(a=>a.needsUpdate);
+ const eligible=updates.filter(a=>a.installable);
+ const blocked=updates.length-eligible.length;
+ const busy=!!state.active||(state.queue?.length||0)>0;
+ const needsAdmin=state.platform==='win32'&&!state.admin;
+ $('bulkUpdateTitle').textContent=eligible.length?eligible.length+' verified update'+(eligible.length===1?'':'s')+' ready':'No approved updates ready';
+ $('bulkUpdateDescription').textContent=eligible.length?
+   'Queues vetted software updates sequentially on this computer.'+(blocked?' '+blocked+' update'+(blocked===1?'':'s')+' require manual handling.':''):
+   blocked?blocked+' update'+(blocked===1?'':'s')+' do not have approved installation packages.':'No installed software needs a verified update.';
+ $('bulkUpdateEligibleCount').textContent=String(eligible.length);
+ const button=$('updateAllButton');
+ button.disabled=!eligible.length||busy||needsAdmin;
+ button.title=busy?'Wait for the current installation queue to finish':needsAdmin?'Administrator access is required on Windows':!eligible.length?'No eligible verified updates to queue':'Queue '+eligible.length+' verified update'+(eligible.length===1?'':'s')+' after confirmation';
+}
 function renderCounters(){
  const c=getCounters();
  $('sourceSummary').textContent=[...new Set(state.apps.map(a=>a.creator||'Storytold'))].length+' creators';
@@ -291,7 +309,7 @@ function renderCounters(){
  $('notice').className=notices.length?'notice'+(state.scanError&&!rateLimited?' error':''):'notice hidden';
  $('notice').textContent=notices.join(' ');
  $('sidebarScan').disabled=!!state.sourceStatus?.queued;
- $('updateAllButton').disabled=!c.updates||!!state.active||state.queue.length>0||(state.platform==='win32'&&!state.admin);
+ renderBulkUpdateBar();
 }
 function filteredApps(){
  const q=ui.search.toLowerCase().trim();
@@ -401,10 +419,10 @@ function cardMarkup(a){
   (p.action==='launch'?glyph('play'):p.action==='install'||p.action==='portable'?glyph('down'):'')+
   escapeHTML(p.verb)+'</button>';
  return '<article class="app-card'+(selected?' selected':'')+'" data-repo="'+escapeHTML(a.repo)+
- '" tabindex="0" role="group" aria-label="'+escapeHTML(a.title)+'">'+
+ '" tabindex="0" role="group" title="Click to view application details" aria-label="'+escapeHTML(a.title)+'">'+
  '<div class="card-head">'+productIcon(a)+'<div class="card-id"><h3>'+(window.ChallengerUX?.highlight(a.title)||escapeHTML(a.title))+'</h3>'+
  '<p>'+(window.ChallengerUX?.highlight(nativeAppName(a))||escapeHTML(nativeAppName(a)))+'</p></div>'+
- '<button class="card-more" data-action="details" data-repo="'+escapeHTML(a.repo)+'" aria-label="View details" title="View details">'+glyph('more')+'</button></div>'+
+ '</div>'+
  '<div class="card-competitors"><span class="card-field-label">Competes with</span>'+competitorMarkup(a)+'</div>'+
  '<div class="card-area"><span class="card-field-label">Category</span><span class="area-pill">'+escapeHTML(domainLabel(domain))+'</span></div>'+
  '<div class="card-maturity"><span class="card-field-label">Maturity</span>'+maturityMarkup(a)+'</div>'+
@@ -447,6 +465,7 @@ function renderCards(force=false){
  const html=list.length?list.map(cardMarkup).join(''):empty;
  $('resultSummary').textContent=t('showing')(list.length);
  window.ChallengerUX?.present(list.length);
+ renderBulkUpdateBar();
  $('cards').setAttribute('aria-busy','false');
  if(force||html!==cardSnapshot){cardSnapshot=html;$('cards').innerHTML=html;}
  $('cards').classList.toggle('list-view',ui.view==='list');
@@ -840,8 +859,13 @@ async function doPortableDownload(a){
 }
 async function doBulkUpdate(){
  const candidates=state.apps.filter(a=>a.needsUpdate&&a.installable);
- if(!candidates.length){showToast(t('youAreCurrent'));return}
- if(!await confirmAction(t('confirmBulk')(candidates.length)))return;
+ if(!candidates.length){showToast('No approved updates are available to queue.');return}
+ if(state.active||(state.queue?.length||0)){showToast('Wait for the current update or installation to finish.',true);return}
+ if(state.platform==='win32'&&!state.admin){showToast(t('requiresAdmin'),true);return}
+ const names=candidates.slice(0,7).map(a=>'• '+a.title).join('\n');
+ const extra=candidates.length>7?'\n… and '+(candidates.length-7)+' more':'';
+ const message=t('confirmBulk')(candidates.length)+'\n\n'+names+extra+'\n\nOnly approved, hash-verified packages can be installed. No research-only project is included.';
+ if(!await confirmAction(message))return;
  try{const data=await api('POST','/api/update-all');showToast(t('addedQueue')(data.queued?.length||0));await poll()}
  catch(e){showToast(e.message,true)}
 }

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" dir="ltr" data-theme="dark" data-app-version="2.5.5">
+<html lang="en" dir="ltr" data-theme="dark" data-app-version="2.5.6">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light dark">
@@ -62,7 +62,7 @@
         <div class="connection-scan" id="lastScanText">Checking releases…</div>
         <button class="sidebar-scan" id="sidebarScan"><svg><use href="#i-sync"/></svg><span data-t="checkUpdates">Check for updates</span></button>
       </div>
-      <div class="sidebar-version"><span>CHALLENGER HUB · MULTI-DOMAIN</span><span>v2.5.5</span></div>
+      <div class="sidebar-version"><span>CHALLENGER HUB · MULTI-DOMAIN</span><span>v2.5.6</span></div>
     </div>
   </aside>
   <div class="sidebar-scrim" id="sidebarScrim"></div>
@@ -134,6 +134,17 @@
           <div class="view-toggle" role="group" aria-label="Display view"><button id="gridButton" class="icon-only active" aria-label="Grid view" title="Grid view" aria-pressed="true"><svg><use href="#i-apps"/></svg></button><button id="listButton" class="icon-only" aria-label="List view" title="List view" aria-pressed="false"><svg><use href="#i-list"/></svg></button></div>
         </div>
           </div>
+          <section id="bulkUpdateBar" class="bulk-update-bar" role="region" aria-label="Batch software updates" hidden>
+            <div class="bulk-update-copy">
+              <span class="bulk-update-kicker">READY TO UPDATE</span>
+              <strong id="bulkUpdateTitle">Checking verified updates…</strong>
+              <small id="bulkUpdateDescription">Only approved installations can be updated automatically.</small>
+            </div>
+            <button type="button" id="updateAllButton" class="bulk-update-button" aria-describedby="bulkUpdateDescription" disabled>
+              <svg aria-hidden="true"><use href="#i-sync"/></svg>
+              <span>Update all</span><span class="bulk-update-badge" id="bulkUpdateEligibleCount">0</span>
+            </button>
+          </section>
           <div id="catalogTableHead" class="catalog-table-head" role="row" hidden><span role="columnheader">Application</span><span role="columnheader">Competes with</span><span role="columnheader">Category</span><span role="columnheader">Maturity</span><span role="columnheader">Availability</span><span role="columnheader">Latest release</span><span role="columnheader">Action</span></div>
           <div id="cards" class="cards" aria-live="polite" aria-busy="true"></div>
           <div class="catalog-footer"><svg><use href="#i-shield"/></svg><span data-t="verifiedSource">Install and update only with reviewed, source-verified adapters.</span></div>
@@ -152,7 +163,7 @@
           <div class="detail-bottom"><span id="detailSourceText">Source: GitHub</span><button class="detail-source" id="detailReleaseLink"><span data-t="fullChangelog">Full changelog</span><svg><use href="#i-external"/></svg></button></div>
         </aside>
       </div>
-      <footer class="main-footer"><div class="device-footer"><span class="footer-dot" id="footerDot"></span><span id="deviceLabel">Local device</span><span class="foot-sep">·</span><span id="footerScan">Not scanned yet</span></div><div class="footer-actions"><button id="verifyButton" data-t="verify">Verify installs</button><button id="updateAllButton" data-t="updateAll">Update all</button><button id="activityButton" data-t="activityLog">Activity log</button></div></footer>
+      <footer class="main-footer"><div class="device-footer"><span class="footer-dot" id="footerDot"></span><span id="deviceLabel">Local device</span><span class="foot-sep">·</span><span id="footerScan">Not scanned yet</span></div><div class="footer-actions"><button id="verifyButton" data-t="verify">Verify installs</button><button id="activityButton" data-t="activityLog">Activity log</button></div></footer>
     </main>
   </div>
 </div>
@@ -161,7 +172,7 @@
 <div class="prefs-line prefs-option"><div><strong>Check frequency</strong><small>Applies equally to all listed projects</small></div><select id="prefsInterval" aria-label="Release check frequency"><option value="6">Every 6 hours</option><option value="12" selected>Every 12 hours</option><option value="24">Daily</option></select></div>
 <div class="prefs-line prefs-option"><div><strong>Show early-stage projects</strong><small>Include alpha, pre-alpha and experimental alternatives</small></div><label class="preference-switch"><input type="checkbox" id="prefsEarly" checked aria-label="Include early-stage projects"><span aria-hidden="true"></span></label></div>
 <p class="prefs-source-state" id="prefsSourceState">Project feeds use official release sources and SHA-256 for supported installers.</p></div></dialog>
-<dialog id="aboutDialog" class="modal-dialog" aria-labelledby="aboutTitle"><div class="modal-pad about-content"><button class="modal-close icon-only" data-dialog-close="aboutDialog" aria-label="Close"><svg><use href="#i-x"/></svg></button><img class="about-logo" src="/brand-icon.png" width="82" height="82" alt=""><h2 id="aboutTitle">Challenger Hub</h2><p data-t="aboutDescription">An independent discovery hub for emerging software projects challenging established professional applications. Not affiliated with the featured creators.</p><span class="about-version">Version 2.5.5 (UI update) · Independent alternatives</span></div></dialog>
+<dialog id="aboutDialog" class="modal-dialog" aria-labelledby="aboutTitle"><div class="modal-pad about-content"><button class="modal-close icon-only" data-dialog-close="aboutDialog" aria-label="Close"><svg><use href="#i-x"/></svg></button><img class="about-logo" src="/brand-icon.png" width="82" height="82" alt=""><h2 id="aboutTitle">Challenger Hub</h2><p data-t="aboutDescription">An independent discovery hub for emerging software projects challenging established professional applications. Not affiliated with the featured creators.</p><span class="about-version">Version 2.5.6 (UI update) · Independent alternatives</span></div></dialog>
 <dialog id="activityDialog" class="modal-dialog activity-dialog" aria-labelledby="activityTitle"><div class="modal-pad"><button class="modal-close icon-only" data-dialog-close="activityDialog" aria-label="Close"><svg><use href="#i-x"/></svg></button><div class="modal-badge"><svg><use href="#i-clock"/></svg></div><h2 id="activityTitle" data-t="activityLog">Activity log</h2><div id="activityContent" class="activity-content"></div></div></dialog>
 <dialog id="whatsNewDialog" class="modal-dialog whats-new-dialog" aria-labelledby="whatsNewTitle"><div class="modal-pad"><button class="modal-close icon-only" data-dialog-close="whatsNewDialog" aria-label="Close release notes"><svg><use href="#i-x"/></svg></button><div class="modal-badge"><svg><use href="#i-info"/></svg></div><h2 id="whatsNewTitle">What’s new</h2><p class="modal-help" id="whatsNewSubtitle"></p><div id="whatsNewBody" class="notes-content" role="document"></div></div></dialog>
 <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
