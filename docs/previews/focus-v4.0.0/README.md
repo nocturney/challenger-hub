@@ -2,6 +2,10 @@
 
 **Read-only, task-first design concept. Not a release.** These ten screenshots come from the actual Windows Chris local staging interface, with the live 164-project index loaded through its read-only API. No synthetic item names, counts or screenshots. Dates and statuses are snapshot-specific.
 
+## Direct image links (mobile / private-repository fallback)
+
+This is a **private repository**. Embedded screenshots may not render in some in-app browsers or previews unless the browser is signed in to an account with repository access. All ten original PNG files are committed on the **`concept/focus-v4-task-first` branch**, not the default branch. If an embedded image is blank, use its **Open original PNG** link below or [browse the ten screenshot files directly](https://github.com/nocturney/challenger-hub/tree/concept/focus-v4-task-first/docs/previews/focus-v4.0.0). Nothing has been made public.
+
 ## Why this is structurally different
 
 Previous candidates kept a single crowded dashboard with a hero, category navigation and the catalog always in view. Focus changes **where content exists, when it appears, and how a user reaches a decision**:
@@ -20,11 +24,15 @@ Previous candidates kept a single crowded dashboard with a hero, category naviga
 
 ![Focused, search-led discovery home, with real domain counts but no catalog yet](01-discover-light-desktop.png)
 
+[Open original PNG 01 ↗](https://github.com/nocturney/challenger-hub/blob/concept/focus-v4-task-first/docs/previews/focus-v4.0.0/01-discover-light-desktop.png?raw=1)
+
 The first screen asks what a user is looking for, rather than showing everything at once. Search directly supports **familiar commercial software**, independent project names and actual descriptions. Choosing a discipline is a second, equivalent route, not a duplicate global nav destination.
 
 ## 2 — Compare only relevant results
 
 ![3D and CAD search results — 28 actual projects](02-results-3d-desktop.png)
+
+[Open original PNG 02 ↗](https://github.com/nocturney/challenger-hub/blob/concept/focus-v4-task-first/docs/previews/focus-v4.0.0/02-results-3d-desktop.png?raw=1)
 
 After selecting 3D & CAD, the user sees a **full list of the 28 matches**, including real alternatives, availability and source-reported dates. Further filtering is optional, not a second permanent strip.
 
@@ -32,11 +40,15 @@ After selecting 3D & CAD, the user sees a **full list of the 28 matches**, inclu
 
 ![CADCraft full-page source dossier](03-project-dossier-desktop.png)
 
+[Open original PNG 03 ↗](https://github.com/nocturney/challenger-hub/blob/concept/focus-v4-task-first/docs/previews/focus-v4.0.0/03-project-dossier-desktop.png?raw=1)
+
 Selecting a result leaves the index and opens a **dedicated page** with the source-provided description, the familiar application being challenged, current local status, reported release, safety caveats, repository link and project facts. No install controls are fabricated into the prototype.
 
 ## 4 — One local workspace, including updates
 
 ![My software — one device-specific installed list with Available updates as a tab](04-my-software-desktop.png)
+
+[Open original PNG 04 ↗](https://github.com/nocturney/challenger-hub/blob/concept/focus-v4-task-first/docs/previews/focus-v4.0.0/04-my-software-desktop.png?raw=1)
 
 **My software** includes Installed and Available updates within the same surface. Both use actual local state, and never imply that the other host has the same installed versions or update status.
 
@@ -44,23 +56,35 @@ Selecting a result leaves the index and opens a **dedicated page** with the sour
 
 ![Activity — live queue status and local recorded history](05-activity-desktop.png)
 
+[Open original PNG 05 ↗](https://github.com/nocturney/challenger-hub/blob/concept/focus-v4-task-first/docs/previews/focus-v4.0.0/05-activity-desktop.png?raw=1)
+
 **Activity** is a timeline of actual job history and queue state. It does not show simulated progress or ungrounded success claims.
 
 ## Light and dark, without a new gimmick
 
 ![Same discovery architecture in restrained dark appearance](06-discover-dark-desktop.png)
 
+[Open original PNG 06 ↗](https://github.com/nocturney/challenger-hub/blob/concept/focus-v4-task-first/docs/previews/focus-v4.0.0/06-discover-dark-desktop.png?raw=1)
+
 ## A real search workflow
 
 ![Photoshop search — five source-matching projects, not an invented recommendation list](07-live-search-desktop.png)
+
+[Open original PNG 07 ↗](https://github.com/nocturney/challenger-hub/blob/concept/focus-v4-task-first/docs/previews/focus-v4.0.0/07-live-search-desktop.png?raw=1)
 
 ## Deliberate phone layout
 
 ![Phone discovery](08-discover-mobile.png)
 
+[Open original PNG 08 ↗](https://github.com/nocturney/challenger-hub/blob/concept/focus-v4-task-first/docs/previews/focus-v4.0.0/08-discover-mobile.png?raw=1)
+
 ![Phone results in a readable reduced-column table](09-results-mobile.png)
 
+[Open original PNG 09 ↗](https://github.com/nocturney/challenger-hub/blob/concept/focus-v4-task-first/docs/previews/focus-v4.0.0/09-results-mobile.png?raw=1)
+
 ![Phone full-page project dossier](10-dossier-mobile.png)
+
+[Open original PNG 10 ↗](https://github.com/nocturney/challenger-hub/blob/concept/focus-v4-task-first/docs/previews/focus-v4.0.0/10-dossier-mobile.png?raw=1)
 
 ## Compare to the previous approaches
 
