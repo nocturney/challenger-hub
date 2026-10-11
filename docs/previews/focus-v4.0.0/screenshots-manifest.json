@@ -1,0 +1,55 @@
+{
+  "origin": "Chris live-data read-only Chromium staging; no screenshots generated",
+  "screenshots": [
+    {
+      "file": "01-discover-light-desktop.png",
+      "bytes": 103533,
+      "sha256": "76a2debe3f3ed0bfc5fe05e4b69b9235168cdd35a25adbf78415e59f8c42f334"
+    },
+    {
+      "file": "02-results-3d-desktop.png",
+      "bytes": 106924,
+      "sha256": "e5c74941fd4f3b858cf497cb10e9cb9ef1889047273d269cc7ddcb5764c50e3d"
+    },
+    {
+      "file": "03-project-dossier-desktop.png",
+      "bytes": 114739,
+      "sha256": "7e575ef3dc72c724ac204cf66e6a06c64dc71aeb03b8553dfc2dda233714e02b"
+    },
+    {
+      "file": "04-my-software-desktop.png",
+      "bytes": 71845,
+      "sha256": "8475054e0d8818923d6dcaa18f35b004d8549aa808e74aaaa0cfdf2cd6257838"
+    },
+    {
+      "file": "05-activity-desktop.png",
+      "bytes": 68149,
+      "sha256": "d3db889b69b6f3b00438e131067c39fc2a87882d927a83bfda2eb418d65adde1"
+    },
+    {
+      "file": "06-discover-dark-desktop.png",
+      "bytes": 104686,
+      "sha256": "373a2a56fdade6d958bf9899f13e728afdfea2530b5303b996402ba0b1202e6a"
+    },
+    {
+      "file": "07-live-search-desktop.png",
+      "bytes": 87719,
+      "sha256": "4e0834d60087ca86db6f41e6d44ecba8596b78b9154f6605a3b9fe74cc4dc07e"
+    },
+    {
+      "file": "08-discover-mobile.png",
+      "bytes": 59486,
+      "sha256": "cecdf52c9fcfb840383c961688c866eb4a82ef9d38c4853539186f614958abf4"
+    },
+    {
+      "file": "09-results-mobile.png",
+      "bytes": 60434,
+      "sha256": "18956270a092b374fd338f63528c38c0fe2d8cd9e2a2d0ee6fbd6789beea1d4a"
+    },
+    {
+      "file": "10-dossier-mobile.png",
+      "bytes": 58645,
+      "sha256": "2bf2bcd86b5dabfe278f211a652820321738e856441b25173ec87b774b85a346"
+    }
+  ]
+}
