@@ -1,0 +1,57 @@
+{
+  "platform": "win32",
+  "brand": "Orbit Signature",
+  "vectorSource": "traced approved direction",
+  "icons": [
+    {
+      "size": 16,
+      "bytes": 604,
+      "sha256": "1bc829cf1e0255511f6658ca58d8cf996951e97d1f037908dd7d38198c75a07d"
+    },
+    {
+      "size": 24,
+      "bytes": 939,
+      "sha256": "9bed3b7b5137ede2f87c8176e04c10fd515148f2d1bc82252ff1f7bece5877b3"
+    },
+    {
+      "size": 32,
+      "bytes": 1284,
+      "sha256": "dc66539737fbb2c726d6047c49a0621679a201214b9c58ea10caa3fca5dd8eec"
+    },
+    {
+      "size": 48,
+      "bytes": 1922,
+      "sha256": "3df99026cdcbfa51d5f5214fc69b5173b7c34045667901178c5f0631cce62f12"
+    },
+    {
+      "size": 64,
+      "bytes": 2421,
+      "sha256": "1b68385b8b6b905897ad4afa9752cce4f1fb4f9b256f0faf5e2e2ff0e3e8fffd"
+    },
+    {
+      "size": 128,
+      "bytes": 5061,
+      "sha256": "a22b1ff013ed293120921ce77c6e15fc51982adb103c7d7ecdde240a6b597358"
+    },
+    {
+      "size": 180,
+      "bytes": 7093,
+      "sha256": "89919ffb3083102a289140d458dd7d58a74c4f38d2ef167d3d7125587531a2bc"
+    },
+    {
+      "size": 256,
+      "bytes": 10271,
+      "sha256": "8275836951c410156c1d68c55b356e290bbb3dc60ff400903cf33a66ed3967bd"
+    },
+    {
+      "size": 512,
+      "bytes": 21327,
+      "sha256": "b9815c65d612a192b12d600434dbdfe44e804d1054bfb5deabf0f584cf392b73"
+    },
+    {
+      "size": 1024,
+      "bytes": 45991,
+      "sha256": "2952fdb19798eddb6ff9b383e110ae215273e478970fb87f3b6978fa342b4a36"
+    }
+  ]
+}
