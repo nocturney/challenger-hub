@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" dir="ltr" data-theme="dark" data-app-version="3.0.0">
+<html lang="en" dir="ltr" data-theme="dark" data-app-version="3.2.0">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light dark">
@@ -62,7 +62,7 @@
         <div class="connection-scan" id="lastScanText">Checking releases…</div>
 
       </div>
-      <div class="sidebar-version"><span>CHALLENGER HUB · MULTI-DOMAIN</span><span>v3.0.0</span></div>
+      <div class="sidebar-version"><span>CHALLENGER / NETWORK RESEARCH</span><span>v3.2.0</span></div>
     </div>
   </aside>
   <div class="sidebar-scrim" id="sidebarScrim"></div>
@@ -101,12 +101,32 @@
       </section>
 
 
-      <div class="discovery-stage" id="discoveryStage">
-      <section class="hero context-hero" id="contextHero" data-context="home"><canvas id="heroShaderCanvas" class="hero-shader-canvas" aria-hidden="true"></canvas>
-        <div class="hero-visual" aria-hidden="true"><span class="hero-visual-ring hero-visual-ring-one"></span><span class="hero-visual-ring hero-visual-ring-two"></span><span class="hero-visual-ring hero-visual-ring-three"></span><span class="hero-visual-core"></span><span class="hero-visual-caption">UNCOMMON / BY DESIGN</span></div><div class="hero-decoration" aria-hidden="true"><div class="hero-sun"></div><div class="mountain mountain-far"></div><div class="mountain mountain-mid"></div><div class="mountain mountain-front"></div><div class="hero-lines"></div></div>
-        <div class="hero-copy"><div class="hero-kicker"><span class="hero-kicker-dot"></span><span id="heroContextKicker">INDEPENDENT SOFTWARE · CURATED DISCOVERY</span></div><h1><span id="heroContextLine1">Find your next tool.</span><br><em id="heroContextLine2">Beyond the usual.</em></h1><p id="heroContextSubtitle">Explore independent software and compare familiar tools.</p><div class="hero-action-row"><span class="hero-context-note" id="heroContextNote">Beyond the default — discover what comes next.</span><button type="button" id="heroContextAction" class="hero-primary-action" hidden tabindex="-1"><span class="hero-action-text">Explore today's discovery</span><span aria-hidden="true">↗</span></button></div></div>
-        </section>
-      <aside class="daily-pick" id="dailyPick" aria-label="Daily independent project discovery" aria-busy="true">
+      <div class="discovery-stage nexus-frame" id="discoveryStage" aria-label="Challenger Network research workspace">
+ <section class="nexus-map-region" aria-label="Live research topology">
+  <div class="nexus-toolbar">
+   <span class="nexus-control-dot" aria-hidden="true"></span>
+   <span>CHALLENGER / NETWORK</span><span class="nexus-toolbar-sep">/</span><span>RESEARCH MODE</span>
+   <span class="nexus-toolbar-right">SOURCE-LINKED INDEX <span aria-hidden="true">◆</span></span>
+  </div>
+  <div class="nexus-heading">
+   <div class="nexus-heading-copy"><span class="nexus-eyebrow">DISCOVERY, WITHOUT THE NOISE</span><h1>EXPLORE THE <em>UNEXPECTED.</em></h1>
+   <p>Navigate independent software by real domains. Every signal leads to a source, not a promise.</p></div>
+   <div class="nexus-heading-meta"><span>THE LIVE MAP</span><strong id="nexusTotal">—</strong><small>FIELDS CONNECTED</small></div>
+  </div>
+  <div class="nexus-topology">
+   <div class="nexus-scanlines" aria-hidden="true"></div>
+   <div class="nexus-ring nexus-ring-one" aria-hidden="true"></div>
+   <div class="nexus-ring nexus-ring-two" aria-hidden="true"></div>
+   <div class="nexus-ring nexus-ring-three" aria-hidden="true"></div>
+   <div class="nexus-map-corner nexus-map-corner-tl" aria-hidden="true"></div><div class="nexus-map-corner nexus-map-corner-br" aria-hidden="true"></div>
+   <section class="domain-section nexus-domain-section" id="domainSection" aria-label="Interactive software domain network"><div class="domain-section-heading"><div class="domain-section-heading-copy"><strong>NAVIGATE BY DOMAIN</strong><small id="domainTotal">Organizing independent alternatives…</small></div></div><div class="nexus-graph-plane" id="nexusGraphPlane"><svg id="nexusWires" class="nexus-wires" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true"></svg><div class="domain-filters" id="domainFilters" role="group" aria-label="Select a software field"></div><div class="nexus-map-crosshair" aria-hidden="true">+</div></div><button id="domainExpandButton" type="button" class="domain-expand-button" aria-controls="domainFilters" aria-expanded="false">All disciplines ↓</button></section>
+  </div>
+  <div class="nexus-map-footer"><span><span class="nexus-pulse" aria-hidden="true"></span><strong id="nexusSelectedCaption">FULL NETWORK</strong></span><span>SELECT A NODE TO REFINE THE RESULTS</span><span>LIVE DATA / NO ESTIMATES</span></div>
+ </section>
+ <aside class="nexus-intelligence" aria-label="Research intelligence console">
+  <div class="nexus-intelligence-top"><span>01</span><strong>THE SIGNAL DESK</strong><span class="nexus-intel-mark" aria-hidden="true">◎</span></div>
+  <div class="nexus-intro"><span>ONE REAL PROJECT, EVERY DAY</span><h2>Discovery<br><em>is the point.</em></h2></div>
+  <aside class="daily-pick" id="dailyPick" aria-label="Daily independent project discovery" aria-busy="true">
         <div class="daily-pick-top"><span class="daily-pick-kicker"><span class="daily-pick-spark" aria-hidden="true">✦</span> DAILY DISCOVERY</span><span id="dailyPickDate" class="daily-pick-date">Today</span></div>
         <div class="daily-pick-graphic" aria-hidden="true"><span class="daily-orbit daily-orbit-outer"></span><span class="daily-orbit daily-orbit-inner"></span><span class="daily-pick-emblem" id="dailyPickEmblem">✦</span></div>
         <div class="daily-pick-info"><span class="daily-pick-strap">TODAY’S PROJECT</span><h2 id="dailyPickTitle">Preparing today’s pick…</h2><p id="dailyPickSummary">Loading the independent catalog.</p>
@@ -116,8 +136,19 @@
         <div class="daily-pick-actions"><button type="button" id="dailyPickOpen" class="daily-pick-open" disabled>View project <span aria-hidden="true">↗</span></button>
           <button type="button" id="dailyPickWhy" class="daily-pick-why" disabled aria-expanded="false" aria-controls="dailyPickReason">Why this pick?</button></div>
       </aside>
-      </div>
-      <section class="challenge-workflows" id="challengeWorkflows" aria-label="Discover alternatives by familiar software">
+  <section id="nexusRecent" class="nexus-recent" aria-label="Recent repository releases">
+    <div class="nexus-recent-heading"><span>02</span><strong>RECENTLY REPORTED RELEASES</strong></div>
+    <div id="nexusRecentRows" class="nexus-recent-rows" aria-live="polite"><p>Reading actual source history…</p></div>
+    <p class="nexus-feed-footnote">Repository-linked, reported dates. Research status remains independent of install approval.</p>
+  </section>
+  <div class="nexus-intel-foot"><span>INDEPENDENT WORKSPACE</span><span class="nexus-intel-glyph" aria-hidden="true">⌁</span></div>
+ </aside>
+ <div class="nexus-legacy" aria-hidden="true"><section class="hero context-hero" id="contextHero" data-context="home"><canvas id="heroShaderCanvas" class="hero-shader-canvas" aria-hidden="true"></canvas>
+        <div class="hero-visual" aria-hidden="true"><span class="hero-visual-ring hero-visual-ring-one"></span><span class="hero-visual-ring hero-visual-ring-two"></span><span class="hero-visual-ring hero-visual-ring-three"></span><span class="hero-visual-core"></span><span class="hero-visual-caption">UNCOMMON / BY DESIGN</span></div><div class="hero-decoration" aria-hidden="true"><div class="hero-sun"></div><div class="mountain mountain-far"></div><div class="mountain mountain-mid"></div><div class="mountain mountain-front"></div><div class="hero-lines"></div></div>
+        <div class="hero-copy"><div class="hero-kicker"><span class="hero-kicker-dot"></span><span id="heroContextKicker">INDEPENDENT SOFTWARE · CURATED DISCOVERY</span></div><h1><span id="heroContextLine1">Find your next tool.</span><br><em id="heroContextLine2">Beyond the usual.</em></h1><p id="heroContextSubtitle">Explore independent software and compare familiar tools.</p><div class="hero-action-row"><span class="hero-context-note" id="heroContextNote">Beyond the default — discover what comes next.</span><button type="button" id="heroContextAction" class="hero-primary-action" hidden tabindex="-1"><span class="hero-action-text">Explore today's discovery</span><span aria-hidden="true">↗</span></button></div></div>
+        </section></div>
+</div>
+<section class="challenge-workflows" id="challengeWorkflows" aria-label="Discover alternatives by familiar software">
         <div class="challenge-intro"><span class="challenge-eyebrow" id="challengeEyebrow">FRESH COMPARISONS</span><strong id="challengeHeading">Explore a different direction.</strong><small id="challengeCaption">Projects from the live catalog.</small></div>
         <div class="challenge-links" id="challengeLinks">
           <button type="button" class="challenge-link challenge-photo" data-global-query="Photoshop" aria-label="Find alternatives to Photoshop"><span class="challenge-link-icon" aria-hidden="true">Ps</span><span class="challenge-copy"><strong>Photoshop</strong><small data-query-count="Photoshop">Explore alternatives</small></span><span class="challenge-arrow" aria-hidden="true">↗</span></button>
@@ -132,7 +163,7 @@
         <div class="heading-start"><p class="eyebrow" id="eyebrow" data-t="libraryEyebrow">CHALLENGER CATALOG</p><h2 id="pageTitle">The index.</h2><p class="heading-subtitle" id="pageSubtitle" data-t="pageSubtitle">Emerging alternatives, mapped by creator, category and the software they challenge.</p></div>
 
       </div>
-      <section class="domain-section" id="domainSection" aria-label="Product categories"><div class="domain-section-heading"><div class="domain-section-heading-copy"><strong>Explore by category</strong><small id="domainTotal">Organizing independent alternatives…</small></div><button id="domainExpandButton" type="button" class="domain-expand-button" aria-controls="domainFilters" aria-expanded="false">All disciplines ↓</button></div><div class="domain-filters" id="domainFilters" role="group" aria-label="Product categories"></div></section>
+
       <div class="tabbar"><div class="filter-tools-heading"><div><span class="filter-kicker">PERSONALIZE YOUR DISCOVERY</span><strong>Refine the catalog</strong></div><button type="button" id="clearAllFilters" class="clear-all-filters" title="Reset all filters">Reset filters ↺</button></div>
         <div id="filterChips" class="filter-chips" role="group" aria-label="Discover catalog subset">
           <button class="filter-chip active" data-filter="all" aria-pressed="true">All projects</button>
@@ -211,7 +242,7 @@
 <div class="prefs-line prefs-option"><div><strong>Check frequency</strong><small>Applies equally to all listed projects</small></div><select id="prefsInterval" aria-label="Release check frequency"><option value="6">Every 6 hours</option><option value="12" selected>Every 12 hours</option><option value="24">Daily</option></select></div>
 <div class="prefs-line prefs-option"><div><strong>Show early-stage projects</strong><small>Include alpha, pre-alpha and experimental alternatives</small></div><label class="preference-switch"><input type="checkbox" id="prefsEarly" checked aria-label="Include early-stage projects"><span aria-hidden="true"></span></label></div>
 <p class="prefs-source-state" id="prefsSourceState">Project feeds use official release sources and SHA-256 for supported installers.</p></div></dialog>
-<dialog id="aboutDialog" class="modal-dialog" aria-labelledby="aboutTitle"><div class="modal-pad about-content"><button class="modal-close icon-only" data-dialog-close="aboutDialog" aria-label="Close"><svg><use href="#i-x"/></svg></button><img class="about-logo" src="/brand-icon.png" width="82" height="82" alt=""><h2 id="aboutTitle">Challenger Hub</h2><p data-t="aboutDescription">An independent discovery hub for emerging software projects challenging established professional applications. Not affiliated with the featured creators.</p><span class="about-version">Version 2.6.0 (Discovery UX)  · Independent alternatives</span></div></dialog>
+<dialog id="aboutDialog" class="modal-dialog" aria-labelledby="aboutTitle"><div class="modal-pad about-content"><button class="modal-close icon-only" data-dialog-close="aboutDialog" aria-label="Close"><svg><use href="#i-x"/></svg></button><img class="about-logo" src="/brand-icon.png" width="82" height="82" alt=""><h2 id="aboutTitle">Challenger Hub</h2><p data-t="aboutDescription">An independent discovery hub for emerging software projects challenging established professional applications. Not affiliated with the featured creators.</p><span class="about-version">Version 3.2.0 (Nexus design candidate) · Independent alternatives</span></div></dialog>
 <dialog id="activityDialog" class="modal-dialog activity-dialog" aria-labelledby="activityTitle"><div class="modal-pad"><button class="modal-close icon-only" data-dialog-close="activityDialog" aria-label="Close"><svg><use href="#i-x"/></svg></button><div class="modal-badge"><svg><use href="#i-clock"/></svg></div><h2 id="activityTitle" data-t="activityLog">Activity log</h2><div id="activityContent" class="activity-content"></div></div></dialog>
 <dialog id="whatsNewDialog" class="modal-dialog whats-new-dialog" aria-labelledby="whatsNewTitle"><div class="modal-pad"><button class="modal-close icon-only" data-dialog-close="whatsNewDialog" aria-label="Close release notes"><svg><use href="#i-x"/></svg></button><div class="modal-badge"><svg><use href="#i-info"/></svg></div><h2 id="whatsNewTitle">What’s new</h2><p class="modal-help" id="whatsNewSubtitle"></p><div id="whatsNewBody" class="notes-content" role="document"></div></div></dialog>
 <dialog id="setupGuideDialog" class="modal-dialog setup-guide-dialog" aria-labelledby="setupGuideTitle">

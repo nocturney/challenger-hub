@@ -89,6 +89,7 @@ const ui={language:'en',creator:'all',
  facetsExpanded:pref('facetsExpanded','false')==='true'};
 if(pref('layoutMigration','')!=='2.5'){ui.view='list';savePref('view','list');savePref('layoutMigration','2.5')}
 if(pref('architectureMigration','')!=='3.0'){ui.view='grid';savePref('view','grid');savePref('architectureMigration','3.0')}
+if(pref('nexusViewMigration','')!=='3.2'){ui.view='list';savePref('view','list');savePref('nexusViewMigration','3.2')}
 const t=k=>I18N.en[k]??k;
 let state={apps:[],queue:[],history:[],scanning:false,scanError:'',checkedAt:null,active:null,platform:'',computer:'',admin:false};
 const notesCache=new Map(),historyCache=new Map();
@@ -146,22 +147,54 @@ function domainOf(a){
  return 'Office & Productivity';
 }
 function domainLabel(value){return DOMAIN_GROUPS.find(g=>g[0]===value)?.[1]||value}
+let nexusFeedSignature='';
+function renderNexusFeed(){
+ const cap=$('nexusSelectedCaption');
+ if(cap)cap.textContent=ui.domain==='all'?'FULL NETWORK · ALL FIELDS':('FILTERED FIELD · '+domainLabel(ui.domain)).toUpperCase();
+ const host=$('nexusRecentRows');if(!host||!initialDataLoaded)return;
+ const candidates=state.apps.filter(a=>a.repo&&a.publishedAt&&Date.parse(a.publishedAt)>0&&a.repoUrl)
+  .sort((a,b)=>Date.parse(b.publishedAt)-Date.parse(a.publishedAt)).slice(0,4);
+ const signature=candidates.map(a=>a.repo+'|'+a.publishedAt).join('|');
+ if(signature===nexusFeedSignature)return;nexusFeedSignature=signature;
+ if(!candidates.length){host.innerHTML='<p class="nexus-feed-empty">No reported release dates in this local index.</p>';return}
+ host.innerHTML=candidates.map((a,i)=>'<button class="nexus-recent-row" type="button" data-nexus-repo="'+escapeHTML(a.repo)+'" aria-label="Inspect '+escapeHTML(a.title)+'">'+
+ '<span class="nexus-recent-num">'+String(i+1).padStart(2,'0')+'</span>'+
+ '<span class="nexus-recent-copy"><strong>'+escapeHTML(a.title)+'</strong><small>'+escapeHTML(domainLabel(domainOf(a)))+'</small></span>'+
+ '<span class="nexus-recent-date">'+escapeHTML(localDate(a.publishedAt))+'</span></button>').join('');
+}
+function renderNexusWires(nodes){
+ const wires=$('nexusWires');if(!wires)return;
+ wires.innerHTML='<circle cx="500" cy="300" r="88" class="nexus-svg-core"></circle>'+
+ nodes.map(n=>'<line x1="500" y1="300" x2="'+(n.x*10).toFixed(1)+'" y2="'+(n.y*6).toFixed(1)+'" class="nexus-wire"></line>'+
+ '<circle cx="'+(n.x*10).toFixed(1)+'" cy="'+(n.y*6).toFixed(1)+'" r="3.7" class="nexus-wire-point"></circle>').join('');
+}
 function renderDomains(){
  const bar=$('domainFilters');if(!bar)return;
  const counts=new Map(DOMAIN_GROUPS.map(g=>[g[0],0]));
  for(const a of state.apps){const domain=domainOf(a);counts.set(domain,(counts.get(domain)||0)+1)}
  counts.set('all',state.apps.length);
- const markup=DOMAIN_GROUPS.filter(g=>g[0]==='all'||counts.get(g[0])>0).map(g=>{
-   const [id,name,desc,color]=g,active=ui.domain===id;
-   return '<button type="button" class="domain-pill'+(active?' active':'')+'" data-domain="'+escapeHTML(id)+'"'+
-     ' aria-pressed="'+active+'" title="'+escapeHTML(desc)+'">'+
-     '<span class="domain-dot" aria-hidden="true"></span><span class="domain-label">'+escapeHTML(name)+'</span>'+
-     '<span class="domain-count">'+(counts.get(id)||0)+'</span></button>';
+ const nodes=[];
+ const markup=DOMAIN_GROUPS.filter(g=>g[0]==='all'||counts.get(g[0])>0).map((g,i)=>{
+  const [id,name,desc,color]=g,active=ui.domain===id,n=counts.get(id)||0;
+  let x=50,y=50,size=180;
+  if(i>0){
+   const outer=i<=13;const j=outer?i-1:i-14;
+   const angle=((outer?-103:-45)+(outer?j*360/13:j*90))*Math.PI/180;
+   x=50+Math.cos(angle)*(outer?41:23);
+   y=50+Math.sin(angle)*(outer?39:28);
+   size=Math.round(65+Math.min(19,Math.sqrt(n)*3.4));
+   nodes.push({x,y});
+  }
+  const style='--nx:'+x.toFixed(2)+'%;--ny:'+y.toFixed(2)+'%;--node-d:'+size+'px;--node-tone:'+escapeHTML(color)+';';
+  return '<button type="button" class="domain-pill'+(active?' active':'')+(i===0?' nexus-core':'')+'" data-domain="'+escapeHTML(id)+'"'+
+    ' aria-pressed="'+active+'" aria-label="'+escapeHTML(name+': '+n+' projects')+'" title="'+escapeHTML(desc)+'" style="'+style+'">'+
+    '<span class="domain-dot" aria-hidden="true"></span><span class="domain-label">'+escapeHTML(name)+'</span>'+
+    '<span class="domain-count">'+n+'</span></button>';
  }).join('');
  if(bar.innerHTML!==markup)bar.innerHTML=markup;
  $('domainTotal').textContent=state.apps.length+' projects across '+(DOMAIN_GROUPS.length-1)+' disciplines';
- updateWorkspaceControls();
-}
+ renderNexusWires(nodes);updateWorkspaceControls();
+};
 /* Challenger v3 — progressive catalog facets, without duplicate workspace modes. */
 function updateWorkspaceControls(){
  const expanded=!!ui.domainsExpanded,facets=!!ui.facetsExpanded;
@@ -403,7 +436,7 @@ function renderCounters(){
  const c=getCounters();
  $('sourceSummary').textContent=[...new Set(state.apps.map(a=>a.creator||'Storytold'))].length+' creators';
  const set=(id,n)=>{const target=$(id);if(target)target.textContent=n};
- set('navCountAll',c.all);set('navCountInstalled',c.installed);
+ set('navCountAll',c.all);set('nexusTotal',DOMAIN_GROUPS.length-1);set('navCountInstalled',c.installed);
  set('navCountUpdates',c.updates);set('navCountNew',c.new);
  set('metricInstalled',c.installed);set('metricUpdates',c.updates);set('metricNew',c.new);
  set('filterCountUpdates',c.updates);set('filterCountNew',c.new);
@@ -822,6 +855,7 @@ function renderCards(force=false){
  window.ChallengerUX?.present(list.length);
  renderDiscoveryStage(list);
  syncV3Architecture(list);
+ renderNexusFeed();
  renderBulkUpdateBar();
  $('cards').setAttribute('aria-busy','false');
  if(force||html!==cardSnapshot){cardSnapshot=html;$('cards').innerHTML=html;}
@@ -1437,3 +1471,9 @@ function start(){
  setInterval(poll,6500);
 }
 document.addEventListener('DOMContentLoaded',start);
+
+/* NEXUS: Source-linked feed is inspect-only; no hidden install actions. */
+document.getElementById('nexusRecentRows')?.addEventListener('click',event=>{
+ const btn=event.target.closest('button[data-nexus-repo]');
+ if(btn&&state.apps.some(a=>a.repo===btn.dataset.nexusRepo))openDiscoveryProject(btn.dataset.nexusRepo);
+});

@@ -13,7 +13,7 @@ const between=(a,b)=>{
 };
 const idCount=id=>(html.match(new RegExp('id="'+id+'"','g'))||[]).length;
 test('Observatory 3.0 is a real replacement of the dual workspace layout',()=>{
- assert.match(html,/data-app-version="3\.0\.0"/);
+ assert.match(html,/data-app-version="3\.2\.0"/);
  assert.equal(idCount('workspaceRailCount'),0);
  assert.equal(idCount('focusOverview'),0);
  assert.equal(idCount('workspaceContext'),1);
