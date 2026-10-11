@@ -1,0 +1,45 @@
+{
+  "origin": "real Chromium/Edge screenshot evidence",
+  "screenshots": [
+    {
+      "file": "win-focus-light-desktop.png",
+      "bytes": 99679,
+      "sha256": "79e7ae6885a9c6d3ae1800286b518ab3f582edece6e031276e14d4b24cfcfdf9"
+    },
+    {
+      "file": "win-focus-dark-desktop.png",
+      "bytes": 100746,
+      "sha256": "4553df91a4b76912ec8a3300021246751b7e5bcc1c779440c73be2317b37db81"
+    },
+    {
+      "file": "win-focus-mobile.png",
+      "bytes": 58130,
+      "sha256": "62708f3ffd284ee0d49e4b78764ab43dba3acb34baefc7049cf402e21ef7fd66"
+    },
+    {
+      "file": "win-results-3d.png",
+      "bytes": 55912,
+      "sha256": "dc965f658344fc84b6d352259a1d80a609e64c5915cdb336075c6524eaa1131f"
+    },
+    {
+      "file": "win-project-dossier.png",
+      "bytes": 54970,
+      "sha256": "5a11317b1e76ae9c5affa26535c83313affa41075215bd7701e68fb24c8ec7ff"
+    },
+    {
+      "file": "mac-focus-light-desktop.png",
+      "bytes": 109005,
+      "sha256": "80ac50fc8c1d69826c35638b294c2852e71eb1449e947e35ea02fe620f241d7d"
+    },
+    {
+      "file": "mac-focus-dark-desktop.png",
+      "bytes": 109154,
+      "sha256": "177c930aa45955bd23634c1ae398bd4b8761586c60bd6d523c9b8cffaf6bea97"
+    },
+    {
+      "file": "mac-focus-mobile.png",
+      "bytes": 62291,
+      "sha256": "f693bf59df7092db1b0cf65792a7440f612b4251983dd592a8eeecf910d4e37d"
+    }
+  ]
+}

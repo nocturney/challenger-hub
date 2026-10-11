@@ -320,3 +320,10 @@ a{color:var(--accent);text-decoration-color:color-mix(in srgb,var(--accent) 45%,
  .library-screen .project-table th:nth-child(1){width:67%}
  .library-screen .project-table th:nth-child(4){width:33%}
 }
+
+/* Orbit Signature v1 — unobtrusive Focus branding. */
+.brand img{object-fit:contain;flex:none;width:29px;height:29px}
+:root[data-theme="light"] .brand-mark-dark{display:none}
+:root[data-theme="dark"] .brand-mark-light{display:none}
+@media(max-width:600px){.brand img{width:23px;height:23px}}
+@media(max-width:380px){.brand img{width:25px;height:25px}}
