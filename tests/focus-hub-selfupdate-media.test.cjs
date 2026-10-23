@@ -64,7 +64,7 @@ test('native shell and compact UI preserve version/check control and maximize th
  const runtime=fs.readFileSync(path.join(__dirname,'../tools/desktop-build/build-runtime.cjs'),'utf8');
  const css=fs.readFileSync(path.join(__dirname,'../tools/desktop-build/viewport-fit.css'),'utf8');
  assert.ok(builder.includes('WindowState = FormWindowState.Maximized'));
- for(const key of ['hubCheckUpdates','hubVersion','hubUpdateState','live-project-media.js','hub-update-ui.js',"preview==='7'"])
+ for(const key of ['hubCheckUpdates','hubVersion','hubUpdateState','live-project-media.js','hub-update-ui.js',"['7','8','9'].includes(preview)"])
   assert.ok(runtime.includes(key),key);
  assert.ok(css.includes('max-height:745px')&&css.includes('home-opening h1'));
 });
