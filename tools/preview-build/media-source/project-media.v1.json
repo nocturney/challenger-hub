@@ -1,6 +1,6 @@
 {
   "schema": "challenger-project-media.v1",
-  "createdAt": "2026-10-23T07:54:06.259Z",
+  "createdAt": "2026-10-23T08:29:02.656Z",
   "sources": "creator-controlled repository files from official-icons.json; no hotlinking",
   "screenshotPolicy": "Only authentic software UI from project-controlled files",
   "projects": {
@@ -24,7 +24,7 @@
         "size": 547002,
         "sha256": "6a12c0d47299f7984063be720ae305775ae3c12d742289d35409bd5ba9210eb4",
         "status": "approved",
-        "checkedAt": "2026-10-23T07:54:06.259Z"
+        "checkedAt": "2026-10-23T08:29:02.656Z"
       }
     },
     "composa": {
@@ -52,14 +52,16 @@
         "size": 7790,
         "sha256": "c6824333ee080b348032dd25b19af65766e62ea1db7128415b0f6f21b4fbaefe",
         "status": "approved",
-        "checkedAt": "2026-10-23T07:54:06.259Z"
+        "checkedAt": "2026-10-23T08:29:02.656Z"
       },
       "screenshot": {
         "path": "/media/screenshots/dune3d.png",
-        "source": "https://raw.githubusercontent.com/dune3d/dune3d/main/screenshot.png",
+        "source": "https://raw.githubusercontent.com/dune3d/dune3d/d01faaf16f309e55834c3b93dddce5c852453cfe/screenshot.png",
         "sourceRepository": "dune3d/dune3d",
-        "reference": "https://github.com/dune3d/dune3d/blob/main/org.dune3d.dune3d.metainfo.xml",
+        "sourceCommit": "d01faaf16f309e55834c3b93dddce5c852453cfe",
+        "reference": "https://github.com/dune3d/dune3d/blob/d01faaf16f309e55834c3b93dddce5c852453cfe/org.dune3d.dune3d.metainfo.xml",
         "caption": "Dune 3D main window",
+        "provenance": "Developer-controlled repository screenshot; visually checked as real application UI",
         "type": "application-ui-screenshot",
         "status": "approved",
         "licenseSpdx": "GPL-3.0",
@@ -68,13 +70,13 @@
         "height": 639,
         "size": 79937,
         "sha256": "56f79318ff609044b6e6f3173c77cbb541a09475353f854b667cf99d7bf1c595",
-        "checkedAt": "2026-10-23T07:54:06.259Z"
+        "checkedAt": "2026-10-23T08:29:02.656Z"
       }
     },
     "material-maker": {
       "title": "Material Maker",
       "repo": "RodZill4/material-maker",
-      "status": "icon-only",
+      "status": "approved",
       "license": {
         "spdx": "MIT",
         "url": "https://github.com/RodZill4/material-maker/blob/master/LICENSE.md",
@@ -91,7 +93,25 @@
         "size": 15138,
         "sha256": "72ee1a0fc59b798b8849eb9bd0cb7b67fd9ee3ff41645f90c2ca98168f3619ef",
         "status": "approved",
-        "checkedAt": "2026-10-23T07:54:06.259Z"
+        "checkedAt": "2026-10-23T08:29:02.656Z"
+      },
+      "screenshot": {
+        "path": "/media/screenshots/material-maker.png",
+        "source": "https://raw.githubusercontent.com/RodZill4/material-maker/424dec64a75478f22267ba9281a5cbe7a236b802/material_maker/doc/images/screenshot.png",
+        "sourceRepository": "RodZill4/material-maker",
+        "sourceCommit": "424dec64a75478f22267ba9281a5cbe7a236b802",
+        "reference": "https://github.com/RodZill4/material-maker/blob/424dec64a75478f22267ba9281a5cbe7a236b802/README.md",
+        "caption": "Material Maker node editor and material previews",
+        "provenance": "Developer-controlled repository screenshot; visually checked as real application UI",
+        "type": "application-ui-screenshot",
+        "status": "approved",
+        "licenseSpdx": "MIT",
+        "licenseUrl": "https://github.com/RodZill4/material-maker/blob/master/LICENSE.md",
+        "width": 1920,
+        "height": 1105,
+        "size": 1246803,
+        "sha256": "82914343db0a3af22f5b96f7b42e362f58f93f9c499b3fad48d182d9059e4f7c",
+        "checkedAt": "2026-10-23T08:29:02.656Z"
       }
     },
     "kiri-moto": {
@@ -114,7 +134,7 @@
         "size": 48110,
         "sha256": "0548c67923160f4e83b781235ef6f06af411f63405cd1dd69915bae93b489e8e",
         "status": "approved",
-        "checkedAt": "2026-10-23T07:54:06.259Z"
+        "checkedAt": "2026-10-23T08:29:02.656Z"
       }
     },
     "friction": {
@@ -137,13 +157,13 @@
         "size": 179958,
         "sha256": "745a20d2be44b47b37ca135a87457dd9dd6b3c7dd5eef7f2968612b364b057ca",
         "status": "approved",
-        "checkedAt": "2026-10-23T07:54:06.259Z"
+        "checkedAt": "2026-10-23T08:29:02.656Z"
       }
     },
     "real-video-enhancer": {
       "title": "REAL Video Enhancer",
       "repo": "TNTwise/REAL-Video-Enhancer",
-      "status": "icon-only",
+      "status": "approved",
       "license": {
         "spdx": "AGPL-3.0",
         "url": "https://github.com/TNTwise/REAL-Video-Enhancer/blob/v2-main/LICENSE",
@@ -160,7 +180,25 @@
         "size": 6711,
         "sha256": "f84b7f92a2663a53409d65276c81e685a3dc43505f86844916465ff91f26d11c",
         "status": "approved",
-        "checkedAt": "2026-10-23T07:54:06.259Z"
+        "checkedAt": "2026-10-23T08:29:02.656Z"
+      },
+      "screenshot": {
+        "path": "/media/screenshots/real-video-enhancer.png",
+        "source": "https://raw.githubusercontent.com/TNTwise/REAL-Video-Enhancer/8541c46ca14e6f84fc86c5b9d3b75373e25732e5/screenshots/settings.png",
+        "sourceRepository": "TNTwise/REAL-Video-Enhancer",
+        "sourceCommit": "8541c46ca14e6f84fc86c5b9d3b75373e25732e5",
+        "reference": "https://github.com/TNTwise/REAL-Video-Enhancer/blob/8541c46ca14e6f84fc86c5b9d3b75373e25732e5/screenshots/settings.png",
+        "caption": "REAL Video Enhancer application settings",
+        "provenance": "Developer-controlled repository screenshot; visually checked as real application UI",
+        "type": "application-ui-screenshot",
+        "status": "approved",
+        "licenseSpdx": "AGPL-3.0",
+        "licenseUrl": "https://github.com/TNTwise/REAL-Video-Enhancer/blob/v2-main/LICENSE",
+        "width": 2050,
+        "height": 1166,
+        "size": 95084,
+        "sha256": "c7ef740510585be4f19573e348595216f5d407328424c2b0faba532e654acd6b",
+        "checkedAt": "2026-10-23T08:29:02.656Z"
       }
     },
     "infinite": {
@@ -193,7 +231,7 @@
         "size": 3523,
         "sha256": "fd1112fd7cd6e5dde9fdc79223b01ea6128e5a4f676e6482f7a286e6258ac9cc",
         "status": "approved",
-        "checkedAt": "2026-10-23T07:54:06.259Z"
+        "checkedAt": "2026-10-23T08:29:02.656Z"
       }
     },
     "docuseal": {
@@ -216,7 +254,7 @@
         "size": 4824,
         "sha256": "fde5f71884ac625107c918c5c2a555b07b533bcf04a3df622588db99a629f506",
         "status": "approved",
-        "checkedAt": "2026-10-23T07:54:06.259Z"
+        "checkedAt": "2026-10-23T08:29:02.656Z"
       }
     },
     "activepieces": {
@@ -244,7 +282,7 @@
         "size": 112227,
         "sha256": "1b7d9724b4636be4ab88c373af21d5278b9f951acabcc6678c15c9b9ad7bc394",
         "status": "approved",
-        "checkedAt": "2026-10-23T07:54:06.259Z"
+        "checkedAt": "2026-10-23T08:29:02.656Z"
       }
     },
     "openhands": {
@@ -267,7 +305,7 @@
         "size": 59806,
         "sha256": "4c30541335c3c06fd3b2f374891885172a4b65a50a776c644c9f6703fc0b5d63",
         "status": "approved",
-        "checkedAt": "2026-10-23T07:54:06.259Z"
+        "checkedAt": "2026-10-23T08:29:02.656Z"
       }
     }
   }
