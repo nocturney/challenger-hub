@@ -1,0 +1,18 @@
+{
+  "name": "challenger-crossplatform-pilot",
+  "version": "4.0.0-beta.12",
+  "private": true,
+  "description": "Isolated multi-platform shell for existing Challenger Desktop backend",
+  "main": "main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "smoke": "electron . --challenger-smoke --challenger-offline",
+    "pack:mac": "node build.cjs darwin arm64",
+    "pack:linux:arm64": "node build.cjs linux arm64",
+    "pack:linux:x64": "node build.cjs linux x64"
+  },
+  "devDependencies": {
+    "electron": "45.0.0",
+    "@electron/packager": "20.3.0"
+  }
+}

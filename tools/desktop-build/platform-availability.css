@@ -1,0 +1,18 @@
+/* Platform compatibility is evidence-labelled and compact, not an installer guarantee. */
+.row-platforms,.platform-badges{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.row-platforms{margin-top:6px}
+.platform-badge{display:inline-flex;align-items:center;justify-content:center;min-width:24px;
+ border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-size:9px;
+ line-height:1.15;font-weight:650;white-space:nowrap;background:var(--paper);color:var(--muted)}
+.platform-badge.ready{color:var(--accent);border-color:var(--accent);background:var(--accent-surface)}
+.platform-badge.reviewed{color:var(--ink);border-color:var(--line-dark)}
+.platform-badge.reported{color:var(--muted)}
+.platform-badge.unknown{color:var(--soft);opacity:.66}
+.platform-badge.current{box-shadow:inset 0 -2px 0 var(--accent)}
+.platform-availability-card{display:block}
+.platform-badges{gap:7px;margin:9px 0}
+.platform-badges .platform-badge{font-size:11px;padding:7px 9px;border-radius:8px}
+.platform-local-message{margin:6px 0;font-weight:650}
+.platform-trust-note{font-size:10px!important;line-height:1.5;color:var(--muted)}
+.explore-screen .project-table tbody tr .status-cell{align-self:start}
+@media(max-width:430px){.platform-badges{gap:4px}.platform-badges .platform-badge{font-size:10px;padding:5px}.row-platforms{gap:3px}}
