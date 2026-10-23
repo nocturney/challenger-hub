@@ -4,9 +4,12 @@ const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
-const {execFileSync, spawn} = require('node:child_process');
+const {execFileSync, execFile, spawn} = require('node:child_process');
+const {promisify}=require('node:util');
+const runChild=promisify(execFile);
 const challenger=require('./challenger-core');
 const officialIcons=require('./official-icons');
+const registryLive=require('./registry-live');
 
 const HOST='127.0.0.1';
 const PORT=(Number(process.env.CRAFT_CENTER_PORT)||17873);
@@ -28,7 +31,7 @@ const KNOWN={
   cadcraft:['CADCraft','Autodesk AutoCAD','CAD'],soundcraft:['SoundCraft','Avid Pro Tools','Audio']
 };
 const EXCLUDED=new Set(['artcraft','artcraftx','placeholder-artcraft']);
-const catalog={apps:[], checkedAt:null, scanning:false, scanError:'', lastForce:0};
+const catalog={apps:[], checkedAt:null, scanning:false, scanError:'', lastForce:0, releaseFailures:0, refreshedReleases:0, lastAttempt:null};
 const run={active:null, queue:[], history:[]};
 const isWin=process.platform==='win32';
 let isAdmin=!isWin;
@@ -42,13 +45,14 @@ function readCuratedDiscoveries(){
   try{data=JSON.parse(fs.readFileSync(COMMUNITY_FILE,'utf8'));}
   catch(_){return [];}
   if(data.schema!=='challenger-registry.v1'||!Array.isArray(data.projects))return [];
-  const collected=[],seen=new Set();
+  const collected=[],seen=new Set(),live=registryLive.read(ROOT).items;
   for(const p of data.projects){
     if(!p||!p.id||!/^[a-z][a-z0-9-]{1,79}$/.test(p.id))continue;
     if(!p.repository||!/^[a-z0-9-]{1,39}\/[a-z0-9_.-]{1,100}$/i.test(p.repository))continue;
     if(typeof p.name!=='string'||typeof p.creator!=='string'||!p.name.trim()||!p.creator.trim())continue;
     if(p.installAdapter||p.installable||catalog.apps.some(x=>x.repo===p.id)||seen.has(p.id))continue;
     seen.add(p.id);
+    const observed=live[p.id]?.repository?.toLowerCase()===p.repository.toLowerCase()?live[p.id]:null;
     const challenges=Array.isArray(p.challenges)?p.challenges.filter(x=>typeof x==='string').slice(0,10).map(x=>x.slice(0,90)):[];
     collected.push({
       repo:p.id,title:p.name.slice(0,96),creator:p.creator.slice(0,100),
@@ -70,12 +74,30 @@ function readCuratedDiscoveries(){
       releaseStrategy:'unverified',installAdapter:null,installable:false,
       installedVersion:null,installedPath:null,needsUpdate:false,current:false,
       latestVersion:null,releaseTag:null,releaseUrl:null,publishedAt:null,
-      pushedAt:typeof p.githubLastPushAtReview==='string'&&Number.isFinite(Date.parse(p.githubLastPushAtReview))?p.githubLastPushAtReview:null,
-      stars:Number.isSafeInteger(p.githubStarsAtReview)&&p.githubStarsAtReview>=0?p.githubStarsAtReview:null,
+      pushedAt:observed?.pushedAt||(typeof p.githubLastPushAtReview==='string'&&Number.isFinite(Date.parse(p.githubLastPushAtReview))?p.githubLastPushAtReview:null),
+      stars:Number.isSafeInteger(observed?.stars)?observed.stars:Number.isSafeInteger(p.githubStarsAtReview)&&p.githubStarsAtReview>=0?p.githubStarsAtReview:null,
+      observedReleaseTag:observed?.observedTag||null,
+      observedPublishedAt:observed?.observedPublishedAt||null,
+      repositoryMetadataCheckedAt:observed?.lastObservedAt||null,
+      archivedAtSource:observed?.isArchived||false,
       issues:null,license:typeof p.license==='string'&&p.license!=='NOASSERTION'?p.license:null,assetBytes:null
     });
   }
-  return collected.map(a=>{const found=challenger.getMeta(a.repo);const enriched=found?{...a,...found}:a;return {...enriched,...officialIcons.iconMeta(enriched)}});
+  return collected.map(a=>{
+    const found=challenger.getMeta(a.repo),enriched=found?{...a,...found}:a;
+    const observed=live[a.repo]?.repository?.toLowerCase()===a.repository.toLowerCase()?live[a.repo]:null;
+    // Fresh upstream observation wins for public repository facts only.
+    // Adapter and installation eligibility continue to come exclusively from reviewed policy.
+    if(observed){
+      enriched.stars=observed.stars;
+      enriched.pushedAt=observed.pushedAt;
+      enriched.observedReleaseTag=observed.observedTag;
+      enriched.observedPublishedAt=observed.observedPublishedAt;
+      enriched.repositoryMetadataCheckedAt=observed.lastObservedAt;
+      enriched.archivedAtSource=!!observed.isArchived;
+    }
+    return {...enriched,...officialIcons.iconMeta(enriched)};
+  });
 }
 function readSources(){
   try{
@@ -95,7 +117,7 @@ const scanner=sourceScanner.makeScanner({
  list:()=>[...catalog.apps.map(a=>({id:a.repo,repository:'storytold/'+a.repo,kind:'craft'})),
             ...readCuratedDiscoveries().map(a=>({id:a.repo,repository:a.repository,kind:"independent"}))],
  config:()=>challenger.config(),
- knownTag:entry=>entry.kind==='craft'?catalog.apps.find(a=>a.repo===entry.id)?.releaseTag||null:
+ knownTag:entry=>entry.kind==='craft'?catalog.apps.find(a=>a.repo.toLowerCase()===entry.id)?.releaseTag||null:
    entry.kind==='independent'?challenger.getMeta(entry.id)?.releaseTag||null:null,
  logger:(kind,message)=>note(kind,message),
  discovery:async()=>{
@@ -120,7 +142,7 @@ const scanner=sourceScanner.makeScanner({
   const {data}=await getGithub(url);
   if(data.draft||data.prerelease||data.tag_name!==event.tag)return false;
   if(event.kind==="craft"){
-   const app=catalog.apps.find(a=>a.repo===event.id);if(!app)return false;
+   const app=catalog.apps.find(a=>a.repo.toLowerCase()===event.id);if(!app)return false;
    if(!String(data.html_url||'').startsWith('https://github.com/storytold/'+app.repo+'/releases/tag/'))return false;
    if(app.publishedAt&&data.published_at&&Date.parse(data.published_at)<Date.parse(app.publishedAt))return false;
    app.releaseTag=event.tag;app.latestVersion=event.tag.replace(/^v/,"");
@@ -212,10 +234,23 @@ function publicRepoMeta(r){
 function apiHeaders(){return {'User-Agent':'CraftUpdateCenter/1.0 (local; public GitHub releases)', 'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};}
 async function getGithub(url){
   if(!url.startsWith('https://api.github.com/'))throw Error('Unsupported API host');
+  // Prefer an existing authorized GitHub CLI for public read-only API queries.
+  // Never read, print, persist, bundle or forward its credential to the desktop.
+  // An installed/authorized gh CLI is optional: the public API remains the fallback.
+  if(process.env.CHALLENGER_DISABLE_GH_CLI!=='1'){
+    try{
+      const endpoint=url.slice('https://api.github.com'.length);
+      const {stdout}=await runChild('gh',['api',endpoint,'-H','Accept: application/vnd.github+json'],
+        {timeout:18000,maxBuffer:9*1024*1024,windowsHide:true});
+      return {data:JSON.parse(stdout),link:'',authenticated:true};
+    }catch(_){ /* No compatible local gh login; fall back to anonymous public API. */ }
+  }
   const response=await fetch(url,{headers:apiHeaders(),signal:AbortSignal.timeout(18000)});
-  if(!response.ok){let hint='';if(response.status===403 || response.status===429)hint=' (GitHub API rate limit; cache retained)';
-    throw Error('GitHub '+response.status+hint);}
-  return {data:await response.json(),link:response.headers.get('link')||''};
+  if(!response.ok){let hint='';
+    if(response.status===403||response.status===429)hint=' (anonymous GitHub API limit; connect existing gh CLI or retry after reset)';
+    throw Error('GitHub '+response.status+hint);
+  }
+  return {data:await response.json(),link:response.headers.get('link')||'',authenticated:false};
 }
 async function getAllRepos(){
   const all=[];let page=1;
@@ -244,14 +279,16 @@ async function scanCatalog(force=false){
   if(!force && catalog.apps.length && catalog.checkedAt && now-new Date(catalog.checkedAt).getTime()<25*60*1000)return;
   if(force && now-catalog.lastForce<90*1000 && catalog.apps.length){note('info','Using recently scanned data');return;}
   if(force)catalog.lastForce=now;
-  catalog.scanning=true;catalog.scanError='';
+  catalog.scanning=true;catalog.scanError='';catalog.lastAttempt=new Date(now).toISOString();
+  catalog.releaseFailures=0;catalog.refreshedReleases=0;
   note('scan','Scanning public repositories of '+OWNER);
   try{
     const listed=await getAllRepos();
     const repos=listed.filter(candidate);
     const unknown=listed.filter(r=>!candidate(r));
     // A newly created alternative may have no useful GitHub description yet.
-    for(let i=0;i<unknown.length;i+=6){
+    // Deep README discovery is a separate opt-in task, never block a normal version refresh.
+    if(process.env.CHALLENGER_DEEP_DISCOVERY==='1')for(let i=0;i<unknown.length;i+=6){
       await Promise.all(unknown.slice(i,i+6).map(async r=>{
         if(await readmeSuggestsReplacement(r))repos.push(r);
       }));
@@ -265,7 +302,13 @@ async function scanCatalog(force=false){
           const response=await getGithub('https://api.github.com/repos/'+OWNER+'/'+m.repo+'/releases/latest');
           data=response.data;
         }catch(e){
-          // Retain last validated release metadata if GitHub's anonymous API hits its rate limit.
+          // A new repository without any published release is not a network failure.
+          if(String(e.message)==='GitHub 404'){
+            m.assetIssue='No published release yet';m.error='';
+            return;
+          }
+          catalog.releaseFailures++;
+          // Retain the last verified release metadata; never claim the cache is newly verified.
           const old=catalog.apps.find(p=>p.repo===m.repo && p.latestVersion);
           if(old){
             m.releaseTag=old.releaseTag;m.latestVersion=old.latestVersion;
@@ -294,9 +337,12 @@ async function scanCatalog(force=false){
       }));
     }
     catalog.apps=next.sort((a,b)=>(Number(a.isNew)-Number(b.isNew)) || a.title.localeCompare(b.title,'en'));
+    await syncInstalled();
+    catalog.refreshedReleases=next.filter(x=>x.latestVersion&&!x.error).length;
     catalog.checkedAt=new Date().toISOString();
+    catalog.scanError=catalog.releaseFailures?catalog.releaseFailures+' release lookups unavailable; previous verified values retained':'';
     fs.writeFileSync(CACHE_FILE,JSON.stringify({checkedAt:catalog.checkedAt,apps:catalog.apps},null,2),'utf8');
-    note('success','Found '+catalog.apps.length+' applications and candidates; '+catalog.apps.filter(x=>x.isNew).length+' newly discovered');
+    note(catalog.releaseFailures?'info':'success','Refreshed '+catalog.apps.length+' managed repositories; '+catalog.refreshedReleases+' releases verified; '+catalog.releaseFailures+' cached fallbacks');
   }catch(e){catalog.scanError=String(e.message);note('error','Catalog scan failed: '+catalog.scanError);}
   finally {catalog.scanning=false;}
 }
@@ -693,7 +739,12 @@ const server=http.createServer(async(req,res)=>{
     json(res,200,{platform:process.platform,computer:os.hostname(),admin:isAdmin,
       apps:catalog.apps.map(({releaseBody,...meta})=>({...meta,creator:'Storytold',sourceId:'storytold',repository:'storytold/'+meta.repo,challenges:meta.original?[meta.original]:[],sourceSignal:scanner.publicSignal(meta.repo),...challenger.craftPortableMeta(meta.repo)})),
       discoveries:readCuratedDiscoveries().map(a=>publicDiscovery({...a,sourceSignal:scanner.publicSignal(a.repo)})),sources:readSources(),sourceStatus:scanner.status(),
-      checkedAt:scanner.status().lastSyncAt||catalog.checkedAt,scanning:scanner.status().scanning,scanError:scanner.status().error,
+      catalogStatus:{checkedAt:catalog.checkedAt,scanning:catalog.scanning,lastAttempt:catalog.lastAttempt,
+        releaseFailures:catalog.releaseFailures,refreshedReleases:catalog.refreshedReleases,
+        count:catalog.apps.length,error:catalog.scanError,registryUpdated:'2026-10-10'},
+      registryStatus:registryLive.status(ROOT),
+      checkedAt:scanner.status().lastSyncAt||catalog.checkedAt,scanning:scanner.status().scanning||catalog.scanning,
+      scanError:[scanner.status().error,catalog.scanError].filter(Boolean).join(' | '),
       active:run.active,queue:run.queue,history:run.history.slice(-45)});
     return;
   }
@@ -709,8 +760,11 @@ const server=http.createServer(async(req,res)=>{
   try{
     if(route==='/api/scan'){
       const work=scanner.requestAll();
-      scanner.tick({force:true}).catch(e=>note("error",e.message));
-      json(res,202,{ok:true,scanning:true,queued:work.queued,cooldown:work.cooldown});return;
+      registryLive.refresh({root:ROOT,force:true,logger:note}).catch(e=>note('error','Curated registry metadata refresh failed: '+String(e.message).slice(0,140)));
+      scanner.drainRequested().catch(e=>note('error','Source scan stalled: '+String(e.message).slice(0,140)));
+      if(!catalog.scanning)scanCatalog(true).catch(e=>note('error','Catalog refresh failed: '+String(e.message).slice(0,140)));
+      json(res,202,{ok:true,scanning:true,sourceQueued:work.queued,cooldown:work.cooldown,
+        catalogRefreshQueued:true,sourceTotal:scanner.status().total});return;
     }
     if(route==='/api/preferences'){
       const prefs=challenger.setConfig(body||{});json(res,200,{ok:true,preferences:prefs});return;
@@ -765,6 +819,17 @@ function setup(){
     console.log('Craft Update Center: http://'+HOST+':'+PORT+' | platform='+process.platform+' | admin='+isAdmin);
     syncInstalled().catch(e=>note('error',e.message));
     scanner.start();
+    // An old cache is not a successful scan. Refresh metadata on startup and
+    // periodically while the native desktop is open; no Task Scheduler service.
+    if(process.env.CHALLENGER_DISABLE_SCAN!=='1'){
+      const refreshCatalog=()=>{
+        scanCatalog(false).catch(e=>note('error','Catalog refresh: '+String(e.message).slice(0,130)));
+        registryLive.refresh({root:ROOT,logger:note}).catch(e=>
+          note('info','Independent repository metadata cached: '+String(e.message).slice(0,130)));
+      };
+      const initial=setTimeout(refreshCatalog,7000);initial.unref();
+      const recurring=setInterval(refreshCatalog,6*60*60*1000);recurring.unref();
+    }
   });
 }
 if(require.main===module)setup();

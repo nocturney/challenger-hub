@@ -25,16 +25,33 @@ function focusNotice(message,error=false){
 }
 function focusToolbar(){
  const toolbar=document.getElementById('liveToolbar');if(!toolbar)return;
- const online=!!snapshot,scanning=!!snapshot?.sourceStatus?.scanning;
+ const online=!!snapshot,src=snapshot?.sourceStatus||{},catalog=snapshot?.catalogStatus||{},
+  registry=snapshot?.registryStatus||{};
+ const scanning=!!(src.scanning||catalog.scanning||registry.scanning);
  const pending=projects.filter(a=>a.installable&&a.needsUpdate);
  const update=document.getElementById('focusUpdateAll');
  if(update){update.hidden=!pending.length;update.textContent='Update '+pending.length+' verified app'+(pending.length===1?'':'s')}
  toolbar.querySelectorAll('button[data-operation]').forEach(b=>{
   b.disabled=!online||(b.dataset.operation==='scan'&&scanning);
  });
- document.getElementById('focusStatus').textContent=!online?'Local engine unavailable':
-  scanning?'Checking sources via network…':
-  'Connected to '+(snapshot.computer||'this computer')+' · '+projects.filter(a=>a.installedVersion).length+' detected installs';
+ const stamp=value=>{
+  const d=Date.parse(value||'');return Number.isFinite(d)?new Date(d).toLocaleString():'not yet';
+ };
+ let message='Local engine unavailable';
+ if(online&&scanning){
+  const progress=src.scanProgress;
+  const parts=[];
+  if(catalog.scanning)parts.push('Managed software: refreshing');
+  if(registry.scanning)parts.push('Curated repositories: '+(registry.checked||0)+'/'+(registry.total||152));
+  if(src.scanning)parts.push('Release sources: '+(progress?.completed||0)+'/'+(progress?.total||src.total||0));
+  message='Refreshing · '+parts.join(' · ');
+ }else if(online){
+  message=(snapshot.computer||'This computer')+' · '+projects.filter(a=>a.installedVersion).length+
+   ' detected installs · managed checked '+stamp(catalog.checkedAt)+
+   ' · curated checked '+stamp(registry.lastCompletedAt)+
+   ' · release sources fresh '+(src.fresh||0)+'/'+(src.total||0);
+ }
+ document.getElementById('focusStatus').textContent=message;
 }
 function focusConfirm(op,repo){
  const a=projectById.get(repo);
@@ -89,7 +106,7 @@ async function runFocusOperation(button){
     throw Error('Installation not accepted by the approved worker');
    focusNotice(op==='install'?'Approved installation/update queued: '+repo:
     op==='update-all'?'Approved updates queued: '+(body.queued||[]).length:
-    op==='scan'?'Network scan requested. Progress appears in Activity.':
+    op==='scan'?'Real catalog, independent repository metadata and release scans started. Progress appears above.':
     op==='download-portable'?'Verified portable download started.':
     op==='launch'?'Local application open requested.':'Installed-software detection refreshed.');
    await refresh();
@@ -102,5 +119,4 @@ if(window.chrome?.webview)window.chrome.webview.addEventListener('message',event
   'Windows opened '+(projectById.get(result.repo)?.title||result.repo)+'.':
   'Windows could not open this app: '+String(result.error||'Not installed or location untrusted'),!result.ok);
 });
-setInterval(()=>{if(!document.hidden&&snapshot&&['activity','library','project'].includes(ui.screen))
- void refresh()},6500);
+setInterval(()=>{if(!document.hidden&&snapshot)void refresh()},8000);

@@ -5,7 +5,7 @@ const fs=require('node:fs'),path=require('node:path'),assert=require('node:asser
 const port=Number(process.env.FOCUS_DESKTOP_TEST_PORT||17964),base='http://127.0.0.1:'+port+'/',platform=process.platform;
 const expectedVersion=process.env.FOCUS_DESKTOP_QA_VERSION||'4.0.0-desktop.preview.4';
 const session=process.env.FOCUS_DESKTOP_QA_SESSION||'';
-const dir=path.join(__dirname,'dist','qa-'+platform+(expectedVersion.endsWith('.5')?'-onefile-preview5':''));
+const dir=path.join(__dirname,'dist','qa-'+platform+(expectedVersion.endsWith('.5')?'-onefile-preview5':expectedVersion.endsWith('.6')?'-onefile-preview6':''));
 const puppeteer=require(platform==='darwin'?
  '/Users/chris/.npm/_npx/4b4c857f6efdfb61/node_modules/puppeteer':
  'C:/Users/Chris/AppData/Local/npm-cache/_npx/4b4c857f6efdfb61/node_modules/puppeteer');
@@ -93,10 +93,23 @@ const puppeteer=require(platform==='darwin'?
   await page.waitForFunction(()=>document.getElementById('connectionState')?.classList.contains('connected'));
   await page.click('[data-operation="verify"]');
   await page.waitForFunction(()=>document.getElementById('operationNotice')?.textContent.includes('refreshed'),{timeout:15000});
+  const checkScan=process.env.FOCUS_TEST_SCAN_BUTTON==='1';
+  if(checkScan){
+    page.on('dialog',dialog=>dialog.accept());
+    await page.click('#liveToolbar [data-operation="scan"]');
+    await page.waitForFunction(()=>document.getElementById('operationNotice')?.textContent.includes('scans started'),{timeout:15000});
+    const snapshot=await fetch(base+'api/state').then(r=>r.json());
+    assert.ok(snapshot.sourceStatus.scanProgress?.total>=160,'Real source scan not accepted');
+    assert.ok(snapshot.sourceStatus.scanProgress?.startedAt,'No live scan started time');
+    assert.ok(snapshot.catalogStatus.lastAttempt,'Real managed catalog refresh was not started');
+    assert.ok(snapshot.registryStatus.scanning||snapshot.registryStatus.lastCompletedAt,
+     'Independent project metadata does not have a scan path');
+  }
   assert.deepEqual(external,[],'web UI sent unexpected external browser requests');
   assert.deepEqual(errors,[],'browser JavaScript errors');
-  assert.deepEqual(writes.filter(x=>!x.includes('/api/verify')),[],'unapproved browser mutation');
+  assert.deepEqual(writes.filter(x=>!x.includes('/api/verify')&&!(checkScan&&x.includes('/api/scan'))),[],'unapproved browser mutation');
   const result={status:'PASS',platform,version:health.version,host:state.computer,cases:checks.length,
+    scanButtonTriggered:checkScan,
     screenshotProjects:3,installedCount:state.apps.filter(a=>a.installedVersion).length,
     canRequestInstall:state.apps.some(a=>a.installable),
     validAccessChecks:true,verifyAction:true,onlyApprovedWrite:'/api/verify',

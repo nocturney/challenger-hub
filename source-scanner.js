@@ -24,8 +24,9 @@ const UPSTREAMS={
   ]
 };
 function safeEntry(input){
- if(!input || !ID_PATTERN.test(input.id||'') || !REPO_PATTERN.test(input.repository||''))return null;
- return {id:input.id,repository:input.repository,kind:input.kind==='craft'?'craft':'independent'};
+ const id=String(input?.id||'').toLowerCase();
+ if(!ID_PATTERN.test(id)||!REPO_PATTERN.test(input.repository||''))return null;
+ return {id,repository:input.repository,kind:input.kind==='craft'?'craft':'independent'};
 }
 function allTasks(rows){
  const map=new Map();
@@ -116,7 +117,8 @@ function makeScanner({root,list,config,fetcher,discovery,onChange,knownTag,logge
  const file=path.join(root,'source-signals.json');
  const db=readCache(file);
  const getFetch=fetcher||fetch;
- let active=false,timer=null,forceIds=new Set(),forceSince=0,lastError='',mostRecent=null,attempts=0,successes=0;
+ let activeCount=0,timer=null,forceIds=new Set(),forceSince=0,lastError='',mostRecent=null,attempts=0,successes=0;
+ let draining=false,manualProgress=null;const inFlight=new Set();
  const log=(type,msg)=>{if(logger)logger(type,msg)};
  const current=()=>allTasks(list());
  function prefs(){
@@ -126,14 +128,16 @@ function makeScanner({root,list,config,fetcher,discovery,onChange,knownTag,logge
  }
  function due(row,manual){
   const now=clock();
-  if(row?.lastAttempt && now-Date.parse(row.lastAttempt)<(row.error?60*60*1000:0))return false;
+  // Explicit user refresh retries once even after an ordinary failure; host backoff is still enforced by request().
   if(manual)return true;
+  if(row?.lastAttempt&&row.error&&now-Date.parse(row.lastAttempt)<60*60*1000)return false;
   return !row?.lastChecked||now-Date.parse(row.lastChecked)>=prefs().hours*3600*1000;
  }
  function pick(){
   const entries=current(),total=entries.length;
   for(let j=0;j<total;j++){
    const at=(Number(db.cursor||0)+j)%total,entry=entries[at],row=db.items[entry.id];
+   if(inFlight.has(entry.id)||(forceIds.size>0&&!forceIds.has(entry.id)))continue;
    if(!due(row,forceIds.has(entry.id)))continue;
    db.cursor=(at+1)%total;
    return entry;
@@ -141,7 +145,8 @@ function makeScanner({root,list,config,fetcher,discovery,onChange,knownTag,logge
   return null;
  }
  function publicSignal(id){
-  const x=db.items[id];if(!x)return null;
+  const key=String(id||'').toLowerCase();
+  const x=db.items[key]||db.items[id];if(!x)return null;
   return {sourceHost:x.sourceHost||null,sourceLabel:x.sourceLabel||null,checkedAt:x.lastChecked||null,
    signalTag:x.tag||null,signalType:x.signalType||null,unverified:x.signalType==='tag',verificationPending:!!x.pendingVerification,error:x.error||null};
  }
@@ -149,8 +154,10 @@ function makeScanner({root,list,config,fetcher,discovery,onChange,knownTag,logge
   const tasks=current(),rows=tasks.filter(x=>x.kind!=='directory'),lastSuccess=rows.map(x=>db.items[x.id]).filter(x=>x?.lastChecked).length;
   const dueCount=rows.filter(x=>due(db.items[x.id],forceIds.has(x.id))).length;
   const cfg=prefs(),failed=rows.filter(x=>!!db.items[x.id]?.error).length;
-  return {scanning:active||forceIds.size>0,lastSyncAt:mostRecent||db.lastActivity||null,error:failed?failed+' source checks need retry; cached information remains available':lastError==='Could not save source signals'?lastError:'',failed,pendingUnverified:rows.filter(x=>db.items[x.id]?.signalType==='tag').length,
-   checked:lastSuccess,total:rows.length,due:dueCount,queued:forceIds.size,intervalHours:cfg.hours,
+  const fresh=rows.filter(x=>{const at=Date.parse(db.items[x.id]?.lastChecked||'');return Number.isFinite(at)&&clock()-at<cfg.hours*3600000}).length;
+  return {scanning:activeCount>0||forceIds.size>0,lastSyncAt:mostRecent||db.lastActivity||null,error:failed?failed+' source checks need retry; cached information remains available':lastError==='Could not save source signals'?lastError:'',failed,pendingUnverified:rows.filter(x=>db.items[x.id]?.signalType==='tag').length,
+   checked:lastSuccess,fresh,total:rows.length,due:dueCount,queued:forceIds.size,
+   scanProgress:manualProgress?{...manualProgress,queued:forceIds.size,active:activeCount}:null,intervalHours:cfg.hours,
    sourceProviders:['GitHub Atom','GitLab','KDE Invent','Codeberg'],preferences:config?config():{autoCheck:true,intervalHours:12}};
  }
  async function request(url,host,prev,kind){
@@ -193,7 +200,10 @@ function makeScanner({root,list,config,fetcher,discovery,onChange,knownTag,logge
    const source=choices[index];
    if(!['github.com','gitlab.com','invent.kde.org','codeberg.org'].includes(source.host))throw Error('Unapproved source host');
    const etagKey=source.url;
-   const result=await request(source.url,source.host,updated.etagByHost[etagKey],source.kind);
+   // A conditional 304 is meaningful only with a prior successfully parsed signal.
+   // Historical ETags without lastChecked/sourceUrl must be refetched unconditionally.
+   const canRevalidate=old.sourceUrl===source.url&&!!old.lastChecked;
+   const result=await request(source.url,source.host,canRevalidate?updated.etagByHost[etagKey]:null,source.kind);
    if(result.kind==='missing'&&source.kind==='github-atom'){
     got=true;used=source;signal=old.tag?{type:old.signalType||'none',tag:old.tag,url:old.url||null}:{type:'none',tag:null};break;
    }
@@ -235,21 +245,54 @@ function makeScanner({root,list,config,fetcher,discovery,onChange,knownTag,logge
   db.items[entry.id]=updated;
  }
  async function tick({force=false}={}){
-  if(active||(!prefs().enabled&&!force))return {skipped:true};
-  const entry=pick();if(!entry)return {skipped:true,reason:'All tracked projects refreshed'};
-  active=true;
-  try{await checkOne(entry)}catch(e){lastError=String(e.message).slice(0,125);log('error','Source probe failed for '+entry.id);}
-  finally{
-   attempts++;forceIds.delete(entry.id);
+  if(activeCount>=3||(!force&&activeCount>0)||(!prefs().enabled&&!force))return {skipped:true};
+  const entry=pick();if(!entry)return {skipped:true,reason:'No eligible project'};
+  activeCount++;inFlight.add(entry.id);
+  try{await checkOne(entry)}
+  catch(e){lastError=String(e.message).slice(0,125);log('error','Source probe failed for '+entry.id);
+    db.items[entry.id]={...(db.items[entry.id]||{}),lastAttempt:new Date(clock()).toISOString(),error:lastError};
+  }finally{
+   attempts++;
+   const inBatch=forceIds.delete(entry.id);
+   if(inBatch&&manualProgress){
+    manualProgress.completed++;
+    if(db.items[entry.id]?.error)manualProgress.failed++;
+    if(!forceIds.size)manualProgress.finishedAt=new Date(clock()).toISOString();
+   }
    try{safePersist(file,db)}catch(e){lastError='Could not save source signals';log('error',lastError)}
-   active=false;
+   inFlight.delete(entry.id);activeCount--;
   }
   return {id:entry.id,status:db.items[entry.id]?.error?'unavailable':'checked',count:current().length};
  }
  function requestAll(){
-  if(clock()-forceSince<30*60*1000)return {queued:forceIds.size,cooldown:true};
+  if(forceIds.size||clock()-forceSince<2*60*1000)return {queued:forceIds.size,cooldown:true};
   forceSince=clock();forceIds=new Set(current().map(x=>x.id));
+  manualProgress={total:forceIds.size,completed:0,failed:0,startedAt:new Date(clock()).toISOString(),finishedAt:null};
   return {queued:forceIds.size,cooldown:false};
+ }
+ async function drainRequested(){
+  if(draining)return {running:true,queued:forceIds.size};
+  if(!forceIds.size)return {running:false,queued:0};
+  draining=true;
+  const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  try{
+   const workers=Array.from({length:3},(_,worker)=>(async()=>{
+    if(worker)await pause(worker*350);
+    let misses=0;
+    while(forceIds.size){
+     const result=await tick({force:true});
+     if(result.skipped){
+      if(activeCount===0&&++misses>15)break;
+      await pause(180);continue;
+     }
+     misses=0;
+     await pause(950); // bounded network burst; host rate-limits/backoff are honored
+    }
+   })());
+   await Promise.all(workers);
+   if(!forceIds.size){db.roundCompleted=(db.roundCompleted||0)+1;safePersist(file,db)}
+  }finally{draining=false}
+  return {running:false,queued:forceIds.size};
  }
  function start(){
   if(disableTimers||process.env.CHALLENGER_DISABLE_SCAN==='1')return;
@@ -257,6 +300,6 @@ function makeScanner({root,list,config,fetcher,discovery,onChange,knownTag,logge
   timer=setInterval(()=>tick().catch(e=>log('error',String(e))),CHECK_INTERVAL_MS);timer.unref();
  }
  function stop(){if(timer)clearInterval(timer);timer=null}
- return {start,stop,tick,requestAll,status,publicSignal,sourcesFor,allTasks,current,readSnapshot:()=>JSON.parse(JSON.stringify(db))};
+ return {start,stop,tick,requestAll,drainRequested,status,publicSignal,sourcesFor,allTasks,current,readSnapshot:()=>JSON.parse(JSON.stringify(db))};
 }
 module.exports={makeScanner,allTasks,sourcesFor,atomRelease,parseResponse,readCache};

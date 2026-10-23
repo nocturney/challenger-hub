@@ -1,0 +1,145 @@
+    private readonly object logGate = new();
+    private int port = 0;
+    private readonly string sessionToken = Convert.ToHexString(RandomNumberGenerator.GetBytes(32));
+    private Process? ownedService;
+    private string BaseUrl => "http://127.0.0.1:" + port + "/";
+    private static string RuntimeRoot => System.IO.Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "VelvetOS", "ChallengerFocusDesktop", "Preview6", "runtime");
+    private static string WebViewRoot => System.IO.Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "VelvetOS", "ChallengerFocusDesktop", "Preview6", "WebView2");
+    private static string LogPath => System.IO.Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "VelvetOS", "ChallengerFocusDesktop", "Preview6", "startup.log");
+
+    private static bool IsAdministrator()
+    {
+        using var identity = WindowsIdentity.GetCurrent();
+        return new WindowsPrincipal(identity).IsInRole(WindowsBuiltInRole.Administrator);
+    }
+
+    private static int FreeLoopbackPort()
+    {
+        var socket = new TcpListener(IPAddress.Loopback, 0);
+        socket.Start();
+        try { return ((IPEndPoint)socket.LocalEndpoint).Port; }
+        finally { socket.Stop(); }
+    }
+
+    private static void ValidateRuntime(string root)
+    {
+        var rootPrefix = System.IO.Path.GetFullPath(root) + System.IO.Path.DirectorySeparatorChar;
+        var manifestFile = System.IO.Path.Combine(root, "SHA256-MANIFEST.json");
+        if (!System.IO.File.Exists(manifestFile)) throw new InvalidOperationException("Missing payload integrity manifest");
+        var manifestDigest = Convert.ToHexString(SHA256.HashData(System.IO.File.ReadAllBytes(manifestFile)));
+        if (manifestDigest != "PINNED_RUNTIME_MANIFEST_SHA256")
+            throw new InvalidOperationException("Local runtime integrity manifest changed");
+        using var doc = JsonDocument.Parse(System.IO.File.ReadAllText(manifestFile));
+        var count = 0;
+        foreach (var pair in doc.RootElement.EnumerateObject())
+        {
+            var relative = pair.Name.Replace('/', System.IO.Path.DirectorySeparatorChar);
+            var file = System.IO.Path.GetFullPath(System.IO.Path.Combine(root, relative));
+            if (!file.StartsWith(rootPrefix, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException("Payload path escaped its private directory");
+            if (!System.IO.File.Exists(file)) throw new InvalidOperationException("Payload missing: " + pair.Name);
+            var digest = Convert.ToHexString(SHA256.HashData(System.IO.File.ReadAllBytes(file)));
+            if (!digest.Equals(pair.Value.GetString(), StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException("Payload integrity check failed: " + pair.Name);
+            ++count;
+        }
+        if (count < 67) throw new InvalidOperationException("Incomplete app payload");
+        var node = System.IO.Path.Combine(root, "node.exe");
+        if (!System.IO.File.Exists(node) || !System.IO.File.Exists(System.IO.Path.Combine(root, "NODE-LICENSE.txt")))
+            throw new InvalidOperationException("Bundled Node.js runtime/license missing");
+    }
+
+    private static void EnsurePayload()
+    {
+        var root = RuntimeRoot;
+        if (System.IO.Directory.Exists(root)) { ValidateRuntime(root); return; }
+        System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(root)!);
+        var tmp = root + ".extract-" + Guid.NewGuid().ToString("N");
+        try
+        {
+            System.IO.Directory.CreateDirectory(tmp);
+            using var stream = System.Reflection.Assembly.GetExecutingAssembly()
+                .GetManifestResourceStream("Challenger.Focus.EmbeddedPayload")
+                ?? throw new InvalidOperationException("Single-file engine resource not found");
+            using var archive = new ZipArchive(stream, ZipArchiveMode.Read);
+            var prefix = System.IO.Path.GetFullPath(tmp) + System.IO.Path.DirectorySeparatorChar;
+            long expanded = 0;
+            foreach (var entry in archive.Entries)
+            {
+                var destination = System.IO.Path.GetFullPath(
+                    System.IO.Path.Combine(tmp, entry.FullName.Replace('/', System.IO.Path.DirectorySeparatorChar)));
+                if (!destination.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidOperationException("Unsafe embedded payload path");
+                expanded += entry.Length;
+                if (expanded > 700_000_000) throw new InvalidOperationException("Payload expansion limit exceeded");
+                if (entry.FullName.EndsWith("/", StringComparison.Ordinal))
+                { System.IO.Directory.CreateDirectory(destination); continue; }
+                System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(destination)!);
+                using var input = entry.Open();
+                using var output = System.IO.File.Create(destination);
+                input.CopyTo(output);
+            }
+            ValidateRuntime(tmp);
+            try { System.IO.Directory.Move(tmp, root); }
+            catch (System.IO.IOException) when (System.IO.Directory.Exists(root))
+            { ValidateRuntime(root); }
+        }
+        finally { if (System.IO.Directory.Exists(tmp)) System.IO.Directory.Delete(tmp, recursive:true); }
+    }
+
+    private static void CopyExistingMetadata()
+    {
+        var legacy = @"D:\Velvet\Installers\CraftSuite\Center";
+        foreach (var name in new[] { "catalog-cache.json", "source-signals.json", "managed-installs.json" })
+        {
+            var oldFile = System.IO.Path.Combine(legacy, name);
+            var newFile = System.IO.Path.Combine(RuntimeRoot, name);
+            if (System.IO.File.Exists(oldFile) && !System.IO.File.Exists(newFile))
+                System.IO.File.Copy(oldFile, newFile);
+        }
+    }
+
+    private void LogEngine(string line)
+    {
+        try {
+            lock (logGate) {
+                System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(LogPath)!);
+                System.IO.File.AppendAllText(LogPath,
+                    DateTimeOffset.Now.ToString("O") + " " + line + Environment.NewLine);
+            }
+        } catch { /* Diagnostic logging must never interrupt service startup. */ }
+    }
+
+    private Task RunStartupScript() => Task.Run(() =>
+    {
+        EnsurePayload();
+        CopyExistingMetadata();
+        if (ownedService is { HasExited: false }) ownedService.Kill(true);
+        port = FreeLoopbackPort();
+        var info = new ProcessStartInfo {
+            FileName = System.IO.Path.Combine(RuntimeRoot, "node.exe"),
+            WorkingDirectory = RuntimeRoot,
+            UseShellExecute = false, CreateNoWindow = true,
+            RedirectStandardOutput = true, RedirectStandardError = true,
+            WindowStyle = ProcessWindowStyle.Hidden
+        };
+        info.ArgumentList.Add(System.IO.Path.Combine(RuntimeRoot, "server.js"));
+        info.Environment["CRAFT_CENTER_PORT"] = port.ToString();
+        info.Environment["CHALLENGER_DESKTOP_SESSION"] = sessionToken;
+        info.Environment.Remove("CHALLENGER_DISABLE_SCAN");
+        LogEngine("Starting private Preview 6 engine on 127.0.0.1:" + port +
+            " account=" + Environment.UserName + " elevated=" + IsAdministrator());
+        var worker = new Process { StartInfo = info, EnableRaisingEvents = true };
+        worker.OutputDataReceived += (_, e) => { if(e.Data is not null) LogEngine("stdout: " + e.Data); };
+        worker.ErrorDataReceived += (_, e) => { if(e.Data is not null) LogEngine("stderr: " + e.Data); };
+        if (!worker.Start()) throw new InvalidOperationException("Could not start bundled Node engine");
+        worker.BeginOutputReadLine();
+        worker.BeginErrorReadLine();
+        ownedService = worker;
+    });
