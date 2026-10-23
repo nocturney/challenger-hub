@@ -34,3 +34,6 @@ Sources-v*/
 Catalog-v*/
 .local/
 *rollback*.json
+
+# Generated and locally signed Focus Desktop app bundles
+tools/desktop-build/dist/

@@ -1,0 +1,25 @@
+/* Desktop Focus control surfaces — subordinate to existing Orbit design system. */
+.live-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;
+ padding:11px max(24px,calc((100vw - 1320px)/2));border-bottom:1px solid var(--line);
+ background:var(--paper);font-size:12px}
+.live-toolbar #focusStatus{margin-right:auto;color:var(--muted)}
+.live-toolbar button,.focus-action{border:1px solid var(--line);border-radius:8px;
+ background:var(--white);padding:8px 12px;color:var(--ink);font:inherit;
+ font-size:12px;cursor:pointer}
+.live-toolbar button:hover,.focus-action:hover{border-color:var(--accent);color:var(--accent)}
+.live-toolbar button:disabled,.focus-action:disabled{opacity:.42;cursor:wait}
+.live-toolbar button[hidden]{display:none}
+.focus-operation-notice{padding:10px max(24px,calc((100vw - 1320px)/2));
+ background:var(--accent-surface);color:var(--accent);font-size:12px}
+.focus-operation-notice.error{background:#a8353513;color:#af4747}
+.focus-action-group{display:flex;align-items:start;flex-wrap:wrap;gap:10px;margin-top:17px}
+.focus-action-group .focus-action{font-weight:680}
+.focus-action-caveat{color:var(--muted);font-size:11px;line-height:1.55;margin-top:12px}
+#projectDocument .project-identity-status .focus-action-group{display:flex}
+#projectDocument .project-identity-status button.focus-action{color:var(--accent);border-color:var(--accent)}
+@media(max-width:700px){
+ .live-toolbar{padding:9px 16px;gap:7px}
+ .live-toolbar #focusStatus{width:100%;margin-right:0}
+ .live-toolbar button{padding:7px 9px;font-size:11px}
+ .focus-operation-notice{padding:9px 16px}
+}
