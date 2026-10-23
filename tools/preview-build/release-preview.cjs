@@ -69,7 +69,11 @@ function requireArchive(){
  return {...v,zipSHA256:sha(fs.readFileSync(zip)),zip};
 }
 function release(){
- return JSON.parse(gh(['api','repos/'+repo+'/releases/tags/'+tag]));
+ // GitHub's /releases/tags REST endpoint can 404 on a DRAFT; gh release view handles drafts.
+ const x=JSON.parse(gh(['release','view',tag,'--repo',repo,
+  '--json','isDraft,isPrerelease,targetCommitish,assets,url']));
+ return {draft:x.isDraft,prerelease:x.isPrerelease,target_commitish:x.targetCommitish,
+  assets:x.assets,html_url:x.url};
 }
 function requireCleanGit(){
  if(run('git',['-C',source,'status','--porcelain']))throw Error('Cannot release with dirty source checkout');
