@@ -15,6 +15,7 @@ const repositoryMedia=require('./repository-media');
 const independentSourceMedia=require('./independent-source-media');
 const managedInstallStatus=require('./managed-install-status');
 const projectQuality=require('./project-quality');
+const catalogHealth=require('./catalog-health');
 const hubChecker=selfUpdates.makeUpdateChecker({root:__dirname});
 
 const HOST='127.0.0.1';
@@ -108,7 +109,8 @@ function readCuratedDiscoveries(){
       enriched.primaryLanguage=observed.primaryLanguage||null;
       enriched.topics=observed.topics||[];
     }
-    return {...enriched,...projectQuality.assess(enriched),...officialIcons.iconMeta(enriched)};
+    return {...enriched,repositoryHealth:catalogHealth.assess(observed),
+      ...projectQuality.assess(enriched),...officialIcons.iconMeta(enriched)};
   });
 }
 function readSources(){
@@ -784,7 +786,7 @@ const server=http.createServer(async(req,res)=>{
       catalogStatus:{checkedAt:catalog.checkedAt,scanning:catalog.scanning,lastAttempt:catalog.lastAttempt,
         releaseFailures:catalog.releaseFailures,refreshedReleases:catalog.refreshedReleases,
         count:catalog.apps.length,error:catalog.scanError,registryUpdated:'2026-10-10'},
-      registryStatus:registryLive.status(ROOT),
+      registryStatus:{...registryLive.status(ROOT),health:catalogHealth.summary(registryLive.read(ROOT).items)},
       checkedAt:scanner.status().lastSyncAt||catalog.checkedAt,scanning:scanner.status().scanning||catalog.scanning,
       scanError:[scanner.status().error,catalog.scanError].filter(Boolean).join(' | '),
       active:run.active,queue:run.queue,history:run.history.slice(-45)});

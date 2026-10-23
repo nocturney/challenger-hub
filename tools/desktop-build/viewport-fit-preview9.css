@@ -1,0 +1,49 @@
+/* Focus v8: visible app version, verified Hub update check and viewport-fit opening. */
+.hub-version{display:inline-flex;align-items:center;white-space:nowrap;color:var(--accent);
+ font:730 10px/1.2 "Segoe UI Variable",sans-serif;letter-spacing:.035em;padding:5px 8px;
+ border-radius:6px;background:var(--accent-surface);border:1px solid var(--line)}
+.hub-update-controls{display:flex;align-items:center;gap:9px;min-width:0}
+.hub-update-button{background:transparent;border:1px solid var(--line);border-radius:5px;
+ padding:7px 10px;font-size:10px;font-weight:720;white-space:nowrap}
+.hub-update-button:hover{border-color:var(--accent);color:var(--accent)}
+.hub-update-state{color:var(--muted);font:600 10px/1.3 "Segoe UI Variable",sans-serif;white-space:nowrap}
+.hub-update-state.new{color:var(--status);font-weight:730}
+.hub-update-link{color:var(--accent);font-size:10px;font-weight:760;white-space:nowrap}
+.hub-update-controls [hidden]{display:none!important}
+@media(max-width:1320px){.hub-update-state,.hub-update-link{display:none}.global-header{gap:14px}}
+@media(max-width:900px){.hub-update-controls{gap:5px}.hub-version{font-size:9px;padding:5px}
+ .hub-update-button{font-size:9px;padding:6px}.brand-context{display:none}
+ .global-header{gap:8px}.main-tab{padding:0 10px}}
+@media(max-width:660px){.hub-update-button{font-size:0;width:27px;height:27px;padding:0}
+ .hub-update-button:before{content:"↻";font-size:18px}
+ .hub-version{font-size:9px}.brand strong{font-size:13px}
+ .hub-update-controls{gap:4px}.header-utilities{gap:5px}}
+@media(max-width:600px){.brand strong{display:none}.hub-version{font-size:0;padding:4px 5px}
+ .hub-version:after{content:"P9";font-size:10px}}
+@media(max-width:420px){.header-utilities{margin-left:0}.main-tab{padding:0 7px}}
+@media(min-width:831px) and (max-height:980px){
+ .global-header{height:59px;min-height:59px}
+ .home-screen{padding:22px 0 28px;min-height:0}
+ .home-opening{margin-bottom:18px}
+ .home-opening h1{font-size:clamp(43px,5vw,64px);line-height:1.02;margin:10px 0 10px}
+ .home-description{font-size:12px;margin:0 0 12px;line-height:1.4}
+ .hero-search{min-height:53px;gap:11px}
+ .hero-search input{height:51px;font-size:15px}
+ .hero-search button{height:36px;font-size:11px}
+ .search-hint{margin:6px 0 0}
+ .section-heading{padding:8px 0 9px}
+ .discipline-row{padding:7px 0}
+ .recent-item{padding:8px 0}
+ .home-directory{gap:42px}
+ .global-footer{min-height:42px;padding-top:6px;padding-bottom:6px}
+ .screen{min-height:calc(100dvh - 150px)}
+}
+@media(min-width:831px) and (max-height:745px){
+ .home-opening h1{font-size:clamp(39px,4.4vw,56px)}
+ .home-screen{padding-top:13px}
+ .home-opening{margin-bottom:12px}
+ .discipline-row{padding:5px 0}
+ .recent-item{padding:6px 0}
+ .live-toolbar{padding-top:7px;padding-bottom:7px}
+ .global-footer{min-height:36px}
+}

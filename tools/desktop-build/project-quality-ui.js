@@ -6,7 +6,8 @@
   originalSuggestions=renderSuggestions,originalBrowse=renderBrowse,
   originalRow=renderRow,originalStatus=installStatus,originalDocument=renderDocument;
  ui.includeIncomplete=false;
- function isDocumented(a){return a.discovery?a.profileTier==='documented':
+ function isDocumented(a){return a.discovery?
+  (a.profileTier==='documented'&&!['archived','disabled','quiet-12m'].includes(a.repositoryHealth?.state)):
   !!(a.releaseTag||a.latestVersion||a.installedVersion||a.installable)}
  function isShown(a){return ui.includeIncomplete||isDocumented(a)}
  function useful(){return projects.filter(isShown)}
@@ -37,6 +38,12 @@
   try{return originalSuggestions()}finally{projects=all}
  };
  installStatus=function(a){
+  if(a.discovery){
+   if(a.repositoryHealth?.state==='archived')return {text:'ARCHIVED upstream',kind:'caution'};
+   if(a.repositoryHealth?.state==='disabled')return {text:'Source disabled',kind:'caution'};
+   if(a.repositoryHealth?.state==='quiet-12m')return {text:'12+ months quiet',kind:'caution'};
+   if(a.repositoryHealth?.state==='quiet-6m')return {text:'6+ months quiet',kind:'caution'};
+  }
   if(!a.discovery&&a.installEvidence){
    const status=a.installEvidence.state;
    if(status==='Checking')return {text:'Checking official release',kind:''};
@@ -136,6 +143,11 @@
   if(source){
    const issue=app.profileCompleteness?.missing||[];
    source.innerHTML='<h2>INFORMATION / INSTALLATION</h2>'+
+    (app.repositoryHealth?.state&&app.repositoryHealth.state!=='active'?'<p class="warning-note"><strong>Upstream activity:</strong> '+
+       esc(app.repositoryHealth.state==='archived'?'GitHub repository archived by maintainer':
+          app.repositoryHealth.state==='quiet-12m'?'No repository push for 12+ months; review maintenance status':
+          app.repositoryHealth.state==='quiet-6m'?'No repository push for 6+ months; not proof of abandonment':
+          app.repositoryHealth.state==='disabled'?'Repository disabled':'Activity not verified')+'</p>':'')+
     '<p>'+esc(app.profileTier==='documented'?
      'Product profile has a source-linked description, reviewed platforms and commercial context.':
      'Research profile is incomplete; it is excluded from standard browsing.')+'</p>'+
