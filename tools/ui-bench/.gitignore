@@ -1,0 +1,7 @@
+electron/node_modules/
+slint/target/
+tauri/src-tauri/target/
+tauri/src-tauri/gen/schemas/
+results/*.log
+results/webkit-*.txt
+.DS_Store

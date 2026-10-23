@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data:; connect-src ipc: http://ipc.localhost; img-src 'self' data:; object-src 'none'; base-uri 'self'">
+<title>Challenger — Renderer Comparison</title>
+<link rel="stylesheet" href="./style.css">
+<script defer src="./app.js"></script>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <div class="brand"><span class="brand-glyph">✦</span><div><strong>CHALLENGER</strong><small>Independent tools, discovered.</small></div></div>
+    <nav class="nav" aria-label="Main navigation"><span class="active">Explore</span><span>My software</span><span>Activity</span></nav>
+    <div class="shell-info"><span class="live-dot"></span><span id="renderer-name">BENCHMARK</span></div>
+  </header>
+  <div class="body-grid">
+    <aside class="sidebar">
+      <div class="side-eyebrow">WORKSPACE</div><h2>Explore</h2>
+      <p>Search more freely. Discover independent alternatives.</p>
+      <div class="side-rule"></div><div class="side-eyebrow">DISCIPLINES</div>
+      <div id="categories" class="categories"></div>
+      <div class="sidebar-footnote">Source-linked preview data<br>14 managed · 152 curated · 15 research</div>
+    </aside>
+    <main class="content">
+      <section class="hero"><div class="eyebrow">THE INDEPENDENT SOFTWARE UNIVERSE <span>·</span> ORBIT</div>
+        <h1>Find tools that <em>move you forward.</em></h1>
+        <p>The right application for the work you love. Explore real sources, alternatives and emerging ideas.</p>
+        <label class="search-wrap" aria-label="Search all software"><span aria-hidden="true">⌕</span><input id="search" type="search" autocomplete="off" spellcheck="false" placeholder="Search tools, categories or capabilities…"><kbd>⌘ K</kbd></label>
+      </section>
+      <div class="section-head"><div><span class="eyebrow">DISCOVER</span><h2>Independent software</h2></div><div><span class="count"><strong id="count">181</strong> results</span></div></div>
+      <div id="cards" class="cards" role="list"></div>
+      <div class="trust">Compatibility reports are not installation approval. This comparison performs no installation.</div>
+    </main>
+    <aside class="detail" id="detail">
+      <div class="detail-eyebrow">PROJECT OVERVIEW</div><div id="detail-content"></div>
+    </aside>
+  </div>
+</div>
+</body>
+</html>
