@@ -91,6 +91,7 @@ function createWindow(token){
  window=new BrowserWindow({
   width:1100,height:760,minWidth:720,minHeight:500,show:!smoke,backgroundColor:'#f7f6f2',
   title:'Challenger Hub · Cross-platform Pilot',
+  ...(process.platform==='linux'?{icon:path.join(sourceRuntime,'brand','orbit','export','orbit-app-256.png')}:{}),
   webPreferences:{nodeIntegration:false,contextIsolation:true,sandbox:true,webSecurity:true,
    partition:'persist:challenger-crossplatform-pilot12'}
  });

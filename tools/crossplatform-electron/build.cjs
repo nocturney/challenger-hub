@@ -1,6 +1,6 @@
 'use strict';
-const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
-const packageElectron=require('@electron/packager');
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),cp=require('node:child_process');
+const {packager:packageElectron}=require('@electron/packager');
 const policy=require('./shell-policy.cjs');
 async function main(argv=process.argv.slice(2)){
  const [platform,arch]=argv;
@@ -19,19 +19,34 @@ async function main(argv=process.argv.slice(2)){
   name,executableName:'ChallengerHubPilot12',
   appBundleId:'io.velvetos.challenger.crossplatform-pilot12',
   appVersion:'4.0.0',buildVersion:'4012',
-  ...(platform==='darwin'||platform==='win32'?{icon}:{}),
+  ...(platform==='win32'?{icon}:{}),
   extraResource:[runtime],asar:true,prune:true,overwrite:false,
   ignore:[/[/\\]dist[/\\]/,/[/\\]package-lock\.json$/,/[/\\]build\.cjs$/]
  });
  if(paths.length!==1)throw Error('Expected one packaged app result');
- const folder=paths[0],extra=platform==='darwin'?
-  path.join(folder,'Contents','Resources','runtime-preview12'):
+ const folder=paths[0],bundle=platform==='darwin'?path.join(paths[0],name+'.app'):paths[0],extra=platform==='darwin'?
+  path.join(folder,name+'.app','Contents','Resources','runtime-preview12'):
   path.join(folder,'resources','runtime-preview12');
  if(!fs.existsSync(extra))throw Error('Verified backend missing from Electron resources');
  const result=policy.verifyBundled(extra);
+ let distribution=null;
+ if(platform==='darwin'){
+  const contents=path.join(bundle,'Contents'),resources=path.join(contents,'Resources');
+  const plist=path.join(contents,'Info.plist');
+  fs.copyFileSync(icon,path.join(resources,'challenger-orbit.icns'));
+  cp.execFileSync('/usr/libexec/PlistBuddy',['-c','Set :CFBundleIconFile challenger-orbit.icns',plist]);
+  cp.execFileSync('/usr/bin/codesign',['--force','--deep','--sign','-',bundle],{timeout:90000});
+  cp.execFileSync('/usr/bin/codesign',['--verify','--deep','--strict',bundle],{timeout:20000});
+  const dmg=path.join(out,'ChallengerHubPilot12-macOS-'+arch+'.dmg');
+  cp.execFileSync('/usr/bin/hdiutil',['create','-volname','Challenger Hub Pilot 12',
+   '-srcfolder',bundle,'-format','UDZO',dmg],{timeout:180000});
+  distribution={name:path.basename(dmg),bytes:fs.statSync(dmg).size,
+   sha256:crypto.createHash('sha256').update(fs.readFileSync(dmg)).digest('hex')};
+ }
  const proof={schema:'challenger-crossplatform-pilot-package.v1',platform,arch,
   app:folder,version:manifest.version,bundledFiles:result.files,
-  signed:false,notarized:false,installApprovalAdded:false,requiresOperatorReview:true};
+  signed:platform==='darwin'?'ad-hoc-only':false,notarized:false,
+  distribution,installApprovalAdded:false,requiresOperatorReview:true};
  fs.writeFileSync(path.join(out,'package-evidence.json'),JSON.stringify(proof,null,2)+'\n');
  console.log('CHALLENGER_ELECTRON_PILOT_PACKAGED '+JSON.stringify(proof));
 }
