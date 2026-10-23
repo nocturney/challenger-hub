@@ -1,0 +1,947 @@
+{
+  "schema": "challenger-independent-media.v1",
+  "reviewedAt": "2026-10-23",
+  "policy": "Explicit vetted upstream repo paths, pinned commit+Git blob+SHA256. Image bytes never bundled or redistributed. On-demand verified source fetch only. Source provenance attached. No unreviewed research project is installable.",
+  "stats": {
+    "requested": 63,
+    "accepted": 62,
+    "projects": 36,
+    "screenshots": 46,
+    "icons": 16,
+    "failed": 1
+  },
+  "apps": {
+    "activepieces": {
+      "repository": "activepieces/activepieces",
+      "commit": "6f4be340d7c4bef9fb6ff874ca72224e4933d3d2",
+      "reviewStatus": "repository-confirmed",
+      "license": null,
+      "icon": null,
+      "screenshots": [
+        {
+          "path": "docs/resources/screenshots/using-activepieces-overview-main-screen.png",
+          "gitBlobSha": "ce425ec5e11a57a4e219562625fbfe087b296fcf",
+          "sha256": "e2986392c9ac30b831ad9561266098ed1247eac14ed0def246160bfd5d49ba51",
+          "bytes": 621115,
+          "width": 2084,
+          "height": 1398,
+          "format": "png",
+          "source": "https://github.com/activepieces/activepieces/blob/6f4be340d7c4bef9fb6ff874ca72224e4933d3d2/docs/resources/screenshots/using-activepieces-overview-main-screen.png"
+        },
+        {
+          "path": "docs/resources/screenshots/using-activepieces-overview-piece-settings.png",
+          "gitBlobSha": "f201d3028f01c6c116d8db4a4d7ac3a26d6a38cf",
+          "sha256": "dacf8bfe63ec013d72f77dda6f259dcd6470a2637fe11cc6cd2ff543517258a9",
+          "bytes": 763958,
+          "width": 2080,
+          "height": 1406,
+          "format": "png",
+          "source": "https://github.com/activepieces/activepieces/blob/6f4be340d7c4bef9fb6ff874ca72224e4933d3d2/docs/resources/screenshots/using-activepieces-overview-piece-settings.png"
+        }
+      ]
+    },
+    "affine": {
+      "repository": "toeverything/AFFiNE",
+      "commit": "fbf2cebfa012a7c92b08af7bfa0340177308b2a6",
+      "reviewStatus": "repository-confirmed",
+      "license": null,
+      "icon": {
+        "path": "packages/frontend/apps/ios/App/App/Assets.xcassets/AppIcon.appiconset/light.png",
+        "gitBlobSha": "ac49d36ae38a5b3b529760989f6f2f04277fafcc",
+        "sha256": "562bfbb14d742b1439f4492f946e3d1803e34d51963e553255a2cd34f43dde36",
+        "bytes": 166720,
+        "width": 1024,
+        "height": 1024,
+        "format": "png",
+        "source": "https://github.com/toeverything/AFFiNE/blob/fbf2cebfa012a7c92b08af7bfa0340177308b2a6/packages/frontend/apps/ios/App/App/Assets.xcassets/AppIcon.appiconset/light.png"
+      },
+      "screenshots": [
+        {
+          "path": "packages/frontend/core/public/imgs/screenshot1.png",
+          "gitBlobSha": "95c7153306bbe63cbf3ff360bf2a927e72c0c487",
+          "sha256": "47446d8b9ccee03951b045166a231b52620f06d36b81fe2135916f6ade3c68d5",
+          "bytes": 847489,
+          "width": 1689,
+          "height": 1117,
+          "format": "png",
+          "source": "https://github.com/toeverything/AFFiNE/blob/fbf2cebfa012a7c92b08af7bfa0340177308b2a6/packages/frontend/core/public/imgs/screenshot1.png"
+        },
+        {
+          "path": "packages/frontend/core/public/imgs/screenshot2.png",
+          "gitBlobSha": "5837f6c84cf0885946e58e735936908b6e6a2520",
+          "sha256": "da75ec805ea256adf0d54a51b7dc54face555fb261f050e1e90b209199697a23",
+          "bytes": 461516,
+          "width": 1689,
+          "height": 1117,
+          "format": "png",
+          "source": "https://github.com/toeverything/AFFiNE/blob/fbf2cebfa012a7c92b08af7bfa0340177308b2a6/packages/frontend/core/public/imgs/screenshot2.png"
+        }
+      ]
+    },
+    "akaunting": {
+      "repository": "akaunting/akaunting",
+      "commit": "06dfa473e0d71a5262a58f6f0759c6badf34d5d2",
+      "reviewStatus": "repository-confirmed",
+      "license": null,
+      "icon": null,
+      "screenshots": [
+        {
+          "path": "public/img/pwa/screenshot-dashboard.png",
+          "gitBlobSha": "7d5c1ca1916aa0a716792a875135aeea6aff1321",
+          "sha256": "5da01d7b3becf585ed27fd0c9980df80f99992f50c100026244ba3ca9bda98ba",
+          "bytes": 374201,
+          "width": 1932,
+          "height": 1394,
+          "format": "png",
+          "source": "https://github.com/akaunting/akaunting/blob/06dfa473e0d71a5262a58f6f0759c6badf34d5d2/public/img/pwa/screenshot-dashboard.png"
+        },
+        {
+          "path": "public/img/pwa/screenshot-invoice.png",
+          "gitBlobSha": "f1a17ab092ff77bc428e13f54ce4bfb090d7d37a",
+          "sha256": "4b970058f55adbbd776801873b15fc48822cb0301a7f1b2f092b34de9dc4fc6a",
+          "bytes": 479388,
+          "width": 2748,
+          "height": 1986,
+          "format": "png",
+          "source": "https://github.com/akaunting/akaunting/blob/06dfa473e0d71a5262a58f6f0759c6badf34d5d2/public/img/pwa/screenshot-invoice.png"
+        }
+      ]
+    },
+    "anythingllm": {
+      "repository": "Mintplex-Labs/anything-llm",
+      "commit": "8239cd85a22d847337215988c69a8d1c0fba3c94",
+      "reviewStatus": "repository-confirmed",
+      "license": "MIT",
+      "icon": null,
+      "screenshots": [
+        {
+          "path": "images/screenshots/upload.png",
+          "gitBlobSha": "d4b6e94a77e25b3a3130d0136fea7f134b987ee4",
+          "sha256": "aabb65516366aeff2218549a14983787bb4662f6fa864c8cef67ee927980ec45",
+          "bytes": 250271,
+          "width": 2832,
+          "height": 1402,
+          "format": "png",
+          "source": "https://github.com/Mintplex-Labs/anything-llm/blob/8239cd85a22d847337215988c69a8d1c0fba3c94/images/screenshots/upload.png"
+        },
+        {
+          "path": "images/screenshots/create_stack.png",
+          "gitBlobSha": "0ad862f1e781f61ec81ff505984be69e61a6aa8c",
+          "sha256": "a69c16cdf8a60e6fbf90be39e12e8ba4bf0bb8348d380c57b456c274821e6c13",
+          "bytes": 27917,
+          "width": 506,
+          "height": 356,
+          "format": "png",
+          "source": "https://github.com/Mintplex-Labs/anything-llm/blob/8239cd85a22d847337215988c69a8d1c0fba3c94/images/screenshots/create_stack.png"
+        }
+      ]
+    },
+    "baserow": {
+      "repository": "baserow/baserow",
+      "commit": "60ce89199d329e03768668ea89622ee3b27ecf9e",
+      "reviewStatus": "repository-confirmed",
+      "license": null,
+      "icon": null,
+      "screenshots": [
+        {
+          "path": "docs/assets/screenshot.png",
+          "gitBlobSha": "f99133c32fe492db377f37aced0d95af9d191db0",
+          "sha256": "9846723d714cb88fbea35652b3cea996bd2a6c7dca958deacbb07830b23959e5",
+          "bytes": 270044,
+          "width": 3312,
+          "height": 1990,
+          "format": "png",
+          "source": "https://github.com/baserow/baserow/blob/60ce89199d329e03768668ea89622ee3b27ecf9e/docs/assets/screenshot.png"
+        },
+        {
+          "path": "docs/assets/screenshot_dashboard.png",
+          "gitBlobSha": "865f994eda5ea8f06db1cea67ac3101ce50962e1",
+          "sha256": "c0251a5f39b461790254116b8d5aaae914d6d37f54bd432063c5ff6eb9b5478f",
+          "bytes": 92242,
+          "width": 3304,
+          "height": 1710,
+          "format": "png",
+          "source": "https://github.com/baserow/baserow/blob/60ce89199d329e03768668ea89622ee3b27ecf9e/docs/assets/screenshot_dashboard.png"
+        }
+      ]
+    },
+    "composa": {
+      "repository": "dvdstelt/Composa",
+      "commit": "86529d3b5355d28ddc28ec3db2e4de1d4d00f63b",
+      "reviewStatus": "repository-confirmed",
+      "license": null,
+      "icon": {
+        "path": "src/Composa.App/Assets/icon.png",
+        "gitBlobSha": "b7037ef5002d02c14d22a87686d02bcf16a06674",
+        "sha256": "8083157f05af502e3c9c9f214ad161217fb3621eec5e9a46438d6a09ece2fa33",
+        "bytes": 24378,
+        "width": 256,
+        "height": 256,
+        "format": "png",
+        "source": "https://github.com/dvdstelt/Composa/blob/86529d3b5355d28ddc28ec3db2e4de1d4d00f63b/src/Composa.App/Assets/icon.png"
+      },
+      "screenshots": []
+    },
+    "compositor": {
+      "repository": "robbietilton/Compositor",
+      "commit": "47cb96b83f73dbb8deda4c417e702c83b7107cab",
+      "reviewStatus": "repository-confirmed",
+      "license": "MIT",
+      "icon": {
+        "path": "Compositor/Assets.xcassets/AppIcon.appiconset/app-icon-512.png",
+        "gitBlobSha": "03c1385f1614ffce0e78e07c17dcce75c20bed24",
+        "sha256": "5e7ca117df3fe67ab4816f5c8e2fb336a41a0b832e888165fea70e0627d86ea1",
+        "bytes": 209342,
+        "width": 512,
+        "height": 512,
+        "format": "png",
+        "source": "https://github.com/robbietilton/Compositor/blob/47cb96b83f73dbb8deda4c417e702c83b7107cab/Compositor/Assets.xcassets/AppIcon.appiconset/app-icon-512.png"
+      },
+      "screenshots": []
+    },
+    "dify": {
+      "repository": "langgenius/dify",
+      "commit": "691b7929b134a04af0a78aa89cc0c7d7de7a6ad6",
+      "reviewStatus": "repository-confirmed",
+      "license": null,
+      "icon": null,
+      "screenshots": [
+        {
+          "path": "web/public/screenshots/light/TextGenerator.png",
+          "gitBlobSha": "14973451cc003c4e8ce75e7dfa874473080968aa",
+          "sha256": "2c03c8b298b201f3b9bfcfe3634df1b2fb9ab09356616e91056ccb8cb7c674f7",
+          "bytes": 26627,
+          "width": 664,
+          "height": 448,
+          "format": "png",
+          "source": "https://github.com/langgenius/dify/blob/691b7929b134a04af0a78aa89cc0c7d7de7a6ad6/web/public/screenshots/light/TextGenerator.png"
+        },
+        {
+          "path": "web/public/screenshots/dark/Chatbot.png",
+          "gitBlobSha": "1f126ff33e614a2fbd92746e27b8aced6cb7f1ca",
+          "sha256": "5a775465bac7faf5bcd4c192ef67d52b48338ca086370688ddcd3fb2a0719d8d",
+          "bytes": 28074,
+          "width": 664,
+          "height": 448,
+          "format": "png",
+          "source": "https://github.com/langgenius/dify/blob/691b7929b134a04af0a78aa89cc0c7d7de7a6ad6/web/public/screenshots/dark/Chatbot.png"
+        }
+      ]
+    },
+    "dune3d": {
+      "repository": "dune3d/dune3d",
+      "commit": "d01faaf16f309e55834c3b93dddce5c852453cfe",
+      "reviewStatus": "repository-confirmed",
+      "license": "GPL-3.0",
+      "icon": null,
+      "screenshots": [
+        {
+          "path": "screenshot.png",
+          "gitBlobSha": "3e229af7c0bb2847b2f9b0696ef823761edf6953",
+          "sha256": "56f79318ff609044b6e6f3173c77cbb541a09475353f854b667cf99d7bf1c595",
+          "bytes": 79937,
+          "width": 888,
+          "height": 639,
+          "format": "png",
+          "source": "https://github.com/dune3d/dune3d/blob/d01faaf16f309e55834c3b93dddce5c852453cfe/screenshot.png"
+        }
+      ]
+    },
+    "filaops": {
+      "repository": "BLB3DPrinting/filaops",
+      "commit": "4b302a8a014163775d2b85fb782379f489edc043",
+      "reviewStatus": "repository-confirmed",
+      "license": null,
+      "icon": null,
+      "screenshots": [
+        {
+          "path": "frontend/docs/screenshots/sop/dashboard-page.png",
+          "gitBlobSha": "7def4aace84f985c95fff7020b8b45c95957357a",
+          "sha256": "6eb3379cd6cf49518e0a78e2250a2da889ba67b22dff29b4a1dea4a89730f9d9",
+          "bytes": 225285,
+          "width": 1280,
+          "height": 1390,
+          "format": "png",
+          "source": "https://github.com/BLB3DPrinting/filaops/blob/4b302a8a014163775d2b85fb782379f489edc043/frontend/docs/screenshots/sop/dashboard-page.png"
+        }
+      ]
+    },
+    "frappe-crm": {
+      "repository": "frappe/crm",
+      "commit": "85af16ce20325a3c91f8970a37c74adae377ac01",
+      "reviewStatus": "repository-confirmed",
+      "license": "AGPL-3.0",
+      "icon": {
+        "path": "crm/public/images/logo.png",
+        "gitBlobSha": "5881304f4457dbc8c36c281fb8c857ea0f7b5f7b",
+        "sha256": "84c79bc789c8695d1a194ee420b6f7ebd66f19003e41b64c756168eab8550c90",
+        "bytes": 21688,
+        "width": 1200,
+        "height": 1200,
+        "format": "png",
+        "source": "https://github.com/frappe/crm/blob/85af16ce20325a3c91f8970a37c74adae377ac01/crm/public/images/logo.png"
+      },
+      "screenshots": [
+        {
+          "path": ".github/screenshots/LeadPage.png",
+          "gitBlobSha": "2bf92b3586d1e6f389b7651d04ee23baf79cb151",
+          "sha256": "1260534916fdf69aafd92274fc5d982139bcca08240d648d0a1696d8577aa426",
+          "bytes": 993624,
+          "width": 3092,
+          "height": 1832,
+          "format": "png",
+          "source": "https://github.com/frappe/crm/blob/85af16ce20325a3c91f8970a37c74adae377ac01/.github/screenshots/LeadPage.png"
+        },
+        {
+          "path": ".github/screenshots/CallLog.png",
+          "gitBlobSha": "016e3f413eb36c1e158a3fc6db021ce2d8c8e93f",
+          "sha256": "8104e880b6f7fa97512a7924a16af22dca1b5697f5b7668204d7c078ec89e064",
+          "bytes": 1090841,
+          "width": 3092,
+          "height": 1832,
+          "format": "png",
+          "source": "https://github.com/frappe/crm/blob/85af16ce20325a3c91f8970a37c74adae377ac01/.github/screenshots/CallLog.png"
+        }
+      ]
+    },
+    "gh-4ian-gdevelop": {
+      "repository": "4ian/GDevelop",
+      "commit": "184fa04aa676b10b2785f065bddd07ad0f8143b5",
+      "reviewStatus": "research-candidate-unverified",
+      "license": null,
+      "icon": null,
+      "screenshots": [
+        {
+          "path": "newIDE/GDevelop screenshot.png",
+          "gitBlobSha": "50ab01046c52dfa67c9b36a97ee6831e515d2dd7",
+          "sha256": "1bd6d3488b64d4324a83186d5d0c13344bb5a01c6a1e24537a7da27b0ede88e2",
+          "bytes": 844111,
+          "width": 3802,
+          "height": 2246,
+          "format": "png",
+          "source": "https://github.com/4ian/GDevelop/blob/184fa04aa676b10b2785f065bddd07ad0f8143b5/newIDE/GDevelop%20screenshot.png"
+        }
+      ]
+    },
+    "gh-actualbudget-actual": {
+      "repository": "actualbudget/actual",
+      "commit": "97a7ca50f3109b37e5294abfcec8f763df397085",
+      "reviewStatus": "research-candidate-unverified",
+      "license": "MIT",
+      "icon": {
+        "path": "packages/desktop-electron/icons/icon.png",
+        "gitBlobSha": "dd6e1c54b7664463ab8ed60a487cacd522673a02",
+        "sha256": "f2fc4a38be8df318b4b7631b8754ffd1d919631bbd2ab4e7b30de085d64b06bc",
+        "bytes": 20037,
+        "width": 512,
+        "height": 512,
+        "format": "png",
+        "source": "https://github.com/actualbudget/actual/blob/97a7ca50f3109b37e5294abfcec8f763df397085/packages/desktop-electron/icons/icon.png"
+      },
+      "screenshots": [
+        {
+          "path": "packages/desktop-electron/screenshots/budget-gnome-light.png",
+          "gitBlobSha": "f3296ebab253b021857c60a1c980e5460389c46d",
+          "sha256": "f1d91633af965cce8b163a531e5ac09b07958031952d0ab375ae460784b1c35b",
+          "bytes": 119778,
+          "width": 1000,
+          "height": 700,
+          "format": "png",
+          "source": "https://github.com/actualbudget/actual/blob/97a7ca50f3109b37e5294abfcec8f763df397085/packages/desktop-electron/screenshots/budget-gnome-light.png"
+        }
+      ]
+    },
+    "gh-chatwoot-chatwoot": {
+      "repository": "chatwoot/chatwoot",
+      "commit": "7fe41fe03731fc2f5b1841b84351386962d2fd05",
+      "reviewStatus": "research-candidate-unverified",
+      "license": null,
+      "icon": {
+        "path": "app/javascript/design-system/images/logo.png",
+        "gitBlobSha": "3a4d4f46c6425c2df67aea5fd2bc5204994fc374",
+        "sha256": "c86415e2bb4e5817565fd00ab6177f73c36373953bfb433f9304e2781e6e1e57",
+        "bytes": 14605,
+        "width": 380,
+        "height": 84,
+        "format": "png",
+        "source": "https://github.com/chatwoot/chatwoot/blob/7fe41fe03731fc2f5b1841b84351386962d2fd05/app/javascript/design-system/images/logo.png"
+      },
+      "screenshots": [
+        {
+          "path": ".github/screenshots/dashboard.png",
+          "gitBlobSha": "b8b99be49f2aa66746d77ae4a691f27e7c7e42d6",
+          "sha256": "593ff252f0692a4bd3b0a7ce60aeb050c37fa3f0733501d635540e9469cd5ce3",
+          "bytes": 956483,
+          "width": 2880,
+          "height": 1554,
+          "format": "png",
+          "source": "https://github.com/chatwoot/chatwoot/blob/7fe41fe03731fc2f5b1841b84351386962d2fd05/.github/screenshots/dashboard.png"
+        }
+      ]
+    },
+    "gh-lightdash-lightdash": {
+      "repository": "lightdash/lightdash",
+      "commit": "de171a9f696b3fbbb5ceadfb2fcf5f01578d96cb",
+      "reviewStatus": "research-candidate-unverified",
+      "license": null,
+      "icon": null,
+      "screenshots": [
+        {
+          "path": "static/screenshots/lightdash_preview.png",
+          "gitBlobSha": "f4cd3da0d78dcfd2d735ea0952c0ac518252301a",
+          "sha256": "1e37ef4ae0ff6107df53dec214298cdb7291f3b4920e73986fe85ae501eea305",
+          "bytes": 1363900,
+          "width": 3070,
+          "height": 1880,
+          "format": "png",
+          "source": "https://github.com/lightdash/lightdash/blob/de171a9f696b3fbbb5ceadfb2fcf5f01578d96cb/static/screenshots/lightdash_preview.png"
+        }
+      ]
+    },
+    "gh-mathesar-foundation-mathesar": {
+      "repository": "mathesar-foundation/mathesar",
+      "commit": "0c05987885c93cdbe5bf9f7fa49b833d02a312cc",
+      "reviewStatus": "research-candidate-unverified",
+      "license": "GPL-3.0",
+      "icon": null,
+      "screenshots": [
+        {
+          "path": "assets/readme/screenshots/08-record-page.png",
+          "gitBlobSha": "bbc9781d012139e60612818ddd00ffb854feb25f",
+          "sha256": "ca2c343bbfecdf5a7af880694cb5437cafe446007c0b361b3ecd815d67257b7e",
+          "bytes": 108106,
+          "width": 2360,
+          "height": 1428,
+          "format": "png",
+          "source": "https://github.com/mathesar-foundation/mathesar/blob/0c05987885c93cdbe5bf9f7fa49b833d02a312cc/assets/readme/screenshots/08-record-page.png"
+        }
+      ]
+    },
+    "gh-metabase-metabase": {
+      "repository": "metabase/metabase",
+      "commit": "99198ec274ccac151c46d12836a787663f8b00e7",
+      "reviewStatus": "research-candidate-unverified",
+      "license": null,
+      "icon": null,
+      "screenshots": [
+        {
+          "path": "docs/images/metabase-product-screenshot-updated.png",
+          "gitBlobSha": "3cea58ea2ba632b61dd073659a8cb658a7874b66",
+          "sha256": "b5a711a53ae8cf019d6dd550799e53ad9c9ebbb4addb27fe5396bb9348ee8502",
+          "bytes": 151220,
+          "width": 2048,
+          "height": 1392,
+          "format": "png",
+          "source": "https://github.com/metabase/metabase/blob/99198ec274ccac151c46d12836a787663f8b00e7/docs/images/metabase-product-screenshot-updated.png"
+        }
+      ]
+    },
+    "gh-openobserve-openobserve": {
+      "repository": "openobserve/openobserve",
+      "commit": "626a9fbd059a18d23a9e730e457e9aa4b6df5158",
+      "reviewStatus": "research-candidate-unverified",
+      "license": "AGPL-3.0",
+      "icon": null,
+      "screenshots": [
+        {
+          "path": "screenshots/home.png",
+          "gitBlobSha": "cbfa5f7a34436da06c3ce83a16263aa3c7712a87",
+          "sha256": "9f00ec4178e01204fb3c03bf8db0158a80608aca07a5c18c40424722599820c0",
+          "bytes": 129790,
+          "width": 1920,
+          "height": 1080,
+          "format": "png",
+          "source": "https://github.com/openobserve/openobserve/blob/626a9fbd059a18d23a9e730e457e9aa4b6df5158/screenshots/home.png"
+        }
+      ]
+    },
+    "glaxnimate": {
+      "repository": "KDE/glaxnimate",
+      "commit": "ef01e17a883abcd3a12381d87f79ba1de4e0a845",
+      "reviewStatus": "repository-confirmed",
+      "license": null,
+      "icon": null,
+      "screenshots": [
+        {
+          "path": "docs/docs/img/screenshots/main_window/main_window.png",
+          "gitBlobSha": "7ab96ff49b47aec3bd937e3b250a1c7ba188f163",
+          "sha256": "cbea1621bfe32522eb0486551f79b2d9c1f3c726fdfaabafd75a3fb71527a37a",
+          "bytes": 172653,
+          "width": 1678,
+          "height": 1037,
+          "format": "png",
+          "source": "https://github.com/KDE/glaxnimate/blob/ef01e17a883abcd3a12381d87f79ba1de4e0a845/docs/docs/img/screenshots/main_window/main_window.png"
+        }
+      ]
+    },
+    "godsvg": {
+      "repository": "MewPurPur/GodSVG",
+      "commit": "de273a028f2b604f5bfa210e029320c468c423e1",
+      "reviewStatus": "repository-confirmed",
+      "license": "MIT",
+      "icon": {
+        "path": "assets/logos/icon.png",
+        "gitBlobSha": "8477aa776c2467efe477fad1e3ce6928d3d9530c",
+        "sha256": "28d5f232e6195a48e0b2a7e6e9259ced57b3b2a3caf46756f36c3bb00f1cabfc",
+        "bytes": 20957,
+        "width": 256,
+        "height": 256,
+        "format": "png",
+        "source": "https://github.com/MewPurPur/GodSVG/blob/de273a028f2b604f5bfa210e029320c468c423e1/assets/logos/icon.png"
+      },
+      "screenshots": []
+    },
+    "goxel": {
+      "repository": "guillaumechereau/goxel",
+      "commit": "33be5c8ed826105ab35746f893065e9ef00d3134",
+      "reviewStatus": "repository-confirmed",
+      "license": "GPL-3.0",
+      "icon": {
+        "path": "osx/goxel/goxel/Assets.xcassets/AppIcon.appiconset/256.png",
+        "gitBlobSha": "e38a4ee23553356a568a1bfa43ef22e72f308b53",
+        "sha256": "e6486695d7763bf83d399a55ed88141dc4e649ca4d00feb0d9d264da3ee1ae3c",
+        "bytes": 25043,
+        "width": 256,
+        "height": 256,
+        "format": "png",
+        "source": "https://github.com/guillaumechereau/goxel/blob/33be5c8ed826105ab35746f893065e9ef00d3134/osx/goxel/goxel/Assets.xcassets/AppIcon.appiconset/256.png"
+      },
+      "screenshots": [
+        {
+          "path": "screenshots/screenshot-procedural-city.png",
+          "gitBlobSha": "82533b672a78000e7fa5131a6dae8b011f145f7c",
+          "sha256": "e5f6437763a52b6719be69458b8f2da668beea4f12d014599fb4e0da32b80aa9",
+          "bytes": 106589,
+          "width": 1024,
+          "height": 768,
+          "format": "png",
+          "source": "https://github.com/guillaumechereau/goxel/blob/33be5c8ed826105ab35746f893065e9ef00d3134/screenshots/screenshot-procedural-city.png"
+        },
+        {
+          "path": "screenshots/screenshot-castle.png",
+          "gitBlobSha": "3b3d4ee8db4c30898594badeeb3e1aec49968c78",
+          "sha256": "c4d4810f4767a14478ea6e30327a09ebbd0785e38ec3a55d85138a16959141ff",
+          "bytes": 85008,
+          "width": 1024,
+          "height": 768,
+          "format": "png",
+          "source": "https://github.com/guillaumechereau/goxel/blob/33be5c8ed826105ab35746f893065e9ef00d3134/screenshots/screenshot-castle.png"
+        }
+      ]
+    },
+    "gyroflow": {
+      "repository": "gyroflow/gyroflow",
+      "commit": "1a78c952dca33e656e772552b48133fa805e2ab0",
+      "reviewStatus": "repository-confirmed",
+      "license": "GPL-3.0",
+      "icon": null,
+      "screenshots": [
+        {
+          "path": "resources/screenshot.jpg",
+          "gitBlobSha": "d88797ed740ba3a5a16c4b3212a61f772869aca2",
+          "sha256": "b28384f66cd04f1090286bc7d8324db9c09ba6a88a432cab0a02509e01fee404",
+          "bytes": 372945,
+          "width": 1534,
+          "height": 922,
+          "format": "jpg",
+          "source": "https://github.com/gyroflow/gyroflow/blob/1a78c952dca33e656e772552b48133fa805e2ab0/resources/screenshot.jpg"
+        }
+      ]
+    },
+    "hatchet": {
+      "repository": "hatchet-dev/hatchet",
+      "commit": "ae05c4bb06c3335b502c1979a5af87313f710180",
+      "reviewStatus": "repository-confirmed",
+      "license": "MIT",
+      "icon": null,
+      "screenshots": [
+        {
+          "path": "frontend/docs/public/hatchet-screenshot-1.png",
+          "gitBlobSha": "31cedf41d2aab197c8934559740deda0cf278c7a",
+          "sha256": "15db9c9d37363265619cde20a7fdfe80b34590f30f83eaac71289492cbd4f7fd",
+          "bytes": 747606,
+          "width": 3456,
+          "height": 1984,
+          "format": "png",
+          "source": "https://github.com/hatchet-dev/hatchet/blob/ae05c4bb06c3335b502c1979a5af87313f710180/frontend/docs/public/hatchet-screenshot-1.png"
+        }
+      ]
+    },
+    "helio": {
+      "repository": "helio-fm/helio-sequencer",
+      "commit": "5a21fbc862af349234d51008f75844e943f80603",
+      "reviewStatus": "repository-confirmed",
+      "license": "GPL-3.0",
+      "icon": {
+        "path": "Projects/iOS/Helio/Images.xcassets/AppIcon.appiconset/Icon.png",
+        "gitBlobSha": "6661c8c12041b5d8c1e73ce13dd76502601cd14f",
+        "sha256": "b2f2c6502fc93551dbff151ecb3ce8d3efb8bbc5acc93751f817f238706dd2bc",
+        "bytes": 4180,
+        "width": 57,
+        "height": 57,
+        "format": "png",
+        "source": "https://github.com/helio-fm/helio-sequencer/blob/5a21fbc862af349234d51008f75844e943f80603/Projects/iOS/Helio/Images.xcassets/AppIcon.appiconset/Icon.png"
+      },
+      "screenshots": [
+        {
+          "path": "Projects/Android/app/src/main/play/listings/en-US/graphics/phone-screenshots/1.png",
+          "gitBlobSha": "571ec1073f52de60c0e8ba7add77e3bb4450534a",
+          "sha256": "5ae3c696e5ac83f07b6934cec5b458b4a98acdd76bc1a661fb36de8c1680b9d8",
+          "bytes": 54190,
+          "width": 1080,
+          "height": 486,
+          "format": "png",
+          "source": "https://github.com/helio-fm/helio-sequencer/blob/5a21fbc862af349234d51008f75844e943f80603/Projects/Android/app/src/main/play/listings/en-US/graphics/phone-screenshots/1.png"
+        }
+      ]
+    },
+    "infinite": {
+      "repository": "n1m21n/Infinite",
+      "commit": "559eca4f82b0c143bd40358fcd9099efec20002c",
+      "reviewStatus": "repository-confirmed",
+      "license": null,
+      "icon": {
+        "path": "website/assets/icon.png",
+        "gitBlobSha": "9bca2913382148d92cd206a8f6c08004701060f6",
+        "sha256": "aea483d168207375f3a4a0b21392baee18c59f2aa115cbc767cb02a9ed39b824",
+        "bytes": 59216,
+        "width": 1024,
+        "height": 1024,
+        "format": "png",
+        "source": "https://github.com/n1m21n/Infinite/blob/559eca4f82b0c143bd40358fcd9099efec20002c/website/assets/icon.png"
+      },
+      "screenshots": [
+        {
+          "path": "docs/brand/img/screenshots/field-pixel-editor.png",
+          "gitBlobSha": "715efb25f2939a1f504d971f4f00c75bbf112fb3",
+          "sha256": "0e1f1652aa9be247e74d3930e0a90de7c7d3d822fa6800ebe3ea675eceadce53",
+          "bytes": 366005,
+          "width": 2037,
+          "height": 1146,
+          "format": "png",
+          "source": "https://github.com/n1m21n/Infinite/blob/559eca4f82b0c143bd40358fcd9099efec20002c/docs/brand/img/screenshots/field-pixel-editor.png"
+        },
+        {
+          "path": "docs/brand/img/screenshots/canvas-overview.png",
+          "gitBlobSha": "104ffc7101c1aa4060c97a19c648d9c0a0fd44d2",
+          "sha256": "a2a3b34e808c306a26aeff0daba28936be396647d4419315319d38202daa650d",
+          "bytes": 711664,
+          "width": 1376,
+          "height": 774,
+          "format": "png",
+          "source": "https://github.com/n1m21n/Infinite/blob/559eca4f82b0c143bd40358fcd9099efec20002c/docs/brand/img/screenshots/canvas-overview.png"
+        }
+      ]
+    },
+    "inventree": {
+      "repository": "inventree/InvenTree",
+      "commit": "d11b74fd857a6ebf47658b707605a64a10be764f",
+      "reviewStatus": "repository-confirmed",
+      "license": "MIT",
+      "icon": {
+        "path": "docs/docs/assets/logo.png",
+        "gitBlobSha": "e4626e0abeb66b9ff3f86123a4b851670e5c492a",
+        "sha256": "4e882f8bfc2d21745038df8f9b4aec2240067558437f99dda274380847e48ef3",
+        "bytes": 202656,
+        "width": 2083,
+        "height": 2083,
+        "format": "png",
+        "source": "https://github.com/inventree/InvenTree/blob/d11b74fd857a6ebf47658b707605a64a10be764f/docs/docs/assets/logo.png"
+      },
+      "screenshots": [
+        {
+          "path": "docs/docs/assets/images/appgallery/Screenshot_1681915404.png",
+          "gitBlobSha": "bc4479ea1f36c7a67809c4d5fe493f544ce45ffb",
+          "sha256": "a601bc89bd9f6d69089fd01149ac085e74b1b8f09c620cc1e59ba8017c37360a",
+          "bytes": 67763,
+          "width": 1080,
+          "height": 1920,
+          "format": "png",
+          "source": "https://github.com/inventree/InvenTree/blob/d11b74fd857a6ebf47658b707605a64a10be764f/docs/docs/assets/images/appgallery/Screenshot_1681915404.png"
+        }
+      ]
+    },
+    "material-maker": {
+      "repository": "RodZill4/material-maker",
+      "commit": "424dec64a75478f22267ba9281a5cbe7a236b802",
+      "reviewStatus": "repository-confirmed",
+      "license": "MIT",
+      "icon": {
+        "path": "icon.png",
+        "gitBlobSha": "62d6c59ea86ebc576d2090a5e317ab7e8289864d",
+        "sha256": "72ee1a0fc59b798b8849eb9bd0cb7b67fd9ee3ff41645f90c2ca98168f3619ef",
+        "bytes": 15138,
+        "width": 256,
+        "height": 256,
+        "format": "png",
+        "source": "https://github.com/RodZill4/material-maker/blob/424dec64a75478f22267ba9281a5cbe7a236b802/icon.png"
+      },
+      "screenshots": [
+        {
+          "path": "material_maker/doc/images/screenshot.png",
+          "gitBlobSha": "89b4f510105e2253f65acc213703e49b4726a90d",
+          "sha256": "82914343db0a3af22f5b96f7b42e362f58f93f9c499b3fad48d182d9059e4f7c",
+          "bytes": 1246803,
+          "width": 1920,
+          "height": 1105,
+          "format": "png",
+          "source": "https://github.com/RodZill4/material-maker/blob/424dec64a75478f22267ba9281a5cbe7a236b802/material_maker/doc/images/screenshot.png"
+        }
+      ]
+    },
+    "mayo": {
+      "repository": "fougue/mayo",
+      "commit": "8e69135dd5259a6a2b77568fcf630f969f408762",
+      "reviewStatus": "repository-confirmed",
+      "license": "BSD-2-Clause",
+      "icon": {
+        "path": "images/appicon_128.png",
+        "gitBlobSha": "5652fb7eba7e0c1462b4a01fa52f60620df9e3f3",
+        "sha256": "746d84e2a27718c5abd22a0b44ab67351fd1a9d592dcb89246eb99166bad1d9f",
+        "bytes": 1269,
+        "width": 128,
+        "height": 128,
+        "format": "png",
+        "source": "https://github.com/fougue/mayo/blob/8e69135dd5259a6a2b77568fcf630f969f408762/images/appicon_128.png"
+      },
+      "screenshots": [
+        {
+          "path": "doc/screenshot_1.png",
+          "gitBlobSha": "a174805633424f3d1250f099d62cb68e450076bd",
+          "sha256": "e96702406d0df0d8314d2775331b6b43c5f59691a7650f7ad2a3ec9bc128f5df",
+          "bytes": 74155,
+          "width": 1007,
+          "height": 701,
+          "format": "png",
+          "source": "https://github.com/fougue/mayo/blob/8e69135dd5259a6a2b77568fcf630f969f408762/doc/screenshot_1.png"
+        },
+        {
+          "path": "doc/screenshot_4.png",
+          "gitBlobSha": "e7ad3fcec1f2027a0608c8575b4291a2128da98f",
+          "sha256": "aa071b784a784006794f9e611825eab2acabf9f538b84ffd1cd8898a2ebb32be",
+          "bytes": 47401,
+          "width": 1006,
+          "height": 720,
+          "format": "png",
+          "source": "https://github.com/fougue/mayo/blob/8e69135dd5259a6a2b77568fcf630f969f408762/doc/screenshot_4.png"
+        }
+      ]
+    },
+    "mfek-glif": {
+      "repository": "MFEK/glif",
+      "commit": "e7c24c5d77b768429b7c7f13605b080fd3f1ca98",
+      "reviewStatus": "repository-confirmed",
+      "license": "Apache-2.0",
+      "icon": {
+        "path": "resources/icon.png",
+        "gitBlobSha": "8da816126f66bea3c28ab1c9d7fd29d7525d4153",
+        "sha256": "fdb97aec7052535dac62984a71ed2cae594d4afae509175d4836751b132691af",
+        "bytes": 11693,
+        "width": 512,
+        "height": 512,
+        "format": "png",
+        "source": "https://github.com/MFEK/glif/blob/e7c24c5d77b768429b7c7f13605b080fd3f1ca98/resources/icon.png"
+      },
+      "screenshots": [
+        {
+          "path": "doc/screenshot_main.png",
+          "gitBlobSha": "81a1e6507aa5be6fa69a854d43b427bf1901700a",
+          "sha256": "6e61c1e35acaa17ce37a1d25e21b8dda284a11b7893472882b7c8bec19377f43",
+          "bytes": 178564,
+          "width": 1359,
+          "height": 959,
+          "format": "png",
+          "source": "https://github.com/MFEK/glif/blob/e7c24c5d77b768429b7c7f13605b080fd3f1ca98/doc/screenshot_main.png"
+        },
+        {
+          "path": "doc/screenshot2.png",
+          "gitBlobSha": "dd301a7f04922ac20aa8e5dbd77a01017d92c083",
+          "sha256": "0b407e9f4ae686f50a5e3dfaa788eb24d40a36b8aa5d7aa56c7df242489894dc",
+          "bytes": 90200,
+          "width": 930,
+          "height": 959,
+          "format": "png",
+          "source": "https://github.com/MFEK/glif/blob/e7c24c5d77b768429b7c7f13605b080fd3f1ca98/doc/screenshot2.png"
+        }
+      ]
+    },
+    "n8n": {
+      "repository": "n8n-io/n8n",
+      "commit": "281ce2cc011cab8535e194b3f6bab58cd932d654",
+      "reviewStatus": "repository-confirmed",
+      "license": null,
+      "icon": null,
+      "screenshots": [
+        {
+          "path": "assets/n8n-screenshot-readme.png",
+          "gitBlobSha": "9a38c856d65f4d458d4529e0fa62e0d129577143",
+          "sha256": "80c3ad944254b3c327c422ca24fcf05c28b45cb33a9be224aebddda78fcb0b87",
+          "bytes": 363405,
+          "width": 3025,
+          "height": 1818,
+          "format": "png",
+          "source": "https://github.com/n8n-io/n8n/blob/281ce2cc011cab8535e194b3f6bab58cd932d654/assets/n8n-screenshot-readme.png"
+        }
+      ]
+    },
+    "oak-video-editor": {
+      "repository": "OakVideoEditorCommunity/oak",
+      "commit": "096b105a74802cedf657c7e07906cb0ca7f32146",
+      "reviewStatus": "repository-confirmed",
+      "license": "GPL-3.0",
+      "icon": {
+        "path": "assets/appicon/icon.png",
+        "gitBlobSha": "c603c10420c6c945bb4576bd748cc32bb30a060e",
+        "sha256": "7a9b317d563ebc9441031165a1514b7c693c3f26717b794bc61f9ed167930ed4",
+        "bytes": 36868,
+        "width": 512,
+        "height": 512,
+        "format": "png",
+        "source": "https://github.com/OakVideoEditorCommunity/oak/blob/096b105a74802cedf657c7e07906cb0ca7f32146/assets/appicon/icon.png"
+      },
+      "screenshots": [
+        {
+          "path": "docs/imgs/screenshot.png",
+          "gitBlobSha": "e5aba070b6627acf26de03aa98f2a076f868c3eb",
+          "sha256": "32d11c9847c192c4d94339b712a49f29c14bb954da13804efa313c9e1c7d6d9d",
+          "bytes": 708368,
+          "width": 3198,
+          "height": 1866,
+          "format": "png",
+          "source": "https://github.com/OakVideoEditorCommunity/oak/blob/096b105a74802cedf657c7e07906cb0ca7f32146/docs/imgs/screenshot.png"
+        }
+      ]
+    },
+    "paperless": {
+      "repository": "paperless-ngx/paperless-ngx",
+      "commit": "f71a9a6eda217a0f3e84ff9a40e0e57d10e7d9ae",
+      "reviewStatus": "repository-confirmed",
+      "license": "GPL-3.0",
+      "icon": null,
+      "screenshots": [
+        {
+          "path": "docs/assets/screenshots/search-preview.png",
+          "gitBlobSha": "325ea73e41ec800655d904a1c1a4273234db7135",
+          "sha256": "9f53ec3e80b49dbff2eeaeeb4e71efc7b53fc0001f1459e795e0ddf1c0ca8bc5",
+          "bytes": 340871,
+          "width": 2134,
+          "height": 1258,
+          "format": "png",
+          "source": "https://github.com/paperless-ngx/paperless-ngx/blob/f71a9a6eda217a0f3e84ff9a40e0e57d10e7d9ae/docs/assets/screenshots/search-preview.png"
+        },
+        {
+          "path": "docs/assets/screenshots/dashboard.png",
+          "gitBlobSha": "d59899b8fb5a12c45dfcc8c81855495c106dcd17",
+          "sha256": "612eaee59d04ff3dcc3f37aa0bb08c5cfc55d4c4b33860567daa9d788d3f1307",
+          "bytes": 1123045,
+          "width": 3824,
+          "height": 2786,
+          "format": "png",
+          "source": "https://github.com/paperless-ngx/paperless-ngx/blob/f71a9a6eda217a0f3e84ff9a40e0e57d10e7d9ae/docs/assets/screenshots/dashboard.png"
+        }
+      ]
+    },
+    "pixieditor": {
+      "repository": "PixiEditor/PixiEditor",
+      "commit": "f3fe8b4d031c64cb563b6135a0d961a05a2728c3",
+      "reviewStatus": "repository-confirmed",
+      "license": "LGPL-3.0",
+      "icon": null,
+      "screenshots": [
+        {
+          "path": "Screenshot.png",
+          "gitBlobSha": "d3e7d3014b0080fdb5ca153e9c0cd5d1331cf693",
+          "sha256": "44351372087859d9f7b3af00871b381e0a4ef10400c9eb609a09cc98810451ac",
+          "bytes": 117265,
+          "width": 1290,
+          "height": 872,
+          "format": "png",
+          "source": "https://github.com/PixiEditor/PixiEditor/blob/f3fe8b4d031c64cb563b6135a0d961a05a2728c3/Screenshot.png"
+        },
+        {
+          "path": "assets/flatpak/screenshots/palettes.png",
+          "gitBlobSha": "7dcb3f4c8c781eea0cd569884a2076902ca65ee1",
+          "sha256": "4555997b4ad655adccdbbf6beba46ad2ab67a1bddb02fe1a82ae557067cc3bb4",
+          "bytes": 208544,
+          "width": 2560,
+          "height": 1391,
+          "format": "png",
+          "source": "https://github.com/PixiEditor/PixiEditor/blob/f3fe8b4d031c64cb563b6135a0d961a05a2728c3/assets/flatpak/screenshots/palettes.png"
+        }
+      ]
+    },
+    "real-video-enhancer": {
+      "repository": "TNTwise/REAL-Video-Enhancer",
+      "commit": "8541c46ca14e6f84fc86c5b9d3b75373e25732e5",
+      "reviewStatus": "repository-confirmed",
+      "license": "AGPL-3.0",
+      "icon": null,
+      "screenshots": [
+        {
+          "path": "screenshots/models.png",
+          "gitBlobSha": "438281bb3f132c280d505883691c6b8a3c88037d",
+          "sha256": "1251023f3f49ca2a4994588fff5c2380c5378fc052fb759f5621e9f059a9a9d7",
+          "bytes": 91112,
+          "width": 2050,
+          "height": 1166,
+          "format": "png",
+          "source": "https://github.com/TNTwise/REAL-Video-Enhancer/blob/8541c46ca14e6f84fc86c5b9d3b75373e25732e5/screenshots/models.png"
+        },
+        {
+          "path": "screenshots/settings.png",
+          "gitBlobSha": "db5948c6c143d83458af9b30240aef6a13f06abb",
+          "sha256": "c7ef740510585be4f19573e348595216f5d407328424c2b0faba532e654acd6b",
+          "bytes": 95084,
+          "width": 2050,
+          "height": 1166,
+          "format": "png",
+          "source": "https://github.com/TNTwise/REAL-Video-Enhancer/blob/8541c46ca14e6f84fc86c5b9d3b75373e25732e5/screenshots/settings.png"
+        }
+      ]
+    },
+    "rustdesk": {
+      "repository": "rustdesk/rustdesk",
+      "commit": "4d37f00af964e8a43fb2239d8599ff8690e4d906",
+      "reviewStatus": "repository-confirmed",
+      "license": "AGPL-3.0",
+      "icon": null,
+      "screenshots": [
+        {
+          "path": "fastlane/metadata/android/en-US/images/sevenInchScreenshots/8.png",
+          "gitBlobSha": "946956b2b88591b8ca24ec892f05ceb18bd71e46",
+          "sha256": "2a98a0c7921ce4ffe554d58d0c82724a01e475f29bd8edefaac03d19fc05f41b",
+          "bytes": 272856,
+          "width": 2048,
+          "height": 2732,
+          "format": "png",
+          "source": "https://github.com/rustdesk/rustdesk/blob/4d37f00af964e8a43fb2239d8599ff8690e4d906/fastlane/metadata/android/en-US/images/sevenInchScreenshots/8.png"
+        }
+      ]
+    },
+    "zed": {
+      "repository": "zed-industries/zed",
+      "commit": "604a0ff023ec719045bbdafa46d1e384e907ba7b",
+      "reviewStatus": "repository-confirmed",
+      "license": null,
+      "icon": {
+        "path": "crates/zed/resources/app-icon.png",
+        "gitBlobSha": "08b6d8afa0d1088e50f1e9697e01407c9c623f6d",
+        "sha256": "77453d98d46494b3b34b94aa863b686ea299e0190030a5c7ca5377b238332522",
+        "bytes": 168173,
+        "width": 512,
+        "height": 512,
+        "format": "png",
+        "source": "https://github.com/zed-industries/zed/blob/604a0ff023ec719045bbdafa46d1e384e907ba7b/crates/zed/resources/app-icon.png"
+      },
+      "screenshots": []
+    }
+  },
+  "rejected": [
+    {
+      "id": "gh-openpanel-dev-openpanel",
+      "kind": "icon",
+      "path": "apps/dashboard/public/logo.png",
+      "error": "Not in audited app icon candidates: gh-openpanel-dev-openpanel/apps/dashboard/public/logo.png"
+    }
+  ]
+}
