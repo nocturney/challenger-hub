@@ -3,8 +3,8 @@
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),
  net=require('node:net'),cp=require('node:child_process'),assert=require('node:assert/strict');
 if(process.platform!=='win32')throw Error('Windows QA must run on authorized Windows host');
-const build=path.join(__dirname,'dist','onefile-preview10'),payload=path.join(build,'payload-stage');
-const exe=path.join(build,'publish','ChallengerFocusDesktopPreview10.exe');
+const build=path.join(__dirname,'dist','onefile-preview10-modern'),payload=path.join(build,'payload-stage');
+const exe=path.join(build,'publish','ChallengerFocusDesktopPreview10Modern.exe');
 const source=path.join(build,'source','Program.cs'),qa=path.join(__dirname,'dist','onefile-preview10-safe-qa');
 const hash=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 const assertBinary=()=>{
@@ -24,6 +24,8 @@ const assertBinary=()=>{
  assert.ok(program.includes('desktopSessionVerified'),'Missing private engine identity check');
  assert.ok(program.includes('NavigationCompleted'),'Missing UI startup diagnostics');
  assert.ok(!program.includes('Start-Center.ps1'),'Production launcher must not be required');
+ assert.ok(program.includes('"Preview10ModernUI"'),'Isolated profile must be pinned for native experiment');
+ assert.ok(!program.includes('"Preview10"'),'Native experiment must not share official Preview10 runtime');
  return {exeSha256:evidence.sha256,embeddedFiles:Object.keys(hashes).length,bytes:fs.statSync(exe).size};
 };
 async function freePort(){

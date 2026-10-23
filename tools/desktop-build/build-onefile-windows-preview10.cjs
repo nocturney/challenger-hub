@@ -4,11 +4,11 @@
 const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process'),crypto=require('node:crypto');
 if(process.platform!=='win32')throw Error('Build the Windows EXE on an authorized Windows host');
 const root=path.resolve(__dirname,'..','..');
-const dist=path.join(__dirname,'dist','onefile-preview10');
+const dist=path.join(__dirname,'dist','onefile-preview10-modern');
 const project=path.join(dist,'source');
 const payload=path.join(dist,'payload-stage');
 const publish=path.join(dist,'publish');
-const exeName='ChallengerFocusDesktopPreview10.exe';
+const exeName='ChallengerFocusDesktopPreview10Modern.exe';
 const exe=path.join(publish,exeName);
 const runtime=path.join(__dirname,'dist','runtime-preview10');
 const sha=buf=>crypto.createHash('sha256').update(buf).digest('hex');
@@ -119,17 +119,22 @@ cs=one(cs,'status.Text = "Could not start Challenger Focus Desktop: " + ex.Messa
 cs=cs.replaceAll('CRAFT UPDATE CENTER','CHALLENGER FOCUS DESKTOP');
 cs=cs.replaceAll('Starting the local update service','Starting private local engine');
 if(cs.includes('Start-Center.ps1')||cs.includes('17873'))throw Error('Legacy production launcher/port leaked into new EXE');
+// Keep the modern trial isolated from the installed Preview10 user profile and runtime.
+const profileReferences=cs.split('"Preview10"').length-1;
+if(profileReferences<3)throw Error('Could not isolate native trial runtime and WebView2 profile');
+cs=cs.replaceAll('"Preview10"','"Preview10ModernUI"');
+if(cs.includes('"Preview10"'))throw Error('Preview10 profile collision remains');
 fs.writeFileSync(path.join(project,'Program.cs'),cs);
 let projectXml=fs.readFileSync(path.join(root,'platform','windows','CraftUpdateCenter.csproj'),'utf8');
-projectXml=projectXml.replaceAll('CraftUpdateCenter','ChallengerFocusDesktopPreview10')
+projectXml=projectXml.replaceAll('CraftUpdateCenter','ChallengerFocusDesktopPreview10Modern')
  .replaceAll('Craft Update Center','Challenger Focus Desktop Preview 10')
  .replaceAll('2.4.0','4.0.0');
 projectXml=one(projectXml,'  <ItemGroup>\n    <PackageReference',
  '  <ItemGroup>\n    <EmbeddedResource Include="payload.zip" LogicalName="Challenger.Focus.EmbeddedPayload" />\n    <PackageReference',
  'single embedded verified Node/engine payload');
-fs.writeFileSync(path.join(project,'ChallengerFocusDesktopPreview10.csproj'),projectXml);
+fs.writeFileSync(path.join(project,'ChallengerFocusDesktopPreview10Modern.csproj'),projectXml);
 fs.copyFileSync(path.join(root,'brand','orbit','export','challenger-orbit.ico'),path.join(project,'icon.ico'));
-const buildOut=exec('dotnet',['publish',path.join(project,'ChallengerFocusDesktopPreview10.csproj'),
+const buildOut=exec('dotnet',['publish',path.join(project,'ChallengerFocusDesktopPreview10Modern.csproj'),
  '-c','Release','-r','win-x64','--self-contained','true','-p:PublishSingleFile=true',
  '-p:IncludeNativeLibrariesForSelfExtract=true','-p:EnableCompressionInSingleFile=true',
  '-p:PublishTrimmed=false','-p:DebugType=None','-o',publish],240000);
@@ -145,7 +150,7 @@ fs.writeFileSync(path.join(dist,'build-evidence.json'),JSON.stringify({
  embeddedPayloadSha256:sha(fs.readFileSync(zip)),
  includes:['original Challenger backend','Node v24','SHA256 integrity','Windows native WebView2 wrapper'],
  requires:['Windows with WebView2 Evergreen runtime'],
- port:'random loopback port per running native app',source:'feat/focus-desktop-onefile-preview10'
+ port:'random loopback port per running native app',profile:'Preview10ModernUI',source:'feat/preview10-modern-surface-v1'
 },null,2));
 console.log('CHALLENGER_ONEFILE_WINDOWS_BUILT '+JSON.stringify({
  exe,bytes:fs.statSync(exe).size,sha256:sha(fs.readFileSync(exe)),

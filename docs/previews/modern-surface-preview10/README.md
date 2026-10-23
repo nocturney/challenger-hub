@@ -41,3 +41,16 @@ Source branch based on feat/focus-preview10-quiet-footer-genoffice (Draft PR #23
 - Existing Preview10 browser QA for all 181 projects / search / new finds / footer: **passed**.
 - Existing original Craft source-image browser QA: **passed** (four sampled products).
 - The older tests/*.test.js suite is **30 pass / 18 fail**, unchanged on the clean Preview10 base branch. Those tests still assert obsolete pre-Focus UI and are not a newly green CI gate. Do not present the entire historical test fleet as all-green.
+
+## Native Windows EXE acceptance — actual console user
+
+After the initial browser review, the onefile builder was hardened to produce **ChallengerFocusDesktopPreview10Modern.exe**, using an independent Preview10ModernUI folder for all extraction, startup logs and WebView2 user data. This prevents collisions with the previously released Preview10.
+
+- Source checkout: feat/preview10-modern-surface-v1
+- Modern one-file EXE: 95,786,969 bytes; SHA256: 2a7b9e7f9dd48f30cbbd00936774575f54da80dacbcd0135fd87b0fd56df90b0
+- Verified package QA: 10/10 authenticated live/browser cases, all 181 source entries, official Craft image galleries; no unauthorized write requests or new installer rights.
+- **Actual first run** from a clean ModernUI runtime folder in non-elevated Windows console session 1: native WebView2 loaded, engine navigation reported TRUE, observed window **1100×760**, native process closed gracefully.
+- Temporary Task Scheduler on-demand launcher **was removed in finally**. A follow-up process/task check found no modern-preview EXE/Node processes and no temporary task remaining.
+- The original Preview10 install, profile and Production state were not replaced.
+
+The custom Windows modern EXE is a separate **test candidate**, not a Production upgrade or in-place self-update. It is not an installation-vetting claim for any new catalog candidates.
