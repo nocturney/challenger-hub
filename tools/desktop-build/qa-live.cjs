@@ -2,8 +2,10 @@
 /* Real cross-platform Chromium/WebKit-compatible page checks against ACTIVE local Challenger engine.
  * Safe: verify only. Never request an approved install/update/download/launch. */
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
-const port=17964,base='http://127.0.0.1:'+port+'/',platform=process.platform;
-const dir=path.join(__dirname,'dist','qa-'+platform);
+const port=Number(process.env.FOCUS_DESKTOP_TEST_PORT||17964),base='http://127.0.0.1:'+port+'/',platform=process.platform;
+const expectedVersion=process.env.FOCUS_DESKTOP_QA_VERSION||'4.0.0-desktop.preview.4';
+const session=process.env.FOCUS_DESKTOP_QA_SESSION||'';
+const dir=path.join(__dirname,'dist','qa-'+platform+(expectedVersion.endsWith('.5')?'-onefile-preview5':''));
 const puppeteer=require(platform==='darwin'?
  '/Users/chris/.npm/_npx/4b4c857f6efdfb61/node_modules/puppeteer':
  'C:/Users/Chris/AppData/Local/npm-cache/_npx/4b4c857f6efdfb61/node_modules/puppeteer');
@@ -11,7 +13,12 @@ const puppeteer=require(platform==='darwin'?
  const health=await fetch(base+'api/health').then(r=>r.json());
  assert.equal(health.app,'Challenger Focus Desktop');
  assert.equal(health.mode,'LIVE_LOCAL_PREVIEW');
- assert.equal(health.version,'4.0.0-desktop.preview.4');
+ assert.equal(health.version,expectedVersion);
+ if(session){
+  const privateHealth=await fetch(base+'api/health',{headers:{'X-Challenger-Desktop-Session':session}}).then(r=>r.json());
+  assert.equal(privateHealth.desktopSessionVerified,true);
+  assert.equal(health.desktopSessionVerified,false);
+ }
  const state=await fetch(base+'api/state').then(r=>r.json());
  assert.ok(state.apps.length>=12&&state.apps.length<=20,'Unexpected locally cached managed app count');
  assert.equal(state.discoveries.length,152);
@@ -19,7 +26,9 @@ const puppeteer=require(platform==='darwin'?
  assert.ok(typeof state.computer==='string'&&state.computer.length);
  const denied=await fetch(base+'api/install',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
  assert.equal(denied.status,403);
- const unknown=await fetch(base+'api/install',{method:'POST',headers:{'Content-Type':'application/json','X-Requested-With':'CraftUpdateCenter'},body:'{"repo":"unapproved-project"}'});
+ const protectedHeaders={'Content-Type':'application/json','X-Requested-With':'CraftUpdateCenter'};
+ if(session)protectedHeaders['X-Challenger-Desktop-Session']=session;
+ const unknown=await fetch(base+'api/install',{method:'POST',headers:protectedHeaders,body:'{"repo":"unapproved-project"}'});
  assert.equal(unknown.status,400);
  const forbidden=await fetch(base+'server.js');assert.equal(forbidden.status,404);
  fs.mkdirSync(dir,{recursive:true});
@@ -27,6 +36,7 @@ const puppeteer=require(platform==='darwin'?
   executablePath:platform==='darwin'?'/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge':undefined,
   args:['--no-sandbox','--disable-gpu']});
  const page=await browser.newPage(),errors=[],external=[],writes=[],checks=[];
+ if(session)await page.evaluateOnNewDocument(token=>Object.defineProperty(window,'CHALLENGER_DESKTOP_SESSION',{value:token,writable:false,configurable:false}),session);
  page.on('pageerror',e=>errors.push(e.message));
  page.on('console',e=>{if(e.type()==='error')errors.push(e.text())});
  page.on('request',r=>{

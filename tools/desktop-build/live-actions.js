@@ -73,9 +73,15 @@ async function runFocusOperation(button){
   if(!focusConfirm(op,repo))return;
   button.disabled=true;focusNotice('Requesting '+op.replaceAll('-',' ')+' from the local engine…');
   try{
+   if(op==='launch'&&snapshot?.platform==='win32'&&window.chrome?.webview){
+    window.chrome.webview.postMessage({type:'launch',repo});
+    focusNotice('Asking Windows to open '+(projectById.get(repo)?.title||repo)+'…');
+    return;
+   }
+   const headers={'Content-Type':'application/json','X-Requested-With':'CraftUpdateCenter'};
+   if(window.CHALLENGER_DESKTOP_SESSION)headers['X-Challenger-Desktop-Session']=window.CHALLENGER_DESKTOP_SESSION;
    const response=await fetch('/api/'+map[op],{
-    method:'POST',headers:{'Content-Type':'application/json','X-Requested-With':'CraftUpdateCenter'},
-    body:JSON.stringify(repo?{repo}:{})
+    method:'POST',headers,body:JSON.stringify(repo?{repo}:{})
    });
    const body=await response.json().catch(()=>({}));
    if(!response.ok||body.ok===false)throw Error(body.error||'HTTP '+response.status);
@@ -90,5 +96,11 @@ async function runFocusOperation(button){
   }finally{button.disabled=false}
  }catch(e){focusNotice('Action rejected: '+String(e.message||e),true)}
 }
+if(window.chrome?.webview)window.chrome.webview.addEventListener('message',event=>{
+ const result=event.data;
+ if(result?.type==='launch-result')focusNotice(result.ok?
+  'Windows opened '+(projectById.get(result.repo)?.title||result.repo)+'.':
+  'Windows could not open this app: '+String(result.error||'Not installed or location untrusted'),!result.ok);
+});
 setInterval(()=>{if(!document.hidden&&snapshot&&['activity','library','project'].includes(ui.screen))
  void refresh()},6500);
