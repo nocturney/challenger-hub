@@ -51,7 +51,7 @@ export function categoriesOf(items){
  return ['All disciplines',...[...counts.entries()]
   .sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).slice(0,11).map(([name])=>name)];
 }
-export async function readFromRealEngine({runtime=defaultRuntime,timeoutMs=12000}={}){
+export async function readFromRealEngine({runtime=defaultRuntime,timeoutMs=12000,candidateFilePath=candidatePath}={}){
  const manifest=JSON.parse(fs.readFileSync(path.join(runtime,'desktop-manifest.json'),'utf8'));
  if(manifest.version!=='4.0.0-desktop.preview.12')throw Error('Refusing unexpected runtime version');
  const port=await choosePort();
@@ -96,7 +96,7 @@ export async function readFromRealEngine({runtime=defaultRuntime,timeoutMs=12000
   if(live.apps.length!==14||live.discoveries.length!==152)
    throw Error('Live catalog count changed: '+live.apps.length+'/'+live.discoveries.length);
   // Research comes from the genuine source-pinned candidate seed, not from Scout or public promotion.
-  const candidateFile=JSON.parse(fs.readFileSync(candidatePath,'utf8'));
+  const candidateFile=JSON.parse(fs.readFileSync(candidateFilePath,'utf8'));
   if(!Array.isArray(candidateFile.candidates)||candidateFile.candidates.length!==15)
    throw Error('Research candidate seed changed');
   const items=[

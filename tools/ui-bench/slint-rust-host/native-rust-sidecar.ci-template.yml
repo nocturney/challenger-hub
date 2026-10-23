@@ -1,0 +1,40 @@
+name: Native Rust / Slint + read-only Node sidecar
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/native-rust-sidecar.yml"
+      - "tools/ui-bench/slint-rust-host/**"
+      - "tools/ui-bench/slint-node-bridge/main.slint"
+      - "tools/ui-bench/slint-node-bridge/sidecar.mjs"
+      - "tools/ui-bench/slint-node-bridge/live-catalog.mjs"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-read-only:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, windows-2022, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Linux native Slint development libraries
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libfontconfig1-dev libxkbcommon-dev libxkbcommon-x11-dev libwayland-dev libxcb-shape0-dev libxcb-xfixes0-dev libgl1-mesa-dev xvfb
+      - name: Build reviewed Preview12 test runtime only
+        run: node tools/desktop-build/build-runtime.cjs 12
+      - name: Rust read-only protocol regression tests
+        run: cargo test --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked
+      - name: Real Node backend / 181-record IPC acceptance
+        run: cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --check-backend-only
+      - name: Linux native Slint GUI smoke in Xvfb
+        if: runner.os == 'Linux'
+        run: xvfb-run -a cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --smoke
