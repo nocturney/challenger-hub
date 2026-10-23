@@ -29,3 +29,11 @@ test('in-memory search, discipline filters and source are correct',async()=>{
  assert.ok(filterCatalog(live.items,'',first).every(x=>x.category===first));
  assert.ok(live.items.some(x=>x.source.includes('github.com')||x.source.includes('/')));
 });
+test('source seed text is UTF-8 and not double-decoded at the native bridge',async()=>{
+ const live=await readFromRealEngine();
+ const cad=live.items.find(p=>p.name==='CADCraft');
+ const varve=live.items.find(p=>p.name==='Varve');
+ assert.ok(cad?.summary.includes('drafting — an open-source'), 'CADCraft source em dash');
+ assert.ok(varve?.summary.includes('Varve · Free Design Software'), 'Varve source middle dot');
+ assert.ok(!live.items.some(p=>/â€”|Â·/.test(p.summary)), 'No known source mojibake');
+});
