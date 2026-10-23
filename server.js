@@ -8,6 +8,7 @@ const {execFileSync, execFile, spawn} = require('node:child_process');
 const {promisify}=require('node:util');
 const runChild=promisify(execFile);
 const challenger=require('./challenger-core');
+const withPlatformAvailability=require('./platform-availability').create({root:__dirname});
 const officialIcons=require('./official-icons');
 const registryLive=require('./registry-live');
 const selfUpdates=require('./hub-updates');
@@ -780,9 +781,15 @@ const server=http.createServer(async(req,res)=>{
     imageResponse(res,found?.available?found:null);return;
   }
   if(req.method==='GET' && route==='/api/state'){
-    json(res,200,{platform:process.platform,computer:os.hostname(),admin:isAdmin,
-      apps:catalog.apps.map(({releaseBody,...meta})=>({...meta,installEvidence:managedInstallStatus.assess(meta),creator:'Storytold',sourceId:'storytold',repository:'storytold/'+meta.repo,challenges:meta.original?[meta.original]:[],sourceSignal:scanner.publicSignal(meta.repo),...challenger.craftPortableMeta(meta.repo)})),
-      discoveries:readCuratedDiscoveries().map(a=>publicDiscovery({...a,sourceSignal:scanner.publicSignal(a.repo)})),sources:readSources(),sourceStatus:scanner.status(),
+    json(res,200,{platform:process.platform,arch:process.arch,computer:os.hostname(),admin:isAdmin,
+      apps:catalog.apps.map(({releaseBody,...meta})=>{
+        const item={...meta,installEvidence:managedInstallStatus.assess(meta),creator:'Storytold',sourceId:'storytold',repository:'storytold/'+meta.repo,challenges:meta.original?[meta.original]:[],sourceSignal:scanner.publicSignal(meta.repo),...challenger.craftPortableMeta(meta.repo)};
+        return {...item,platformAvailability:withPlatformAvailability(item)};
+      }),
+      discoveries:readCuratedDiscoveries().map(a=>{
+        const item=publicDiscovery({...a,sourceSignal:scanner.publicSignal(a.repo)});
+        return {...item,platformAvailability:withPlatformAvailability(item)};
+      }),sources:readSources(),sourceStatus:scanner.status(),
       catalogStatus:{checkedAt:catalog.checkedAt,scanning:catalog.scanning,lastAttempt:catalog.lastAttempt,
         releaseFailures:catalog.releaseFailures,refreshedReleases:catalog.refreshedReleases,
         count:catalog.apps.length,error:catalog.scanError,registryUpdated:'2026-10-10'},
