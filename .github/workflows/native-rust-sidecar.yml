@@ -7,6 +7,9 @@ on:
       - "tools/ui-bench/slint-node-bridge/main.slint"
       - "tools/ui-bench/slint-node-bridge/sidecar.mjs"
       - "tools/ui-bench/slint-node-bridge/live-catalog.mjs"
+      - "tools/ui-bench/slint-node-bridge/bridge.test.mjs"
+      - "tools/desktop-build/seeds/managed-catalog.preview10.json"
+      - "tools/desktop-build/seeds/catalog-candidates.preview10.json"
   workflow_dispatch:
 permissions:
   contents: read
@@ -33,8 +36,23 @@ jobs:
         run: node tools/desktop-build/build-runtime.cjs 12
       - name: Rust read-only protocol regression tests
         run: cargo test --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked
+      - name: Native bridge source encoding regression tests
+        run: node --test tools/ui-bench/slint-node-bridge/bridge.test.mjs
       - name: Real Node backend / 181-record IPC acceptance
         run: cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --check-backend-only
+      - name: macOS developer app packaging and bundled-engine smoke
+        if: runner.os == 'macOS'
+        run: |
+          bash tools/ui-bench/slint-rust-host/package-macos.sh
+          app="tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview.app"
+          codesign --verify --deep --strict "$app"
+          "$app/Contents/MacOS/challenger-slint-rust-host" --check-backend-only
+      - name: Windows developer package and bundled-engine smoke
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          ./tools/ui-bench/slint-rust-host/package-windows.ps1
+          & ./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe --check-backend-only
       - name: Linux native Slint GUI smoke in Xvfb
         if: runner.os == 'Linux'
         run: xvfb-run -a cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --smoke
