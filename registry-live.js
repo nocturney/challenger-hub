@@ -40,7 +40,7 @@ async function lookupBatch(batch,cli){
  const aliases=batch.map((p,i)=>{
   const [owner,name]=p.repository.split('/');
   return 'p'+i+':repository(owner:'+JSON.stringify(owner)+',name:'+JSON.stringify(name)+')'+
-   '{nameWithOwner pushedAt updatedAt stargazerCount isArchived url '+
+   '{nameWithOwner pushedAt updatedAt stargazerCount isArchived url owner{avatarUrl} '+
    'releases(first:1,orderBy:{field:CREATED_AT,direction:DESC}){nodes{tagName isPrerelease isDraft publishedAt url}}}';
  });
  const query='query { '+aliases.join(' ')+' }';
@@ -55,6 +55,7 @@ async function lookupBatch(batch,cli){
   return {id:p.id,repository:p.repository,stars:Number.isSafeInteger(v.stargazerCount)?v.stargazerCount:null,
    pushedAt:v.pushedAt||null,repoUpdatedAt:v.updatedAt||null,isArchived:!!v.isArchived,
    observedTag:release?.tagName||null,observedPublishedAt:release?.publishedAt||null,
+   ownerAvatarUrl:/^https:\/\/avatars\.githubusercontent\.com\/u\/[0-9]+(?:\?v=[0-9]+)?$/.test(v.owner?.avatarUrl||'')?v.owner.avatarUrl:null,
    lastObservedAt:new Date().toISOString()};
  });
 }
