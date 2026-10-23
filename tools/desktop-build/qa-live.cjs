@@ -5,7 +5,7 @@ const fs=require('node:fs'),path=require('node:path'),assert=require('node:asser
 const port=Number(process.env.FOCUS_DESKTOP_TEST_PORT||17964),base='http://127.0.0.1:'+port+'/',platform=process.platform;
 const expectedVersion=process.env.FOCUS_DESKTOP_QA_VERSION||'4.0.0-desktop.preview.4';
 const session=process.env.FOCUS_DESKTOP_QA_SESSION||'';
-const dir=path.join(__dirname,'dist','qa-'+platform+(expectedVersion.endsWith('.5')?'-onefile-preview5':expectedVersion.endsWith('.6')?'-onefile-preview6':expectedVersion.endsWith('.7')?'-onefile-preview7':''));
+const dir=path.join(__dirname,'dist','qa-'+platform+(expectedVersion.endsWith('.5')?'-onefile-preview5':expectedVersion.endsWith('.6')?'-onefile-preview6':expectedVersion.endsWith('.7')?'-onefile-preview7':expectedVersion.endsWith('.8')?'-onefile-preview8':''));
 const puppeteer=require(platform==='darwin'?
  '/Users/chris/.npm/_npx/4b4c857f6efdfb61/node_modules/puppeteer':
  'C:/Users/Chris/AppData/Local/npm-cache/_npx/4b4c857f6efdfb61/node_modules/puppeteer');
@@ -64,6 +64,11 @@ const puppeteer=require(platform==='darwin'?
       {repo:'real-video-enhancer',name:'REAL Video Enhancer'}]){
       await page.$eval('#homeSearch',(el,name)=>{el.value=name},p.name);
       await page.$eval('#homeSearchForm',form=>form.requestSubmit());
+      if(expectedVersion.endsWith('.8')&&['dune3d','material-maker'].includes(p.repo)){
+       await page.waitForSelector('#researchToggle');
+       const already=await page.$eval('#researchToggle',el=>el.getAttribute('aria-pressed'));
+       if(already!=='true')await page.click('#researchToggle');
+      }
       await page.waitForSelector('#exploreRows [data-project="'+p.repo+'"]',{timeout:15000});
       await page.click('#exploreRows [data-project="'+p.repo+'"]');
       await page.waitForFunction((name)=>{

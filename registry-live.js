@@ -41,6 +41,8 @@ async function lookupBatch(batch,cli){
   const [owner,name]=p.repository.split('/');
   return 'p'+i+':repository(owner:'+JSON.stringify(owner)+',name:'+JSON.stringify(name)+')'+
    '{nameWithOwner pushedAt updatedAt stargazerCount isArchived url owner{avatarUrl} '+
+   'description homepageUrl primaryLanguage{name} licenseInfo{spdxId name} '+
+   'repositoryTopics(first:8){nodes{topic{name}}} '+
    'releases(first:1,orderBy:{field:CREATED_AT,direction:DESC}){nodes{tagName isPrerelease isDraft publishedAt url}}}';
  });
  const query='query { '+aliases.join(' ')+' }';
@@ -56,6 +58,11 @@ async function lookupBatch(batch,cli){
    pushedAt:v.pushedAt||null,repoUpdatedAt:v.updatedAt||null,isArchived:!!v.isArchived,
    observedTag:release?.tagName||null,observedPublishedAt:release?.publishedAt||null,
    ownerAvatarUrl:/^https:\/\/avatars\.githubusercontent\.com\/u\/[0-9]+(?:\?v=[0-9]+)?$/.test(v.owner?.avatarUrl||'')?v.owner.avatarUrl:null,
+   sourceDescription:typeof v.description==='string'?v.description.slice(0,400):null,
+   officialHomepage:/^https:\/\/[^\s@/]+(?:\/[^\s]*)?$/i.test(v.homepageUrl||'')?v.homepageUrl.slice(0,350):null,
+   officialLicense:/^[A-Za-z0-9.+-]{2,60}$/.test(v.licenseInfo?.spdxId||'')&&v.licenseInfo.spdxId!=='NOASSERTION'?v.licenseInfo.spdxId:null,
+   primaryLanguage:typeof v.primaryLanguage?.name==='string'?v.primaryLanguage.name.slice(0,60):null,
+   topics:(v.repositoryTopics?.nodes||[]).map(x=>x?.topic?.name).filter(x=>typeof x==='string'&&/^[a-z0-9-]{2,60}$/.test(x)).slice(0,8),
    lastObservedAt:new Date().toISOString()};
  });
 }

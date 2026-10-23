@@ -4,7 +4,7 @@
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const root=path.resolve(__dirname,'..','..'),mediaRoot=path.join(root,'tools','preview-build','media-source');
 const preview=process.argv[2]||'4';
-if(!['4','5','6','7'].includes(preview))throw Error('Unsupported desktop preview');
+if(!['4','5','6','7','8'].includes(preview))throw Error('Unsupported desktop preview');
 const out=path.join(root,'tools','desktop-build','dist',preview==='4'?'runtime':'runtime-preview'+preview);
 const version='4.0.0-desktop.preview.'+preview,port=preview!=='4'?null:17964;
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
@@ -21,7 +21,7 @@ if(media.schema!=='challenger-project-media.v1')throw Error('Unrecognized media 
 const files=new Map();let icons=0,screenshots=0;
 try{
  const copy=(src,dst)=>{const dest=path.join(tmp,dst);fs.mkdirSync(path.dirname(dest),{recursive:true});fs.copyFileSync(src,dest)};
- for(const name of ['server.js','challenger-core.js','source-scanner.js','registry-live.js','hub-updates.js','repository-media.js','Install-Challenger.js','adapters.json',
+ for(const name of ['server.js','challenger-core.js','source-scanner.js','registry-live.js','hub-updates.js','repository-media.js','independent-source-media.js','independent-media.v1.json','managed-install-status.js','project-quality.js','Install-Challenger.js','adapters.json',
   'portable-assets.json','official-icons.json','official-icons.js','challengers.json','sources.json','brand-icon.png','favicon.ico'])
    copy(path.join(root,name),name);
  fs.cpSync(path.join(root,'brand','orbit'),path.join(tmp,'brand','orbit'),{recursive:true});
@@ -43,7 +43,40 @@ try{
   }
  }
  if(icons<10||screenshots<3)throw Error('Too few verified media assets');
- if(preview==='6'||preview==='7'){
+ if(preview==='8'){
+  const craft=JSON.parse(fs.readFileSync(path.join(mediaRoot,'craft-suite-media.v1.json'),'utf8'));
+  if(craft.schema!=='challenger-craft-media.v1'||Object.keys(craft.apps||{}).length!==13)
+   throw Error('Official Craft app coverage must be 13 source-audited app icons');
+  const vetted={},seenPaths=new Set();let photos=0;
+  function ship(id,p,kind){
+   if(!/^[a-z]+craft$/.test(id)||typeof p.path!=='string'||
+      !new RegExp('^/media/craft/'+kind+'/'+id+(kind==='icons'?'\\.png':'/[a-z0-9-]+\\.(jpg|png)')+'$').test(p.path)||
+      !/^https:\/\/github\.com\/storytold\/[a-z0-9-]+\/blob\/[A-Za-z0-9._-]+\/[A-Za-z0-9._/-]+$/.test(p.source||'')||
+      !/^(MIT OR Apache-2\.0|Apache-2\.0)$/.test(p.license||'')||
+      !/^[0-9a-f]{64}$/.test(p.sha256||'')||seenPaths.has(p.path))
+    throw Error('Untrusted Craft source media '+id+':'+p.path);
+   const rel=p.path.slice(1),buf=fs.readFileSync(path.join(mediaRoot,'assets',rel));
+   if(buf.length!==p.size||sha(buf)!==p.sha256)throw Error('Unverified Craft image bytes '+rel);
+   if(rel.endsWith('.png')&&!buf.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])))
+    throw Error('Craft PNG signature absent '+rel);
+   if(rel.endsWith('.jpg')&&!(buf[0]===255&&buf[1]===216&&buf[2]===255))
+    throw Error('Craft JPEG signature absent '+rel);
+   copy(path.join(mediaRoot,'assets',rel),rel);files.set(p.path,rel);seenPaths.add(p.path);
+   return {path:p.path,source:p.source,key:p.key||id,caption:p.caption||id};
+  }
+  for(const [id,entry] of Object.entries(craft.apps)){
+   if(!entry.icon||!Array.isArray(entry.screenshots)||!entry.screenshots.length)
+    throw Error('Missing original Craft application imagery '+id);
+   vetted[id]={icon:ship(id,entry.icon,'icons'),
+    screenshots:entry.screenshots.map(p=>{photos++;return ship(id,p,'screenshots')})};
+  }
+  if(photos!==47)throw Error('Expected 47 verified Craft UI screenshots, got '+photos);
+  fs.writeFileSync(path.join(tmp,'craft-media-index.js'),
+   'window.CHALLENGER_CRAFT_MEDIA=Object.freeze('+JSON.stringify(vetted)+');\n');
+  copy(path.join(mediaRoot,'CRAFT_SUITE_MEDIA_NOTICES.md'),'CRAFT_SUITE_MEDIA_NOTICES.md');
+  console.log('VERIFIED_CRAFT_APP_MEDIA_BUNDLED '+JSON.stringify({officialIcons:13,officialScreenshots:photos}));
+ }
+ if(preview==='6'||preview==='7'||preview==='8'){
   const managedSeed=JSON.parse(fs.readFileSync(path.join(__dirname,'seeds','managed-catalog.preview'+preview+'.json'),'utf8'));
   if(!Array.isArray(managedSeed.apps)||managedSeed.apps.some(a=>a.installedPath||a.installedVersion||a.needsUpdate))
    throw Error('Refusing to publish machine-specific installed-software data in shared catalog seed');
@@ -73,19 +106,36 @@ try{
  html=one(html,'Refresh read-only data ↻','Refresh live status ↻','footer refresh');
  html=one(html,'DESIGN CANDIDATE 4.0 / NO SYSTEM WRITES',
   'DESKTOP PREVIEW · REAL LOCAL ENGINE · ACTIONS REQUIRE APPROVAL','footer state');
- if(preview==='7'){
+ if(preview==='7'||preview==='8'){
   html=one(html,'<div class="header-utilities">',
    '<div class="header-utilities"><div class="hub-update-controls">'+
-   '<span class="hub-version" id="hubVersion">v4.0.0 · Preview 7</span>'+
+   '<span class="hub-version" id="hubVersion">v4.0.0 · Preview '+preview+'</span>'+
    '<button id="hubCheckUpdates" type="button" class="hub-update-button" title="Check updates for Challenger Hub itself">Check Hub updates</button>'+
    '<span id="hubUpdateState" class="hub-update-state" role="status">Not checked</span>'+
    '<a id="hubUpdateLink" class="hub-update-link" rel="noopener noreferrer" target="_blank" hidden>View official release ↗</a></div>',
    'visible Hub version and self-update');
   html=one(html,'<script src="/live-actions.js" defer></script>',
+   (preview==='8'?'<script src="/project-quality-ui.js" defer></script>\n ':'')+
    '<script src="/live-project-media.js" defer></script>\n '+
    '<script src="/hub-update-ui.js" defer></script>\n '+
    '<script src="/live-actions.js" defer></script>','v7 client scripts');
  }
+ if(preview==='8'){
+  html=one(html,'<button type="button" id="filterToggle"',
+   '<button type="button" id="researchToggle" class="control-button" aria-pressed="false" title="Show project research with missing details">Show research</button>\n    <button type="button" id="filterToggle"',
+   'independent research quality opt-in');
+ }
+ if(preview==='8')html=one(html,
+  '<script src="/live-project-media.js" defer></script>',
+  '<script src="/independent-media-index.js" defer></script>\n '+
+  '<script src="/live-project-media.js" defer></script>',
+  'vetted source-media index before original project dossier resolver');
+ if(preview==='8')html=one(html,
+  '<script src="/project-media-runtime.js" defer></script>',
+  '<script src="/project-media-runtime.js" defer></script>\n '+
+  '<script src="/craft-media-index.js" defer></script>\n '+
+  '<script src="/craft-suite-media-runtime.js" defer></script>',
+  'official source-based Craft App media loaded before dossiers');
  fs.writeFileSync(path.join(tmp,'index.html'),html);
  let js=fs.readFileSync(path.join(root,'app.js'),'utf8');
  js=one(js,'No installation, launch, scan, settings writes or background actions.',
@@ -108,7 +158,7 @@ try{
  js=one(js,'No action is available in this preview.','Installation requires approval and verified assets.','installer statement');
  js=one(js,"'Read-only preview cannot reach the local source. '+error.message+",
   "'Local engine cannot be reached. '+error.message+",'error context');
- if(preview==='6'||preview==='7'){
+ if(preview==='6'||preview==='7'||preview==='8'){
   js=one(js,"['Latest source version',a.latestVersion||a.releaseTag||'Not verified']",
    "['Latest source version',a.latestVersion||a.releaseTag||(a.observedReleaseTag?'Observed '+a.observedReleaseTag+' (not install-verified)':'Not verified')]",'honest observed release tag');
   js=one(js,"['Release date',dateLabel(a.publishedAt)]",
@@ -125,16 +175,29 @@ try{
  fs.writeFileSync(path.join(tmp,'app.js'),js);
  let css=fs.readFileSync(path.join(root,'style.css'),'utf8')+'\n'+
   fs.readFileSync(path.join(root,'tools','preview-build','project-media.css'),'utf8')+'\n'+
-  fs.readFileSync(path.join(__dirname,'live.css'),'utf8')+(preview==='7'?'\n'+fs.readFileSync(path.join(__dirname,'viewport-fit.css'),'utf8'):'');
+  fs.readFileSync(path.join(__dirname,'live.css'),'utf8')+(preview==='7'||preview==='8'?'\n'+fs.readFileSync(path.join(__dirname,preview==='8'?'viewport-fit-preview8.css':'viewport-fit.css'),'utf8'):'')+
+   (preview==='8'?'\n'+fs.readFileSync(path.join(__dirname,'slice-shell.css'),'utf8')+'\n'+
+     fs.readFileSync(path.join(__dirname,'craft-suite-media.css'),'utf8'):'');
  fs.writeFileSync(path.join(tmp,'style.css'),css);
  const clientMedia=Object.fromEntries(Object.entries(media.projects).map(([id,p])=>
    [id,{icon:p.icon||null,screenshot:p.screenshot||null}]));
  fs.writeFileSync(path.join(tmp,'media-index.js'),
   'window.CHALLENGER_PROJECT_MEDIA=Object.freeze('+JSON.stringify(clientMedia)+');\n');
  copy(path.join(root,'tools','preview-build','project-media-runtime.js'),'project-media-runtime.js');
+ if(preview==='8'){
+  copy(path.join(__dirname,'craft-suite-media-runtime.js'),'craft-suite-media-runtime.js');
+  const vetted=require(path.join(root,'independent-source-media.js')).clientIndex();
+  if(Object.keys(vetted.apps).length<24)throw Error('Insufficient vetted independent source media');
+  fs.writeFileSync(path.join(tmp,'independent-media-index.js'),
+   'window.CHALLENGER_INDEPENDENT_MEDIA=Object.freeze('+JSON.stringify(vetted)+');\n');
+  console.log('SOURCE_PINNED_INDEPENDENT_MEDIA_BUNDLED '+JSON.stringify({
+   projects:Object.keys(vetted.apps).length,icons:Object.values(vetted.apps).filter(x=>x.icon).length,
+   sourceScreenshots:Object.values(vetted.apps).reduce((n,x)=>n+x.screenshots.length,0)}));
+ }
  copy(path.join(__dirname,'live-actions.js'),'live-actions.js');
- if(preview==='7'){
-  copy(path.join(__dirname,'hub-update-ui.js'),'hub-update-ui.js');
+ if(preview==='7'||preview==='8'){
+  copy(path.join(__dirname,preview==='8'?'hub-update-ui-preview8.js':'hub-update-ui.js'),'hub-update-ui.js');
+  if(preview==='8')copy(path.join(__dirname,'project-quality-ui.js'),'project-quality-ui.js');
   copy(path.join(__dirname,'live-project-media.js'),'live-project-media.js');
  }
  let server=fs.readFileSync(path.join(root,'server.js'),'utf8');
@@ -151,13 +214,25 @@ try{
   "sendStatic(res,name,name.endsWith('.svg')?'image/svg+xml':name.endsWith('.png')?'image/png':"+
   "name.endsWith('.ico')?'image/x-icon':'application/octet-stream');return;}",
   'live resource whitelist');
- if(preview==='7')server=one(server,
+ if(preview==='7'||preview==='8')server=one(server,
   "if(req.method==='GET' && route==='/live-actions.js'){sendStatic(res,'live-actions.js','text/javascript; charset=utf-8');return;}",
   "if(req.method==='GET' && route==='/live-actions.js'){sendStatic(res,'live-actions.js','text/javascript; charset=utf-8');return;}\n"+
   "if(req.method==='GET' && route==='/hub-update-ui.js'){sendStatic(res,'hub-update-ui.js','text/javascript; charset=utf-8');return;}\n"+
   "if(req.method==='GET' && route==='/live-project-media.js'){sendStatic(res,'live-project-media.js','text/javascript; charset=utf-8');return;}",
   'Hub version and media UI script routes');
- server=one(server,"const ROOT=__dirname;","const ROOT=__dirname;\nconst MEDIA_WHITELIST=new Map("+
+ if(preview==='8')server=one(server,
+  "if(req.method==='GET' && route==='/hub-update-ui.js'){sendStatic(res,'hub-update-ui.js','text/javascript; charset=utf-8');return;}",
+  "if(req.method==='GET' && route==='/hub-update-ui.js'){sendStatic(res,'hub-update-ui.js','text/javascript; charset=utf-8');return;}\n"+
+  "if(req.method==='GET' && route==='/project-quality-ui.js'){sendStatic(res,'project-quality-ui.js','text/javascript; charset=utf-8');return;}\n"+
+  "if(req.method==='GET' && route==='/independent-media-index.js'){sendStatic(res,'independent-media-index.js','text/javascript; charset=utf-8');return;}",
+  'quality UI script delivered solely by native app');
+ if(preview==='8')server=one(server,
+  "if(req.method==='GET' && route==='/project-media-runtime.js'){sendStatic(res,'project-media-runtime.js','text/javascript; charset=utf-8');return;}",
+  "if(req.method==='GET' && route==='/project-media-runtime.js'){sendStatic(res,'project-media-runtime.js','text/javascript; charset=utf-8');return;}\n"+
+  "if(req.method==='GET' && route==='/craft-media-index.js'){sendStatic(res,'craft-media-index.js','text/javascript; charset=utf-8');return;}\n"+
+  "if(req.method==='GET' && route==='/craft-suite-media-runtime.js'){sendStatic(res,'craft-suite-media-runtime.js','text/javascript; charset=utf-8');return;}",
+  'source-vetted Craft app media script routes');
+ server=one(server,"const ROOT=__dirname;",  "const ROOT=__dirname;\nconst MEDIA_WHITELIST=new Map("+
   JSON.stringify([...files.entries()])+");",'frozen media whitelist');
  server=one(server,"json(res,200,{ok:true,app:'Craft Update Center',platform:process.platform,version:'2.5.7'});",
   "json(res,200,{ok:true,app:'Challenger Focus Desktop',mode:'LIVE_LOCAL_PREVIEW',platform:process.platform,"+

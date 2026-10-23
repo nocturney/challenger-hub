@@ -1,0 +1,11 @@
+/* Official, independently source-audited Craft App screenshots */
+.craft-product-gallery .project-screenshot{max-height:370px;object-fit:contain}
+.craft-product-gallery .project-screenshot-frame{padding:6px}
+.craft-gallery-more{margin-top:11px;padding-top:9px;border-top:1px solid var(--line)}
+.craft-gallery-more>summary{cursor:pointer;color:var(--accent);font-size:11px;font-weight:730;list-style-position:inside;padding:6px 0}
+.craft-gallery-tiles{margin-top:9px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.craft-gallery-tiles figure{margin:0;min-width:0;overflow:hidden}
+.craft-gallery-tiles img{width:100%;height:auto;aspect-ratio:8/5;object-fit:contain;border:1px solid var(--line);border-radius:7px;background:var(--accent-surface)}
+.craft-gallery-tiles figcaption{font-size:10px;color:var(--muted);line-height:1.4;padding:4px 0;overflow-wrap:anywhere}
+.craft-gallery-tiles a{color:var(--accent)}
+@media(max-width:700px){.craft-gallery-tiles{grid-template-columns:1fr}}

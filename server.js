@@ -12,6 +12,9 @@ const officialIcons=require('./official-icons');
 const registryLive=require('./registry-live');
 const selfUpdates=require('./hub-updates');
 const repositoryMedia=require('./repository-media');
+const independentSourceMedia=require('./independent-source-media');
+const managedInstallStatus=require('./managed-install-status');
+const projectQuality=require('./project-quality');
 const hubChecker=selfUpdates.makeUpdateChecker({root:__dirname});
 
 const HOST='127.0.0.1';
@@ -99,8 +102,13 @@ function readCuratedDiscoveries(){
       enriched.repositoryMetadataCheckedAt=observed.lastObservedAt;
       enriched.archivedAtSource=!!observed.isArchived;
       enriched.ownerAvatarUrl=observed.ownerAvatarUrl||null;
+      enriched.sourceDescription=observed.sourceDescription||null;
+      enriched.officialHomepage=observed.officialHomepage||null;
+      enriched.officialLicense=observed.officialLicense||null;
+      enriched.primaryLanguage=observed.primaryLanguage||null;
+      enriched.topics=observed.topics||[];
     }
-    return {...enriched,...officialIcons.iconMeta(enriched)};
+    return {...enriched,...projectQuality.assess(enriched),...officialIcons.iconMeta(enriched)};
   });
 }
 function readSources(){
@@ -743,10 +751,19 @@ const server=http.createServer(async(req,res)=>{
     const result=await hubChecker.check({force:(req.url||'').includes('force=1')});
     json(res,result.ok?200:503,result);return;
   }
-  if(req.method==='GET' && ['/api/repository-media/meta','/api/repository-media/screenshot','/api/repository-media/avatar'].includes(route)){
+  if(req.method==='GET' && ['/api/repository-media/meta','/api/repository-media/screenshot','/api/repository-media/avatar',
+    '/api/repository-media/official-icon','/api/repository-media/official-screenshot'].includes(route)){
     const repo=new URL(req.url,'http://127.0.0.1:'+PORT).searchParams.get('repo')||'';
     const app=/^[a-z][a-z0-9-]{1,79}$/.test(repo)?readCuratedDiscoveries().find(x=>x.repo===repo):null;
     if(!app){json(res,404,{error:'Unknown curated project'});return;}
+    if(route==='/api/repository-media/official-icon'||route==='/api/repository-media/official-screenshot'){
+      const params=new URL(req.url,'http://127.0.0.1:'+PORT).searchParams;
+      const n=params.get('i')||'0';
+      if(!/^[0-4]$/.test(n)){json(res,400,{error:'Invalid vetted image index'});return;}
+      const verified=await independentSourceMedia.get(app,
+       route==='/api/repository-media/official-icon'?'icon':'screenshot',Number(n)).catch(()=>null);
+      imageResponse(res,verified);return;
+    }
     if(route==='/api/repository-media/avatar'){
       const img=await repositoryMedia.avatar(app).catch(()=>null);
       imageResponse(res,img);return;
@@ -762,7 +779,7 @@ const server=http.createServer(async(req,res)=>{
   }
   if(req.method==='GET' && route==='/api/state'){
     json(res,200,{platform:process.platform,computer:os.hostname(),admin:isAdmin,
-      apps:catalog.apps.map(({releaseBody,...meta})=>({...meta,creator:'Storytold',sourceId:'storytold',repository:'storytold/'+meta.repo,challenges:meta.original?[meta.original]:[],sourceSignal:scanner.publicSignal(meta.repo),...challenger.craftPortableMeta(meta.repo)})),
+      apps:catalog.apps.map(({releaseBody,...meta})=>({...meta,installEvidence:managedInstallStatus.assess(meta),creator:'Storytold',sourceId:'storytold',repository:'storytold/'+meta.repo,challenges:meta.original?[meta.original]:[],sourceSignal:scanner.publicSignal(meta.repo),...challenger.craftPortableMeta(meta.repo)})),
       discoveries:readCuratedDiscoveries().map(a=>publicDiscovery({...a,sourceSignal:scanner.publicSignal(a.repo)})),sources:readSources(),sourceStatus:scanner.status(),
       catalogStatus:{checkedAt:catalog.checkedAt,scanning:catalog.scanning,lastAttempt:catalog.lastAttempt,
         releaseFailures:catalog.releaseFailures,refreshedReleases:catalog.refreshedReleases,
