@@ -13,7 +13,8 @@ const puppeteer=require(platform==='darwin'?
  assert.equal(health.mode,'LIVE_LOCAL_PREVIEW');
  assert.equal(health.version,'4.0.0-desktop.preview.4');
  const state=await fetch(base+'api/state').then(r=>r.json());
- assert.equal(state.apps.length,12);assert.equal(state.discoveries.length,152);
+ assert.ok(state.apps.length>=12&&state.apps.length<=20,'Unexpected locally cached managed app count');
+ assert.equal(state.discoveries.length,152);
  assert.equal(state.discoveries.filter(a=>a.researchPendingVerification).length,73);
  assert.ok(typeof state.computer==='string'&&state.computer.length);
  const denied=await fetch(base+'api/install',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});

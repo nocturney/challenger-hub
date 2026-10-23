@@ -26,6 +26,10 @@ macOS: open the Challenger Focus Desktop Preview 4.app from the DMG. Windows: un
 ## Audit screenshot and source
 ![Actual running Focus Desktop page, verified from browser on macOS](focus-desktop-live-home-macos.png)
 
+![Actual running Focus Desktop page, verified from browser on Windows](focus-desktop-live-home-windows.png)
+
+On both machines the packaged native GUI successfully started its own LIVE_LOCAL_PREVIEW backend. In each environment 31/31 Node tests and 10/10 responsive browser test scenarios passed with zero JavaScript errors, zero external browser requests and exactly one explicitly initiated benign /api/verify POST during QA. Real approved installation or update execution has not yet been tested.
+
 Source: tools/desktop-build/build-runtime.cjs, live-actions.js, build-mac.cjs, build-windows.cjs and qa-live.cjs. Native hosts derive from the existing platform/windows/Program.cs and platform/macos/main.swift.
 
 The package includes upstream image provenance and separate Node.js license notices. A completed real install on a designated test program remains the outstanding acceptance test before any Production promotion.
