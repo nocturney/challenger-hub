@@ -7,6 +7,7 @@ const policy=require('./shell-policy.cjs');
 const VERSION='4.0.0-desktop.preview.12',smoke=process.argv.includes('--challenger-smoke');
 const standalone=process.argv.includes('--challenger-offline');
 const profile=policy.deploymentRoot(app.getPath('appData'));
+fs.mkdirSync(profile,{recursive:true});
 app.setPath('userData',profile);
 if(!app.requestSingleInstanceLock()){app.exit(0)}
 let child=null,window=null,port=null;
