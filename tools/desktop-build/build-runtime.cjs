@@ -91,6 +91,12 @@ try{
  copy(path.join(mediaRoot,'THIRD_PARTY_MEDIA_NOTICES.md'),'THIRD_PARTY_MEDIA_NOTICES.md');
  fs.cpSync(path.join(mediaRoot,'licenses'),path.join(tmp,'licenses'),{recursive:true});
  let html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+ if(preview==='10'){
+  html=one(html,'<h1>Find the tool<br><span>that fits.</span></h1>',
+   '<h1>Explore <span>better tools.</span></h1>','modern native home heading');
+  html=one(html,'Start with the software you know, or the discipline you work in.',
+   'Independent software, fresh ideas, and tools worth exploring.','modern native home description');
+ }
  html=one(html,'data-app-version="4.0.0"','data-app-version="'+version+'"','release version');
  html=one(html,'<script src="/app.js" defer></script>',
   '<script src="/media-index.js" defer></script>\n <script src="/project-media-runtime.js" defer></script>\n <script src="/app.js" defer></script>\n <script src="/live-actions.js" defer></script>','script loading');
@@ -226,7 +232,8 @@ try{
   fs.readFileSync(path.join(__dirname,'live.css'),'utf8')+(['7','8','9','10'].includes(preview)?'\n'+fs.readFileSync(path.join(__dirname,preview==='10'?'viewport-fit-preview10.css':preview==='9'?'viewport-fit-preview9.css':['8','9','10'].includes(preview)?'viewport-fit-preview8.css':'viewport-fit.css'),'utf8'):'')+
    (['8','9','10'].includes(preview)?'\n'+fs.readFileSync(path.join(__dirname,'slice-shell.css'),'utf8')+'\n'+
      fs.readFileSync(path.join(__dirname,'craft-suite-media.css'),'utf8'):'')+
-  (preview==='10'?'\n'+fs.readFileSync(path.join(__dirname,'quiet-footer-preview10.css'),'utf8'):'');
+  (preview==='10'?'\n'+fs.readFileSync(path.join(__dirname,'quiet-footer-preview10.css'),'utf8')+'\n'+
+    fs.readFileSync(path.join(__dirname,'modern-surface-preview10.css'),'utf8'):'');
  fs.writeFileSync(path.join(tmp,'style.css'),css);
  const clientMedia=Object.fromEntries(Object.entries(media.projects).map(([id,p])=>
    [id,{icon:p.icon||null,screenshot:p.screenshot||null}]));
