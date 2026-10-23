@@ -1,0 +1,196 @@
+import { LineEdit, ListView } from "std-widgets.slint";
+export struct ProjectEntry {
+    id: string,
+    initial: string,
+    name: string,
+    maker: string,
+    category: string,
+    summary: string,
+    evidence: string,
+    platforms: string,
+    source: string,
+}
+export component AppWindow inherits Window {
+    title: "Challenger · Native Rust Prototype";
+    width: 1190px;
+    height: 760px;
+    background: #f7f7f2;
+    default-font-family: "Arial";
+    in-out property <[ProjectEntry]> entries;
+    in-out property <[string]> categories;
+    in-out property <int> total: 181;
+    in-out property <int> visible-total: 181;
+    in-out property <string> search-term: "";
+    in-out property <string> active-category: "All disciplines";
+    in-out property <string> detail-name: "";
+    in-out property <string> detail-initial: "";
+    in-out property <string> detail-maker: "";
+    in-out property <string> detail-summary: "";
+    in-out property <string> detail-platforms: "";
+    in-out property <string> detail-category: "";
+    in-out property <string> detail-source: "";
+    in-out property <string> detail-evidence: "";
+    in-out property <int> selected-index: 0;
+    callback search-changed(string);
+    callback category-changed(string);
+    callback selected(int);
+
+    VerticalLayout {
+        spacing: 0px;
+        Rectangle {
+            height: 70px;
+            background: #ffffff;
+            border-color: #e3e9df;
+            border-width: 1px;
+            HorizontalLayout {
+                padding-left: 26px; padding-right: 26px;
+                spacing: 20px;
+                Rectangle {
+                    width: 38px; height: 38px; border-radius: 11px;
+                    background: #243e30;
+                    Text { text: "C"; font-size: 22px; color: #e5f2df; horizontal-alignment: center; vertical-alignment: center; }
+                }
+                VerticalLayout {
+                    spacing: 2px;
+                    Text { text: "C H A L L E N G E R"; font-size: 12px; font-weight: 800; color: #27392e; }
+                    Text { text: "Independent tools, discovered."; font-size: 10px; color: #809084; }
+                }
+                Rectangle { horizontal-stretch: 1; background: transparent; }
+                Text { text: "Explore"; font-size: 12px; color: #47725b; font-weight: 800; vertical-alignment: center; }
+                Text { text: "My software"; font-size: 12px; color: #97a59a; vertical-alignment: center; }
+                Text { text: "Activity"; font-size: 12px; color: #97a59a; vertical-alignment: center; }
+                Rectangle { width: 1px; background: #e4e9e1; }
+                Text { text: "●  RUST NATIVE"; font-size: 10px; color: #47725b; vertical-alignment: center; }
+            }
+        }
+        HorizontalLayout {
+            spacing: 0px;
+            Rectangle {
+                width: 223px;
+                background: #fafcf8;
+                border-color: #e3e9df;
+                border-width: 1px;
+                VerticalLayout {
+                    padding: 22px; spacing: 7px;
+                    Text { text: "WORKSPACE"; font-size: 10px; color: #8aa08e; font-weight: 800; }
+                    Text { text: "Explore"; font-size: 25px; color: #24382d; font-weight: 800; }
+                    Text { text: "Search more freely. Discover independent alternatives."; font-size: 11px; color: #758579; wrap: word-wrap; }
+                    Rectangle { height: 15px; background: transparent; }
+                    Text { text: "DISCIPLINES"; font-size: 10px; color: #8aa08e; font-weight: 800; }
+                    ListView {
+                        vertical-stretch: 1;
+                        for category[i] in root.categories : Rectangle {
+                            height: 36px;
+                            border-radius: 8px;
+                            background: category == root.active-category ? #e7f0e5 : transparent;
+                            Text {
+                                x: 10px; y: 0px; width: parent.width - 20px; height: parent.height;
+                                text: category;
+                                color: category == root.active-category ? #3f7557 : #78887c;
+                                font-weight: category == root.active-category ? 800 : 400;
+                                font-size: 11px;
+                                vertical-alignment: center;
+                                overflow: elide;
+                            }
+                            TouchArea {
+                                clicked => { root.category-changed(category); }
+                            }
+                        }
+                    }
+                    Text { text: "14 managed · 152 curated · 15 research"; font-size: 9px; color: #9aada0; }
+                }
+            }
+            Rectangle {
+                horizontal-stretch: 1;
+                background: #f7f7f2;
+                VerticalLayout {
+                    padding: 22px; spacing: 14px;
+                    Rectangle {
+                        height: 194px;
+                        background: @linear-gradient(140deg, #eef6ea, #f6faf5);
+                        border-color: #d9e6d8; border-width: 1px;
+                        border-radius: 16px;
+                        VerticalLayout {
+                            padding: 22px; spacing: 8px;
+                            Text { text: "THE INDEPENDENT SOFTWARE UNIVERSE  ·  ORBIT"; font-size: 9px; font-weight: 800; color: #7a9a82; }
+                            Text { text: "Find tools that move you forward."; font-size: 28px; color: #284634; font-weight: 800; overflow: elide; }
+                            Text { text: "Real sources, better alternatives and genuinely new ideas."; font-size: 11px; color: #6b806f; }
+                            LineEdit {
+                                height: 43px;
+                                placeholder-text: "Search tools, categories or capabilities…";
+                                text: root.search-term;
+                                edited(value) => { root.search-changed(value); }
+                            }
+                        }
+                    }
+                    HorizontalLayout {
+                        height: 47px;
+                        VerticalLayout {
+                            spacing: 1px;
+                            Text { text: "DISCOVER"; font-size: 9px; font-weight: 800; color: #839888; }
+                            Text { text: "Independent software"; font-size: 21px; font-weight: 800; color: #2b3a30; }
+                        }
+                        Rectangle { horizontal-stretch: 1; background: transparent; }
+                        Text { text: root.visible-total + " / " + root.total + " tools"; font-size: 11px; color: #79907d; vertical-alignment: center; }
+                    }
+                    ListView {
+                        vertical-stretch: 1;
+                        for project[i] in root.entries : Rectangle {
+                            height: 95px;
+                            border-radius: 11px;
+                            border-color: i == root.selected-index ? #8bad95 : #e0e7df;
+                            border-width: 1px;
+                            background: i == root.selected-index ? #f0f6ec : white;
+                            HorizontalLayout {
+                                padding: 12px; spacing: 12px;
+                                Rectangle {
+                                    width: 46px; height: 46px; border-radius: 12px; background: #e4f0e4;
+                                    Text { text: project.initial; font-size: 23px; font-weight: 800; color: #39734f; horizontal-alignment: center; vertical-alignment: center; }
+                                }
+                                VerticalLayout {
+                                    spacing: 5px;
+                                    HorizontalLayout {
+                                        Text { text: project.name; color: #2c4233; font-size: 14px; font-weight: 800; overflow: elide; }
+                                        Rectangle { horizontal-stretch: 1; background: transparent; }
+                                        Text { text: project.evidence; color: #548160; font-size: 9px; }
+                                    }
+                                    Text { text: project.summary; color: #718174; font-size: 11px; wrap: word-wrap; max-height: 34px; overflow: elide; }
+                                    Text { text: project.category + "   ·   " + project.maker; color: #9aaa9f; font-size: 9px; overflow: elide; }
+                                }
+                            }
+                            TouchArea { clicked => {root.selected(i);} }
+                        }
+                    }
+                    Text { text: "Preview data only · no installations or edits"; font-size: 9px; color: #97aa9a; }
+                }
+            }
+            Rectangle {
+                width: 275px;
+                background: #ffffff;
+                border-color: #e3e9df;
+                border-width: 1px;
+                VerticalLayout {
+                    padding: 21px; spacing: 11px;
+                    Text { text: "PROJECT OVERVIEW"; font-size: 9px; font-weight: 800; color: #7b9683; }
+                    Rectangle { height: 64px; background: transparent; }
+                    Rectangle {
+                        width: 68px; height: 68px; background: #e5f1e4; border-radius: 15px;
+                        Text { text: root.detail-initial; color: #39734f; font-size: 34px; font-weight: 800; horizontal-alignment: center; vertical-alignment: center; }
+                    }
+                    Text { text: root.detail-name; font-size: 23px; color: #264532; font-weight: 800; wrap: word-wrap; }
+                    Text { text: root.detail-maker; font-size: 11px; color: #91a396; }
+                    Rectangle { height: 1px; background: #e4ece4; }
+                    Text { text: "WHAT IT DOES"; font-size: 9px; color: #8ca292; font-weight: 800; }
+                    Text { text: root.detail-summary; font-size: 12px; color: #6c806f; wrap: word-wrap; }
+                    Text { text: "DISCIPLINE"; font-size: 9px; color: #8ca292; font-weight: 800; }
+                    Text { text: root.detail-category; font-size: 12px; color: #37634b; wrap: word-wrap; }
+                    Text { text: "REPORTED PLATFORMS"; font-size: 9px; color: #8ca292; font-weight: 800; }
+                    Text { text: root.detail-platforms; font-size: 11px; color: #738b79; wrap: word-wrap; }
+                    Text { text: root.detail-evidence; font-size: 10px; color: #3c7855; font-weight: 800; }
+                    Rectangle { vertical-stretch: 1; background: transparent; }
+                    Text { text: "Native Rust drawing\nPowered by Slint · no WebView\nNo installation permission"; font-size: 10px; color: #9cae9d; wrap: word-wrap; }
+                }
+            }
+        }
+    }
+}

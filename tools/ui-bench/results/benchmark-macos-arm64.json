@@ -1,0 +1,157 @@
+{
+  "schema": "challenger-ui-renderer-benchmark.v1",
+  "createdAt": "2026-10-23T19:05:02.694Z",
+  "os": "darwin",
+  "arch": "arm64",
+  "cpuCores": 10,
+  "fixtureCount": 181,
+  "fixtureHash": "b1c6529329ddd95d93d1cc0a786d7040c397995d906dcfa40c541f37211f68e5",
+  "caveats": [
+    "Same source records but not identical rendering work (Slint list virtualization vs DOM full grid).",
+    "Ready signals measure different milestones (Slint timer vs WebView two animation frames).",
+    "Aggregate RSS includes helper processes and shared pages; Tauri uses system WebKit.",
+    "No installed application backend, installer or real DCC workloads are included."
+  ],
+  "runs": [
+    {
+      "framework": "electron",
+      "total": 181,
+      "renderer": "chromium",
+      "appReadyMs": 1141,
+      "startToReadyMs": 1706,
+      "processes": 4,
+      "aggregateRssMiB": 427.8,
+      "snapshotCpuPercent": 62.6,
+      "trial": 1,
+      "pid": 97807
+    },
+    {
+      "framework": "tauri",
+      "total": 181,
+      "renderer": "webview",
+      "appReadyMs": 1258,
+      "startToReadyMs": 1865,
+      "processes": 1,
+      "aggregateRssMiB": 103.4,
+      "snapshotCpuPercent": 8.4,
+      "trial": 1,
+      "pid": 97837
+    },
+    {
+      "framework": "slint",
+      "total": 181,
+      "renderer": "native",
+      "appReadyMs": 1136,
+      "startToReadyMs": 1465,
+      "processes": 1,
+      "aggregateRssMiB": 99.3,
+      "snapshotCpuPercent": 63.6,
+      "trial": 1,
+      "pid": 97853
+    },
+    {
+      "framework": "electron",
+      "total": 181,
+      "renderer": "chromium",
+      "appReadyMs": 990,
+      "startToReadyMs": 1359,
+      "processes": 4,
+      "aggregateRssMiB": 417.6,
+      "snapshotCpuPercent": 58.6,
+      "trial": 2,
+      "pid": 97860
+    },
+    {
+      "framework": "tauri",
+      "total": 181,
+      "renderer": "webview",
+      "appReadyMs": 1249,
+      "startToReadyMs": 1269,
+      "processes": 1,
+      "aggregateRssMiB": 103.3,
+      "snapshotCpuPercent": 9.9,
+      "trial": 2,
+      "pid": 97873
+    },
+    {
+      "framework": "slint",
+      "total": 181,
+      "renderer": "native",
+      "appReadyMs": 1001,
+      "startToReadyMs": 1018,
+      "processes": 1,
+      "aggregateRssMiB": 99.2,
+      "snapshotCpuPercent": 62.3,
+      "trial": 2,
+      "pid": 97885
+    },
+    {
+      "framework": "electron",
+      "total": 181,
+      "renderer": "chromium",
+      "appReadyMs": 1014,
+      "startToReadyMs": 1372,
+      "processes": 4,
+      "aggregateRssMiB": 420.5,
+      "snapshotCpuPercent": 50.5,
+      "trial": 3,
+      "pid": 97893
+    },
+    {
+      "framework": "tauri",
+      "total": 181,
+      "renderer": "webview",
+      "appReadyMs": 1243,
+      "startToReadyMs": 1263,
+      "processes": 1,
+      "aggregateRssMiB": 103.4,
+      "snapshotCpuPercent": 10.2,
+      "trial": 3,
+      "pid": 97905
+    },
+    {
+      "framework": "slint",
+      "total": 181,
+      "renderer": "native",
+      "appReadyMs": 1007,
+      "startToReadyMs": 1025,
+      "processes": 1,
+      "aggregateRssMiB": 99.3,
+      "snapshotCpuPercent": 63.3,
+      "trial": 3,
+      "pid": 97924
+    }
+  ],
+  "summary": {
+    "electron": {
+      "validTrials": 3,
+      "medianStartToReadyMs": 1372,
+      "medianAppReadyMs": 1014,
+      "medianAggregateRssMiB": 420.5,
+      "processCountRange": [
+        4,
+        4
+      ]
+    },
+    "tauri": {
+      "validTrials": 3,
+      "medianStartToReadyMs": 1269,
+      "medianAppReadyMs": 1249,
+      "medianAggregateRssMiB": 103.4,
+      "processCountRange": [
+        1,
+        1
+      ]
+    },
+    "slint": {
+      "validTrials": 3,
+      "medianStartToReadyMs": 1025,
+      "medianAppReadyMs": 1007,
+      "medianAggregateRssMiB": 99.3,
+      "processCountRange": [
+        1,
+        1
+      ]
+    }
+  }
+}

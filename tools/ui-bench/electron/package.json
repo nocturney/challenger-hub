@@ -1,0 +1,13 @@
+{
+  "name": "challenger-renderer-electron-benchmark",
+  "private": true,
+  "version": "0.1.0",
+  "main": "main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "smoke": "electron . --bench-smoke"
+  },
+  "devDependencies": {
+    "electron": "45.0.0"
+  }
+}
