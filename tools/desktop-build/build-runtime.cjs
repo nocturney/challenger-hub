@@ -3,8 +3,10 @@
  * Wraps the EXISTING vetted Challenger backend, not a shadow installer API. */
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const root=path.resolve(__dirname,'..','..'),mediaRoot=path.join(root,'tools','preview-build','media-source');
-const out=path.join(root,'tools','desktop-build','dist','runtime');
-const version='4.0.0-desktop.preview.4',port=17964;
+const preview=process.argv[2]||'4';
+if(!['4','5'].includes(preview))throw Error('Unsupported desktop preview');
+const out=path.join(root,'tools','desktop-build','dist',preview==='5'?'runtime-preview5':'runtime');
+const version='4.0.0-desktop.preview.'+preview,port=preview==='5'?null:17964;
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
 const one=(s,old,repl,label)=>{
  const count=s.split(old).length-1;
@@ -114,8 +116,13 @@ try{
   JSON.stringify([...files.entries()])+");",'frozen media whitelist');
  server=one(server,"json(res,200,{ok:true,app:'Craft Update Center',platform:process.platform,version:'2.5.7'});",
   "json(res,200,{ok:true,app:'Challenger Focus Desktop',mode:'LIVE_LOCAL_PREVIEW',platform:process.platform,"+
-  "version:'"+version+"',admin:isAdmin,networkEnabled:process.env.CHALLENGER_DISABLE_SCAN!=='1'});",
+  "version:'"+version+"',"+(preview==='5'?"desktopSessionVerified:!!process.env.CHALLENGER_DESKTOP_SESSION&&req.headers['x-challenger-desktop-session']===process.env.CHALLENGER_DESKTOP_SESSION,":"")+"admin:isAdmin,networkEnabled:process.env.CHALLENGER_DISABLE_SCAN!=='1'});",
   'desktop health contract');
+ if(preview==='5')server=one(server,
+  "const route=(req.url||'').split('?')[0];",
+  "const route=(req.url||'').split('?')[0];\n"+
+  "if(req.method==='POST'&&(!process.env.CHALLENGER_DESKTOP_SESSION||req.headers['x-challenger-desktop-session']!==process.env.CHALLENGER_DESKTOP_SESSION)){json(res,403,{error:'Desktop session required'});return;}",
+  'private desktop write session');
  fs.writeFileSync(path.join(tmp,'server.js'),server);
  const manifest={schema:'challenger-focus-desktop.live-preview.v1',version,port,
   backend:'Original Challenger Hub vetted installer and source scanner',
