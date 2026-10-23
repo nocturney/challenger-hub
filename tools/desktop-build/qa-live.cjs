@@ -5,7 +5,7 @@ const fs=require('node:fs'),path=require('node:path'),assert=require('node:asser
 const port=Number(process.env.FOCUS_DESKTOP_TEST_PORT||17964),base='http://127.0.0.1:'+port+'/',platform=process.platform;
 const expectedVersion=process.env.FOCUS_DESKTOP_QA_VERSION||'4.0.0-desktop.preview.4';
 const session=process.env.FOCUS_DESKTOP_QA_SESSION||'';
-const dir=path.join(__dirname,'dist','qa-'+platform+(expectedVersion.endsWith('.5')?'-onefile-preview5':expectedVersion.endsWith('.6')?'-onefile-preview6':''));
+const dir=path.join(__dirname,'dist','qa-'+platform+(expectedVersion.endsWith('.5')?'-onefile-preview5':expectedVersion.endsWith('.6')?'-onefile-preview6':expectedVersion.endsWith('.7')?'-onefile-preview7':''));
 const puppeteer=require(platform==='darwin'?
  '/Users/chris/.npm/_npx/4b4c857f6efdfb61/node_modules/puppeteer':
  'C:/Users/Chris/AppData/Local/npm-cache/_npx/4b4c857f6efdfb61/node_modules/puppeteer');

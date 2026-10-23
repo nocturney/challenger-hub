@@ -10,6 +10,9 @@ const runChild=promisify(execFile);
 const challenger=require('./challenger-core');
 const officialIcons=require('./official-icons');
 const registryLive=require('./registry-live');
+const selfUpdates=require('./hub-updates');
+const repositoryMedia=require('./repository-media');
+const hubChecker=selfUpdates.makeUpdateChecker({root:__dirname});
 
 const HOST='127.0.0.1';
 const PORT=(Number(process.env.CRAFT_CENTER_PORT)||17873);
@@ -95,6 +98,7 @@ function readCuratedDiscoveries(){
       enriched.observedPublishedAt=observed.observedPublishedAt;
       enriched.repositoryMetadataCheckedAt=observed.lastObservedAt;
       enriched.archivedAtSource=!!observed.isArchived;
+      enriched.ownerAvatarUrl=observed.ownerAvatarUrl||null;
     }
     return {...enriched,...officialIcons.iconMeta(enriched)};
   });
@@ -735,6 +739,27 @@ const server=http.createServer(async(req,res)=>{
     json(res,200,app.discovery?challenger.history(repo):await recentReleases(app));return;
   }
   if(req.method==='GET' && route==='/api/health'){json(res,200,{ok:true,app:'Craft Update Center',platform:process.platform,version:'2.5.7'});return;}
+  if(req.method==='GET' && route==='/api/hub-update'){
+    const result=await hubChecker.check({force:(req.url||'').includes('force=1')});
+    json(res,result.ok?200:503,result);return;
+  }
+  if(req.method==='GET' && ['/api/repository-media/meta','/api/repository-media/screenshot','/api/repository-media/avatar'].includes(route)){
+    const repo=new URL(req.url,'http://127.0.0.1:'+PORT).searchParams.get('repo')||'';
+    const app=/^[a-z][a-z0-9-]{1,79}$/.test(repo)?readCuratedDiscoveries().find(x=>x.repo===repo):null;
+    if(!app){json(res,404,{error:'Unknown curated project'});return;}
+    if(route==='/api/repository-media/avatar'){
+      const img=await repositoryMedia.avatar(app).catch(()=>null);
+      imageResponse(res,img);return;
+    }
+    const found=await repositoryMedia.probe(app).catch(()=>null);
+    if(route==='/api/repository-media/meta'){
+      json(res,200,{available:!!found?.available,type:found?.available?'official-readme-image':'none',
+        caption:found?.caption||null,source:found?.source||null,
+        width:found?.width||null,height:found?.height||null,
+        productLogo:false,appScreenshotConfirmed:!!found?.available});return;
+    }
+    imageResponse(res,found?.available?found:null);return;
+  }
   if(req.method==='GET' && route==='/api/state'){
     json(res,200,{platform:process.platform,computer:os.hostname(),admin:isAdmin,
       apps:catalog.apps.map(({releaseBody,...meta})=>({...meta,creator:'Storytold',sourceId:'storytold',repository:'storytold/'+meta.repo,challenges:meta.original?[meta.original]:[],sourceSignal:scanner.publicSignal(meta.repo),...challenger.craftPortableMeta(meta.repo)})),
