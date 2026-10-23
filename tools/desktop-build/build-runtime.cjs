@@ -4,7 +4,7 @@
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const root=path.resolve(__dirname,'..','..'),mediaRoot=path.join(root,'tools','preview-build','media-source');
 const preview=process.argv[2]||'4';
-if(!['4','5','6','7','8','9'].includes(preview))throw Error('Unsupported desktop preview');
+if(!['4','5','6','7','8','9','10'].includes(preview))throw Error('Unsupported desktop preview');
 const out=path.join(root,'tools','desktop-build','dist',preview==='4'?'runtime':'runtime-preview'+preview);
 const version='4.0.0-desktop.preview.'+preview,port=preview!=='4'?null:17964;
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
@@ -43,7 +43,7 @@ try{
   }
  }
  if(icons<10||screenshots<3)throw Error('Too few verified media assets');
- if(['8','9'].includes(preview)){
+ if(['8','9','10'].includes(preview)){
   const craft=JSON.parse(fs.readFileSync(path.join(mediaRoot,'craft-suite-media.v1.json'),'utf8'));
   if(craft.schema!=='challenger-craft-media.v1'||Object.keys(craft.apps||{}).length!==13)
    throw Error('Official Craft app coverage must be 13 source-audited app icons');
@@ -76,7 +76,7 @@ try{
   copy(path.join(mediaRoot,'CRAFT_SUITE_MEDIA_NOTICES.md'),'CRAFT_SUITE_MEDIA_NOTICES.md');
   console.log('VERIFIED_CRAFT_APP_MEDIA_BUNDLED '+JSON.stringify({officialIcons:13,officialScreenshots:photos}));
  }
- if(['6','7','8','9'].includes(preview)){
+ if(['6','7','8','9','10'].includes(preview)){
   const managedSeed=JSON.parse(fs.readFileSync(path.join(__dirname,'seeds','managed-catalog.preview'+preview+'.json'),'utf8'));
   if(!Array.isArray(managedSeed.apps)||managedSeed.apps.some(a=>a.installedPath||a.installedVersion||a.needsUpdate))
    throw Error('Refusing to publish machine-specific installed-software data in shared catalog seed');
@@ -106,7 +106,7 @@ try{
  html=one(html,'Refresh read-only data ↻','Refresh live status ↻','footer refresh');
  html=one(html,'DESIGN CANDIDATE 4.0 / NO SYSTEM WRITES',
   'DESKTOP PREVIEW · REAL LOCAL ENGINE · ACTIONS REQUIRE APPROVAL','footer state');
- if(['7','8','9'].includes(preview)){
+ if(['7','8','9','10'].includes(preview)){
   html=one(html,'<div class="header-utilities">',
    '<div class="header-utilities"><div class="hub-update-controls">'+
    '<span class="hub-version" id="hubVersion">v4.0.0 · Preview '+preview+'</span>'+
@@ -115,7 +115,7 @@ try{
    '<a id="hubUpdateLink" class="hub-update-link" rel="noopener noreferrer" target="_blank" hidden>View official release ↗</a></div>',
    'visible Hub version and self-update');
   html=one(html,'<script src="/live-actions.js" defer></script>',
-   (['8','9'].includes(preview)?'<script src="/project-quality-ui.js" defer></script>\n ':'')+
+   (['8','9','10'].includes(preview)?'<script src="/project-quality-ui.js" defer></script>\n ':'')+
    '<script src="/live-project-media.js" defer></script>\n '+
    '<script src="/hub-update-ui.js" defer></script>\n '+
    '<script src="/live-actions.js" defer></script>','v7 client scripts');
@@ -125,19 +125,19 @@ try{
    '<button type="button" id="researchToggle" class="control-button" aria-pressed="false" title="Show project research with missing details">Show research</button>\n    <button type="button" id="filterToggle"',
    'independent research quality opt-in');
  }
- if(['8','9'].includes(preview))html=one(html,
+ if(['8','9','10'].includes(preview))html=one(html,
   '<script src="/live-project-media.js" defer></script>',
   '<script src="/independent-media-index.js" defer></script>\n '+
   '<script src="/live-project-media.js" defer></script>',
   'vetted source-media index before original project dossier resolver');
- if(['8','9'].includes(preview))html=one(html,
+ if(['8','9','10'].includes(preview))html=one(html,
   '<script src="/project-media-runtime.js" defer></script>',
   '<script src="/project-media-runtime.js" defer></script>\n '+
   '<script src="/craft-media-index.js" defer></script>\n '+
   '<script src="/craft-suite-media-runtime.js" defer></script>',
   'official source-based Craft App media loaded before dossiers');
  if(preview==='9'){
-  const watch=JSON.parse(fs.readFileSync(path.join(__dirname,'seeds','catalog-candidates.preview9.json'),'utf8'));
+  const watch=JSON.parse(fs.readFileSync(path.join(__dirname,'seeds','catalog-candidates.preview'+preview+'.json'),'utf8'));
   if(watch.schema!=='challenger-candidate-watchlist.v1'||watch.summary.verified<10||
       watch.candidates.some(x=>x.installable!==false))
     throw Error('Candidate watchlist must be source-verified, non-installable research');
@@ -148,6 +148,27 @@ try{
     '<script src="/candidate-watch-index.js" defer></script>\n '+
     '<script src="/catalog-watch-ui.js" defer></script>',
     'new research candidates visible in native UI');
+ }
+ if(preview==='10'){
+  const watch=JSON.parse(fs.readFileSync(path.join(__dirname,'seeds','catalog-candidates.preview10.json'),'utf8'));
+  if(watch.schema!=='challenger-candidate-watchlist.v1'||watch.summary.verified!==15||
+     watch.candidates.length!==15||watch.candidates.some(x=>x.installable!==false||x.installerAdapter!==null))
+   throw Error('Preview10 public source watchlist must have exactly 15 unapproved sources');
+  fs.writeFileSync(path.join(tmp,'candidate-watch-index.js'),
+   'window.CHALLENGER_CANDIDATE_WATCHLIST=Object.freeze('+JSON.stringify(watch)+');\n');
+  html=one(html,'<script src="/app.js" defer></script>',
+   '<script src="/candidate-watch-index.js" defer></script>\n <script src="/app.js" defer></script>',
+   'new candidates loaded before primary search');
+  const hub=html.match(/<div class="hub-update-controls">[\s\S]*?<\/div>/g);
+  if(!hub||hub.length!==1)throw Error('Expected one original header update control');
+  html=one(html,hub[0],'','remove expanding header update status');
+  html=one(html,'<footer class="global-footer">',
+   '<footer class="global-footer">'+hub[0],'version and update check in stable footer');
+  html=one(html,
+   '<button type="button" data-scope="independent" class="scope-chip">Independent</button>',
+   '<button type="button" data-scope="independent" class="scope-chip">Independent</button>'+
+   '<button type="button" data-scope="new" class="scope-chip">New finds</button>',
+   'all new candidates filter');
  }
  fs.writeFileSync(path.join(tmp,'index.html'),html);
  let js=fs.readFileSync(path.join(root,'app.js'),'utf8');
@@ -171,7 +192,7 @@ try{
  js=one(js,'No action is available in this preview.','Installation requires approval and verified assets.','installer statement');
  js=one(js,"'Read-only preview cannot reach the local source. '+error.message+",
   "'Local engine cannot be reached. '+error.message+",'error context');
- if(['6','7','8','9'].includes(preview)){
+ if(['6','7','8','9','10'].includes(preview)){
   js=one(js,"['Latest source version',a.latestVersion||a.releaseTag||'Not verified']",
    "['Latest source version',a.latestVersion||a.releaseTag||(a.observedReleaseTag?'Observed '+a.observedReleaseTag+' (not install-verified)':'Not verified')]",'honest observed release tag');
   js=one(js,"['Release date',dateLabel(a.publishedAt)]",
@@ -185,19 +206,34 @@ try{
   "function rerender(){\n renderShell();focusToolbar();",'toolbar refresh');
  js=one(js,"function action(event){\n const node=event.target.closest('button');if(!node)return;",
   "function action(event){\n const node=event.target.closest('button');if(!node)return;\n if(node.dataset.operation){void runFocusOperation(node);return}",'action handler');
+ if(preview==='10'){
+  js=one(js,'async function refresh(){',
+   fs.readFileSync(path.join(__dirname,'new-source-records-preview10.js'),'utf8')+'\nasync function refresh(){',
+   'visible candidate normalization loaded in browser');
+  js=one(js,
+   'projects=[...data.apps.map(a=>({...a,discovery:false})),...data.discoveries.map(a=>({...a,discovery:true}))];',
+   'const current=[...data.apps.map(a=>({...a,discovery:false})),...data.discoveries.map(a=>({...a,discovery:true}))];\n'+
+   '  projects=[...current,...sourceCandidatesForDiscovery(current)];',
+   'all source-linked candidate records in primary index');
+  js=one(js,
+   "ui.scope==='all'||ui.scope==='independent'&&!!a.discovery||ui.scope==='missing'&&!a.installedVersion",
+   "ui.scope==='all'||ui.scope==='independent'&&!!a.discovery||ui.scope==='new'&&!!a.candidateWatch||ui.scope==='missing'&&!a.installedVersion",
+   'new finds filter inside real software index');
+ }
  fs.writeFileSync(path.join(tmp,'app.js'),js);
  let css=fs.readFileSync(path.join(root,'style.css'),'utf8')+'\n'+
   fs.readFileSync(path.join(root,'tools','preview-build','project-media.css'),'utf8')+'\n'+
-  fs.readFileSync(path.join(__dirname,'live.css'),'utf8')+(['7','8','9'].includes(preview)?'\n'+fs.readFileSync(path.join(__dirname,preview==='9'?'viewport-fit-preview9.css':['8','9'].includes(preview)?'viewport-fit-preview8.css':'viewport-fit.css'),'utf8'):'')+
-   (['8','9'].includes(preview)?'\n'+fs.readFileSync(path.join(__dirname,'slice-shell.css'),'utf8')+'\n'+
-     fs.readFileSync(path.join(__dirname,'craft-suite-media.css'),'utf8'):'');
+  fs.readFileSync(path.join(__dirname,'live.css'),'utf8')+(['7','8','9','10'].includes(preview)?'\n'+fs.readFileSync(path.join(__dirname,preview==='10'?'viewport-fit-preview10.css':preview==='9'?'viewport-fit-preview9.css':['8','9','10'].includes(preview)?'viewport-fit-preview8.css':'viewport-fit.css'),'utf8'):'')+
+   (['8','9','10'].includes(preview)?'\n'+fs.readFileSync(path.join(__dirname,'slice-shell.css'),'utf8')+'\n'+
+     fs.readFileSync(path.join(__dirname,'craft-suite-media.css'),'utf8'):'')+
+  (preview==='10'?'\n'+fs.readFileSync(path.join(__dirname,'quiet-footer-preview10.css'),'utf8'):'');
  fs.writeFileSync(path.join(tmp,'style.css'),css);
  const clientMedia=Object.fromEntries(Object.entries(media.projects).map(([id,p])=>
    [id,{icon:p.icon||null,screenshot:p.screenshot||null}]));
  fs.writeFileSync(path.join(tmp,'media-index.js'),
   'window.CHALLENGER_PROJECT_MEDIA=Object.freeze('+JSON.stringify(clientMedia)+');\n');
  copy(path.join(root,'tools','preview-build','project-media-runtime.js'),'project-media-runtime.js');
- if(['8','9'].includes(preview)){
+ if(['8','9','10'].includes(preview)){
   copy(path.join(__dirname,'craft-suite-media-runtime.js'),'craft-suite-media-runtime.js');
   const vetted=require(path.join(root,'independent-source-media.js')).clientIndex();
   if(Object.keys(vetted.apps).length<24)throw Error('Insufficient vetted independent source media');
@@ -208,9 +244,9 @@ try{
    sourceScreenshots:Object.values(vetted.apps).reduce((n,x)=>n+x.screenshots.length,0)}));
  }
  copy(path.join(__dirname,'live-actions.js'),'live-actions.js');
- if(['7','8','9'].includes(preview)){
-  copy(path.join(__dirname,preview==='9'?'hub-update-ui-preview9.js':['8','9'].includes(preview)?'hub-update-ui-preview8.js':'hub-update-ui.js'),'hub-update-ui.js');
-  if(['8','9'].includes(preview))copy(path.join(__dirname,'project-quality-ui.js'),'project-quality-ui.js');
+ if(['7','8','9','10'].includes(preview)){
+  copy(path.join(__dirname,preview==='10'?'hub-update-ui-preview10.js':preview==='9'?'hub-update-ui-preview9.js':['8','9','10'].includes(preview)?'hub-update-ui-preview8.js':'hub-update-ui.js'),'hub-update-ui.js');
+  if(['8','9','10'].includes(preview))copy(path.join(__dirname,preview==='10'?'project-discovery-ui-preview10.js':'project-quality-ui.js'),'project-quality-ui.js');
   copy(path.join(__dirname,'live-project-media.js'),'live-project-media.js');
  }
  if(preview==='9')copy(path.join(__dirname,'catalog-watch-ui.js'),'catalog-watch-ui.js');
@@ -228,19 +264,19 @@ try{
   "sendStatic(res,name,name.endsWith('.svg')?'image/svg+xml':name.endsWith('.png')?'image/png':"+
   "name.endsWith('.ico')?'image/x-icon':'application/octet-stream');return;}",
   'live resource whitelist');
- if(['7','8','9'].includes(preview))server=one(server,
+ if(['7','8','9','10'].includes(preview))server=one(server,
   "if(req.method==='GET' && route==='/live-actions.js'){sendStatic(res,'live-actions.js','text/javascript; charset=utf-8');return;}",
   "if(req.method==='GET' && route==='/live-actions.js'){sendStatic(res,'live-actions.js','text/javascript; charset=utf-8');return;}\n"+
   "if(req.method==='GET' && route==='/hub-update-ui.js'){sendStatic(res,'hub-update-ui.js','text/javascript; charset=utf-8');return;}\n"+
   "if(req.method==='GET' && route==='/live-project-media.js'){sendStatic(res,'live-project-media.js','text/javascript; charset=utf-8');return;}",
   'Hub version and media UI script routes');
- if(['8','9'].includes(preview))server=one(server,
+ if(['8','9','10'].includes(preview))server=one(server,
   "if(req.method==='GET' && route==='/hub-update-ui.js'){sendStatic(res,'hub-update-ui.js','text/javascript; charset=utf-8');return;}",
   "if(req.method==='GET' && route==='/hub-update-ui.js'){sendStatic(res,'hub-update-ui.js','text/javascript; charset=utf-8');return;}\n"+
   "if(req.method==='GET' && route==='/project-quality-ui.js'){sendStatic(res,'project-quality-ui.js','text/javascript; charset=utf-8');return;}\n"+
   "if(req.method==='GET' && route==='/independent-media-index.js'){sendStatic(res,'independent-media-index.js','text/javascript; charset=utf-8');return;}",
   'quality UI script delivered solely by native app');
- if(['8','9'].includes(preview))server=one(server,
+ if(['8','9','10'].includes(preview))server=one(server,
   "if(req.method==='GET' && route==='/project-media-runtime.js'){sendStatic(res,'project-media-runtime.js','text/javascript; charset=utf-8');return;}",
   "if(req.method==='GET' && route==='/project-media-runtime.js'){sendStatic(res,'project-media-runtime.js','text/javascript; charset=utf-8');return;}\n"+
   "if(req.method==='GET' && route==='/craft-media-index.js'){sendStatic(res,'craft-media-index.js','text/javascript; charset=utf-8');return;}\n"+
@@ -252,6 +288,11 @@ try{
   "if(req.method==='GET' && route==='/candidate-watch-index.js'){sendStatic(res,'candidate-watch-index.js','text/javascript; charset=utf-8');return;}\n"+
   "if(req.method==='GET' && route==='/catalog-watch-ui.js'){sendStatic(res,'catalog-watch-ui.js','text/javascript; charset=utf-8');return;}",
   'new candidates served locally without installer rights');
+ if(preview==='10')server=one(server,
+  "if(req.method==='GET' && route==='/hub-update-ui.js'){sendStatic(res,'hub-update-ui.js','text/javascript; charset=utf-8');return;}",
+  "if(req.method==='GET' && route==='/hub-update-ui.js'){sendStatic(res,'hub-update-ui.js','text/javascript; charset=utf-8');return;}\n"+
+  "if(req.method==='GET' && route==='/candidate-watch-index.js'){sendStatic(res,'candidate-watch-index.js','text/javascript; charset=utf-8');return;}",
+  'visible source watch data served read-only by private app');
  server=one(server,"const ROOT=__dirname;",  "const ROOT=__dirname;\nconst MEDIA_WHITELIST=new Map("+
   JSON.stringify([...files.entries()])+");",'frozen media whitelist');
  server=one(server,"json(res,200,{ok:true,app:'Craft Update Center',platform:process.platform,version:'2.5.7'});",
