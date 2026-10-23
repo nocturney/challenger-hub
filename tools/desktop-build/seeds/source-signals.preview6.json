@@ -1,0 +1,3100 @@
+{
+  "schema": "challenger-source-signals.v1",
+  "items": {
+    "activepieces": {
+      "lastAttempt": "2026-10-23T10:40:03.161Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/activepieces/activepieces/releases.atom": {
+          "etag": "W/\"6567e1b9d9e2619a8776987e717f0b8c\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:03.161Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/activepieces/activepieces/releases.atom",
+      "signalType": "release",
+      "tag": "0.92.3",
+      "url": "https://github.com/activepieces/activepieces/releases/tag/0.92.3",
+      "pendingVerification": "0.92.3",
+      "lastVerificationAttempt": "2026-10-23T10:40:03.161Z"
+    },
+    "affine": {
+      "lastAttempt": "2026-10-23T10:40:04.098Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/toeverything/AFFiNE/releases.atom": {
+          "etag": "W/\"9dacc8544c781408469835e4364b26a5\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:04.098Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/toeverything/AFFiNE/releases.atom",
+      "signalType": "tag",
+      "tag": "v2026.10.23-canary.908",
+      "url": "https://github.com/toeverything/AFFiNE/releases/tag/v2026.10.23-canary.908"
+    },
+    "agent-vault": {
+      "lastAttempt": "2026-10-23T10:40:05.066Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/Infisical/agent-vault/releases.atom": {
+          "etag": "W/\"93b3d35b4ec2ce57f6c16f4287f367b8\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:05.066Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/Infisical/agent-vault/releases.atom",
+      "signalType": "release",
+      "tag": "v0.40.2",
+      "url": "https://github.com/Infisical/agent-vault/releases/tag/v0.40.2",
+      "pendingVerification": "v0.40.2",
+      "lastVerificationAttempt": "2026-10-23T10:40:05.066Z"
+    },
+    "agentgateway": {
+      "lastAttempt": "2026-10-23T10:40:05.674Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/agentgateway/agentgateway/releases.atom": {
+          "etag": "W/\"76052d72150fb25ea0244bc1a14d21b5\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:05.674Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/agentgateway/agentgateway/releases.atom",
+      "signalType": "release",
+      "tag": "v1.6.0",
+      "url": "https://github.com/agentgateway/agentgateway/releases/tag/v1.7.0-alpha.1",
+      "mirrorTag": "v1.7.0-alpha.1",
+      "sourceCheckedFrom": "github.com",
+      "mirrorCheckedAt": "2026-10-23T10:40:05.674Z"
+    },
+    "akaunting": {
+      "lastAttempt": "2026-10-23T10:40:07.352Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/akaunting/akaunting/releases.atom": {
+          "etag": "W/\"641ea9b08e7315e2c7e8d5ce744ab5ef\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:07.352Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/akaunting/akaunting/releases.atom",
+      "signalType": "release",
+      "tag": "3.2.4",
+      "url": "https://github.com/akaunting/akaunting/releases/tag/3.2.4"
+    },
+    "anythingllm": {
+      "lastAttempt": "2026-10-23T10:40:07.655Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/Mintplex-Labs/anything-llm/releases.atom": {
+          "etag": "W/\"c9a1419568c7331d8391211c389e730f\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:07.655Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/Mintplex-Labs/anything-llm/releases.atom",
+      "signalType": "release",
+      "tag": "v1.18.0",
+      "url": "https://github.com/Mintplex-Labs/anything-llm/releases/tag/v1.18.0",
+      "pendingVerification": "v1.18.0",
+      "lastVerificationAttempt": "2026-10-23T10:40:07.655Z"
+    },
+    "appflowy": {
+      "lastAttempt": "2026-10-23T10:40:09.405Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/AppFlowy-IO/AppFlowy/releases.atom": {
+          "etag": "W/\"677c37388250a632696f1db389c9bfb6\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:09.405Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/AppFlowy-IO/AppFlowy/releases.atom",
+      "signalType": "release",
+      "tag": "0.14.10",
+      "url": "https://github.com/AppFlowy-IO/AppFlowy/releases/tag/0.14.10",
+      "pendingVerification": "0.14.10",
+      "lastVerificationAttempt": "2026-10-23T10:40:09.405Z"
+    },
+    "appsmith": {
+      "lastAttempt": "2026-10-23T10:40:09.710Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/appsmithorg/appsmith/releases.atom": {
+          "etag": "W/\"3464228016559b02e569de897553e958\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:09.710Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/appsmithorg/appsmith/releases.atom",
+      "signalType": "release",
+      "tag": "v2.5.1",
+      "url": "https://github.com/appsmithorg/appsmith/releases/tag/v2.5.1",
+      "pendingVerification": "v2.5.1",
+      "lastVerificationAttempt": "2026-10-23T10:40:09.710Z"
+    },
+    "armorpaint": {
+      "lastAttempt": "2026-10-23T10:40:10.632Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/armory3d/armorpaint/releases.atom": {
+          "etag": "W/\"20d3e5dff5c41f36ef624df13ca63c30\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "26.09",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:40:10.632Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/armory3d/armorpaint/releases.atom",
+      "signalType": "release",
+      "tag": "26.09",
+      "url": "https://github.com/armory3d/armorpaint/releases/tag/26.09"
+    },
+    "baserow": {
+      "lastAttempt": "2026-10-23T10:40:11.561Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/baserow/baserow/releases.atom": {
+          "etag": "W/\"c313b363100c2054e50fc82d28ff7f9a\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:11.561Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/baserow/baserow/releases.atom",
+      "signalType": "release",
+      "tag": "2.4.1",
+      "url": "https://github.com/baserow/baserow/releases/tag/2.4.1",
+      "pendingVerification": "2.4.1",
+      "lastVerificationAttempt": "2026-10-23T10:40:11.561Z"
+    },
+    "bespoke-synth": {
+      "lastAttempt": "2026-10-23T10:40:12.228Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/BespokeSynth/BespokeSynth/releases.atom": {
+          "etag": "W/\"ffb89aaa5b2a4eba93d0b41c30eeff3b\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v1.3.0",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:40:12.228Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/BespokeSynth/BespokeSynth/releases.atom",
+      "signalType": "release",
+      "tag": "v1.3.0",
+      "url": "https://github.com/BespokeSynth/BespokeSynth/releases/tag/v1.3.0"
+    },
+    "bifrost": {
+      "lastAttempt": "2026-10-23T10:40:12.839Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/maximhq/bifrost/releases.atom": {
+          "etag": "W/\"4b30679dffc0b1c63959c2df8bc8669d\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:12.839Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/maximhq/bifrost/releases.atom",
+      "signalType": "release",
+      "tag": "transports/v2.3.2",
+      "url": "https://github.com/maximhq/bifrost/releases/tag/transports%2Fv2.3.2",
+      "pendingVerification": "transports/v2.3.2",
+      "lastVerificationAttempt": "2026-10-23T10:40:12.839Z"
+    },
+    "cadcraft": {
+      "lastAttempt": "2026-10-23T10:40:13.799Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/storytold/cadcraft/releases.atom": {
+          "etag": "W/\"6c2cd85cd3b4fb90ddb73c3ea50a9f96\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v0.12.0",
+      "pendingVerification": "v0.12.0",
+      "lastChecked": "2026-10-23T10:40:13.799Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/storytold/cadcraft/releases.atom",
+      "signalType": "release",
+      "tag": "v0.12.0",
+      "url": "https://github.com/storytold/cadcraft/releases/tag/v0.12.0",
+      "lastVerificationAttempt": "2026-10-23T10:40:13.799Z"
+    },
+    "carbon-erp": {
+      "lastAttempt": "2026-10-23T10:40:14.756Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/crbnos/carbon/releases.atom": {
+          "etag": "W/\"6a820ef536f7b89062a75be954f0ce50\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:14.756Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/crbnos/carbon/releases.atom",
+      "signalType": "none",
+      "tag": null,
+      "url": null
+    },
+    "cardinal": {
+      "lastAttempt": "2026-10-23T10:40:15.597Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/DISTRHO/Cardinal/releases.atom": {
+          "etag": "W/\"210f192335cb576f41fb30b282736629\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "26.02",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:40:15.597Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/DISTRHO/Cardinal/releases.atom",
+      "signalType": "release",
+      "tag": "26.02",
+      "url": "https://github.com/DISTRHO/Cardinal/releases/tag/26.02"
+    },
+    "cloudcompare": {
+      "lastAttempt": "2026-10-23T10:40:16.789Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/CloudCompare/CloudCompare/releases.atom": {
+          "etag": "W/\"41e04f10298da8eac3228c07fc7e9372\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v2.13.2",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:40:16.789Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/CloudCompare/CloudCompare/releases.atom",
+      "signalType": "release",
+      "tag": "v2.13.2",
+      "url": "https://github.com/CloudCompare/CloudCompare/releases/tag/v2.13.2"
+    },
+    "composa": {
+      "lastAttempt": "2026-10-23T10:40:17.403Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/dvdstelt/Composa/releases.atom": {
+          "etag": "W/\"d28c28109ef09e011766d671a30c86ea\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v1.4.0",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:40:17.403Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/dvdstelt/Composa/releases.atom",
+      "signalType": "release",
+      "tag": "v1.4.0",
+      "url": "https://github.com/dvdstelt/Composa/releases/tag/v1.4.0"
+    },
+    "compositor": {
+      "lastAttempt": "2026-10-23T10:40:18.012Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/robbietilton/Compositor/releases.atom": {
+          "etag": "W/\"5371646edd9bb60fcb099486ad9e1665\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v1.4.9",
+      "pendingVerification": "v1.5.6",
+      "lastChecked": "2026-10-23T10:40:18.012Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/robbietilton/Compositor/releases.atom",
+      "signalType": "release",
+      "tag": "v1.5.6",
+      "url": "https://github.com/robbietilton/Compositor/releases/tag/v1.5.6",
+      "lastVerificationAttempt": "2026-10-23T10:40:18.012Z"
+    },
+    "contextforge": {
+      "lastAttempt": "2026-10-23T10:40:19.201Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/IBM/mcp-context-forge/releases.atom": {
+          "etag": "W/\"39d2d974824f4c93d7ad3a92819280f5\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:19.201Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/IBM/mcp-context-forge/releases.atom",
+      "signalType": "release",
+      "tag": "v1.1.0",
+      "url": "https://github.com/IBM/mcp-context-forge/releases/tag/v1.1.0",
+      "pendingVerification": "v1.1.0",
+      "lastVerificationAttempt": "2026-10-23T10:40:19.201Z"
+    },
+    "deckcraft": {
+      "lastAttempt": "2026-10-23T10:40:19.868Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/storytold/deckcraft/releases.atom": {
+          "etag": "W/\"87750468b7c25434850bd4b3bfc55cd7\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v0.10.0",
+      "pendingVerification": "v0.10.0",
+      "lastChecked": "2026-10-23T10:40:19.868Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/storytold/deckcraft/releases.atom",
+      "signalType": "release",
+      "tag": "v0.10.0",
+      "url": "https://github.com/storytold/deckcraft/releases/tag/v0.10.0",
+      "lastVerificationAttempt": "2026-10-23T10:40:19.868Z"
+    },
+    "designcraft": {
+      "lastAttempt": "2026-10-23T10:40:20.494Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/storytold/designcraft/releases.atom": {
+          "etag": "W/\"ebbcc3d435e5fd1fcea481a32ee82f9a\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v0.12.0",
+      "pendingVerification": "v0.12.0",
+      "lastChecked": "2026-10-23T10:40:20.494Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/storytold/designcraft/releases.atom",
+      "signalType": "release",
+      "tag": "v0.12.0",
+      "url": "https://github.com/storytold/designcraft/releases/tag/v0.12.0",
+      "lastVerificationAttempt": "2026-10-23T10:40:20.494Z"
+    },
+    "dify": {
+      "lastAttempt": "2026-10-23T10:40:22.647Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/langgenius/dify/releases.atom": {
+          "etag": "W/\"9c7f575ab54555627724fd517241125a\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:22.647Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/langgenius/dify/releases.atom",
+      "signalType": "release",
+      "tag": "1.18.0",
+      "url": "https://github.com/langgenius/dify/releases/tag/1.18.0",
+      "pendingVerification": "1.18.0",
+      "lastVerificationAttempt": "2026-10-23T10:40:22.647Z"
+    },
+    "directus": {
+      "lastAttempt": "2026-10-23T10:40:24.197Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/directus/directus/releases.atom": {
+          "etag": "W/\"2f5ae0cff9d60ea5d07e0705c14f3da2\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:24.197Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/directus/directus/releases.atom",
+      "signalType": "release",
+      "tag": "v12.5.0",
+      "url": "https://github.com/directus/directus/releases/tag/v12.5.0"
+    },
+    "docuseal": {
+      "lastAttempt": "2026-10-23T10:40:24.513Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/docusealco/docuseal/releases.atom": {
+          "etag": "W/\"17039c39d1b7d588e24037379d1e0089\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:24.513Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/docusealco/docuseal/releases.atom",
+      "signalType": "release",
+      "tag": "3.3.3",
+      "url": "https://github.com/docusealco/docuseal/releases/tag/3.3.3",
+      "pendingVerification": "3.3.3",
+      "lastVerificationAttempt": "2026-10-23T10:40:24.513Z"
+    },
+    "dune3d": {
+      "lastAttempt": "2026-10-23T10:40:26.453Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/dune3d/dune3d/releases.atom": {
+          "etag": "W/\"92b8c9139e9b867492f911b07163f6c7\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v1.4.0",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:40:26.453Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/dune3d/dune3d/releases.atom",
+      "signalType": "release",
+      "tag": "v1.4.0",
+      "url": "https://github.com/dune3d/dune3d/releases/tag/v1.4.0"
+    },
+    "effectcraft": {
+      "lastAttempt": "2026-10-23T10:40:26.858Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/storytold/effectcraft/releases.atom": {
+          "etag": "W/\"72af211b3fe00250ffa2be51cb992fa1\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v0.16.0",
+      "pendingVerification": "v0.16.0",
+      "lastChecked": "2026-10-23T10:40:26.858Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/storytold/effectcraft/releases.atom",
+      "signalType": "release",
+      "tag": "v0.16.0",
+      "url": "https://github.com/storytold/effectcraft/releases/tag/v0.16.0",
+      "lastVerificationAttempt": "2026-10-23T10:40:26.858Z"
+    },
+    "erpnext": {
+      "lastAttempt": "2026-10-23T10:40:28.611Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/frappe/erpnext/releases.atom": {
+          "etag": "W/\"07103672c7976bbbb95c10c966970d37\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:28.611Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/frappe/erpnext/releases.atom",
+      "signalType": "release",
+      "tag": "v16.52.1",
+      "url": "https://github.com/frappe/erpnext/releases/tag/v16.52.1",
+      "pendingVerification": "v16.52.1",
+      "lastVerificationAttempt": "2026-10-23T10:40:28.611Z"
+    },
+    "espocrm": {
+      "lastAttempt": "2026-10-23T10:40:28.926Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/espocrm/espocrm/releases.atom": {
+          "etag": "W/\"a4a4e7ab53d1245a7a5dc86c9e00e7d4\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:28.926Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/espocrm/espocrm/releases.atom",
+      "signalType": "release",
+      "tag": "9.3.11",
+      "url": "https://github.com/espocrm/espocrm/releases/tag/9.3.11",
+      "pendingVerification": "9.3.11",
+      "lastVerificationAttempt": "2026-10-23T10:40:28.926Z"
+    },
+    "f3d": {
+      "lastAttempt": "2026-10-23T10:40:29.539Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/f3d-app/f3d/releases.atom": {
+          "etag": "W/\"26176eafd2cc1bf79110010deedbfdc1\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v3.5.0",
+      "pendingVerification": "v4.0.0",
+      "lastChecked": "2026-10-23T10:40:29.539Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/f3d-app/f3d/releases.atom",
+      "signalType": "release",
+      "tag": "v4.0.0",
+      "url": "https://github.com/f3d-app/f3d/releases/tag/v4.0.0",
+      "lastVerificationAttempt": "2026-10-23T10:40:29.539Z"
+    },
+    "filaops": {
+      "lastAttempt": "2026-10-23T10:40:31.475Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/BLB3DPrinting/filaops/releases.atom": {
+          "etag": "W/\"11b655484c2ce0a223ed01b0b8a1ba73\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:31.475Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/BLB3DPrinting/filaops/releases.atom",
+      "signalType": "release",
+      "tag": "v4.3.2",
+      "url": "https://github.com/BLB3DPrinting/filaops/releases/tag/v4.3.2",
+      "pendingVerification": "v4.3.2",
+      "lastVerificationAttempt": "2026-10-23T10:40:31.475Z"
+    },
+    "filmcraft": {
+      "lastAttempt": "2026-10-23T10:40:31.820Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/storytold/filmcraft/releases.atom": {
+          "etag": "W/\"1d0d8407da725db20f05499aed679d9b\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v0.12.0",
+      "pendingVerification": "v0.12.0",
+      "lastChecked": "2026-10-23T10:40:31.820Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/storytold/filmcraft/releases.atom",
+      "signalType": "release",
+      "tag": "v0.12.0",
+      "url": "https://github.com/storytold/filmcraft/releases/tag/v0.12.0",
+      "lastVerificationAttempt": "2026-10-23T10:40:31.820Z"
+    },
+    "flowise": {
+      "lastAttempt": "2026-10-23T10:43:20.052Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/FlowiseAI/Flowise/releases.atom": {
+          "etag": "W/\"53ad92edf772abb1c841ebf30ced732c\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:43:20.052Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/FlowiseAI/Flowise/releases.atom",
+      "signalType": "none",
+      "tag": null,
+      "url": null
+    },
+    "frappe-crm": {
+      "lastAttempt": "2026-10-23T10:40:34.448Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/frappe/crm/releases.atom": {
+          "etag": "W/\"de28f6ba0075bd34bcb72d2ccfd29c6f\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:34.448Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/frappe/crm/releases.atom",
+      "signalType": "release",
+      "tag": "v1.89.1",
+      "url": "https://github.com/frappe/crm/releases/tag/v1.89.1",
+      "pendingVerification": "v1.89.1",
+      "lastVerificationAttempt": "2026-10-23T10:11:43.820Z",
+      "verifiedTag": "v1.89.0"
+    },
+    "friction": {
+      "lastAttempt": "2026-10-23T10:40:35.370Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/friction2d/friction/releases.atom": {
+          "etag": "W/\"1d6868f78e23f2d01af6cd27810f8bc7\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:35.370Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/friction2d/friction/releases.atom",
+      "signalType": "release",
+      "tag": "v0.9.6.1",
+      "url": "https://github.com/friction2d/friction/releases/tag/v0.9.6.1",
+      "pendingVerification": null,
+      "lastVerificationAttempt": "2026-10-23T10:12:01.238Z",
+      "verifiedTag": "v0.9.6.1"
+    },
+    "glaxnimate": {
+      "lastAttempt": "2026-10-23T10:41:38.075Z",
+      "error": null,
+      "etagByHost": {
+        "https://invent.kde.org/api/v4/projects/graphics%2Fglaxnimate/releases?per_page=1": {
+          "etag": "W/\"6188ca03d1157470207e4ad9732c9d54\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:38.075Z",
+      "sourceHost": "invent.kde.org",
+      "sourceLabel": "KDE Invent · releases",
+      "sourceUrl": "https://invent.kde.org/api/v4/projects/graphics%2Fglaxnimate/releases?per_page=1",
+      "signalType": "release",
+      "tag": "0.5.4",
+      "url": "https://invent.kde.org/graphics/glaxnimate/-/releases/0.5.4"
+    },
+    "godsvg": {
+      "lastAttempt": "2026-10-23T10:41:38.637Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/MewPurPur/GodSVG/releases.atom": {
+          "etag": "W/\"c81295f0883cbf281d2df478fb5ee482\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v1.0-alpha17",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:41:38.637Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/MewPurPur/GodSVG/releases.atom",
+      "signalType": "tag",
+      "tag": "v1.0-alpha17",
+      "url": "https://github.com/MewPurPur/GodSVG/releases/tag/v1.0-alpha17"
+    },
+    "goxel": {
+      "lastAttempt": "2026-10-23T10:39:07.363Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/guillaumechereau/goxel/releases.atom": {
+          "etag": "W/\"b68eca55d1a3dc0bc2dc81a02978e825\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v0.15.1",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:39:07.363Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/guillaumechereau/goxel/releases.atom",
+      "signalType": "release",
+      "tag": "v0.15.1",
+      "url": "https://github.com/guillaumechereau/goxel/releases/tag/v0.15.1"
+    },
+    "graphiti": {
+      "lastAttempt": "2026-10-23T10:39:08.049Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/getzep/graphiti/releases.atom": {
+          "etag": "W/\"51f264bf8a7ea9d5c4a0dce3144bed93\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:08.049Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/getzep/graphiti/releases.atom",
+      "signalType": "release",
+      "tag": "v0.31.2",
+      "url": "https://github.com/getzep/graphiti/releases/tag/v0.31.2",
+      "pendingVerification": null,
+      "lastVerificationAttempt": "2026-10-23T10:39:08.049Z",
+      "verifiedTag": "v0.31.2"
+    },
+    "grida": {
+      "lastAttempt": "2026-10-23T10:39:08.692Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/gridaco/grida/releases.atom": {
+          "etag": "W/\"4b8c3da94bcb7b042971aebcf549cc25\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v0.0.24",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:39:08.692Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/gridaco/grida/releases.atom",
+      "signalType": "release",
+      "tag": "v0.0.24",
+      "url": "https://github.com/gridaco/grida/releases/tag/v0.0.24"
+    },
+    "gridcraft": {
+      "lastAttempt": "2026-10-23T10:39:09.680Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/storytold/gridcraft/releases.atom": {
+          "etag": "W/\"a1a7d2a5a625e599d63d39cabd0cd01a\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v0.11.1",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:39:09.680Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/storytold/gridcraft/releases.atom",
+      "signalType": "release",
+      "tag": "v0.11.1",
+      "url": "https://github.com/storytold/gridcraft/releases/tag/v0.11.1",
+      "lastVerificationAttempt": "2026-10-23T10:39:09.680Z"
+    },
+    "gyroflow": {
+      "lastAttempt": "2026-10-23T10:39:10.730Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/gyroflow/gyroflow/releases.atom": {
+          "etag": "W/\"52629c3423efb04a3a56f9858e979332\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v1.6.3",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:39:10.730Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/gyroflow/gyroflow/releases.atom",
+      "signalType": "release",
+      "tag": "v1.6.3",
+      "url": "https://github.com/gyroflow/gyroflow/releases/tag/v1.6.3"
+    },
+    "hatchet": {
+      "lastAttempt": "2026-10-23T10:39:11.720Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/hatchet-dev/hatchet/releases.atom": {
+          "etag": "W/\"d61bbf8b50afd5e7fc98fe35d8914707\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:11.720Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/hatchet-dev/hatchet/releases.atom",
+      "signalType": "release",
+      "tag": "v0.113.4",
+      "url": "https://github.com/hatchet-dev/hatchet/releases/tag/v0.113.4",
+      "pendingVerification": "v0.113.4",
+      "lastVerificationAttempt": "2026-10-23T10:39:11.720Z"
+    },
+    "helio": {
+      "lastAttempt": "2026-10-23T10:39:13.546Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/helio-fm/helio-sequencer/releases.atom": {
+          "etag": "W/\"b5555d67651451eb89027b8ff4959ce6\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:13.546Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/helio-fm/helio-sequencer/releases.atom",
+      "signalType": "release",
+      "tag": "3.18",
+      "url": "https://github.com/helio-fm/helio-sequencer/releases/tag/3.18"
+    },
+    "hindsight": {
+      "lastAttempt": "2026-10-23T10:39:16.569Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/vectorize-io/hindsight/releases.atom": {
+          "etag": "W/\"fdc83bcf4ef401492169beca17265903\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:16.569Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/vectorize-io/hindsight/releases.atom",
+      "signalType": "release",
+      "tag": "integrations/openclaw/v1.2.0",
+      "url": "https://github.com/vectorize-io/hindsight/releases/tag/integrations%2Fopenclaw%2Fv1.2.0",
+      "pendingVerification": "integrations/openclaw/v1.2.0",
+      "lastVerificationAttempt": "2026-10-23T10:39:16.569Z"
+    },
+    "hoppscotch": {
+      "lastAttempt": "2026-10-23T10:39:18.233Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/hoppscotch/hoppscotch/releases.atom": {
+          "etag": "W/\"11b671acec473fdef491a63bcfc6808e\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:18.233Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/hoppscotch/hoppscotch/releases.atom",
+      "signalType": "release",
+      "tag": "2026.9.0",
+      "url": "https://github.com/hoppscotch/hoppscotch/releases/tag/2026.9.0"
+    },
+    "horizon-eda": {
+      "lastAttempt": "2026-10-23T10:39:18.597Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/horizon-eda/horizon/releases.atom": {
+          "etag": "W/\"fe4396af9dc252875241a0d77d8a6f2e\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v2.7.2",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:39:18.597Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/horizon-eda/horizon/releases.atom",
+      "signalType": "release",
+      "tag": "v2.7.2",
+      "url": "https://github.com/horizon-eda/horizon/releases/tag/v2.7.2"
+    },
+    "infinite": {
+      "lastAttempt": "2026-10-23T10:39:20.428Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/n1m21n/Infinite/releases.atom": {
+          "etag": "W/\"446a7482d85de7dbe416ad543f63f189\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v0.6.0",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:39:20.428Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/n1m21n/Infinite/releases.atom",
+      "signalType": "release",
+      "tag": "v0.6.0",
+      "url": "https://github.com/n1m21n/Infinite/releases/tag/v0.6.0",
+      "lastVerificationAttempt": "2026-10-23T10:39:20.428Z"
+    },
+    "inochi-creator": {
+      "lastAttempt": "2026-10-23T10:39:20.773Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/Inochi2D/inochi-creator/releases.atom": {
+          "etag": "W/\"1336187a886d5fbfd7dc3b404572317f\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v0.8.6",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:39:20.773Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/Inochi2D/inochi-creator/releases.atom",
+      "signalType": "release",
+      "tag": "v0.8.6",
+      "url": "https://github.com/Inochi2D/inochi-creator/releases/tag/v0.8.6"
+    },
+    "inventree": {
+      "lastAttempt": "2026-10-23T10:39:21.075Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/inventree/InvenTree/releases.atom": {
+          "etag": "W/\"4f33d0fabeb9a7285405c1379d16d750\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:21.075Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/inventree/InvenTree/releases.atom",
+      "signalType": "release",
+      "tag": "1.6.1",
+      "url": "https://github.com/inventree/InvenTree/releases/tag/1.6.1",
+      "pendingVerification": null,
+      "lastVerificationAttempt": "2026-10-23T10:39:21.075Z",
+      "verifiedTag": "1.6.1"
+    },
+    "kiri-moto": {
+      "lastAttempt": "2026-10-23T10:39:23.381Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/GridSpace/grid-apps/releases.atom": {
+          "etag": "W/\"a9c043ff4b83490d7cc140837bc5781e\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "4.7.3",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:39:23.381Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/GridSpace/grid-apps/releases.atom",
+      "signalType": "release",
+      "tag": "4.7.3",
+      "url": "https://github.com/GridSpace/grid-apps/releases/tag/4.7.3"
+    },
+    "langfuse": {
+      "lastAttempt": "2026-10-23T10:39:23.703Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/langfuse/langfuse/releases.atom": {
+          "etag": "W/\"98f8a5fe9bbfe15ade5166ec2bb58443\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:23.703Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/langfuse/langfuse/releases.atom",
+      "signalType": "release",
+      "tag": "v4.68.0",
+      "url": "https://github.com/langfuse/langfuse/releases/tag/v4.68.0",
+      "pendingVerification": null,
+      "lastVerificationAttempt": "2026-10-23T10:39:23.703Z",
+      "verifiedTag": "v4.68.0"
+    },
+    "letta": {
+      "lastAttempt": "2026-10-23T10:39:24.378Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/letta-ai/letta/releases.atom": {
+          "etag": "W/\"29945d2f78f58cbd9a3b469316208456\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:24.378Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/letta-ai/letta/releases.atom",
+      "signalType": "release",
+      "tag": "0.16.8",
+      "url": "https://github.com/letta-ai/letta/releases/tag/0.16.8"
+    },
+    "librechat": {
+      "lastAttempt": "2026-10-23T10:39:25.459Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/LibreChat-AI/LibreChat/releases.atom": {
+          "etag": "W/\"65e0ee779bef528ab56ff26ba884b371\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:25.459Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/LibreChat-AI/LibreChat/releases.atom",
+      "signalType": "release",
+      "tag": "backup/chat-class-c88a1f4",
+      "url": "https://github.com/LibreChat-AI/LibreChat/releases/tag/backup%2Fchat-class-c88a1f4",
+      "pendingVerification": "backup/chat-class-c88a1f4",
+      "lastVerificationAttempt": "2026-10-23T10:39:25.459Z"
+    },
+    "lightcraft": {
+      "lastAttempt": "2026-10-23T10:39:26.477Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/storytold/lightcraft/releases.atom": {
+          "etag": "W/\"fe3a9cd4166023ef65d59cdd874434ac\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v0.13.0",
+      "pendingVerification": "v0.13.0",
+      "lastChecked": "2026-10-23T10:39:26.477Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/storytold/lightcraft/releases.atom",
+      "signalType": "release",
+      "tag": "v0.13.0",
+      "url": "https://github.com/storytold/lightcraft/releases/tag/v0.13.0",
+      "lastVerificationAttempt": "2026-10-23T10:39:26.477Z"
+    },
+    "limo-cad": {
+      "lastAttempt": "2026-10-23T10:39:28.295Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/limo-cad/Limo-CAD/releases.atom": {
+          "etag": "W/\"d73028217bbe44d446211b884323c1b5\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v0.2.2",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:39:28.295Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/limo-cad/Limo-CAD/releases.atom",
+      "signalType": "release",
+      "tag": "v0.2.2",
+      "url": "https://github.com/limo-cad/Limo-CAD/releases/tag/v0.2.2"
+    },
+    "losslesscut": {
+      "lastAttempt": "2026-10-23T10:39:28.596Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/mifi/lossless-cut/releases.atom": {
+          "etag": "W/\"45caa973b51d72802837a89c09373c87\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v3.69.0",
+      "pendingVerification": "v3.70.1",
+      "lastChecked": "2026-10-23T10:39:28.596Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/mifi/lossless-cut/releases.atom",
+      "signalType": "release",
+      "tag": "v3.70.1",
+      "url": "https://github.com/mifi/lossless-cut/releases/tag/v3.70.1",
+      "lastVerificationAttempt": "2026-10-23T10:39:28.596Z"
+    },
+    "mastra": {
+      "lastAttempt": "2026-10-23T10:39:29.410Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/mastra-ai/mastra/releases.atom": {
+          "etag": "W/\"2b1653d836e9479429f63d50cad8df1a\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:29.410Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/mastra-ai/mastra/releases.atom",
+      "signalType": "none",
+      "tag": null,
+      "url": null
+    },
+    "material-maker": {
+      "lastAttempt": "2026-10-23T10:39:30.363Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/RodZill4/material-maker/releases.atom": {
+          "etag": "W/\"56c3f212e974d305af6d5f325c976832\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "1.7",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:39:30.363Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/RodZill4/material-maker/releases.atom",
+      "signalType": "release",
+      "tag": "1.7",
+      "url": "https://github.com/RodZill4/material-maker/releases/tag/1.7"
+    },
+    "mayo": {
+      "lastAttempt": "2026-10-23T10:39:31.301Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/fougue/mayo/releases.atom": {
+          "etag": "W/\"6906536e661448c1557a4fb523970d13\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v0.10.0",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:39:31.301Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/fougue/mayo/releases.atom",
+      "signalType": "release",
+      "tag": "v0.10.0",
+      "url": "https://github.com/fougue/mayo/releases/tag/v0.10.0"
+    },
+    "meshcentral": {
+      "lastAttempt": "2026-10-23T10:39:32.210Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/Ylianst/MeshCentral/releases.atom": {
+          "etag": "W/\"42efa330a9e7dd9385192e85575bf27c\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:32.210Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/Ylianst/MeshCentral/releases.atom",
+      "signalType": "release",
+      "tag": "1.3.0",
+      "url": "https://github.com/Ylianst/MeshCentral/releases/tag/1.3.0",
+      "pendingVerification": "1.3.0",
+      "lastVerificationAttempt": "2026-10-23T10:39:32.210Z"
+    },
+    "meshlab": {
+      "lastAttempt": "2026-10-23T10:39:32.523Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/cnr-isti-vclab/meshlab/releases.atom": {
+          "etag": "W/\"1428bd3d18eefd0748dbd0a158a44bb6\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "MeshLab-2025.07",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:39:32.523Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/cnr-isti-vclab/meshlab/releases.atom",
+      "signalType": "release",
+      "tag": "MeshLab-2025.07",
+      "url": "https://github.com/cnr-isti-vclab/meshlab/releases/tag/MeshLab-2025.07"
+    },
+    "mfek-glif": {
+      "lastAttempt": "2026-10-23T10:39:33.171Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/MFEK/glif/releases.atom": {
+          "etag": "W/\"ee4e75e3907e1efcea45313820d0c9b3\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v2.0.0b1",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:39:33.171Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/MFEK/glif/releases.atom",
+      "signalType": "release",
+      "tag": "v2.0.0b1",
+      "url": "https://github.com/MFEK/glif/releases/tag/v2.0.0b1"
+    },
+    "n8n": {
+      "lastAttempt": "2026-10-23T10:39:34.755Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/n8n-io/n8n/releases.atom": {
+          "etag": "W/\"0150833d3bf81fe3227b4d79f2c4af7e\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:34.755Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/n8n-io/n8n/releases.atom",
+      "signalType": "release",
+      "tag": "v1",
+      "url": "https://github.com/n8n-io/n8n/releases/tag/v1",
+      "pendingVerification": "v1",
+      "lastVerificationAttempt": "2026-10-23T10:39:34.755Z"
+    },
+    "nocobase": {
+      "lastAttempt": "2026-10-23T10:39:35.059Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/nocobase/nocobase/releases.atom": {
+          "etag": "W/\"eed012e72764b194028c68595b406268\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:35.059Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/nocobase/nocobase/releases.atom",
+      "signalType": "release",
+      "tag": "release-beta/2026-10-23.1",
+      "url": "https://github.com/nocobase/nocobase/releases/tag/release-beta%2F2026-10-23.1",
+      "pendingVerification": "release-beta/2026-10-23.1",
+      "lastVerificationAttempt": "2026-10-23T10:39:35.059Z"
+    },
+    "oak-video-editor": {
+      "lastAttempt": "2026-10-23T10:39:35.726Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/OakVideoEditorCommunity/oak/releases.atom": {
+          "etag": "W/\"c08cf3f7ff8f3e65ab8f0e55d21f7505\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:35.726Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/OakVideoEditorCommunity/oak/releases.atom",
+      "signalType": "release",
+      "tag": "v0.3.0",
+      "url": "https://github.com/OakVideoEditorCommunity/oak/releases/tag/v0.3.0",
+      "pendingVerification": "v0.3.0",
+      "lastVerificationAttempt": "2026-10-23T10:39:35.726Z"
+    },
+    "olive": {
+      "lastAttempt": "2026-10-23T10:39:37.345Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/olive-editor/olive/releases.atom": {
+          "etag": "W/\"37c9b811cf6084f6b0db08bf1bdf8db4\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:37.345Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/olive-editor/olive/releases.atom",
+      "signalType": "release",
+      "tag": "continuous",
+      "url": "https://github.com/olive-editor/olive/releases/tag/continuous",
+      "pendingVerification": "continuous",
+      "lastVerificationAttempt": "2026-10-23T10:39:37.345Z"
+    },
+    "openhands": {
+      "lastAttempt": "2026-10-23T10:39:37.645Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/OpenHands/OpenHands/releases.atom": {
+          "etag": "W/\"593659df46df563af19ec98aa7285f92\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:37.645Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/OpenHands/OpenHands/releases.atom",
+      "signalType": "release",
+      "tag": "v1.32.0",
+      "url": "https://github.com/OpenHands/OpenHands/releases/tag/v1.32.0",
+      "pendingVerification": "v1.32.0",
+      "lastVerificationAttempt": "2026-10-23T10:39:37.645Z"
+    },
+    "paperless": {
+      "lastAttempt": "2026-10-23T10:39:38.507Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/paperless-ngx/paperless-ngx/releases.atom": {
+          "etag": "W/\"839954c2851d4ecc8084e8a834fa3d0e\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:38.507Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/paperless-ngx/paperless-ngx/releases.atom",
+      "signalType": "release",
+      "tag": "v3.3.4",
+      "url": "https://github.com/paperless-ngx/paperless-ngx/releases/tag/v3.3.4",
+      "pendingVerification": "v3.3.4",
+      "lastVerificationAttempt": "2026-10-23T10:39:38.507Z"
+    },
+    "pdfcraft": {
+      "lastAttempt": "2026-10-23T10:39:39.509Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/storytold/pdfcraft/releases.atom": {
+          "etag": "W/\"d6ea01a315382039722116e7d0e325b6\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v0.13.0",
+      "pendingVerification": "v0.13.0",
+      "lastChecked": "2026-10-23T10:39:39.509Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/storytold/pdfcraft/releases.atom",
+      "signalType": "release",
+      "tag": "v0.13.0",
+      "url": "https://github.com/storytold/pdfcraft/releases/tag/v0.13.0",
+      "lastVerificationAttempt": "2026-10-23T10:39:39.509Z"
+    },
+    "peta-core": {
+      "lastAttempt": "2026-10-23T10:39:40.389Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/dunialabs/peta-core/releases.atom": {
+          "etag": "W/\"6cf492d00def5a6385e57013352b763d\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:40.389Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/dunialabs/peta-core/releases.atom",
+      "signalType": "release",
+      "tag": "v1.3.0",
+      "url": "https://github.com/dunialabs/peta-core/releases/tag/v1.3.0"
+    },
+    "photocraft": {
+      "lastAttempt": "2026-10-23T10:39:41.071Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/storytold/photocraft/releases.atom": {
+          "etag": "W/\"5a1fd1d2cf4a704cd9b0d56ef8b42c03\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v0.14.0",
+      "pendingVerification": "v0.14.0",
+      "lastChecked": "2026-10-23T10:39:41.071Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/storytold/photocraft/releases.atom",
+      "signalType": "release",
+      "tag": "v0.14.0",
+      "url": "https://github.com/storytold/photocraft/releases/tag/v0.14.0",
+      "lastVerificationAttempt": "2026-10-23T10:39:41.071Z"
+    },
+    "photodemon": {
+      "lastAttempt": "2026-10-23T10:39:42.608Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/tannerhelland/PhotoDemon/releases.atom": {
+          "etag": "W/\"cc710554b27bd914da7623b737407a6a\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v2025.12",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:39:42.608Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/tannerhelland/PhotoDemon/releases.atom",
+      "signalType": "release",
+      "tag": "v2025.12",
+      "url": "https://github.com/tannerhelland/PhotoDemon/releases/tag/v2025.12"
+    },
+    "pixieditor": {
+      "lastAttempt": "2026-10-23T10:39:43.052Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/PixiEditor/PixiEditor/releases.atom": {
+          "etag": "W/\"3825e0b5dcc169f770d469ccab1031b1\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "2.1.2.4",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:39:43.052Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/PixiEditor/PixiEditor/releases.atom",
+      "signalType": "release",
+      "tag": "2.1.2.4",
+      "url": "https://github.com/PixiEditor/PixiEditor/releases/tag/2.1.2.4"
+    },
+    "plane": {
+      "lastAttempt": "2026-10-23T10:39:44.648Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/makeplane/plane/releases.atom": {
+          "etag": "W/\"a1132d5b2f7a51d84f3fa37225c89781\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:44.648Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/makeplane/plane/releases.atom",
+      "signalType": "release",
+      "tag": "v1.4.2",
+      "url": "https://github.com/makeplane/plane/releases/tag/v1.4.2"
+    },
+    "postiz": {
+      "lastAttempt": "2026-10-23T10:39:45.450Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/gitroomhq/postiz-app/releases.atom": {
+          "etag": "W/\"21bd471575b1a7dd59a3657f839f3d06\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:45.450Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/gitroomhq/postiz-app/releases.atom",
+      "signalType": "release",
+      "tag": "v2.25.1",
+      "url": "https://github.com/gitroomhq/postiz-app/releases/tag/v2.25.1",
+      "pendingVerification": "v2.25.1",
+      "lastVerificationAttempt": "2026-10-23T10:39:45.450Z"
+    },
+    "ragflow": {
+      "lastAttempt": "2026-10-23T10:39:46.400Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/infiniflow/ragflow/releases.atom": {
+          "etag": "W/\"4c98cbc679cc8c30c2151815f85592dc\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:46.400Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/infiniflow/ragflow/releases.atom",
+      "signalType": "release",
+      "tag": "v0.27.3",
+      "url": "https://github.com/infiniflow/ragflow/releases/tag/v0.27.3",
+      "pendingVerification": "v0.27.3",
+      "lastVerificationAttempt": "2026-10-23T10:39:46.400Z"
+    },
+    "real-video-enhancer": {
+      "lastAttempt": "2026-10-23T10:39:48.580Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/TNTwise/REAL-Video-Enhancer/releases.atom": {
+          "etag": "W/\"86ed802a3b8cac9f3089c2b431d259d2\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:48.580Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/TNTwise/REAL-Video-Enhancer/releases.atom",
+      "signalType": "release",
+      "tag": "RVE-2.4.2",
+      "url": "https://github.com/TNTwise/REAL-Video-Enhancer/releases/tag/RVE-2.4.2",
+      "pendingVerification": "RVE-2.4.2",
+      "lastVerificationAttempt": "2026-10-23T10:39:48.580Z"
+    },
+    "restate": {
+      "lastAttempt": "2026-10-23T10:39:48.882Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/restatedev/restate/releases.atom": {
+          "etag": "W/\"9bc2474044802a3a21ddc82283f74d29\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:48.882Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/restatedev/restate/releases.atom",
+      "signalType": "release",
+      "tag": "v1.7.14",
+      "url": "https://github.com/restatedev/restate/releases/tag/v1.7.14",
+      "pendingVerification": "v1.7.14",
+      "lastVerificationAttempt": "2026-10-23T10:39:48.882Z"
+    },
+    "rustdesk": {
+      "lastAttempt": "2026-10-23T10:39:50.808Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/rustdesk/rustdesk/releases.atom": {
+          "etag": "W/\"2c70ceb2d3a68041ab2693310e588635\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:50.808Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/rustdesk/rustdesk/releases.atom",
+      "signalType": "release",
+      "tag": "1.5.0",
+      "url": "https://github.com/rustdesk/rustdesk/releases/tag/1.5.0"
+    },
+    "sim": {
+      "lastAttempt": "2026-10-23T10:39:51.070Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/simstudioai/sim/releases.atom": {
+          "etag": "W/\"ab082bf8bcc28dd4b15f139a900bd63c\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:51.070Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/simstudioai/sim/releases.atom",
+      "signalType": "release",
+      "tag": "v0.9.32",
+      "url": "https://github.com/simstudioai/sim/releases/tag/v0.9.32",
+      "pendingVerification": "v0.9.32",
+      "lastVerificationAttempt": "2026-10-23T10:39:51.070Z"
+    },
+    "solvespace": {
+      "lastAttempt": "2026-10-23T10:39:51.400Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/solvespace/solvespace/releases.atom": {
+          "etag": "W/\"56e71479802bf2dbe1aed1f2273ca996\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v3.2",
+      "pendingVerification": "v3.3",
+      "lastChecked": "2026-10-23T10:39:51.400Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/solvespace/solvespace/releases.atom",
+      "signalType": "release",
+      "tag": "v3.3",
+      "url": "https://github.com/solvespace/solvespace/releases/tag/v3.3",
+      "lastVerificationAttempt": "2026-10-23T10:39:51.400Z"
+    },
+    "soundcraft": {
+      "lastAttempt": "2026-10-23T10:39:53.012Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/storytold/soundcraft/releases.atom": {
+          "etag": "W/\"95eb25188be67d6e4987e27a05990366\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v0.12.1",
+      "pendingVerification": "v0.12.1",
+      "lastChecked": "2026-10-23T10:39:53.012Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/storytold/soundcraft/releases.atom",
+      "signalType": "release",
+      "tag": "v0.12.1",
+      "url": "https://github.com/storytold/soundcraft/releases/tag/v0.12.1",
+      "lastVerificationAttempt": "2026-10-23T10:39:53.012Z"
+    },
+    "stargate-daw": {
+      "lastAttempt": "2026-10-23T10:39:53.312Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/stargatedaw/stargate/releases.atom": {
+          "etag": "W/\"f4a97fa91aaf79f69aaa904aca136d74\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "release-24.02.2",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:39:53.312Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/stargatedaw/stargate/releases.atom",
+      "signalType": "release",
+      "tag": "release-24.02.2",
+      "url": "https://github.com/stargatedaw/stargate/releases/tag/release-24.02.2"
+    },
+    "synfig": {
+      "lastAttempt": "2026-10-23T10:39:53.628Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/synfig/synfig/releases.atom": {
+          "etag": "W/\"1f9e84f575ad56e6e6a655f2d4fe1748\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v1.5.5",
+      "pendingVerification": null,
+      "lastChecked": "2026-10-23T10:39:53.628Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/synfig/synfig/releases.atom",
+      "signalType": "release",
+      "tag": "v1.5.5",
+      "url": "https://github.com/synfig/synfig/releases/tag/v1.5.5"
+    },
+    "twenty": {
+      "lastAttempt": "2026-10-23T10:39:55.275Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/twentyhq/twenty/releases.atom": {
+          "etag": "W/\"2f44487a4551fbc14b5c67af637bb438\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:55.275Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/twentyhq/twenty/releases.atom",
+      "signalType": "release",
+      "tag": "npm-release/39904099333-1",
+      "url": "https://github.com/twentyhq/twenty/releases/tag/npm-release%2F39904099333-1",
+      "pendingVerification": "npm-release/39904099333-1",
+      "lastVerificationAttempt": "2026-10-23T10:39:55.275Z"
+    },
+    "vectorcraft": {
+      "lastAttempt": "2026-10-23T10:39:55.597Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/storytold/vectorcraft/releases.atom": {
+          "etag": "W/\"4728fe0a78a516f65689c516c87e6043\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v0.16.0",
+      "pendingVerification": "v0.16.0",
+      "lastChecked": "2026-10-23T10:39:55.597Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/storytold/vectorcraft/releases.atom",
+      "signalType": "release",
+      "tag": "v0.16.0",
+      "url": "https://github.com/storytold/vectorcraft/releases/tag/v0.16.0",
+      "lastVerificationAttempt": "2026-10-23T10:39:55.597Z"
+    },
+    "vgc": {
+      "lastAttempt": "2026-10-23T10:39:55.857Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/vgc/vgc/releases.atom": {
+          "etag": "W/\"9b0cc02ed150f9565e479c139d9b20a0\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:55.857Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/vgc/vgc/releases.atom",
+      "signalType": "none",
+      "tag": null,
+      "url": null
+    },
+    "windmill": {
+      "lastAttempt": "2026-10-23T10:39:57.582Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/windmill-labs/windmill/releases.atom": {
+          "etag": "W/\"05d8e4b6ff1266d14812da60a68d4419\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:57.582Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/windmill-labs/windmill/releases.atom",
+      "signalType": "release",
+      "tag": "v1.847.0",
+      "url": "https://github.com/windmill-labs/windmill/releases/tag/v1.847.0",
+      "pendingVerification": "v1.847.0",
+      "lastVerificationAttempt": "2026-10-23T10:39:57.582Z"
+    },
+    "wordcraft": {
+      "lastAttempt": "2026-10-23T10:39:57.886Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/storytold/wordcraft/releases.atom": {
+          "etag": "W/\"5bb43a5914a2caa063e04a305162c189\"",
+          "modified": null
+        }
+      },
+      "verifiedTag": "v0.10.0",
+      "pendingVerification": "v0.10.0",
+      "lastChecked": "2026-10-23T10:39:57.886Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/storytold/wordcraft/releases.atom",
+      "signalType": "release",
+      "tag": "v0.10.0",
+      "url": "https://github.com/storytold/wordcraft/releases/tag/v0.10.0",
+      "lastVerificationAttempt": "2026-10-23T10:39:57.886Z"
+    },
+    "zed": {
+      "lastAttempt": "2026-10-23T10:39:59.838Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/zed-industries/zed/releases.atom": {
+          "etag": "W/\"e9aeba4a59f01042d29f5175b039e525\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:39:59.838Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/zed-industries/zed/releases.atom",
+      "signalType": "release",
+      "tag": "collab-staging",
+      "url": "https://github.com/zed-industries/zed/releases/tag/collab-staging",
+      "pendingVerification": "collab-staging",
+      "lastVerificationAttempt": "2026-10-23T10:39:59.838Z"
+    },
+    "zrythm": {
+      "lastAttempt": "2026-10-23T10:40:00.157Z",
+      "error": null,
+      "etagByHost": {
+        "https://gitlab.com/api/v4/projects/zrythm%2Fzrythm/releases?per_page=1": {
+          "etag": "W/\"4f53cda18c2baa0c0354bb5f9a3ecbe5\"",
+          "modified": null
+        },
+        "https://gitlab.com/api/v4/projects/zrythm%2Fzrythm/repository/tags?per_page=1": {
+          "etag": "W/\"7cf57034342cc7e656496b7825cd83f3\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:00.157Z",
+      "sourceHost": "gitlab.com",
+      "sourceLabel": "GitLab · source tags",
+      "sourceUrl": "https://gitlab.com/api/v4/projects/zrythm%2Fzrythm/repository/tags?per_page=1",
+      "signalType": "tag",
+      "tag": "v2.0.0-alpha.6",
+      "url": null
+    },
+    "zz:directory:storytold": {
+      "lastAttempt": "2026-10-23T10:50:23.152Z",
+      "error": null,
+      "etagByHost": {},
+      "lastChecked": "2026-10-23T10:50:23.152Z",
+      "sourceHost": "api.github.com",
+      "sourceLabel": "Owner directory",
+      "signalType": "directory"
+    },
+    "gh-4ian-gdevelop": {
+      "lastAttempt": "2026-10-23T10:40:36.113Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/4ian/GDevelop/releases.atom": {
+          "etag": "W/\"8b470b8beb3a8cbdba63b663867974e1\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:36.113Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/4ian/GDevelop/releases.atom",
+      "signalType": "release",
+      "tag": "v5.6.285",
+      "url": "https://github.com/4ian/GDevelop/releases/tag/v5.6.285",
+      "pendingVerification": null,
+      "lastVerificationAttempt": "2026-10-23T10:12:21.263Z",
+      "verifiedTag": "v5.6.285"
+    },
+    "gh-abemelic-freeshow": {
+      "lastAttempt": "2026-10-23T10:40:37.207Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/abemelic/freeshow/releases.atom": {
+          "etag": "W/\"a5878ac5fff4fc1f7a931fe53ed2888b\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:37.207Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/abemelic/freeshow/releases.atom",
+      "signalType": "release",
+      "tag": "v0.5.5",
+      "url": "https://github.com/abemelic/freeshow/releases/tag/v0.5.5"
+    },
+    "gh-actualbudget-actual": {
+      "lastAttempt": "2026-10-23T10:40:37.703Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/actualbudget/actual/releases.atom": {
+          "etag": "W/\"f9256527f9dbb4410b8990bab5b90385\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:37.703Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/actualbudget/actual/releases.atom",
+      "signalType": "release",
+      "tag": "v26.10.0",
+      "url": "https://github.com/actualbudget/actual/releases/tag/v26.10.0"
+    },
+    "gh-anjok07-ultimatevocalremovergui": {
+      "lastAttempt": "2026-10-23T10:40:38.351Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/Anjok07/ultimatevocalremovergui/releases.atom": {
+          "etag": "W/\"ac927fa4a7552bd82b0ee2b57eb6ac39\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:38.351Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/Anjok07/ultimatevocalremovergui/releases.atom",
+      "signalType": "release",
+      "tag": "v5.6",
+      "url": "https://github.com/Anjok07/ultimatevocalremovergui/releases/tag/v5.6"
+    },
+    "gh-apache-superset": {
+      "lastAttempt": "2026-10-23T10:40:39.636Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/apache/superset/releases.atom": {
+          "etag": "W/\"4d99bc835c89e723c013dafd95eb39fc\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:39.636Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/apache/superset/releases.atom",
+      "signalType": "release",
+      "tag": "7.0.0rc2",
+      "url": "https://github.com/apache/superset/releases/tag/7.0.0rc2",
+      "pendingVerification": "7.0.0rc2",
+      "lastVerificationAttempt": "2026-10-23T10:13:41.283Z"
+    },
+    "gh-benkuper-chataigne": {
+      "lastAttempt": "2026-10-23T10:40:39.938Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/benkuper/Chataigne/releases.atom": {
+          "etag": "W/\"cfc7c42f2f406e33e64b2efd844bd09c\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:39.938Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/benkuper/Chataigne/releases.atom",
+      "signalType": "release",
+      "tag": "1.10.5b7",
+      "url": "https://github.com/benkuper/Chataigne/releases/tag/1.10.5b7",
+      "pendingVerification": "1.10.5b7",
+      "lastVerificationAttempt": "2026-10-23T10:14:01.303Z"
+    },
+    "gh-biolab-orange3": {
+      "lastAttempt": "2026-10-23T10:40:40.877Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/biolab/orange3/releases.atom": {
+          "etag": "W/\"10bb7c399efb55147a7e4cc0d3f2c7e7\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:40.877Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/biolab/orange3/releases.atom",
+      "signalType": "release",
+      "tag": "3.40.0",
+      "url": "https://github.com/biolab/orange3/releases/tag/3.40.0"
+    },
+    "gh-box-of-dragons-jsketcher": {
+      "lastAttempt": "2026-10-23T10:40:42.123Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/Box-of-Dragons/JSketcher/releases.atom": {
+          "etag": "W/\"fa33e4e215c719f3876969e687fb0e47\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:42.123Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/Box-of-Dragons/JSketcher/releases.atom",
+      "signalType": "none",
+      "tag": null,
+      "url": null
+    },
+    "gh-calcom-cal-diy": {
+      "lastAttempt": "2026-10-23T10:40:42.462Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/calcom/cal.diy/releases.atom": {
+          "etag": "W/\"a1d0e49044f966c2076f7667cdcdfc07\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:42.462Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/calcom/cal.diy/releases.atom",
+      "signalType": "release",
+      "tag": "v6.2.0",
+      "url": "https://github.com/calcom/cal.diy/releases/tag/v6.2.0"
+    },
+    "gh-chatwoot-chatwoot": {
+      "lastAttempt": "2026-10-23T10:40:43.071Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/chatwoot/chatwoot/releases.atom": {
+          "etag": "W/\"71c29001c6f7d45d32284ce5bd8b2232\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:43.071Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/chatwoot/chatwoot/releases.atom",
+      "signalType": "release",
+      "tag": "v4.19.0",
+      "url": "https://github.com/chatwoot/chatwoot/releases/tag/v4.19.0",
+      "pendingVerification": null,
+      "lastVerificationAttempt": "2026-10-23T10:15:21.319Z",
+      "verifiedTag": "v4.19.0"
+    },
+    "gh-documenso-documenso": {
+      "lastAttempt": "2026-10-23T10:40:44.326Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/documenso/documenso/releases.atom": {
+          "etag": "W/\"999f393b59de6a8df0bdf276c2e2d3d5\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:44.326Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/documenso/documenso/releases.atom",
+      "signalType": "release",
+      "tag": "v2.21.1",
+      "url": "https://github.com/documenso/documenso/releases/tag/v2.21.1",
+      "pendingVerification": null,
+      "lastVerificationAttempt": "2026-10-23T10:15:41.355Z",
+      "verifiedTag": "v2.21.1"
+    },
+    "gh-dolibarr-dolibarr": {
+      "lastAttempt": "2026-10-23T10:40:44.968Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/Dolibarr/dolibarr/releases.atom": {
+          "etag": "W/\"f66acbeda95c72c1bf36a7e0cb784adb\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:44.968Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/Dolibarr/dolibarr/releases.atom",
+      "signalType": "release",
+      "tag": "24.0.2",
+      "url": "https://github.com/Dolibarr/dolibarr/releases/tag/24.0.2"
+    },
+    "gh-donkie-spoolman": {
+      "lastAttempt": "2026-10-23T10:40:45.623Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/Donkie/Spoolman/releases.atom": {
+          "etag": "W/\"1d7107fc760693c071b93400fe97d105\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:45.623Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/Donkie/Spoolman/releases.atom",
+      "signalType": "release",
+      "tag": "v0.27.0",
+      "url": "https://github.com/Donkie/Spoolman/releases/tag/v0.27.0"
+    },
+    "gh-elmercsc-elmerfem": {
+      "lastAttempt": "2026-10-23T10:40:46.763Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/ElmerCSC/elmerfem/releases.atom": {
+          "etag": "W/\"229a172c08f7038638eed77bed4b7714\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:46.763Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/ElmerCSC/elmerfem/releases.atom",
+      "signalType": "release",
+      "tag": "release-26.2.1",
+      "url": "https://github.com/ElmerCSC/elmerfem/releases/tag/release-26.2.1"
+    },
+    "gh-evidence-dev-evidence": {
+      "lastAttempt": "2026-10-23T10:40:47.665Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/evidence-dev/evidence/releases.atom": {
+          "etag": "W/\"5f217dba26f11401f21a805c84b420b2\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:47.665Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/evidence-dev/evidence/releases.atom",
+      "signalType": "none",
+      "tag": null,
+      "url": null
+    },
+    "gh-falktx-carla": {
+      "lastAttempt": "2026-10-23T10:40:48.389Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/falkTX/Carla/releases.atom": {
+          "etag": "W/\"a5915ea2e117aaa6124932213098a2d0\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:48.389Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/falkTX/Carla/releases.atom",
+      "signalType": "release",
+      "tag": "v2.5.10",
+      "url": "https://github.com/falkTX/Carla/releases/tag/v2.5.10"
+    },
+    "gh-formbricks-formbricks": {
+      "lastAttempt": "2026-10-23T10:40:49.365Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/formbricks/formbricks/releases.atom": {
+          "etag": "W/\"61409943a0328e9d92c0008f2e871a95\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:49.365Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/formbricks/formbricks/releases.atom",
+      "signalType": "release",
+      "tag": "6.1.1",
+      "url": "https://github.com/formbricks/formbricks/releases/tag/6.1.1",
+      "mirrorTag": "6.1.0-rc.1",
+      "sourceCheckedFrom": "github.com",
+      "mirrorCheckedAt": "2026-10-14T15:20:10.552Z",
+      "pendingVerification": null,
+      "lastVerificationAttempt": "2026-10-23T10:17:45.485Z",
+      "verifiedTag": "6.1.1"
+    },
+    "gh-goauthentik-authentik": {
+      "lastAttempt": "2026-10-23T10:40:50.035Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/goauthentik/authentik/releases.atom": {
+          "etag": "W/\"78333e5c409f1c588081ab56a1995343\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:50.035Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/goauthentik/authentik/releases.atom",
+      "signalType": "release",
+      "tag": "version/2026.8.5",
+      "url": "https://github.com/goauthentik/authentik/releases/tag/version%2F2026.8.5",
+      "pendingVerification": null,
+      "lastVerificationAttempt": "2026-10-23T10:18:05.503Z",
+      "verifiedTag": "version/2026.8.5"
+    },
+    "gh-greenbone-openvas-scanner": {
+      "lastAttempt": "2026-10-23T10:40:50.332Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/greenbone/openvas-scanner/releases.atom": {
+          "etag": "W/\"31e93a5b392a79ef9aa4871ba6fec4ab\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:50.332Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/greenbone/openvas-scanner/releases.atom",
+      "signalType": "release",
+      "tag": "v23.52.3",
+      "url": "https://github.com/greenbone/openvas-scanner/releases/tag/v23.52.3",
+      "pendingVerification": null,
+      "lastVerificationAttempt": "2026-10-23T10:18:25.510Z",
+      "verifiedTag": "v23.52.3"
+    },
+    "gh-gristlabs-grist-core": {
+      "lastAttempt": "2026-10-23T10:40:52.134Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/gristlabs/grist-core/releases.atom": {
+          "etag": "W/\"11c737a702bb22d0a66545d7d999656c\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:52.134Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/gristlabs/grist-core/releases.atom",
+      "signalType": "release",
+      "tag": "v1.7.21",
+      "url": "https://github.com/gristlabs/grist-core/releases/tag/v1.7.21"
+    },
+    "gh-ifcopenshell-ifcopenshell": {
+      "lastAttempt": "2026-10-23T10:40:52.578Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/IfcOpenShell/IfcOpenShell/releases.atom": {
+          "etag": "W/\"9cdb8a0929ea8401036f9aa01221a2ef\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:52.578Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/IfcOpenShell/IfcOpenShell/releases.atom",
+      "signalType": "release",
+      "tag": "ifcsverchok-0.9.1.261013",
+      "url": "https://github.com/IfcOpenShell/IfcOpenShell/releases/tag/bonsai-0.9.1-alpha2610220728",
+      "pendingVerification": null,
+      "lastVerificationAttempt": "2026-10-14T15:21:30.578Z",
+      "verifiedTag": "ifcsverchok-0.9.1.261013",
+      "mirrorTag": "bonsai-0.9.1-alpha2610220728",
+      "sourceCheckedFrom": "github.com",
+      "mirrorCheckedAt": "2026-10-23T10:19:05.506Z"
+    },
+    "gh-infisical-infisical": {
+      "lastAttempt": "2026-10-23T10:40:53.108Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/Infisical/infisical/releases.atom": {
+          "etag": "W/\"fb5be4264dfc1b82a7f416d218e4a52d\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:53.108Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/Infisical/infisical/releases.atom",
+      "signalType": "release",
+      "tag": "v0.167.1",
+      "url": "https://github.com/Infisical/infisical/releases/tag/v0.167.1",
+      "pendingVerification": null,
+      "lastVerificationAttempt": "2026-10-23T10:19:25.515Z",
+      "verifiedTag": "v0.167.1"
+    },
+    "gh-inkcut-inkcut": {
+      "lastAttempt": "2026-10-23T10:40:54.634Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/inkcut/inkcut/releases.atom": {
+          "etag": "W/\"ae8363c1a20ab0ba28e18b424d8309de\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:54.634Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/inkcut/inkcut/releases.atom",
+      "signalType": "release",
+      "tag": "v2.1.8",
+      "url": "https://github.com/inkcut/inkcut/releases/tag/v2.1.8"
+    },
+    "gh-jamovi-jamovi": {
+      "lastAttempt": "2026-10-23T10:40:55.240Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/jamovi/jamovi/releases.atom": {
+          "etag": "W/\"ca2d9d0bb637fb89111022a816d61cdf\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:55.240Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/jamovi/jamovi/releases.atom",
+      "signalType": "release",
+      "tag": "v28.14",
+      "url": "https://github.com/jamovi/jamovi/releases/tag/v28.14",
+      "pendingVerification": "v28.14",
+      "lastVerificationAttempt": "2026-10-23T10:20:05.536Z"
+    },
+    "gh-jasp-stats-jasp-desktop": {
+      "lastAttempt": "2026-10-23T10:40:56.470Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/jasp-stats/jasp-desktop/releases.atom": {
+          "etag": "W/\"1fb7cbc3bbf680296436946ad39a97a0\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:56.470Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/jasp-stats/jasp-desktop/releases.atom",
+      "signalType": "release",
+      "tag": "v0.99.0",
+      "url": "https://github.com/jasp-stats/jasp-desktop/releases/tag/v0.99.0",
+      "pendingVerification": null,
+      "lastVerificationAttempt": "2026-10-23T10:20:21.703Z",
+      "verifiedTag": "v0.99.0"
+    },
+    "gh-lightdash-lightdash": {
+      "lastAttempt": "2026-10-23T10:40:56.801Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/lightdash/lightdash/releases.atom": {
+          "etag": "W/\"d3ad7a8be9878b777b0473d3405419c5\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:56.801Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/lightdash/lightdash/releases.atom",
+      "signalType": "release",
+      "tag": "3.42.0",
+      "url": "https://github.com/lightdash/lightdash/releases/tag/3.42.0",
+      "pendingVerification": "3.42.0",
+      "lastVerificationAttempt": "2026-10-23T10:20:25.541Z",
+      "verifiedTag": "3.41.1"
+    },
+    "gh-mapmapteam-mapmap": {
+      "lastAttempt": "2026-10-23T10:40:57.456Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/mapmapteam/mapmap/releases.atom": {
+          "etag": "W/\"155053c4b940bc3cd66f83ca1e44786a\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:57.456Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/mapmapteam/mapmap/releases.atom",
+      "signalType": "release",
+      "tag": "0.6.2",
+      "url": "https://github.com/mapmapteam/mapmap/releases/tag/0.6.2"
+    },
+    "gh-mathesar-foundation-mathesar": {
+      "lastAttempt": "2026-10-23T10:40:59.155Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/mathesar-foundation/mathesar/releases.atom": {
+          "etag": "W/\"7e8c170a6b88adb963409321d8d6a12c\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:59.155Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/mathesar-foundation/mathesar/releases.atom",
+      "signalType": "release",
+      "tag": "0.12.0",
+      "url": "https://github.com/mathesar-foundation/mathesar/releases/tag/0.12.0"
+    },
+    "gh-mcallegari-qlcplus": {
+      "lastAttempt": "2026-10-23T10:40:59.461Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/mcallegari/qlcplus/releases.atom": {
+          "etag": "W/\"2b9be5c0515f47f1483f1f432624c049\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:59.461Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/mcallegari/qlcplus/releases.atom",
+      "signalType": "release",
+      "tag": "QLC+_5.3.0",
+      "url": "https://github.com/mcallegari/qlcplus/releases/tag/QLC%2B_5.3.0"
+    },
+    "gh-meerk40t-meerk40t": {
+      "lastAttempt": "2026-10-23T10:40:59.762Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/meerk40t/meerk40t/releases.atom": {
+          "etag": "W/\"5aa99697c611cb631dfe27de6015c3d7\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:59.762Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/meerk40t/meerk40t/releases.atom",
+      "signalType": "release",
+      "tag": "0.9.9000.61",
+      "url": "https://github.com/meerk40t/meerk40t/releases/tag/0.9.9000.61"
+    },
+    "gh-metabase-metabase": {
+      "lastAttempt": "2026-10-23T10:41:01.344Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/metabase/metabase/releases.atom": {
+          "etag": "W/\"43fc92b984bf7d60bf7368bf5d98ef56\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:01.344Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/metabase/metabase/releases.atom",
+      "signalType": "release",
+      "tag": "v0.65.0.x",
+      "url": "https://github.com/metabase/metabase/releases/tag/v0.65.0.x",
+      "pendingVerification": "v0.65.0.x",
+      "lastVerificationAttempt": "2026-10-23T10:22:05.572Z"
+    },
+    "gh-mixxxdj-mixxx": {
+      "lastAttempt": "2026-10-23T10:41:01.659Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/mixxxdj/mixxx/releases.atom": {
+          "etag": "W/\"77fa4ca643d6aff980c5c2627195f5b0\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:01.659Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/mixxxdj/mixxx/releases.atom",
+      "signalType": "release",
+      "tag": "2.5.6",
+      "url": "https://github.com/mixxxdj/mixxx/releases/tag/2.5.6"
+    },
+    "gh-napari-napari": {
+      "lastAttempt": "2026-10-23T10:41:01.997Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/napari/napari/releases.atom": {
+          "etag": "W/\"150ee00017a609b7f3b3e4c01fec2f61\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:01.997Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/napari/napari/releases.atom",
+      "signalType": "release",
+      "tag": "v0.10.0rc0",
+      "url": "https://github.com/napari/napari/releases/tag/v0.10.0rc0",
+      "pendingVerification": "v0.10.0rc0",
+      "lastVerificationAttempt": "2026-10-23T10:22:45.584Z"
+    },
+    "gh-netbirdio-netbird": {
+      "lastAttempt": "2026-10-23T10:41:03.575Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/netbirdio/netbird/releases.atom": {
+          "etag": "W/\"a59a6c6b6ce9e7f3e0707d790635375f\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:03.575Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/netbirdio/netbird/releases.atom",
+      "signalType": "release",
+      "tag": "v0.81.0-canary.pr-7407.2",
+      "url": "https://github.com/netbirdio/netbird/releases/tag/v0.81.0-canary.pr-7407.2",
+      "pendingVerification": "v0.81.0-canary.pr-7407.2",
+      "lastVerificationAttempt": "2026-10-23T10:23:05.599Z"
+    },
+    "gh-obsproject-obs-studio": {
+      "lastAttempt": "2026-10-23T10:41:04.292Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/obsproject/obs-studio/releases.atom": {
+          "etag": "W/\"9064ed27b4dfe72653ace277467dbde6\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:04.292Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/obsproject/obs-studio/releases.atom",
+      "signalType": "release",
+      "tag": "32.2.2",
+      "url": "https://github.com/obsproject/obs-studio/releases/tag/32.2.2"
+    },
+    "gh-open-source-legal-opencontracts": {
+      "lastAttempt": "2026-10-23T10:41:05.264Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/Open-Source-Legal/OpenContracts/releases.atom": {
+          "etag": "W/\"1b02e5b51d08636943286d852aedf875\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:05.264Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/Open-Source-Legal/OpenContracts/releases.atom",
+      "signalType": "release",
+      "tag": "v3.1.1",
+      "url": "https://github.com/Open-Source-Legal/OpenContracts/releases/tag/v3.1.1"
+    },
+    "gh-openbao-openbao": {
+      "lastAttempt": "2026-10-23T10:41:06.006Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/openbao/openbao/releases.atom": {
+          "etag": "W/\"1f0bb338e341cfe8eb797a20bb663285\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:06.006Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/openbao/openbao/releases.atom",
+      "signalType": "release",
+      "tag": "v2.7.1",
+      "url": "https://github.com/openbao/openbao/releases/tag/v2.7.1"
+    },
+    "gh-openchemistry-avogadroapp": {
+      "lastAttempt": "2026-10-23T10:41:06.839Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/OpenChemistry/avogadroapp/releases.atom": {
+          "etag": "W/\"9721cf17d5e241081fdaea1d598e8dbe\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:06.839Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/OpenChemistry/avogadroapp/releases.atom",
+      "signalType": "release",
+      "tag": "2.0.0",
+      "url": "https://github.com/OpenChemistry/avogadroapp/releases/tag/2.0.0"
+    },
+    "gh-opencpn-opencpn": {
+      "lastAttempt": "2026-10-23T10:41:07.663Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/OpenCPN/OpenCPN/releases.atom": {
+          "etag": "W/\"39616f483167779e0c7e1cab8506f305\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:07.663Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/OpenCPN/OpenCPN/releases.atom",
+      "signalType": "release",
+      "tag": "upstream/5.14.2+dfsg",
+      "url": "https://github.com/OpenCPN/OpenCPN/releases/tag/upstream%2F5.14.2%2Bdfsg"
+    },
+    "gh-opendronemap-odm": {
+      "lastAttempt": "2026-10-23T10:41:09.231Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/OpenDroneMap/ODM/releases.atom": {
+          "etag": "W/\"0bb2460030b31bf2e6d7020d4a83e7f3\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:09.231Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/OpenDroneMap/ODM/releases.atom",
+      "signalType": "release",
+      "tag": "v3.6.2",
+      "url": "https://github.com/OpenDroneMap/ODM/releases/tag/v3.6.2"
+    },
+    "gh-openfoam-openfoam-dev": {
+      "lastAttempt": "2026-10-23T10:41:09.582Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/OpenFOAM/OpenFOAM-dev/releases.atom": {
+          "etag": "W/\"3d2ce7d70224f7860b474271a69504c9\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:09.582Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/OpenFOAM/OpenFOAM-dev/releases.atom",
+      "signalType": "release",
+      "tag": "20260907",
+      "url": "https://github.com/OpenFOAM/OpenFOAM-dev/releases/tag/20260907"
+    },
+    "gh-openmdao-openmdao": {
+      "lastAttempt": "2026-10-23T10:41:09.894Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/OpenMDAO/OpenMDAO/releases.atom": {
+          "etag": "W/\"7ceb62caf9532e7b8887d4aed41db7e6\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:09.894Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/OpenMDAO/OpenMDAO/releases.atom",
+      "signalType": "release",
+      "tag": "3.45.1",
+      "url": "https://github.com/OpenMDAO/OpenMDAO/releases/tag/3.45.1"
+    },
+    "gh-openmodelica-openmodelica": {
+      "lastAttempt": "2026-10-23T10:41:11.606Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/OpenModelica/OpenModelica/releases.atom": {
+          "etag": "W/\"91343b1648844e9a96c667dbad35e10b\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:11.606Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/OpenModelica/OpenModelica/releases.atom",
+      "signalType": "release",
+      "tag": "v1.27.1",
+      "url": "https://github.com/OpenModelica/OpenModelica/releases/tag/v1.27.1"
+    },
+    "gh-openobserve-openobserve": {
+      "lastAttempt": "2026-10-23T10:41:12.092Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/openobserve/openobserve/releases.atom": {
+          "etag": "W/\"5abc2117b826de2f566cd4e4cb36037b\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:12.092Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/openobserve/openobserve/releases.atom",
+      "signalType": "release",
+      "tag": "v1.1.2",
+      "url": "https://github.com/openobserve/openobserve/releases/tag/v1.1.2",
+      "pendingVerification": "v1.1.2",
+      "lastVerificationAttempt": "2026-10-23T10:26:25.651Z"
+    },
+    "gh-openpanel-dev-openpanel": {
+      "lastAttempt": "2026-10-23T10:41:12.743Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/Openpanel-dev/openpanel/releases.atom": {
+          "etag": "W/\"0931cf21fc996909f3933abf6c15cbcd\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:12.743Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/Openpanel-dev/openpanel/releases.atom",
+      "signalType": "release",
+      "tag": "v3.13.1",
+      "url": "https://github.com/Openpanel-dev/openpanel/releases/tag/v3.13.1",
+      "pendingVerification": "v3.13.1",
+      "lastVerificationAttempt": "2026-10-23T10:26:45.645Z"
+    },
+    "gh-openrocket-openrocket": {
+      "lastAttempt": "2026-10-23T10:41:13.737Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/openrocket/openrocket/releases.atom": {
+          "etag": "W/\"2fdd8b08848d8e2228c0f054a8c62da1\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:13.737Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/openrocket/openrocket/releases.atom",
+      "signalType": "release",
+      "tag": "release-24.12",
+      "url": "https://github.com/openrocket/openrocket/releases/tag/release-24.12"
+    },
+    "gh-openscan-org-openscan3": {
+      "lastAttempt": "2026-10-23T10:41:14.699Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/OpenScan-org/OpenScan3/releases.atom": {
+          "etag": "W/\"2436aa167ce014440d09ebeb2c9810fc\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:14.699Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/OpenScan-org/OpenScan3/releases.atom",
+      "signalType": "release",
+      "tag": "v0.13.2",
+      "url": "https://github.com/OpenScan-org/OpenScan3/releases/tag/v0.13.2",
+      "pendingVerification": "v0.13.2",
+      "lastVerificationAttempt": "2026-10-23T10:27:25.664Z"
+    },
+    "gh-openziti-ziti": {
+      "lastAttempt": "2026-10-23T10:41:15.326Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/openziti/ziti/releases.atom": {
+          "etag": "W/\"8137c7683de29c7d78b2c0594d9e3a8c\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:15.326Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/openziti/ziti/releases.atom",
+      "signalType": "release",
+      "tag": "v1.6.22",
+      "url": "https://github.com/openziti/ziti/releases/tag/v1.6.22",
+      "pendingVerification": "v1.6.22",
+      "lastVerificationAttempt": "2026-10-23T10:27:45.674Z"
+    },
+    "gh-payloadcms-payload": {
+      "lastAttempt": "2026-10-23T10:41:16.264Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/payloadcms/payload/releases.atom": {
+          "etag": "W/\"2b30b40428d9d5331dc3df2e09199cb4\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:16.264Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/payloadcms/payload/releases.atom",
+      "signalType": "release",
+      "tag": "v3.92.0",
+      "url": "https://github.com/payloadcms/payload/releases/tag/v3.92.0",
+      "pendingVerification": "v3.92.0",
+      "lastVerificationAttempt": "2026-10-23T10:28:05.673Z"
+    },
+    "gh-pocketbase-pocketbase": {
+      "lastAttempt": "2026-10-23T10:41:16.997Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/pocketbase/pocketbase/releases.atom": {
+          "etag": "W/\"610a2ace0c8ec9c3cb38658d698323a6\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:16.997Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/pocketbase/pocketbase/releases.atom",
+      "signalType": "release",
+      "tag": "v0.40.5",
+      "url": "https://github.com/pocketbase/pocketbase/releases/tag/v0.40.5"
+    },
+    "gh-qelectrotech-qelectrotech-source-mirror": {
+      "lastAttempt": "2026-10-23T10:41:18.021Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/qelectrotech/qelectrotech-source-mirror/releases.atom": {
+          "etag": "W/\"84b2c84a078ddac6947b82f465dd6a82\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:18.021Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/qelectrotech/qelectrotech-source-mirror/releases.atom",
+      "signalType": "release",
+      "tag": "nightly-qt6",
+      "url": "https://github.com/qelectrotech/qelectrotech-source-mirror/releases/tag/nightly-qt6",
+      "pendingVerification": "nightly-qt6",
+      "lastVerificationAttempt": "2026-10-23T10:28:45.680Z"
+    },
+    "gh-qgis-qgis": {
+      "lastAttempt": "2026-10-23T10:41:18.979Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/qgis/QGIS/releases.atom": {
+          "etag": "W/\"45fbf9e1336bc7d748268397699cebda\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:18.979Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/qgis/QGIS/releases.atom",
+      "signalType": "release",
+      "tag": "final-4_2_3",
+      "url": "https://github.com/qgis/QGIS/releases/tag/final-4_2_3"
+    },
+    "gh-qupath-qupath": {
+      "lastAttempt": "2026-10-23T10:41:19.620Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/qupath/qupath/releases.atom": {
+          "etag": "W/\"76cc1a9e19f6af489b8e1c7dd6f80091\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:19.620Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/qupath/qupath/releases.atom",
+      "signalType": "release",
+      "tag": "v0.7.0",
+      "url": "https://github.com/qupath/qupath/releases/tag/v0.7.0"
+    },
+    "gh-rizinorg-cutter": {
+      "lastAttempt": "2026-10-23T10:41:21.111Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/rizinorg/cutter/releases.atom": {
+          "etag": "W/\"2a85c64b6065b89290b9a7b29c60dd27\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:21.111Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/rizinorg/cutter/releases.atom",
+      "signalType": "release",
+      "tag": "v2.5.0",
+      "url": "https://github.com/rizinorg/cutter/releases/tag/v2.5.0"
+    },
+    "gh-signoz-signoz": {
+      "lastAttempt": "2026-10-23T10:41:21.689Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/SigNoz/signoz/releases.atom": {
+          "etag": "W/\"d82ef506a6a671d9f03a8df1cf20fbec\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:21.689Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/SigNoz/signoz/releases.atom",
+      "signalType": "release",
+      "tag": "v0.147.0",
+      "url": "https://github.com/SigNoz/signoz/releases/tag/v0.147.0",
+      "pendingVerification": "v0.147.0",
+      "lastVerificationAttempt": "2026-10-23T10:30:05.724Z"
+    },
+    "gh-sleuthkit-autopsy": {
+      "lastAttempt": "2026-10-23T10:41:22.660Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/sleuthkit/autopsy/releases.atom": {
+          "etag": "W/\"eb1b26cd73a5135153c447df3b05fdf4\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:22.660Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/sleuthkit/autopsy/releases.atom",
+      "signalType": "release",
+      "tag": "autopsy-4.23.1",
+      "url": "https://github.com/sleuthkit/autopsy/releases/tag/autopsy-4.23.1"
+    },
+    "gh-slicer-slicer": {
+      "lastAttempt": "2026-10-23T10:41:23.274Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/Slicer/Slicer/releases.atom": {
+          "etag": "W/\"2a118362030747f691565ce6d491d475\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:23.274Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/Slicer/Slicer/releases.atom",
+      "signalType": "release",
+      "tag": "v5.12.4",
+      "url": "https://github.com/Slicer/Slicer/releases/tag/v5.12.4"
+    },
+    "gh-stellarium-stellarium": {
+      "lastAttempt": "2026-10-23T10:41:24.588Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/Stellarium/stellarium/releases.atom": {
+          "etag": "W/\"414edc3a2f00d89ef5ae8147c78420b7\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:24.588Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/Stellarium/stellarium/releases.atom",
+      "signalType": "release",
+      "tag": "v26.3",
+      "url": "https://github.com/Stellarium/stellarium/releases/tag/v26.3"
+    },
+    "gh-strapi-strapi": {
+      "lastAttempt": "2026-10-23T10:41:24.892Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/strapi/strapi/releases.atom": {
+          "etag": "W/\"4c0ea5de36b7410a52253e29949e63e9\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:24.892Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/strapi/strapi/releases.atom",
+      "signalType": "release",
+      "tag": "v5.59.0",
+      "url": "https://github.com/strapi/strapi/releases/tag/v5.59.0",
+      "pendingVerification": "v5.59.0",
+      "lastVerificationAttempt": "2026-10-23T10:31:25.740Z"
+    },
+    "gh-stride3d-stride": {
+      "lastAttempt": "2026-10-23T10:41:25.525Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/stride3d/stride/releases.atom": {
+          "etag": "W/\"754e1ba430df61c2bc63cd4cdaa8de7d\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:25.525Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/stride3d/stride/releases.atom",
+      "signalType": "release",
+      "tag": "releases/4.4.1",
+      "url": "https://github.com/stride3d/stride/releases/tag/releases%2F4.4.1",
+      "pendingVerification": "releases/4.4.1",
+      "lastVerificationAttempt": "2026-10-23T10:31:45.751Z"
+    },
+    "gh-su2code-su2": {
+      "lastAttempt": "2026-10-23T10:41:27.160Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/su2code/SU2/releases.atom": {
+          "etag": "W/\"865345129f574f69b7b401ff6cfbd297\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:27.160Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/su2code/SU2/releases.atom",
+      "signalType": "release",
+      "tag": "v8.5.0",
+      "url": "https://github.com/su2code/SU2/releases/tag/v8.5.0"
+    },
+    "gh-surge-synthesizer-surge": {
+      "lastAttempt": "2026-10-23T10:41:27.809Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/surge-synthesizer/surge/releases.atom": {
+          "etag": "W/\"af8dacd77742ffdae2a351bb5e58b007\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:27.809Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/surge-synthesizer/surge/releases.atom",
+      "signalType": "release",
+      "tag": "last_cpp17",
+      "url": "https://github.com/surge-synthesizer/surge/releases/tag/last_cpp17"
+    },
+    "gh-turanszkij-wickedengine": {
+      "lastAttempt": "2026-10-23T10:41:28.781Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/turanszkij/WickedEngine/releases.atom": {
+          "etag": "W/\"2586da2eb6a6e246e6886214ab4f9e2d\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:28.781Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/turanszkij/WickedEngine/releases.atom",
+      "signalType": "release",
+      "tag": "v0.72.120",
+      "url": "https://github.com/turanszkij/WickedEngine/releases/tag/v0.72.120"
+    },
+    "gh-usebruno-bruno": {
+      "lastAttempt": "2026-10-23T10:41:30.110Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/usebruno/bruno/releases.atom": {
+          "etag": "W/\"407993015ff615f39899075ea52989ca\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:30.110Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/usebruno/bruno/releases.atom",
+      "signalType": "release",
+      "tag": "v4.3.0",
+      "url": "https://github.com/usebruno/bruno/releases/tag/v4.3.0",
+      "pendingVerification": "v4.3.0",
+      "lastVerificationAttempt": "2026-10-23T10:33:05.810Z"
+    },
+    "gh-wazuh-wazuh": {
+      "lastAttempt": "2026-10-23T10:41:30.443Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/wazuh/wazuh/releases.atom": {
+          "etag": "W/\"af86ec376cce4bb762fa6b59e432a350\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:30.443Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/wazuh/wazuh/releases.atom",
+      "signalType": "release",
+      "tag": "v4.14.9",
+      "url": "https://github.com/wazuh/wazuh/releases/tag/v4.14.9",
+      "pendingVerification": "v4.14.9",
+      "lastVerificationAttempt": "2026-10-23T10:33:25.820Z"
+    },
+    "gh-webodm-webodm": {
+      "lastAttempt": "2026-10-23T10:41:31.064Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/WebODM/WebODM/releases.atom": {
+          "etag": "W/\"bf2e2b8d33d5493631ce794aeb7e96cf\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:31.064Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/WebODM/WebODM/releases.atom",
+      "signalType": "release",
+      "tag": "v3.3.1",
+      "url": "https://github.com/WebODM/WebODM/releases/tag/v3.3.1",
+      "pendingVerification": "v3.3.1",
+      "lastVerificationAttempt": "2026-10-23T10:33:45.828Z"
+    },
+    "gh-werwolv-imhex": {
+      "lastAttempt": "2026-10-23T10:41:33.082Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/WerWolv/ImHex/releases.atom": {
+          "etag": "W/\"4cad35e9f915f5d8d09d4d874370419b\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:33.082Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/WerWolv/ImHex/releases.atom",
+      "signalType": "release",
+      "tag": "v1.38.1",
+      "url": "https://github.com/WerWolv/ImHex/releases/tag/v1.38.1"
+    },
+    "gh-xibyte-jsketcher": {
+      "lastAttempt": "2026-10-23T10:41:33.390Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/xibyte/jsketcher/releases.atom": {
+          "etag": "W/\"34d7a9281a9736b8ffcd98d42496ea2f\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:33.390Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/xibyte/jsketcher/releases.atom",
+      "signalType": "release",
+      "tag": "v1.0.0-dev.1",
+      "url": "https://github.com/xibyte/jsketcher/releases/tag/v1.0.0-dev.1"
+    },
+    "gh-xlightssequencer-xlights": {
+      "lastAttempt": "2026-10-23T10:41:33.747Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/xLightsSequencer/xLights/releases.atom": {
+          "etag": "W/\"1af9ee94c43b2250fe8702d80332a770\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:33.747Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/xLightsSequencer/xLights/releases.atom",
+      "signalType": "release",
+      "tag": "2026.18",
+      "url": "https://github.com/xLightsSequencer/xLights/releases/tag/2026.18"
+    },
+    "gh-xlightssequencer-xschedule": {
+      "lastAttempt": "2026-10-23T10:41:35.432Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/xLightsSequencer/xSchedule/releases.atom": {
+          "etag": "W/\"d19ba475790dabe75db0906e5a561381\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:35.432Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/xLightsSequencer/xSchedule/releases.atom",
+      "signalType": "release",
+      "tag": "2026.06",
+      "url": "https://github.com/xLightsSequencer/xSchedule/releases/tag/2026.06"
+    },
+    "gh-zammad-zammad": {
+      "lastAttempt": "2026-10-23T10:41:35.765Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/zammad/zammad/releases.atom": {
+          "etag": "W/\"e2a921260b2840b77c6f12822d6ef68a\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:35.765Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/zammad/zammad/releases.atom",
+      "signalType": "release",
+      "tag": "6.5.5",
+      "url": "https://github.com/zammad/zammad/releases/tag/6.5.5",
+      "pendingVerification": "6.5.5",
+      "lastVerificationAttempt": "2026-10-23T10:35:25.851Z"
+    },
+    "gh-zaproxy-zaproxy": {
+      "lastAttempt": "2026-10-23T10:41:36.121Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/zaproxy/zaproxy/releases.atom": {
+          "etag": "W/\"3ef72bf0924ed5cc7b2e7f0c98dad22e\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:36.121Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/zaproxy/zaproxy/releases.atom",
+      "signalType": "release",
+      "tag": "w2026-10-23",
+      "url": "https://github.com/zaproxy/zaproxy/releases/tag/w2026-10-23",
+      "pendingVerification": "w2026-10-23",
+      "lastVerificationAttempt": "2026-10-23T10:35:45.866Z"
+    },
+    "gh-zitadel-zitadel": {
+      "lastAttempt": "2026-10-23T10:41:37.714Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/zitadel/zitadel/releases.atom": {
+          "etag": "W/\"7ba1e9f4da5799ea873812e90f0992ef\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:41:37.714Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/zitadel/zitadel/releases.atom",
+      "signalType": "release",
+      "tag": "v4.20.0",
+      "url": "https://github.com/zitadel/zitadel/releases/tag/v4.20.0",
+      "pendingVerification": "v4.20.0",
+      "lastVerificationAttempt": "2026-10-23T10:36:05.865Z"
+    },
+    "figcraft": {
+      "lastAttempt": "2026-10-23T10:40:31.111Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/storytold/figcraft/releases.atom": {
+          "etag": "W/\"6f0d3c6e81e6f15e8ba9093ca0d0f17a\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:40:31.111Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/storytold/figcraft/releases.atom",
+      "signalType": "release",
+      "tag": "v0.10.0",
+      "url": "https://github.com/storytold/figcraft/releases/tag/v0.10.0",
+      "verifiedTag": "v0.10.0",
+      "pendingVerification": "v0.10.0",
+      "lastVerificationAttempt": "2026-10-23T10:40:31.111Z"
+    },
+    "anicraft": {
+      "lastAttempt": "2026-10-23T10:50:22.897Z",
+      "error": null,
+      "etagByHost": {
+        "https://github.com/storytold/AniCraft/releases.atom": {
+          "etag": "W/\"0e466661de76e274a4e892a398840087\"",
+          "modified": null
+        }
+      },
+      "lastChecked": "2026-10-23T10:50:22.897Z",
+      "sourceHost": "github.com",
+      "sourceLabel": "GitHub · published releases",
+      "sourceUrl": "https://github.com/storytold/AniCraft/releases.atom",
+      "signalType": "none",
+      "tag": null,
+      "url": null
+    }
+  },
+  "hostBackoff": {},
+  "cursor": 0,
+  "lastActivity": "2026-10-23T10:50:22.897Z",
+  "roundCompleted": 1
+}

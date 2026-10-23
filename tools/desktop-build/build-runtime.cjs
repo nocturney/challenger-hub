@@ -4,9 +4,9 @@
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const root=path.resolve(__dirname,'..','..'),mediaRoot=path.join(root,'tools','preview-build','media-source');
 const preview=process.argv[2]||'4';
-if(!['4','5'].includes(preview))throw Error('Unsupported desktop preview');
-const out=path.join(root,'tools','desktop-build','dist',preview==='5'?'runtime-preview5':'runtime');
-const version='4.0.0-desktop.preview.'+preview,port=preview==='5'?null:17964;
+if(!['4','5','6'].includes(preview))throw Error('Unsupported desktop preview');
+const out=path.join(root,'tools','desktop-build','dist',preview==='4'?'runtime':'runtime-preview'+preview);
+const version='4.0.0-desktop.preview.'+preview,port=preview!=='4'?null:17964;
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
 const one=(s,old,repl,label)=>{
  const count=s.split(old).length-1;
@@ -21,7 +21,7 @@ if(media.schema!=='challenger-project-media.v1')throw Error('Unrecognized media 
 const files=new Map();let icons=0,screenshots=0;
 try{
  const copy=(src,dst)=>{const dest=path.join(tmp,dst);fs.mkdirSync(path.dirname(dest),{recursive:true});fs.copyFileSync(src,dest)};
- for(const name of ['server.js','challenger-core.js','source-scanner.js','Install-Challenger.js','adapters.json',
+ for(const name of ['server.js','challenger-core.js','source-scanner.js','registry-live.js','Install-Challenger.js','adapters.json',
   'portable-assets.json','official-icons.json','official-icons.js','challengers.json','sources.json','brand-icon.png','favicon.ico'])
    copy(path.join(root,name),name);
  fs.cpSync(path.join(root,'brand','orbit'),path.join(tmp,'brand','orbit'),{recursive:true});
@@ -43,6 +43,18 @@ try{
   }
  }
  if(icons<10||screenshots<3)throw Error('Too few verified media assets');
+ if(preview==='6'){
+  const managedSeed=JSON.parse(fs.readFileSync(path.join(__dirname,'seeds','managed-catalog.preview6.json'),'utf8'));
+  if(!Array.isArray(managedSeed.apps)||managedSeed.apps.some(a=>a.installedPath||a.installedVersion||a.needsUpdate))
+   throw Error('Refusing to publish machine-specific installed-software data in shared catalog seed');
+  // Immutable, source-audited snapshots for first launch without a credential.
+  // Later refreshes write only to isolated per-user app data.
+  for(const [src,dst] of [['managed-catalog.preview6.json','catalog-cache.json'],
+    ['curated-metadata.preview6.json','registry-live-metadata.json'],
+    ['source-signals.preview6.json','source-signals.json']]){
+   copy(path.join(__dirname,'seeds',src),dst);
+  }
+ }
  copy(path.join(mediaRoot,'THIRD_PARTY_MEDIA_NOTICES.md'),'THIRD_PARTY_MEDIA_NOTICES.md');
  fs.cpSync(path.join(mediaRoot,'licenses'),path.join(tmp,'licenses'),{recursive:true});
  let html=fs.readFileSync(path.join(root,'index.html'),'utf8');
@@ -83,6 +95,16 @@ try{
  js=one(js,'No action is available in this preview.','Installation requires approval and verified assets.','installer statement');
  js=one(js,"'Read-only preview cannot reach the local source. '+error.message+",
   "'Local engine cannot be reached. '+error.message+",'error context');
+ if(preview==='6'){
+  js=one(js,"['Latest source version',a.latestVersion||a.releaseTag||'Not verified']",
+   "['Latest source version',a.latestVersion||a.releaseTag||(a.observedReleaseTag?'Observed '+a.observedReleaseTag+' (not install-verified)':'Not verified')]",'honest observed release tag');
+  js=one(js,"['Release date',dateLabel(a.publishedAt)]",
+   "['Release date',dateLabel(a.publishedAt||a.observedPublishedAt)]",'upstream release observed date');
+  js=one(js,"['Installed on device',a.installedVersion||'Not installed']",
+   "['GitHub repository checked',dateLabel(a.repositoryMetadataCheckedAt)],['Installed on device',a.installedVersion||'Not installed']",'metadata freshness');
+  js=one(js,"$('footerUpdated').textContent=snapshot?.checkedAt?('Last source check '+dateLabel(snapshot.checkedAt)):'Release check time unavailable';",
+   "$('footerUpdated').textContent=snapshot?.catalogStatus?.checkedAt?('Managed catalog refreshed '+dateLabel(snapshot.catalogStatus.checkedAt)):'Managed catalog not refreshed';",'no false freshness claim');
+ }
  js=one(js,"function rerender(){\n renderShell();",
   "function rerender(){\n renderShell();focusToolbar();",'toolbar refresh');
  js=one(js,"function action(event){\n const node=event.target.closest('button');if(!node)return;",
@@ -116,7 +138,7 @@ try{
   JSON.stringify([...files.entries()])+");",'frozen media whitelist');
  server=one(server,"json(res,200,{ok:true,app:'Craft Update Center',platform:process.platform,version:'2.5.7'});",
   "json(res,200,{ok:true,app:'Challenger Focus Desktop',mode:'LIVE_LOCAL_PREVIEW',platform:process.platform,"+
-  "version:'"+version+"',"+(preview==='5'?"desktopSessionVerified:!!process.env.CHALLENGER_DESKTOP_SESSION&&req.headers['x-challenger-desktop-session']===process.env.CHALLENGER_DESKTOP_SESSION,":"")+"admin:isAdmin,networkEnabled:process.env.CHALLENGER_DISABLE_SCAN!=='1'});",
+  "version:'"+version+"',"+(preview!=='4'?"desktopSessionVerified:!!process.env.CHALLENGER_DESKTOP_SESSION&&req.headers['x-challenger-desktop-session']===process.env.CHALLENGER_DESKTOP_SESSION,":"")+"admin:isAdmin,networkEnabled:process.env.CHALLENGER_DISABLE_SCAN!=='1'});",
   'desktop health contract');
  if(preview==='5')server=one(server,
   "const route=(req.url||'').split('?')[0];",
