@@ -21,6 +21,12 @@ From the parent repository:
     node bridge.mjs --smoke
     node bridge.mjs
 
+Windows interactive desktop acceptance (one-shot Task Scheduler task, removed on completion):
+
+    powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File qa-windows-session.ps1
+
+The QA report files are stored only under the ignored qa-results/ folder. Run only in the authorized Windows Chris test environment; the script explicitly requires session 1 and refuses to overwrite earlier results.
+
 On macOS ARM64, the prebuilt `slint-ui@1.18.1` Node binding currently links directly against Homebrew `/opt/homebrew/opt/gettext/lib/libintl.8.dylib`. On the test Mac, Homebrew gettext was absent; **the regular package import initially failed**. For **local testing only**, a compatible preexisting `libintl.8.dylib` was resolved through a temporary **per-process `DYLD_LIBRARY_PATH`**, without installing or copying any system library. **This workaround is NOT a viable release dependency**. A production distribution must package and license all required libraries correctly or rebuild from source with proper library search paths. Windows x64 import of the same published Node binding succeeded without this issue.
 
 ## Important architectural conclusions
@@ -32,6 +38,6 @@ Long-term target remains **Slint frontend + Rust application services**, with ca
 ## Validation
 
 - Mac ARM64: real preview12 backend read and 181 records verified; search and native renderer smoke passed; [actual macOS window](live-slint-mac.png).
-- Windows x64: official Slint 1.18.1 Node native addon successfully loaded; full GUI acceptance pending Windows native-session test.
+- Windows x64: 2/2 real-backend tests passed. **Native Slint GUI passed inside the actual Chris interactive Windows session (session 1)**: a visible native window was observed, 181 records loaded, search was verified, and the application emitted the success marker. The one-time QA task was removed. The PowerShell redirecting process wrapper returned a null ExitCode despite the application success marker; the QA instead checks an observed window, completed process, empty stderr and valid application report. This process wrapper limitation is recorded rather than misreported as exit code 0.
 - Unit tests cover the real backend catalogue, filtering, correct source counts, disabled scanner and absence of write permissions.
 - This experiment does not support installing or updating software, and must not be merged as if it does.
