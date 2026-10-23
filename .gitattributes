@@ -11,3 +11,6 @@
 *.png binary
 *.ico binary
 *.webp binary
+
+tools/preview-build/media-source/assets/** -text
+tools/preview-build/media-source/licenses/*.txt -text

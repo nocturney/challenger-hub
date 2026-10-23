@@ -1,0 +1,53 @@
+/* Focus 4.0 project media, preview-only. Quiet Orbit hierarchy. */
+.discipline-icon{flex:none;width:19px;height:19px;color:var(--muted);vertical-align:middle}
+.discipline-row:hover .discipline-icon{color:var(--accent)}
+.project-hit-title{display:flex;gap:11px;align-items:center;min-width:0}
+.project-hit-title>span:last-child{min-width:0;overflow-wrap:anywhere}
+.project-hit small{padding-left:39px}
+.project-icon-frame{display:inline-flex;flex:none;align-items:center;justify-content:center;
+ background:var(--white);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.project-icon-frame.row{width:29px;height:29px;border-radius:7px}
+.project-icon-frame.detail{width:66px;height:66px;border-radius:14px}
+.project-icon-frame img{width:80%;height:80%;object-fit:contain;display:block}
+.project-icon-frame.row img{width:26px;height:26px}
+.project-icon-frame.icon-fallback{background:var(--accent-surface);color:var(--accent)}
+.project-icon-frame .discipline-icon{width:55%;height:55%;color:inherit}
+.project-title-cluster{display:flex;align-items:center;gap:19px;min-width:0;margin:15px 0}
+.project-title-cluster .project-name{margin:0;min-width:0}
+.project-identity.with-media{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);
+ grid-template-areas:"identity media" "status media";gap:26px 56px;padding-bottom:38px}
+.project-identity.with-media .project-identity-copy{grid-area:identity}
+.project-identity.with-media .project-identity-status{grid-area:status}
+.project-identity.with-media .project-media-figure{grid-area:media}
+.project-media-figure{min-width:0;margin:0}
+.project-screenshot-frame{border:1px solid var(--line);border-radius:12px;overflow:hidden;
+ background:var(--accent-surface);padding:8px;box-shadow:0 14px 29px #00000009}
+.project-screenshot{width:100%;height:auto;display:block;object-fit:contain;border-radius:6px;
+ background:var(--paper)}
+.project-media-figure figcaption{display:flex;flex-wrap:wrap;justify-content:space-between;
+ gap:6px 14px;margin-top:12px;color:var(--muted);font-size:10px;line-height:1.5}
+.project-media-figure figcaption>span:first-child{font-size:9px;letter-spacing:.095em;font-weight:740;color:var(--accent)}
+.project-media-figure figcaption a{font-size:10px;color:var(--accent)}
+@media(max-width:1010px){
+ .project-identity.with-media{grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:18px 30px}
+ .project-title-cluster{gap:12px}
+ .project-icon-frame.detail{width:55px;height:55px}
+ .project-name{font-size:clamp(38px,5.1vw,65px)}
+}
+@media(max-width:700px){
+ .project-identity.with-media{grid-template-columns:minmax(0,1fr);grid-template-areas:"identity" "media" "status";gap:21px}
+ .project-identity.with-media .project-identity-status{border-top:1px solid var(--line)}
+ .project-title-cluster{gap:12px}
+ .project-icon-frame.detail{width:58px;height:58px}
+ .project-identity.with-media .project-name{font-size:clamp(38px,10vw,67px)}
+ .project-media-figure figcaption{font-size:9px}
+}
+@media(max-width:380px){
+ .project-hit-title{gap:6px}
+ .project-hit small{padding-left:34px}
+ .project-icon-frame.row{height:25px;width:25px}
+ .project-icon-frame.row img{height:23px;width:23px}
+ .project-title-cluster{gap:10px}
+ .project-icon-frame.detail{width:50px;height:50px}
+ .project-identity.with-media .project-name{font-size:clamp(31px,9vw,45px)}
+}
