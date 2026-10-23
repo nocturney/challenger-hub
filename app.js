@@ -20,7 +20,7 @@ const I18N={
  confirmTitle:'Confirm action',prefsDescription:'Your preferences stay on this device.',language:'Language',
  appearance:'Appearance',light:'Light',dark:'Dark',system:'System',
  aboutDescription:'An independent hub for discovering lesser-known open-source challengers to expensive professional software. Not affiliated with any featured creator.',
- searchPlaceholder:'Search all apps, products and alternatives…',
+ searchPlaceholder:'Search software, competitors, categories…',
  noApps:'Nothing here yet',noAppsHint:'Try another filter, search, or scan for new releases.',
  loading:'Loading the challenger catalog…',scanning:'Scanning GitHub repositories…',
  noScan:'Not scanned yet',lastChecked:'Last checked',scanFailed:'GitHub scanning is temporarily unavailable. Cached results remain available.',
@@ -80,15 +80,15 @@ const PRODUCT_DESC={
 const pref=(key,fallback)=>{try{return localStorage.getItem('craft.center.v2.'+key)||fallback}catch(_){return fallback}};
 const savePref=(key,value)=>{try{localStorage.setItem('craft.center.v2.'+key,value)}catch(_){}};
 const ui={language:'en',creator:'all',
- theme:['system','light','dark'].includes(pref('theme','system'))?pref('theme','system'):'system',
+ theme:['system','light','dark'].includes(pref('theme','dark'))?pref('theme','dark'):'system',
  sort:['activity','name','release','status'].includes(pref('sort','activity'))?pref('sort','activity'):'activity',
  view:['grid','list'].includes(pref('view','list'))?pref('view','list'):'list',
- filter:'all',category:'all',selectedRepo:null,detailTab:'changes',search:'',mobileNav:false,notesExpanded:false,
+ filter:'all',activityOpen:false,category:'all',selectedRepo:null,detailTab:'changes',search:'',mobileNav:false,notesExpanded:false,
  showExperimental:pref('showExperimental','true')!=='false',domain:'all',maturity:'all',availability:'all',platform:'all',
- workspaceMode:pref('workspaceMode','explore')==='focus'?'focus':'explore',
  domainsExpanded:pref('domainsExpanded','false')==='true',
  facetsExpanded:pref('facetsExpanded','false')==='true'};
 if(pref('layoutMigration','')!=='2.5'){ui.view='list';savePref('view','list');savePref('layoutMigration','2.5')}
+if(pref('architectureMigration','')!=='3.0'){ui.view='grid';savePref('view','grid');savePref('architectureMigration','3.0')}
 const t=k=>I18N.en[k]??k;
 let state={apps:[],queue:[],history:[],scanning:false,scanError:'',checkedAt:null,active:null,platform:'',computer:'',admin:false};
 const notesCache=new Map(),historyCache=new Map();
@@ -162,7 +162,7 @@ function renderDomains(){
  $('domainTotal').textContent=state.apps.length+' projects across '+(DOMAIN_GROUPS.length-1)+' disciplines';
  updateWorkspaceControls();
 }
-/* 2.7: user-controlled workspace density, built on the existing live catalog. */
+/* Challenger v3 — progressive catalog facets, without duplicate workspace modes. */
 function updateWorkspaceControls(){
  const expanded=!!ui.domainsExpanded,facets=!!ui.facetsExpanded;
  $('domainSection').classList.toggle('domains-expanded',expanded);
@@ -173,17 +173,6 @@ function updateWorkspaceControls(){
  $('facetToggle').setAttribute('aria-expanded',String(facets));
  const active=['maturity','availability','platform','category','creator'].filter(k=>ui[k]!=='all').length;
  $('facetToggle').textContent=facets?'Hide advanced filters ↑':'Advanced filters'+(active?' · '+active+' active':'')+' ↓';
- for(const button of document.querySelectorAll('[data-workspace-mode]')){
-  const selected=button.dataset.workspaceMode===ui.workspaceMode;
-  button.classList.toggle('active',selected);button.setAttribute('aria-pressed',String(selected));
- }
- document.documentElement.dataset.workspaceMode=ui.workspaceMode;
- $('focusOverview').hidden=ui.workspaceMode!=='focus';
-}
-function setWorkspaceMode(mode){
- if(mode!=='explore'&&mode!=='focus')return;
- ui.workspaceMode=mode;savePref('workspaceMode',mode);
- updateWorkspaceControls();
 }
 function setDomainsExpanded(expanded){
  ui.domainsExpanded=!!expanded;savePref('domainsExpanded',String(ui.domainsExpanded));
@@ -193,24 +182,10 @@ function setFacetsExpanded(expanded){
  ui.facetsExpanded=!!expanded;savePref('facetsExpanded',String(ui.facetsExpanded));
  updateWorkspaceControls();
 }
-function renderWorkspaceOverview(list){
- $('workspaceRailCount').textContent=state.apps.length+' catalogued tools · '+state.apps.filter(a=>!!a.installedVersion).length+' installed';
- const context=$('contextHero').dataset.context;
- $('focusOverviewTitle').textContent=context==='home'?'All your tools. One focused view.':
-  [$('heroContextLine1').textContent,$('heroContextLine2').textContent].join(' ');
- $('focusOverviewDetail').textContent=context==='home'?
-  'Explore '+state.apps.length+' catalogued tools, including '+state.apps.filter(a=>!!a.installedVersion).length+' installed applications. Discovery entries are not automatically approved for installation.':
-  $('heroContextSubtitle').textContent;
- $('focusOverviewCount').textContent=list.length+' matching project'+(list.length===1?'':'s');
- $('focusDailyOpen').disabled=$('dailyPickOpen').disabled;
- updateWorkspaceControls();
-}
 function initializeWorkspaceNavigation(){
  updateWorkspaceControls();
- for(const button of document.querySelectorAll('[data-workspace-mode]'))button.addEventListener('click',()=>setWorkspaceMode(button.dataset.workspaceMode));
  $('domainExpandButton').addEventListener('click',()=>setDomainsExpanded(!ui.domainsExpanded));
  $('facetToggle').addEventListener('click',()=>setFacetsExpanded(!ui.facetsExpanded));
- $('focusDailyOpen').addEventListener('click',()=>{if(!$('dailyPickOpen').disabled)$('dailyPickOpen').click()});
 }
 function stageOf(app){
  const text=String(app.reportedMaturity||'').toLowerCase();
@@ -365,36 +340,46 @@ function renderQueueDialog(){
 }
 function renderQueue(){
  const active=state.active,pending=state.queue||[],issues=queueErrors();
- const latest=issues.at(-1);
- const key=queueErrorKey(latest);
- const recentIssue=!!latest&&Date.now()-htmlDate(latest.time)<30*60*1000&&pref('queueDismissedFailure','')!==key;
- const isRunning=!!active,isWaiting=!active&&pending.length>0;
- const activity=isRunning?"active":isWaiting?"waiting":recentIssue?"attention":"idle";
- const panel=$('workQueue');panel.classList.remove('hidden','queue-error');
- panel.classList.toggle('queue-idle',activity==='idle');
- panel.classList.toggle('queue-active',isRunning);
- panel.classList.toggle('queue-waiting',isWaiting);
- panel.classList.toggle('queue-attention',activity==='attention');
- panel.dataset.errorKey=recentIssue?key:'';
- document.body.classList.add('queue-dock-visible');
- const total=(active?1:0)+pending.length;
- const number=String(total);
- $('queueFooterCount').textContent=number;
- $('queueToolbarCount').textContent=number;
- $('queueNavCount').textContent=number;
- $('queueToolbarStatus').textContent=isRunning?'RUNNING':isWaiting?'WAITING':recentIssue?'REVIEW':'IDLE';
- $('queueToolbarButton').dataset.queueState=activity;
- $('queueToolbarButton').title=total?total+' active/waiting job(s) · Open queue':recentIssue?'An update needs attention · Open queue':'Open installations, updates and history';
- $('queueNavButton').setAttribute('aria-label','Open installation and update queue · '+(total?total+' active or waiting':'idle'));
- $('queueTitle').textContent=isRunning?queueStage(active)+' · '+queueLabel(active.repo):isWaiting?pending.length+' task'+(pending.length===1?'':'s')+' waiting':recentIssue?'An update needs attention':'Queue is clear';
- $('queueMessage').textContent=isRunning?String(active.messages?.at(-1)||'Waiting for installer output').slice(0,140):isWaiting?'Processing sequentially · '+queueLabel(pending[0]):recentIssue?queueLabel(latest.repo)+' · '+String(latest.message||'Review the latest error').slice(0,110):'No installations or updates running';
- $('queueCount').textContent=pending.length?pending.length+' waiting':isRunning?'1 running':'';
- $('queueProgress').hidden=!isRunning;
- $('queueProgress').classList.toggle('queue-progress-idle',!isRunning);
- $('queueProgress').setAttribute('aria-valuetext',isRunning?queueStage(active)+'; installer has not reported an exact percentage':'No job currently progressing');
- $('queueDockDismiss').hidden=!recentIssue||!!active||pending.length>0;
- $('queueIndicatorIcon').classList.toggle('is-working',isRunning);
+ const nav=$('queueNavButton'),badge=$('queueNavCount'),total=(active?1:0)+pending.length;
+ const hasUnresolved=issues.length>0;
+ nav.dataset.queueState=active?'running':pending.length?'waiting':hasUnresolved?'attention':'idle';
+ badge.hidden=total===0&&!hasUnresolved;
+ badge.textContent=total?String(total):hasUnresolved?'!':'';
+ const summary=active?queueStage(active)+' · '+queueLabel(active.repo):
+  pending.length?pending.length+' waiting job'+(pending.length===1?'':'s'):
+  hasUnresolved?'Review '+issues.length+' unresolved issue'+(issues.length===1?'':'s'):'No active jobs';
+ nav.setAttribute('aria-label','Activity and installation queue · '+summary);
+ nav.title=summary;
  if($('queueDialog').open)renderQueueDialog();
+}
+function renderActivityWorkspace(){
+ const active=state.active,pending=state.queue||[],issues=queueErrors();
+ $('activityRunningCount').textContent=active?'1':'0';
+ $('activityWaitingCount').textContent=String(pending.length);
+ $('activityIssueCount').textContent=String(issues.length);
+ $('activityCurrentText').textContent=active?queueStage(active)+' — '+queueLabel(active.repo)+
+  '\n'+(active.messages?.slice(-3).join('\n')||'Waiting for worker output'):
+  pending.length?'No active job. '+pending.length+' queued for sequential processing.':
+  'The queue is idle. Nothing is installing or updating.';
+ const waiting=$('activityWaitingRows');waiting.replaceChildren();
+ if(!pending.length){const li=document.createElement('li');li.textContent='Nothing is waiting';li.className='activity-empty';waiting.appendChild(li)}
+ pending.forEach((repo,i)=>{const li=document.createElement('li');li.textContent=String(i+1).padStart(2,'0')+'  '+queueLabel(repo);waiting.appendChild(li)});
+ const recent=$('activityHistoryRows');recent.replaceChildren();
+ const outcomes=latestQueueOutcomes();
+ const history=(state.history||[]).filter(e=>e&&(e.message||e.repo)).slice(-60).reverse();
+ if(!history.length){const item=document.createElement('p');item.className='activity-empty';item.textContent='No local operations recorded on this computer yet.';recent.appendChild(item)}
+ for(const entry of history){
+  const recovered=!!entry.repo&&entry.kind==='error'&&outcomes.get(entry.repo)?.kind==='success'&&htmlDate(outcomes.get(entry.repo).time)>=htmlDate(entry.time);
+  const tone=entry.kind==='error'?(recovered?'recovered':'issue'):entry.kind==='success'?'success':'neutral';
+  const item=document.createElement('div');item.className='activity-history-item '+tone;
+  const kind=entry.kind==='success'?'Completed':entry.kind==='error'?(recovered?'Past failure · recovered':'Needs attention'):
+   entry.kind==='scan'?'Source check':entry.kind==='queue'?'Queued':entry.kind==='install'?'Installation started':
+   entry.kind==='launch'?'App launched':'Event';
+  const label=document.createElement('strong');label.textContent=(entry.repo?queueLabel(entry.repo):'System')+' · '+kind;
+  const description=document.createElement('p');description.textContent=String(entry.message||'No additional message').slice(0,280);
+  const when=document.createElement('small');when.textContent=localTime(entry.time);
+  item.append(label,description,when);recent.appendChild(item);
+ }
 }
 function renderBulkUpdateBar(){
  const bar=$('bulkUpdateBar');if(!bar)return;
@@ -417,7 +402,7 @@ function renderBulkUpdateBar(){
 function renderCounters(){
  const c=getCounters();
  $('sourceSummary').textContent=[...new Set(state.apps.map(a=>a.creator||'Storytold'))].length+' creators';
- const set=(id,n)=>{$(id).textContent=n};
+ const set=(id,n)=>{const target=$(id);if(target)target.textContent=n};
  set('navCountAll',c.all);set('navCountInstalled',c.installed);
  set('navCountUpdates',c.updates);set('navCountNew',c.new);
  set('metricInstalled',c.installed);set('metricUpdates',c.updates);set('metricNew',c.new);
@@ -623,9 +608,9 @@ function renderDiscoveryStage(list){
   state.apps.filter(a=>a.needsUpdate).length,state.apps.filter(a=>a.installedVersion).length].join('|');
  if(signature===discoverySignature)return;
  discoverySignature=signature;
- let kicker='INDEPENDENT SOFTWARE · CURATED DISCOVERY',headline='Find your next tool.',line='Beyond the usual.';
- let subtitle='Explore independent projects, compare familiar software and follow upstream activity.';
- let context='home',actionText='Explore today’s discovery',note='Daily rotation · '+day.label;
+ let kicker='THE INDEPENDENT SOFTWARE OBSERVATORY',headline='Think outside',line='the usual.';
+ let subtitle='A universe of independent tools, real sources and smarter alternatives to familiar software.';
+ let context='home',actionText='Explore today’s discovery',note='REPOSITORY-LINKED · RESEARCH FIRST';
  heroFeature={type:'daily',repo:daily?.repo||null};
  const search=String(ui.search||'').trim();
  const updates=state.apps.filter(a=>a.needsUpdate).length,installed=state.apps.filter(a=>a.installedVersion).length;
@@ -774,6 +759,46 @@ function updateCategoryList(){
  if(values.includes(current))select.value=current;
  else{ui.category='all';select.value='all';}
 }
+/* Challenger Hub v3: one primary destination per work mode. */
+function syncV3Architecture(list){
+ const global=!!String(ui.search||'').trim();
+ const page=global?'search':ui.activityOpen?'activity':['installed','updates'].includes(ui.filter)?ui.filter:'discover';
+ document.documentElement.dataset.hubPage=page;
+ $('activityWorkspace').hidden=page!=='activity';
+ if(page==='activity')renderActivityWorkspace();
+ const context=$('workspaceContext');
+ context.hidden=page!=='installed'&&page!=='updates';
+ $('verifyButton').hidden=page!=='installed';
+ $('sidebarScan').hidden=page!=='updates';
+ $('domainSection').hidden=page==='installed'||page==='updates'||page==='search'||page==='activity';
+ $('filterChips').hidden=page==='installed'||page==='updates'||page==='search'||page==='activity';
+ const info={
+  discover:['THE ALTERNATIVE INDEX','The index.','Independent software across disciplines. Every listing is linked to a real project and source.'],
+  installed:['MY TOOLKIT / THIS DEVICE','Your toolkit.','Software installed on this computer. Verify versions here; nothing changes without your approval.'],
+  updates:['RELEASE CONTROL / THIS DEVICE','Release desk.','Review verified updates and deliberately refresh upstream release sources.'],
+  search:['GLOBAL INDEX SEARCH','Search results.','Matches from the entire catalog. Clear search to restore the previous view.'],
+  activity:['OPERATIONS / THIS DEVICE','Activity.','The current queue and past installation outcomes.']
+ };
+ const [kicker,title,description]=info[page];
+ $('pageTitle').textContent=title;
+ $('pageSubtitle').textContent=description;
+ $('eyebrow').textContent=kicker;
+ $('workspaceContextKicker').textContent=page==='updates'?'CONTROLLED RELEASE MANAGEMENT':'YOUR INSTALLED SOFTWARE';
+ $('workspaceContextTitle').textContent=page==='updates'?
+  (state.apps.filter(a=>a.needsUpdate).length+' available updates.'):
+  (state.apps.filter(a=>!!a.installedVersion).length+' tools. One workspace.');
+ $('workspaceContextDescription').textContent=page==='updates'?
+  'Source checks and reviewed updates live here. Research entries are never automatically installed.':
+  'Versions, changelogs and launches for applications detected on this computer.';
+ for(const nav of document.querySelectorAll('[data-nav]')){
+  const active=global?nav.dataset.nav==='all':!ui.activityOpen&&(nav.dataset.nav===ui.filter||(nav.dataset.nav==='all'&&['new','missing'].includes(ui.filter)));
+  nav.classList.toggle('active',active);
+  if(active)nav.setAttribute('aria-current','page');else nav.removeAttribute('aria-current');
+ }
+ const activityNav=$('queueNavButton');
+ activityNav.classList.toggle('active',page==='activity');
+ if(page==='activity')activityNav.setAttribute('aria-current','page');else activityNav.removeAttribute('aria-current');
+}
 function renderCards(force=false){
  if(!initialDataLoaded){
    $('resultSummary').textContent=t('loading');
@@ -796,7 +821,7 @@ function renderCards(force=false){
  $('resultSummary').textContent=t('showing')(list.length);
  window.ChallengerUX?.present(list.length);
  renderDiscoveryStage(list);
- renderWorkspaceOverview(list);
+ syncV3Architecture(list);
  renderBulkUpdateBar();
  $('cards').setAttribute('aria-busy','false');
  if(force||html!==cardSnapshot){cardSnapshot=html;$('cards').innerHTML=html;}
@@ -811,7 +836,7 @@ function renderCards(force=false){
    const active=btn.dataset.filter===ui.filter;btn.classList.toggle('active',active);btn.setAttribute('aria-pressed',String(active));
  }
  for(const btn of document.querySelectorAll('[data-nav]')){
-   const active=btn.dataset.nav===ui.filter;btn.classList.toggle('active',active);
+   const active=String(ui.search||'').trim()?btn.dataset.nav==='all':!ui.activityOpen&&(btn.dataset.nav===ui.filter||(btn.dataset.nav==='all'&&['new','missing'].includes(ui.filter)));btn.classList.toggle('active',active);
    if(active)btn.setAttribute('aria-current','page');else btn.removeAttribute('aria-current');
  }
  $('sortSelect').value=ui.sort;
@@ -839,7 +864,7 @@ function setFilter(filter){
  // must not silently hide Installed, Updates, Discoveries or Not installed.
  window.ChallengerUX?.leaveSearch();
  resetInspector();
- ui.filter=filter;
+ ui.filter=filter;ui.activityOpen=false;
  ui.domain='all';ui.category='all';ui.creator='all';
  ui.maturity='all';ui.availability='all';ui.platform='all';
  categorySignature='';updateCategoryList();
@@ -1317,14 +1342,8 @@ function wireEvents(){
  $('aboutButton').addEventListener('click',()=>{
    ui.mobileNav=false;document.body.classList.remove('mobile-nav-open');openDialog('aboutDialog')
  });
- $('activityButton').addEventListener('click',()=>{renderActivity();openDialog('activityDialog')});
- const openQueue=()=>{renderQueueDialog();openDialog('queueDialog')};
- $('queueViewButton').addEventListener('click',openQueue);
- $('queueToolbarButton').addEventListener('click',openQueue);
- $('queueNavButton').addEventListener('click',()=>{ui.mobileNav=false;document.body.classList.remove('mobile-nav-open');openQueue()});
+ $('queueNavButton').addEventListener('click',()=>{ui.mobileNav=false;document.body.classList.remove('mobile-nav-open');resetInspector();ui.activityOpen=true;renderCards(true);window.scrollTo({top:0,behavior:'instant'})});
  $('noticeDismiss').addEventListener('click',()=>{if(activeNoticeKey){savePref('noticeDismissedKey',activeNoticeKey);renderCounters()}});
- $('queueDockDismiss').addEventListener('click',()=>{const key=$('workQueue').dataset.errorKey;if(key){savePref('queueDismissedFailure',key);renderQueue()}});
- $('queueDockOpen').addEventListener('click',openQueue);
  for(const button of document.querySelectorAll('[data-dialog-close]'))button.addEventListener('click',()=>closeDialog(button.dataset.dialogClose));
  $('confirmCancel').addEventListener('click',()=>resolveConfirm(false));
  $('confirmAccept').addEventListener('click',()=>resolveConfirm(true));
