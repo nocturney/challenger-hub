@@ -3,7 +3,7 @@ const fs=require('fs'),path=require('path'),assert=require('assert').strict;
 const mac=process.platform==='darwin';
 const base=mac?'/Users/chris/Library/Application Support/OfficeOps/CraftSuite':'D:/Velvet/Installers/CraftSuite';
 const root=path.join(base,'Center','Challenger-FocusOrbit-PREVIEW-4.0.0-orbit.1');
-const puppeteer=require(mac?'/Users/chris/.npm/_npx/4b4c857f6efdfb61/node_modules/@wonderwhy-er/desktop-commander/node_modules/puppeteer':'C:/Users/Chris/AppData/Local/npm-cache/_npx/4b4c857f6efdfb61/node_modules/puppeteer');
+const puppeteer=require(mac?'/Users/chris/.npm/_npx/4b4c857f6efdfb61/node_modules/puppeteer':'C:/Users/Chris/AppData/Local/npm-cache/_npx/4b4c857f6efdfb61/node_modules/puppeteer');
 const url='http://127.0.0.1:17961/';
 (async()=>{
  const state=await fetch(url+'api/state').then(x=>x.json());
