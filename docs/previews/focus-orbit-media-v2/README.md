@@ -29,4 +29,10 @@ This is visual QA from the **running browser against a real, read-only local bui
 
 Windows Chris: 10 responsive/theme scenarios PASS (1590, 1040, 768, 430, 320 × light/dark); 17 category icons, 28 entries in the 3D & CAD category, Dune 3D genuine screenshot, zero browser JavaScript errors, zero non-GET requests, and HTTP 405 for attempted mutations. Machine-generated report: preview build's _qa/browser-qa-media-v2.json.
 
-macOS QA: to be reported independently.
+macOS MacMiniOffice: 10 responsive/theme scenarios PASS (same 5 widths × 2 themes); real Dune 3D screenshot and upstream icon loaded, zero JS errors, zero writes and zero external image requests. Full report in the macOS preview folder: `_qa/browser-qa-media-v2.json`.
+
+![Dune 3D dossier — actual macOS browser, dark, 430px](preview-v2-macos-dune3d-dossier-dark-430.png)
+
+![Dune 3D dossier — actual macOS browser, light, 1590px](preview-v2-macos-dune3d-dossier-light-1590.png)
+
+Both hosts passed the five Node regression tests. No Production changes, no PR merges.
