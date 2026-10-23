@@ -66,3 +66,14 @@ test('avoid listicles, curriculum and guide-only sources even when README keywor
   'MusicGen Pro Trainer 2026: The Ultimate AI Music Studio Guide'
  ])assert.equal(rank(sample('noise/not-a-product','2026-10-01',{description}),now),null);
 });
+
+test('AI-native design apps with optional MCP are not mislabeled as MCP-only bridges',()=>{
+ assert.equal(kindOf(sample('tiny/canvas','2026-10-01',{description:
+  'AI-native infinite-canvas design tool; local agents can also use it over MCP'})),'application-unconfirmed');
+ assert.equal(kindOf(sample('tiny/vector','2026-10-01',{description:
+  'AI-native vector design editor in Rust with MCP API'})),'application-unconfirmed');
+ assert.equal(kindOf(sample('tiny/web','2026-10-01',{description:
+  'Browser-native image editor with AI and ComfyUI integration'})),'web');
+ assert.equal(kindOf(sample('tiny/mcp','2026-10-01',{description:
+  'MCP server for FreeCAD: Python SDK with thirty tools'})),'integration');
+});

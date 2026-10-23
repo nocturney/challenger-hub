@@ -45,10 +45,12 @@ function ageDays(value,now=Date.now()){
 function kindOf(repo){
  const desc=String(repo.description||'').toLowerCase();
  const s=(desc+' '+(repo.topics||[]).join(' ')).toLowerCase();
- // A genuine desktop app stays a desktop app even when it also advertises MCP integration.
- if(/(desktop|native app|electron|tauri|macos|windows|note-taking app|3d modeller|3d modeler|slicer)/.test(desc))return 'desktop';
- if(/(^|\W)(mcp|plugin|extension|sdk|integration|agent server)(\W|$)/.test(s))return 'integration';
- if(/(web app|browser-based|self-hosted|web-based|saas)/.test(desc))return 'web';
+ // Installation format is never inferred from a generic mention of MCP or AI.
+ if(/(desktop app|desktop editor|native app|electron|tauri|macos|windows|note-taking app|3d modeller|3d modeler|slicer)/.test(desc))return 'desktop';
+ if(/(web editor|web app|browser-native|browser-based|web-based|saas)/.test(desc))return 'web';
+ if(/(vector design editor|vector editor|image editor|video editor|infinite.canvas|visual document|design tool|interactive canvas|drawing app)/.test(desc))return 'application-unconfirmed';
+ if(/(^|\W)(mcp server|plugin|extension|sdk|agent server|mcp|api bridge)(\W|$)/.test(s))return 'integration';
+ if(/(self-hosted|website)/.test(desc))return 'web';
  return 'unconfirmed';
 }
 function productSignal(desc){

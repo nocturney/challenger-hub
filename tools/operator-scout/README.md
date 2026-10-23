@@ -31,3 +31,21 @@ Override with --out "C:\absolute\private\folder" (never a directory within the p
 Check the actual product/demo and practical differentiation; verify project identity and the latest upstream source; confirm license, OS, real binaries/releases and potential paid API dependence. Approve a catalog entry manually with separate provenance. **Adding a source entry must never grant an installer adapter.**
 
 This tool intentionally has no dashboard, automated approval, background polling, public route or dependency on the app's frontend.
+
+## Second pass: source evidence (manual review, no auto-approval)
+
+After the initial Scout search, verify a bounded selection directly against the **official repository, README and GitHub Release API**:
+
+    node tools/operator-scout/verify.cjs --input "C:\Users\Chris\AppData\Local\ChallengerOperator\Scout\scout-YYYY-MM-DD.json" --limit 10
+
+Or target a manually chosen shortlist (recommended for diversified creative software):
+
+    node tools/operator-scout/verify.cjs --repos UpstandPlatform/OpenRive,Bearisbug/Quilt,slicerx-oss/slicerx --limit 3
+
+The script makes only authenticated **read-only gh api GET calls**, does not download binary assets and does not execute untrusted code. It saves an operator-local evidence-*.json and evidence-*.md next to the Scout reports. Per repository it captures official licence/source status, README depth and *mentions* of screenshots/demo/API keys, plus released asset **filenames** grouped by apparent OS; it flags pre-alpha even if GitHub marked the release prerelease=false.
+
+Source observations, reported platforms and release file names never grant install/update/rollback privileges and are **not** hands-on compatibility tests. A source can remain interesting with no published release; its absence is disclosed, not hidden.
+
+Run all tests with:
+
+    node --test tools/operator-scout/*.test.cjs
