@@ -1,0 +1,48 @@
+    private static bool IsAdministrator()
+    {
+        using var identity = WindowsIdentity.GetCurrent();
+        return new WindowsPrincipal(identity).IsInRole(WindowsBuiltInRole.Administrator);
+    }
+
+    private static void CopyFolder(string from, string to)
+    {
+        System.IO.Directory.CreateDirectory(to);
+        foreach(var sub in System.IO.Directory.GetDirectories(from))
+            CopyFolder(sub,System.IO.Path.Combine(to,System.IO.Path.GetFileName(sub)));
+        foreach(var f in System.IO.Directory.GetFiles(from))
+            System.IO.File.Copy(f,System.IO.Path.Combine(to,System.IO.Path.GetFileName(f)));
+    }
+
+    private Task RunStartupScript()
+    {
+        var bundled=BundledRoot;
+        var node=System.IO.Path.Combine(AppContext.BaseDirectory,"node.exe");
+        if(!System.IO.File.Exists(node)||!System.IO.File.Exists(System.IO.Path.Combine(bundled,"server.js")))
+            throw new InvalidOperationException("Bundled engine or Node runtime is missing");
+        var target=RuntimePath;
+        if(!System.IO.Directory.Exists(target))
+        {
+            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(target)!);
+            var tmp=target+".initializing-"+Guid.NewGuid().ToString("N");
+            try { CopyFolder(bundled,tmp); System.IO.Directory.Move(tmp,target); }
+            catch {if(System.IO.Directory.Exists(tmp))System.IO.Directory.Delete(tmp,true);throw;}
+        }
+        // Copy local metadata, never change the production Center.
+        var legacy=@"D:\Velvet\Installers\CraftSuite\Center";
+        foreach(var name in new[]{"catalog-cache.json","source-signals.json","managed-installs.json"})
+        {
+            var old=System.IO.Path.Combine(legacy,name);
+            var fresh=System.IO.Path.Combine(target,name);
+            if(!System.IO.File.Exists(fresh)&&System.IO.File.Exists(old))System.IO.File.Copy(old,fresh);
+        }
+        var entry=System.IO.Path.Combine(target,"server.js");
+        var settings=new ProcessStartInfo{
+            FileName=node,Arguments="\""+entry+"\"",WorkingDirectory=target,
+            UseShellExecute=false,CreateNoWindow=true,WindowStyle=ProcessWindowStyle.Hidden
+        };
+        settings.Environment["CRAFT_CENTER_PORT"]="17964";
+        settings.Environment.Remove("CHALLENGER_DISABLE_SCAN");
+        ownedService=Process.Start(settings)??throw new InvalidOperationException("Local engine did not start");
+        return Task.CompletedTask;
+    }
+
