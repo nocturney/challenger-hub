@@ -42,7 +42,7 @@ test('Dune 3D screenshot is original SHA256-pinned source bytes',()=>{
  const item=data.projects.dune3d,s=item.screenshot;
  assert.equal(s.type,'application-ui-screenshot');
  assert.equal(s.status,'approved');
- assert.equal(s.source,'https://raw.githubusercontent.com/dune3d/dune3d/main/screenshot.png');
+ assert.match(s.source,/^https:\/\/raw\.githubusercontent\.com\/dune3d\/dune3d\/[a-f0-9]{40}\/screenshot\.png$/);
  assert.match(s.reference,/github.com\/dune3d\/dune3d/);
  assert.ok(s.width>=600&&s.height>=350&&s.licenseSpdx.startsWith('GPL-'));
  const b=fs.readFileSync(path.join(base,'media-source','assets','screenshots','dune3d.png'));

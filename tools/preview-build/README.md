@@ -38,3 +38,19 @@ This is **not an update to the operational app**. Focus functional parity and a 
 Look at the search-first Explore view, the actual results table, dedicated project dossier, simple top navigation, Orbit Signature logo/contrast and responsive mobile layout. Feedback on product structure and reading hierarchy is more useful than detailed polishing until parity work is scoped.
 
 No information from the offline snapshot should be used to decide whether to install or update software.
+
+## Pre-release policy (Preview 3 and later)
+
+**Every successfully validated, user-testable preview gets a versioned GitHub pre-release**, never a replace-in-place ZIP. Failed, broken or incomplete development builds stay local. Published previews are immutable; never force-push a published tag, overwrite an asset, merge a draft PR or deploy Production without separate approval.
+
+One artifact per host from the *same pushed Git commit*. Do not upload a package made on an uncommitted, unreviewed branch. The commands below use the existing GitHub CLI (no paid API), source-controlled assets and genuine QA captures; first run every stage locally on each operating system:
+
+1. Audit upstream assets manually for provenance and screenshot authenticity; update the explicit allowlist in collect-project-media.cjs, then run: node tools/preview-build/collect-project-media.cjs. Do **not** add promotional art or content with unknown licensing.
+2. Create a new branch based on the previous media PR branch, keeping the PR chain explicitly stacked. For Preview N, build in an unused directory using: node tools/preview-build/build-media.cjs N. The builder refuses to overwrite existing Preview N; Preview 1 and Production are never modified.
+3. Start the numbered local server using START-WINDOWS.cmd or START-MAC.command (port = 17960 + N). Run node tools/preview-build/browser-qa-media.cjs N and Node tests on **both** Windows and macOS. The browser suite covers all three authentic dossiers, five viewports, two themes, restricted research, no external requests and read-only methods. Do not continue after failure.
+4. Archive only after a verified QA report with node tools/preview-build/release-preview.cjs N archive on both hosts. It verifies manifest SHA256, the screenshot coverage gate, real-browser results and the unpacked ZIP again.
+5. Push the branch, then create a **Draft PR** against the immediately previous preview branch; do not merge. On Windows create the **Draft Pre-release** with node tools/preview-build/release-preview.cjs N draft /absolute/path/RELEASE-NOTES.md. It uploads the Windows ZIP.
+6. From the tested Mac checkout, run node tools/preview-build/release-preview.cjs N upload to attach the separately verified macOS ZIP to the *same* draft release.
+7. On Windows run node tools/preview-build/release-preview.cjs N publish. It requires both uploaded assets with GitHub SHA256 digests and identical target source commit before publishing a non-draft **Pre-release**. Verify tag, downloads, digest, draft PR and screenshot gallery after publication.
+
+The CLI never merges code, installs anything, starts production services, changes installed software, or calls paid models/APIs. It binds the preview UI to loopback. Artifact and license sources are pinned and the historical October 10, 2026 snapshot is always labelled archived.

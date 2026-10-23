@@ -9,6 +9,14 @@ const ICON_MANIFEST=require(path.join(ROOT,'official-icons.json')).projects;
 const registry=require(path.join(ROOT,'challengers.json')).projects;
 const IDS=['compositor','composa','dune3d','material-maker','kiri-moto','friction',
  'real-video-enhancer','infinite','zrythm','espocrm','docuseal','activepieces','meshcentral','openhands'];
+const SCREENSHOTS=[
+ {id:'dune3d',repository:'dune3d/dune3d',commit:'d01faaf16f309e55834c3b93dddce5c852453cfe',path:'screenshot.png',caption:'Dune 3D main window',
+  evidencePath:'org.dune3d.dune3d.metainfo.xml'},
+ {id:'material-maker',repository:'RodZill4/material-maker',commit:'424dec64a75478f22267ba9281a5cbe7a236b802',path:'material_maker/doc/images/screenshot.png',caption:'Material Maker node editor and material previews',
+  evidencePath:'README.md'},
+ {id:'real-video-enhancer',repository:'TNTwise/REAL-Video-Enhancer',commit:'8541c46ca14e6f84fc86c5b9d3b75373e25732e5',path:'screenshots/settings.png',caption:'REAL Video Enhancer application settings',
+  evidencePath:'screenshots/settings.png'}
+];
 const ALLOWED=new Set(['MIT','Apache-2.0','BSD-2-Clause','BSD-3-Clause','MPL-2.0',
  'GPL-2.0','GPL-2.0-or-later','GPL-3.0','GPL-3.0-or-later','AGPL-3.0','AGPL-3.0-or-later',
  'LGPL-2.1','LGPL-2.1-or-later','LGPL-3.0','LGPL-3.0-or-later']);
@@ -76,25 +84,31 @@ async function run(){
   notes.push('* '+id+' icon: '+official.rawUrl+' — repository license '+license.spdx+' ('+license.url+')');
   report.push({id,result:'approved-icon',size:icon.bytes.length});
  }
- const dune=manifest.projects.dune3d;
- if(dune?.icon){
-  const url='https://raw.githubusercontent.com/dune3d/dune3d/main/screenshot.png';
+ for(const entry of SCREENSHOTS){
+  const project=manifest.projects[entry.id];
+  if(!project?.icon||project.repo?.toLowerCase()!==entry.repository.toLowerCase()||!project.license?.spdx){
+   report.push({id:entry.id,result:'screenshot-not-authorized-by-project-icon-and-license'});continue;
+  }
+  const source='https://raw.githubusercontent.com/'+entry.repository+'/'+entry.commit+'/'+entry.path;
+  const evidence='https://github.com/'+entry.repository+'/blob/'+entry.commit+'/'+entry.evidencePath;
   try{
-   const buf=await getBytes(url);
-   const dim=pngDimensions(buf);
-   if(!dim.width||!dim.height||dim.width<600||dim.height<350)throw Error('Invalid screenshot dimensions');
+   const bytes=await getBytes(source,8000000),dim=pngDimensions(bytes);
+   if(!dim.width||!dim.height||dim.width<600||dim.height<350||
+     dim.width*dim.height>18000000)throw Error('Screenshot size/dimensions invalid');
    fs.mkdirSync(path.join(IMAGE,'screenshots'),{recursive:true});
-   const rel='screenshots/dune3d.png';
-   fs.writeFileSync(path.join(IMAGE,rel),buf);
-   dune.screenshot={path:'/media/'+rel,source:url,sourceRepository:'dune3d/dune3d',
-    reference:'https://github.com/dune3d/dune3d/blob/main/org.dune3d.dune3d.metainfo.xml',
-    caption:'Dune 3D main window',type:'application-ui-screenshot',status:'approved',
-    licenseSpdx:dune.license.spdx,licenseUrl:dune.license.url,width:dim.width,height:dim.height,
-    size:buf.length,sha256:sha(buf),checkedAt:manifest.createdAt};
-   dune.status='approved';
-   notes.push('* Dune 3D original screenshot: '+url+' — see official metainfo reference; GPL repository license: '+dune.license.url);
-   report.push({id:'dune3d',result:'authentic-screenshot',dimensions:dim,sha256:sha(buf)});
-  }catch(err){report.push({id:'dune3d',result:'screenshot-unavailable',reason:String(err.message)})}
+   const rel='screenshots/'+entry.id+'.png';
+   fs.writeFileSync(path.join(IMAGE,rel),bytes);
+   project.screenshot={path:'/media/'+rel,source,sourceRepository:entry.repository,
+    sourceCommit:entry.commit,reference:evidence,caption:entry.caption,
+    provenance:'Developer-controlled repository screenshot; visually checked as real application UI',
+    type:'application-ui-screenshot',status:'approved',
+    licenseSpdx:project.license.spdx,licenseUrl:project.license.url,
+    width:dim.width,height:dim.height,size:bytes.length,sha256:sha(bytes),checkedAt:manifest.createdAt};
+   project.status='approved';
+   notes.push('* '+entry.id+' authentic app UI: '+source+' — evidenced at '+evidence+
+    ' — repository license '+project.license.spdx+' ('+project.license.url+')');
+   report.push({id:entry.id,result:'authentic-screenshot',dimensions:dim,sha256:sha(bytes)});
+  }catch(err){report.push({id:entry.id,result:'screenshot-unavailable',reason:String(err.message)})}
  }
  fs.writeFileSync(path.join(OUT,'project-media.v1.json'),JSON.stringify(manifest,null,2)+'\n');
  fs.writeFileSync(path.join(OUT,'THIRD_PARTY_MEDIA_NOTICES.md'),notes.join('\n')+'\n');
