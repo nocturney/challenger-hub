@@ -155,5 +155,21 @@
   const releaseNotes=[...document.querySelectorAll('#projectDocument .doc-main .document-section')]
    .find(x=>x.querySelector('h2')?.textContent==='REPORTED RELEASE NOTES');
   if(releaseNotes&&!app.releaseBody)releaseNotes.remove();
+  // Software-first microcopy: keep source evidence, drop the printed-report framing.
+  const label=document.querySelector('#projectDocument .project-label');
+  if(label)label.textContent=domainName(domainOf(app));
+  const names=new Map([
+   ['WHAT THIS PROJECT DOES','Overview'],
+   ['SOFTWARE IT CHALLENGES','Alternatives to'],
+   ['REPORTED RELEASE NOTES','Release notes'],
+   ['LIMITATIONS & CAVEATS','Important limitations'],
+   ['FACTS FROM THE OFFICIAL SOURCE','Official source details'],
+   ['PROJECT FACTS','Project details'],
+   ['INFORMATION / INSTALLATION','Availability & trust'],
+   ['OFFICIAL CRAFT APP DISTRIBUTION','Official distribution']
+  ]);
+  for(const heading of document.querySelectorAll('#projectDocument .document-section h2')){
+   const next=names.get(heading.textContent.trim());if(next)heading.textContent=next;
+  }
  };
 })();
