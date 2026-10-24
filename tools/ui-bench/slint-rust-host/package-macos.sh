@@ -29,7 +29,7 @@ if [[ "$("$node_bin" -p 'process.platform')" != "darwin" ||
 fi
 node_license="$here/legal/node-v24.22.1/LICENSE"
 test -s "$node_license" || { echo "Pinned Node third-party LICENSE missing" >&2; exit 3; }
-export PATH="$HOME/.cargo/bin:$PATH
+export PATH="$HOME/.cargo/bin:$PATH"
 cargo build --manifest-path "$here/Cargo.toml" --release --locked
 cargo_target="${CARGO_TARGET_DIR:-$here/target}"
 app="$here/dist/ChallengerHubNativePreview.app"
