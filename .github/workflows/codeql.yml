@@ -1,18 +1,5 @@
 name: CodeQL JS analysis
 on:
-  pull_request:
-    paths:
-      - '**/*.js'
-      - '**/*.mjs'
-      - '**/*.ts'
-      - '.github/workflows/codeql.yml'
-  push:
-    branches: [main]
-    paths:
-      - '**/*.js'
-      - '**/*.mjs'
-      - '**/*.ts'
-      - '.github/workflows/codeql.yml'
   workflow_dispatch:
 permissions:
   contents: read
