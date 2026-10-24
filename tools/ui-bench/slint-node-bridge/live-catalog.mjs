@@ -18,6 +18,20 @@ async function choosePort(){
  await new Promise(res=>server.close(res));
  return port;
 }
+// Preview12's built-in local detector checks name/path plus OS-reported version.
+// This is only a managed-app signal, NEVER a full machine inventory or proof
+// that a curated/research project can be installed.
+export function managedSignalFor(item,platform=process.platform){
+ const supported=platform==='darwin'||platform==='win32';
+ const installed=supported?limited(item.installedVersion,64):'';
+ const latest=limited(item.latestVersion||item.releaseTag,64);
+ return {
+  managedInstallSignal:!supported?'unsupported':installed?'detected':'not-detected',
+  installedVersion:installed,
+  latestVersion:latest,
+  updateHint:!!(supported&&installed&&latest&&item.needsUpdate===true)
+ };
+}
 function normalize(item,kind){
  const name=limited(item.name||item.title||item.repo||item.id,110);
  const id=limited(item.id||item.repo||name,160);
@@ -39,7 +53,8 @@ function normalize(item,kind){
   // Only source-provided dossier facts. Missing values remain explicitly unknown.
   challenges:limited(item.original||(Array.isArray(item.challenges)?item.challenges.join(', '):''),180),
   license:limited(item.officialLicense||item.license||'',90),
-  release:limited(item.latestPublishedStableTag||item.latestVersion||item.releaseTag||'',90)
+  release:limited(item.latestPublishedStableTag||item.latestVersion||item.releaseTag||'',90),
+  ...(kind==='managed'?managedSignalFor(item):{})
  };
 }
 export function filterCatalog(items,term='',category='All disciplines'){
@@ -110,7 +125,18 @@ export async function readFromRealEngine({runtime=defaultRuntime,timeoutMs=12000
   ];
   if(items.length!==181||new Set(items.map(p=>p.id)).size!==181)
    throw Error('Expected 181 unique source-linked items');
-  return {items,counts:{managed:live.apps.length,curated:live.discoveries.length,
+  const checkedAtMs=Date.now();
+  const platformSupported=live.platform==='darwin'||live.platform==='win32';
+  const inventory={
+   scope:'managed-only',
+   source:'preview12-local-name-version-detector',
+   method:'name-version-heuristic',
+   status:platformSupported?'assessed':'unsupported',
+   assessedManagedCount:platformSupported?live.apps.length:0,
+   checkedAt:new Date(checkedAtMs).toISOString(),
+   checkedAtMs
+  };
+  return {items,inventory,counts:{managed:live.apps.length,curated:live.discoveries.length,
    research:candidateFile.candidates.length},
    engineVersion:manifest.version,hostPlatform:live.platform,hostArch:live.arch,
    source:'real local Challenger Preview12 /api/state; 15 pinned research candidates',

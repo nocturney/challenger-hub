@@ -1,7 +1,7 @@
 mod catalog;
 mod sidecar;
 
-use catalog::{domain_counts, domain_label, domain_of, filtered_domain, Catalog, Project, DOMAINS};
+use catalog::{domain_counts, domain_label, domain_of, filtered_domain, Catalog, Inventory, Project, DOMAINS};
 use slint::{ComponentHandle, Model, ModelRc, SharedString, Timer, TimerMode, VecModel};
 use std::{
     cell::{Cell, RefCell},
@@ -43,15 +43,27 @@ struct State {
     visible: Vec<Project>,
     history: Vec<Route>,
     cursor: usize,
+    inventory: Option<Inventory>,
+    events: Vec<SessionEvent>,
 }
 
 impl Default for State {
     fn default() -> Self {
-        Self { all: Vec::new(), visible: Vec::new(), history: vec![Route::home()], cursor: 0 }
+        Self {
+            all: Vec::new(), visible: Vec::new(), history: vec![Route::home()], cursor: 0,
+            inventory: None, events: Vec::new(),
+        }
     }
 }
 
 impl State {
+    fn event(&mut self, name: &str, detail: &str, outcome: &str) {
+        self.events.push(SessionEvent {
+            name: name.into(), detail: detail.into(), outcome: outcome.into()
+        });
+        if self.events.len() > 32 { self.events.remove(0); }
+    }
+
     fn route(&self) -> &Route { &self.history[self.cursor] }
     fn route_mut(&mut self) -> &mut Route { &mut self.history[self.cursor] }
 
@@ -174,6 +186,45 @@ fn set_detail(ui: &AppWindow, project: Option<&Project>) {
     }
 }
 
+fn update_device_panels(ui: &AppWindow, state: &State) {
+    // Deliberately only managed apps. The 152 curated and 15 research records
+    // have no trusted OS-detection mapping and must never appear installed.
+    let mut managed = state.all.iter().filter(|p| p.kind == "managed")
+        .collect::<Vec<_>>();
+    managed.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
+    let assessed = state.inventory.as_ref().is_some_and(|i| i.status == "assessed");
+    let detected = managed.iter().filter(|p| assessed && p.managed_install_signal == "detected").count();
+    let updates = managed.iter().filter(|p| assessed && p.update_hint).count();
+    let rows = managed.iter().map(|p| {
+        let status = if !assessed { "Not assessed" }
+            else if p.update_hint { "Possible update" }
+            else if p.managed_install_signal == "detected" { "Detected" }
+            else { "Not detected" };
+        ManagedEntry {
+            name: p.name.clone().into(),
+            installed: if !assessed { "Unsupported".into() }
+                else if p.installed_version.is_empty() { "Not detected".into() }
+                else { p.installed_version.clone().into() },
+            latest: if p.latest_version.is_empty() { "Not verified".into() }
+                else { p.latest_version.clone().into() },
+            status: status.into(),
+        }
+    }).collect::<Vec<_>>();
+    ui.set_managed_entries(ModelRc::new(VecModel::from(rows)));
+    ui.set_managed_assessed(if assessed { managed.len() as i32 } else { 0 });
+    ui.set_managed_detected(detected as i32);
+    ui.set_managed_updates(updates as i32);
+    ui.set_inventory_status(if assessed { "assessed" } else { "unsupported" }.into());
+    ui.set_inventory_checked(match state.inventory.as_ref() {
+        Some(i) if assessed => format!("Local read: {} UTC", &i.checked_at[..19]).into(),
+        _ => "Local detector unavailable".into()
+    });
+    ui.set_session_event_count(state.events.len() as i32);
+    ui.set_session_events(ModelRc::new(VecModel::from(
+        state.events.iter().rev().cloned().collect::<Vec<_>>()
+    )));
+}
+
 fn redraw(ui: &AppWindow, state: &mut State) {
     let route = state.route().clone();
     let counts = domain_counts(&state.all);
@@ -205,6 +256,7 @@ fn redraw(ui: &AppWindow, state: &mut State) {
 
     let detail = route.selected.as_ref().and_then(|id| state.all.iter().find(|p| &p.id == id));
     set_detail(ui, detail);
+    update_device_panels(ui, state);
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -222,6 +274,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "research": initial.counts.research,
             "focusDomains": domain_counts(&initial.items).len(),
             "verifiedMedia": initial.items.iter().filter(|p| !media_id(p).is_empty()).count(),
+            "inventoryScope": initial.inventory.scope,
+            "inventoryStatus": initial.inventory.status,
+            "assessedManaged": initial.inventory.assessed_managed_count,
+            "managedDetected": initial.items.iter()
+                .filter(|p| p.kind == "managed" && p.managed_install_signal == "detected").count(),
             "engineVersion": initial.engine_version,
             "platform": initial.host_platform,
             "arch": initial.host_arch,
@@ -233,8 +290,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let ui = AppWindow::new()?;
     let state = Rc::new(RefCell::new(State::default()));
-    state.borrow_mut().all = initial.items;
-    redraw(&ui, &mut state.borrow_mut());
+    {
+        let mut s = state.borrow_mut();
+        s.event("Initial local engine read", &format!(
+            "{} · {} source records · managed detector {}",
+            initial.inventory.checked_at, initial.items.len(), initial.inventory.status
+        ), "OK");
+        s.inventory = Some(initial.inventory);
+        s.all = initial.items;
+        redraw(&ui, &mut s);
+    }
 
     ui.on_navigate({
         let state = Rc::clone(&state); let weak = ui.as_weak();
@@ -366,11 +431,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     match result {
                         Ok(catalog) => {
                             let mut s = state.borrow_mut();
+                            s.event("Manual local engine refresh", &format!(
+                                "{} · {} verified source records · managed {}",
+                                catalog.inventory.checked_at, catalog.items.len(),
+                                catalog.inventory.status
+                            ), "OK");
+                            s.inventory = Some(catalog.inventory);
                             s.all = catalog.items;
                             redraw(&w, &mut s);
                             eprintln!("FOCUS_NATIVE_REFRESH_PASS {}", w.get_total());
                         }
-                        Err(e) => eprintln!("FOCUS_NATIVE_REFRESH_REFUSED {e}"),
+                        Err(e) => {
+                            let mut s = state.borrow_mut();
+                            s.event("Manual local engine refresh refused",
+                                "No update applied; prior verified snapshot preserved. See local stderr.", "ERROR");
+                            redraw(&w, &mut s);
+                            eprintln!("FOCUS_NATIVE_REFRESH_REFUSED {e}");
+                        },
                     }
                 }
             }
@@ -379,6 +456,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Deterministic visual QA routes. Developer-preview only; self-closing
     // windows, no machine scans, downloads, installers or background tasks.
+    if args.iter().any(|a| a == "--qa-preview-library") {
+        ui.invoke_navigate("library".into());
+    }
+    if args.iter().any(|a| a == "--qa-preview-activity" || a == "--qa-preview-activity-refresh") {
+        ui.invoke_navigate("activity".into());
+    }
+    if args.iter().any(|a| a == "--qa-preview-activity-refresh") {
+        // Explicit developer QA of a true manual read; never starts an installer.
+        ui.invoke_refresh_requested();
+    }
     if args.iter().any(|a| a == "--qa-preview-results") {
         ui.invoke_search_submitted("".into());
     }
@@ -386,7 +473,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         ui.invoke_search_submitted("Dune 3D".into());
         ui.invoke_open_project(0);
     }
-    if args.iter().any(|a| a == "--qa-preview-results" || a == "--qa-preview-dune") {
+    if args.iter().any(|a| ["--qa-preview-results", "--qa-preview-dune",
+        "--qa-preview-library", "--qa-preview-activity",
+        "--qa-preview-activity-refresh"].contains(&a.as_str())) {
         let weak = ui.as_weak();
         Timer::single_shot(Duration::from_secs(22), move || {
             if let Some(w) = weak.upgrade() { let _ = w.hide(); }
@@ -414,9 +503,24 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 w.invoke_open_discipline("3D & Manufacturing".into());
                 if w.get_page() != "results" || w.get_matching() == 0 { fail("discipline mapping"); }
                 w.invoke_navigate("library".into());
-                if w.get_page() != "library" { fail("My software route"); }
+                if w.get_page() != "library" || w.get_managed_entries().row_count() != 14 {
+                    fail("14 real managed inventory evidence rows");
+                }
+                if cfg!(target_os = "linux") {
+                    if w.get_inventory_status() != "unsupported" ||
+                        w.get_managed_assessed() != 0 || w.get_managed_detected() != 0 {
+                        fail("Linux unsupported inventory must not infer installed status");
+                    }
+                } else if w.get_inventory_status() != "assessed" ||
+                    w.get_managed_assessed() != 14 || w.get_managed_detected() > 14 ||
+                    w.get_managed_updates() > w.get_managed_detected() {
+                    fail("real managed inventory counts or provenance");
+                }
                 w.invoke_navigate("activity".into());
-                if w.get_page() != "activity" { fail("Activity route"); }
+                if w.get_page() != "activity" || w.get_session_event_count() != 1 ||
+                    w.get_session_events().row_count() != 1 {
+                    fail("native session diagnostics, not transient backend job queue");
+                }
                 w.invoke_toggle_theme();
                 if !w.get_dark_mode() { fail("dark appearance"); }
                 w.invoke_navigate("home".into());
@@ -447,6 +551,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     "pages": ["home","results","detail","library","activity"],
                     "history": "back+forward", "pageSize": 30,
                     "pageSizeVerified": 60, "sourceScreenshots": 2, "darkMode": true,
+                    "managedCoverage": w.get_managed_assessed(),
+                    "managedDetected": w.get_managed_detected(),
+                    "sessionEvents": w.get_session_event_count(),
                     "engine": "real Preview12", "renderer": "Rust/Slint",
                     "startToReadyMs": started.elapsed().as_millis(),
                     "noWebView": true, "writeActionsExposed": false
@@ -465,6 +572,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn session_events_are_ephemeral_and_bounded() {
+        let mut state = State::default();
+        assert!(state.events.is_empty());
+        for n in 0..36 {
+            state.event("Local snapshot", &format!("read #{}", n), "OK");
+        }
+        assert_eq!(state.events.len(), 32);
+        assert_eq!(state.events.first().unwrap().detail, "read #4");
+        assert_eq!(state.events.last().unwrap().outcome, "OK");
+    }
 
     #[test]
     fn history_restores_discovery_query_and_clears_forward_after_new_route() {
@@ -491,7 +610,8 @@ mod tests {
             summary:"CAD".into(), platforms:"Linux".into(),
             evidence:"Curated source".into(), source:"https://github.com/dune3d/dune3d".into(),
             kind:"curated".into(), license:"GPL-3.0".into(), challenges:"".into(),
-            release:"".into()
+            release:"".into(), managed_install_signal:"".into(), installed_version:"".into(),
+            latest_version:"".into(), update_hint:false
         };
         assert_eq!(media_id(&p), "dune3d");
         p.kind = "research".into();

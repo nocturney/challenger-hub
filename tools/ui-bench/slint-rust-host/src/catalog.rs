@@ -25,6 +25,7 @@ pub const DOMAINS: [(&str, &str); 17] = [
 ];
 
 #[derive(Clone, Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Project {
     pub id: String,
     pub name: String,
@@ -41,6 +42,14 @@ pub struct Project {
     pub challenges: String,
     #[serde(default)]
     pub release: String,
+    #[serde(default)]
+    pub managed_install_signal: String,
+    #[serde(default)]
+    pub installed_version: String,
+    #[serde(default)]
+    pub latest_version: String,
+    #[serde(default)]
+    pub update_hint: bool,
 }
 
 #[derive(Debug, Deserialize)]
@@ -50,11 +59,24 @@ pub struct Counts {
     pub research: usize,
 }
 
+#[derive(Clone, Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Inventory {
+    pub scope: String,
+    pub source: String,
+    pub method: String,
+    pub status: String,
+    pub assessed_managed_count: usize,
+    pub checked_at: String,
+    pub checked_at_ms: u64,
+}
+
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Catalog {
     pub schema: String,
     pub items: Vec<Project>,
+    pub inventory: Inventory,
     pub counts: Counts,
     pub engine_version: String,
     pub host_platform: String,
@@ -64,7 +86,7 @@ pub struct Catalog {
 }
 
 pub fn validate(c: &Catalog) -> Result<(), String> {
-    if c.schema != "challenger.native.catalog.v1" {
+    if c.schema != "challenger.native.catalog.v2" {
         return Err("Unexpected sidecar protocol (fail closed)".into());
     }
     if c.engine_version != EXPECTED_VERSION {
@@ -95,6 +117,28 @@ pub fn validate(c: &Catalog) -> Result<(), String> {
     if c.host_arch != actual_arch {
         return Err(format!("Backend architecture mismatch: {}", c.host_arch));
     }
+    let inv = &c.inventory;
+    let supported = actual_platform == "darwin" || actual_platform == "win32";
+    let expected_status = if supported { "assessed" } else { "unsupported" };
+    let expected_assessed = if supported { 14 } else { 0 };
+    if inv.scope != "managed-only" ||
+       inv.source != "preview12-local-name-version-detector" ||
+       inv.method != "name-version-heuristic" ||
+       inv.status != expected_status ||
+       inv.assessed_managed_count != expected_assessed ||
+       !inv.checked_at.is_ascii() || !inv.checked_at.ends_with('Z') || inv.checked_at.len() != 24
+    {
+        return Err("Managed inventory provenance or platform mismatch (fail closed)".into());
+    }
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_err(|_| "Clock before epoch")?.as_millis() as u64;
+    if inv.checked_at_ms > now.saturating_add(15_000) ||
+       now.saturating_sub(inv.checked_at_ms) > 300_000
+    {
+        return Err("Managed inventory snapshot is stale or future-dated".into());
+    }
+
     let mut ids = HashSet::new();
     let mut managed = 0;
     let mut curated = 0;
@@ -104,10 +148,28 @@ pub fn validate(c: &Catalog) -> Result<(), String> {
             return Err("Invalid or duplicate project identity".into());
         }
         match p.kind.as_str() {
-            "managed" if p.id.starts_with("managed:") => managed += 1,
+            "managed" if p.id.starts_with("managed:") => {
+                managed += 1;
+                let expected = if !supported { "unsupported" } else if p.installed_version.is_empty() {
+                    "not-detected"
+                } else { "detected" };
+                if p.managed_install_signal != expected ||
+                    p.installed_version.len() > 64 || p.latest_version.len() > 64 ||
+                    (p.update_hint && (expected != "detected" || p.latest_version.is_empty())) ||
+                    (!supported && (p.update_hint || !p.installed_version.is_empty()))
+                {
+                    return Err("Untrusted managed installation signal".into());
+                }
+            },
             "curated" if p.id.starts_with("curated:") => curated += 1,
             "research" if p.id.starts_with("research:") => research += 1,
             _ => return Err("Unexpected project kind or ID prefix".into()),
+        }
+        if p.kind != "managed" &&
+          (!p.managed_install_signal.is_empty() || !p.installed_version.is_empty() ||
+           !p.latest_version.is_empty() || p.update_hint)
+        {
+            return Err("Nonmanaged candidate spoofed a device installation".into());
         }
     }
     if (managed, curated, research) != (14, 152, 15) {
@@ -219,10 +281,25 @@ mod tests {
                 platforms: "macOS, Windows".into(), evidence: "Source listed".into(),
                 source: "https://github.com/example/tool".into(), kind: kind.into(),
                 license: "".into(), challenges: "".into(), release: "".into(),
+                managed_install_signal: if kind == "managed" {
+                    if cfg!(target_os="linux") { "unsupported".into() }
+                    else { "not-detected".into() }
+                } else { "".into() },
+                installed_version:"".into(), latest_version:"".into(), update_hint:false,
             }
         }).collect();
         Catalog {
-            schema: "challenger.native.catalog.v1".into(), items,
+            schema: "challenger.native.catalog.v2".into(), items,
+            inventory: Inventory {
+                scope: "managed-only".into(),
+                source: "preview12-local-name-version-detector".into(),
+                method: "name-version-heuristic".into(),
+                status: if cfg!(target_os="linux") { "unsupported" } else { "assessed" }.into(),
+                assessed_managed_count: if cfg!(target_os="linux") { 0 } else { 14 },
+                checked_at: "2026-10-24T00:00:00.000Z".into(),
+                checked_at_ms: std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as u64,
+            },
             counts: Counts { managed: 14, curated: 152, research: 15 },
             engine_version: EXPECTED_VERSION.into(),
             host_platform: match std::env::consts::OS { "macos"=>"darwin", "windows"=>"win32", x=>x }.into(),
@@ -245,6 +322,26 @@ mod tests {
         assert!(validate(&c).is_err());
         c = example();
         c.items[166].kind = "curated".into();
+        assert!(validate(&c).is_err());
+    }
+
+    #[test]
+    fn rejects_spoofed_inventory_and_stale_or_untrusted_install_signals() {
+        let mut c = example();
+        assert!(validate(&c).is_ok());
+        c.inventory.checked_at_ms = 1;
+        assert!(validate(&c).is_err());
+        c = example();
+        c.inventory.scope = "all-machine-software".into();
+        assert!(validate(&c).is_err());
+        c = example();
+        c.items[166].installed_version = "9.9".into();
+        assert!(validate(&c).is_err());
+        c = example();
+        c.items[0].update_hint = true;
+        assert!(validate(&c).is_err());
+        c = example();
+        c.items[0].managed_install_signal = "detected".into();
         assert!(validate(&c).is_err());
     }
 

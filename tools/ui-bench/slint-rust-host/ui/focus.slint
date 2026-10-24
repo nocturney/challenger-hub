@@ -19,6 +19,17 @@ export struct ProjectEntry {
     media: string,
     initial: string,
 }
+export struct ManagedEntry {
+    name: string,
+    installed: string,
+    latest: string,
+    status: string,
+}
+export struct SessionEvent {
+    name: string,
+    detail: string,
+    outcome: string,
+}
 export component AppWindow inherits Window {
     title: "Challenger · Focus Native Preview";
     width: 1210px;
@@ -41,6 +52,14 @@ export component AppWindow inherits Window {
     in-out property <int> matching: 0;
     in-out property <int> showing: 0;
     in-out property <bool> has-more: false;
+    in-out property <[ManagedEntry]> managed-entries;
+    in-out property <int> managed-assessed: 0;
+    in-out property <int> managed-detected: 0;
+    in-out property <int> managed-updates: 0;
+    in-out property <string> inventory-status: "unsupported";
+    in-out property <string> inventory-checked: "Not assessed";
+    in-out property <[SessionEvent]> session-events;
+    in-out property <int> session-event-count: 0;
 
     in-out property <string> detail-name: "";
     in-out property <string> detail-maker: "";
@@ -487,41 +506,134 @@ export component AppWindow inherits Window {
             }
         }
 
+        // Truthful managed-app detection from Preview12's existing local
+        // name/path/version heuristic. This is NOT a device-wide inventory.
         if root.page == "library": VerticalLayout {
-            padding: 52px;
-            spacing: 20px;
-            Text { text: "MY SOFTWARE"; font-size: 10px; font-weight: 800; color: root.accent; }
-            Text { text: "Your software, in one place."; font-size: 35px; font-weight: 800; color: root.strong; }
+            padding-left: root.width < 950px ? 25px : 52px;
+            padding-right: root.width < 950px ? 25px : 52px;
+            padding-top: 29px; padding-bottom: 20px; spacing: 15px;
+            Text { text: "MY SOFTWARE  /  MANAGED APP SIGNALS"; font-size: 10px; font-weight: 800; color: root.accent; }
+            Text { text: "What this device reports."; font-size: 31px; font-weight: 800; color: root.strong; }
             Rectangle {
-                height: 182px; background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 12px;
-                VerticalLayout {
-                    padding: 26px; spacing: 13px;
-                    Text { text: "Installed  /  Available updates"; font-size: 13px; font-weight: 800; color: root.strong; }
-                    Text { text: "Device installation and update state is not exposed by this read-only Native Preview.";
-                        font-size: 13px; wrap: word-wrap; color: root.muted; }
-                    Text { text: "No invented installed count, update count or approval state. Operational adapters remain unchanged.";
-                        font-size: 11px; wrap: word-wrap; color: root.subtle; }
+                height: 112px; background: root.accent-bg; border-radius: 11px;
+                HorizontalLayout {
+                    padding: 20px; spacing: 30px;
+                    VerticalLayout {
+                        spacing: 9px; horizontal-stretch: 1;
+                        Text { text: "MANAGED APPS ASSESSED"; font-size: 10px; font-weight: 800; color: root.accent; }
+                        Text { text: root.inventory-status == "assessed" ? root.managed-assessed : "Unavailable";
+                            font-size: 23px; font-weight: 800; color: root.strong; }
+                    }
+                    VerticalLayout {
+                        spacing: 9px; horizontal-stretch: 1;
+                        Text { text: "VERSION SIGNALS DETECTED"; font-size: 10px; font-weight: 800; color: root.accent; }
+                        Text { text: root.inventory-status == "assessed" ? root.managed-detected : "Unknown";
+                            font-size: 23px; font-weight: 800; color: root.strong; }
+                    }
+                    VerticalLayout {
+                        spacing: 9px; horizontal-stretch: 1;
+                        Text { text: "POSSIBLE UPDATE SIGNALS"; font-size: 10px; font-weight: 800; color: root.accent; }
+                        Text { text: root.inventory-status == "assessed" ? root.managed-updates : "Unknown";
+                            font-size: 23px; font-weight: 800; color: root.strong; }
+                    }
                 }
             }
-            Rectangle { vertical-stretch: 1; background: transparent; }
+            Text {
+                text: root.inventory-status == "assessed" ?
+                    "Local name/path/version heuristic for 14 managed Challenger apps only. Not an OS-wide inventory. Not detected does not mean uninstalled." :
+                    "Managed-app detector is unsupported on this platform. No installed or update counts are inferred.";
+                font-size: 11px; color: root.muted; wrap: word-wrap;
+            }
+            HorizontalLayout {
+                Text { text: "MANAGED CATALOG"; color: root.strong; font-size: 11px; font-weight: 800;
+                    vertical-alignment: center; }
+                Rectangle { horizontal-stretch: 1; background: transparent; }
+                Text { text: root.inventory-checked; color: root.subtle; font-size: 10px; vertical-alignment: center; }
+            }
+            Rectangle {
+                height: 34px; background: root.muted-sheet; border-radius: 5px;
+                HorizontalLayout {
+                    padding-left: 13px; padding-right: 13px; spacing: 12px;
+                    Text { text: "APPLICATION"; color: root.subtle; font-size: 9px; font-weight: 800;
+                        horizontal-stretch: 3; vertical-alignment: center; }
+                    Text { text: "DEVICE VERSION"; color: root.subtle; font-size: 9px; font-weight: 800;
+                        horizontal-stretch: 2; vertical-alignment: center; }
+                    Text { text: "SOURCE VERSION"; color: root.subtle; font-size: 9px; font-weight: 800;
+                        horizontal-stretch: 2; vertical-alignment: center; }
+                    Text { text: "SIGNAL"; color: root.subtle; font-size: 9px; font-weight: 800;
+                        horizontal-stretch: 2; vertical-alignment: center; }
+                }
+            }
+            ListView {
+                vertical-stretch: 1;
+                for app in root.managed-entries: Rectangle {
+                    height: 52px; background: root.sheet; border-color: root.line; border-width: 1px;
+                    HorizontalLayout {
+                        padding-left: 13px; padding-right: 13px; spacing: 12px;
+                        Text { text: app.name; font-size: 12px; font-weight: 700; color: root.strong;
+                            horizontal-stretch: 3; vertical-alignment: center; overflow: elide; }
+                        Text { text: app.installed; font-size: 11px; color: root.muted;
+                            horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
+                        Text { text: app.latest; font-size: 11px; color: root.muted;
+                            horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
+                        Text { text: app.status; font-size: 11px; font-weight: 700;
+                            color: app.status == "Possible update" ? #bd8536 : root.accent;
+                            horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
+                    }
+                }
+            }
+            Text { text: "Read-only. Curated and research projects are NOT checked for installation. Refresh reruns only the original local detector.";
+                font-size: 10px; color: root.subtle; wrap: word-wrap; }
         }
 
+        // Only events generated by THIS native preview session; never present
+        // its temporary Node child's queue/history as persistent worker data.
         if root.page == "activity": VerticalLayout {
-            padding: 52px; spacing: 20px;
-            Text { text: "ACTIVITY"; font-size: 10px; font-weight: 800; color: root.accent; }
-            Text { text: "Operations stay separate."; font-size: 35px; font-weight: 800; color: root.strong; }
+            padding-left: root.width < 950px ? 25px : 52px;
+            padding-right: root.width < 950px ? 25px : 52px;
+            padding-top: 35px; padding-bottom: 20px; spacing: 17px;
+            Text { text: "ACTIVITY  /  THIS NATIVE SESSION"; font-size: 10px; font-weight: 800; color: root.accent; }
+            Text { text: "Local read diagnostics."; font-size: 33px; font-weight: 800; color: root.strong; }
             Rectangle {
-                height: 180px; background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 12px;
+                height: 156px; background: root.muted-sheet; border-radius: 12px;
                 VerticalLayout {
-                    padding: 26px; spacing: 13px;
-                    Text { text: "Worker  /  Queue  /  Timeline"; font-size: 13px; font-weight: 800; color: root.strong; }
-                    Text { text: "A native read-only activity feed has not been connected to this prototype.";
-                        font-size: 13px; color: root.muted; wrap: word-wrap; }
-                    Text { text: "No jobs were started by this UI. Absence of data must not be displayed as an empty queue.";
-                        font-size: 11px; color: root.subtle; wrap: word-wrap; }
+                    padding: 22px; spacing: 11px;
+                    Text { text: "INSTALL / UPDATE WORKERS"; font-size: 10px; color: root.accent; font-weight: 800; }
+                    Text { text: "Not connected to a persistent Challenger worker.";
+                        font-size: 15px; color: root.strong; font-weight: 700; }
+                    Text { text: "The backend for this preview exists only during each read. Its empty queue or history cannot prove that the actual device is idle.";
+                        font-size: 12px; color: root.muted; wrap: word-wrap; }
                 }
             }
-            Rectangle { vertical-stretch: 1; background: transparent; }
+            HorizontalLayout {
+                Text { text: "READ-ONLY SESSION EVENTS"; font-size: 11px; font-weight: 800; color: root.strong;
+                    vertical-alignment: center; }
+                Rectangle { horizontal-stretch: 1; background: transparent; }
+                Text { text: root.session-event-count + " events since launch"; font-size: 11px; color: root.subtle;
+                    vertical-alignment: center; }
+            }
+            ListView {
+                vertical-stretch: 1;
+                for event in root.session-events : Rectangle {
+                    height: 78px; background: root.sheet; border-color: root.line; border-width: 1px;
+                    HorizontalLayout {
+                        padding-left: 17px; padding-right: 17px; spacing: 14px;
+                        Rectangle {
+                            width: 9px; height: 9px; border-radius: 5px;
+                            background: event.outcome == "OK" ? root.accent : #c38442;
+                        }
+                        VerticalLayout {
+                            spacing: 6px; horizontal-stretch: 1;
+                            Text { text: event.name; font-size: 13px; font-weight: 700; color: root.strong; }
+                            Text { text: event.detail; font-size: 11px; color: root.muted; overflow: elide; }
+                        }
+                        Text { text: event.outcome; font-size: 10px; color: event.outcome == "OK" ? root.accent : #c38442;
+                            vertical-alignment: center; }
+                    }
+                }
+            }
+            Text { text: "Session log is memory-only. Refresh failures appear here but never overwrite the last verified catalog or installation signals.";
+                font-size: 10px; color: root.subtle; wrap: word-wrap; }
         }
 
         Rectangle {

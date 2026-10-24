@@ -98,16 +98,34 @@ This is a **real native Slint interface**, not an Electron/WebView/CSS wrapper:
   repository ID/source. Asset SHA256, licenses and source commits are recorded
   in `ui/MEDIA_PROVENANCE.md`. Other projects have a neutral, non-fabricated
   fallback until their assets are independently vetted.
-- My software and Activity are visible but intentionally display **data
-  unavailable** — not fake installed counts, fake empty queues or invented
-  worker status. Live device-state parity is unfinished.
+- **My software P2 (limited, real data):** the authentic Preview12 engine's
+  existing local name/path/version detector now contributes **managed-only
+  installation signals** for its 14 managed applications. The sidecar passes
+  the detected version, source-reported version and *possible* update hint
+  through versioned `challenger.native.catalog.v2` with exact provenance,
+  scope, timestamp and per-kind fail-closed validation. Curated (152) and
+  research (15) entries are explicitly excluded. Linux's current detector is
+  unsupported and reports **unavailable**, not false zeros. macOS/Windows
+  rows may say *not detected*, which is not proof of absence or authorization
+  to install. No installed paths are transferred.
+- **Activity P2 (limited, real data):** native in-memory events from the
+  **current preview session only** show actual initial reads, successful
+  manual Refresh and refused Refresh. Failed reads preserve the previous
+  validated catalog/inventory. There is no fabricated persistent worker
+  history or empty queue: the Node engine child is intentionally ephemeral,
+  so its own activity state is not treated as the real device job queue.
+- Existing Preview12 OS detection uses read-only filesystem and version
+  metadata. Network/source scanning stays disabled; this UI never triggers
+  OS-wide software discovery or an install/update/launch.
 
 ## Next gates — not yet implemented
 
-Actual installed/update state, worker queue/timeline, deeper metadata and
-additional source-pinned screenshots; accessibility, keyboard shortcuts,
+Full OS-wide inventory, authoritative package/application IDs and genuine
+persistent-worker queue/history (distinct from these P2 managed-only signals
+and preview session diagnostics), user-controlled sorting, deeper metadata,
+and additional source-pinned screenshots; accessibility, keyboard shortcuts,
 IME/RTL, DPI and responsive small-screen visual QA; native Windows/Linux
-interactive desktop tests, full resource/performance sampling, authenticated
+interactive desktop tests, resource/performance sampling, authenticated
 distribution signing/notarization, Slint attribution and permission-gated
 third-party installers. These remain blocked from Production. Do not infer
 resource usage from the old Rust-only fixture benchmark.
