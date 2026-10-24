@@ -147,6 +147,94 @@ function userState(){
        'ChallengerNativePreview');
   return path.join(base,'install-state');
 }
+// Append-only records of approved native installs. This is NOT a live
+// background worker queue or proof that a previously installed app still runs.
+const HISTORY_SCHEMA='challenger.native.install-history.v1';
+const HISTORY_LIMIT=512*1024;
+const HISTORY_STATES=new Set(['STARTED','COMPLETED','FAILED','CANCELED']);
+function historyFile(base){return path.join(base,'install-history.jsonl')}
+function validateHistoryEvent(e){
+  assert(e&&e.schema===HISTORY_SCHEMA&&
+    typeof e.runId==='string'&&/^[a-f0-9-]{36}$/i.test(e.runId)&&
+    typeof e.projectId==='string'&&
+      /^(curated:[a-z][a-z0-9-]{1,79}|managed:pdfcraft)$/.test(e.projectId)&&
+    typeof e.tag==='string'&&/^[A-Za-z0-9][A-Za-z0-9._+-]{0,99}$/.test(e.tag)&&
+    hashOk(e.sha256)&&HISTORY_STATES.has(e.state)&&
+    typeof e.timestamp==='string'&&
+      /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(e.timestamp),
+    'Malformed installation history record');
+}
+function safeHistoryPath(base){
+  if(!fs.existsSync(base))return historyFile(base);
+  const parent=fs.lstatSync(base);
+  assert(parent.isDirectory()&&!parent.isSymbolicLink(),
+    'Untrusted installation history parent');
+  const file=historyFile(base);
+  if(fs.existsSync(file)){
+    const st=fs.lstatSync(file);
+    assert(st.isFile()&&!st.isSymbolicLink()&&st.size<=HISTORY_LIMIT,
+      'Untrusted or oversized installation history file');
+  }
+  return file;
+}
+export function appendInstallHistory(base,event){
+  // Explicit allowlist: never persist approval tokens, file paths or raw errors.
+  const record={schema:HISTORY_SCHEMA,runId:event?.runId,
+    projectId:event?.projectId,tag:event?.tag,sha256:event?.sha256,
+    state:event?.state,timestamp:event?.timestamp};
+  validateHistoryEvent(record);
+  const file=safeHistoryPath(base);
+  const line=JSON.stringify(record)+'\n';
+  assert(Buffer.byteLength(line,'utf8')<=1024,'Oversized installation history event');
+  const size=fs.existsSync(file)?fs.statSync(file).size:0;
+  if(size){
+    const reader=fs.openSync(file,'r'),last=Buffer.alloc(1);
+    try{fs.readSync(reader,last,0,1,size-1);}finally{fs.closeSync(reader);}
+    assert(last[0]===10,'History ends in an incomplete record; manual review required');
+  }
+  assert(size+Buffer.byteLength(line,'utf8')<=HISTORY_LIMIT,
+    'Installation history is full; preserve and archive it before new installs');
+  const flags=fs.constants.O_WRONLY|fs.constants.O_APPEND|fs.constants.O_CREAT|
+    (fs.constants.O_NOFOLLOW||0);
+  const fd=fs.openSync(file,flags,0o600);
+  try{
+    assert(fs.writeSync(fd,line)===Buffer.byteLength(line,'utf8'),
+      'Short installation history append');
+    fs.fsyncSync(fd);
+  }finally{fs.closeSync(fd);}
+}
+export function readInstallHistory(base){
+  const file=safeHistoryPath(base);
+  if(!fs.existsSync(file))return {schema:HISTORY_SCHEMA,entries:[],incomplete:false};
+  const raw=fs.readFileSync(file,'utf8');
+  let lines=raw.split('\n'),incomplete=false;
+  if(!raw.endsWith('\n')){incomplete=true;lines.pop();}
+  const runs=new Map();
+  for(const line of lines){
+    if(!line)continue;
+    assert(Buffer.byteLength(line,'utf8')<=1024,'Oversized history line');
+    const item=JSON.parse(line);
+    validateHistoryEvent(item);
+    let current=runs.get(item.runId);
+    if(current){
+      assert(current.projectId===item.projectId &&
+        current.tag===item.tag && current.sha256===item.sha256,
+        'Inconsistent installation history run');
+      assert(current.state==='STARTED','Duplicate terminal history record');
+      current.state=item.state;
+      current.timestamp=item.timestamp;
+    }else{
+      assert(item.state==='STARTED','History terminal record without approved start');
+      runs.set(item.runId,{runId:item.runId,projectId:item.projectId,
+        tag:item.tag,sha256:item.sha256,timestamp:item.timestamp,
+        state:item.state});
+    }
+  }
+  const entries=[...runs.values()].map(x=>({
+    ...x,state:x.state==='STARTED'?'UNRESOLVED':x.state
+  })).sort((a,b)=>b.timestamp.localeCompare(a.timestamp)).slice(0,30);
+  return {schema:HISTORY_SCHEMA,entries,incomplete};
+}
 async function install(projectId,token){
   assert(hashOk(token),'Missing exact user-approved release token');
   requireNormalUser();
@@ -175,8 +263,13 @@ async function install(projectId,token){
     'Unsafe native install state folder');
   const lock=path.join(base,'.install.lock');
   const fd=fs.openSync(lock,'wx',0o600);
-  const sandbox=fs.mkdtempSync(path.join(base,'run-'));
+  let sandbox=null,attemptStarted=false;
+  const runId=crypto.randomUUID();
+  const historyBase={runId,projectId:plan.projectId,tag:plan.tag,sha256:plan.sha256};
   try{
+    sandbox=fs.mkdtempSync(path.join(base,'run-'));
+    appendInstallHistory(base,{...historyBase,state:'STARTED',timestamp:new Date().toISOString()});
+    attemptStarted=true;
     // Copy ORIGINAL vetted worker byte-for-byte to a separate user-owned
     // staging folder. No change to Production, Preview11 or packaged resources.
     const workerFiles=['Install-Challenger.js','challengers.json','adapters.json'];
@@ -238,12 +331,31 @@ async function install(projectId,token){
     const next=path.join(base,'managed-installs.next');
     fs.writeFileSync(next,JSON.stringify(state,null,2)+'\n',{mode:0o600});
     fs.renameSync(next,existing);
+    let historyPersisted=true;
+    try {
+      appendInstallHistory(base,{...historyBase,state:'COMPLETED',timestamp:new Date().toISOString()});
+    }catch(e){
+      historyPersisted=false;
+      // The app and managed record were already committed. Never report a
+      // false install failure just because the secondary history append failed.
+      console.log(JSON.stringify({state:'history-warning',
+        detail:'Install succeeded, but durable history could not be updated'}));
+    }
     console.log(JSON.stringify({schema:'challenger.native.install-result.v1',
       state:'success',projectId:plan.projectId,tag:plan.tag,sha256:plan.sha256,
-      installedPath:verified.installedPath,sourceDigestVerified:true}));
+      installedPath:verified.installedPath,sourceDigestVerified:true,historyPersisted}));
+  }catch(e){
+    if(attemptStarted){
+      const state=String(e.message).includes('INSTALL_CANCELLED_BEFORE_COMMIT')
+        ?'CANCELED':'FAILED';
+      try {appendInstallHistory(base,{...historyBase,state,timestamp:new Date().toISOString()});}
+      catch(historyError){console.error('NATIVE_HISTORY_WRITE_FAILED '+String(historyError.message).slice(0,120));}
+    }
+    throw e;
   }finally{
-    fs.rmSync(sandbox,{recursive:true,force:true});
-    fs.closeSync(fd);fs.rmSync(lock,{force:true});
+    try{if(sandbox)fs.rmSync(sandbox,{recursive:true,force:true});}
+    catch(e){console.error('NATIVE_STAGING_CLEANUP_WARNING '+String(e.message).slice(0,120));}
+    try{fs.closeSync(fd);}finally{fs.rmSync(lock,{force:true});}
   }
   }finally{
     process.stdin.off('data',onCancelInput);
@@ -253,6 +365,9 @@ async function install(projectId,token){
 async function cli(){
   const [mode,projectId,token,...extra]=process.argv.slice(2);
   assert(!extra.length,'Unexpected install arguments');
+  if(mode==='history'&&!projectId&&!token){
+    console.log(JSON.stringify(readInstallHistory(userState())));return;
+  }
   if(mode==='plan'&&!token){console.log(JSON.stringify(await fetchPlan(projectId)));return;}
   if(mode==='install'&&token){await install(projectId,token);return;}
   throw Error('Usage: install-bridge.mjs plan <reviewed-id> | install <reviewed-id> <approved-token>');

@@ -798,6 +798,71 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     });
 
+    // Explicit, read-only account-local installation history. Opening Activity
+    // alone cannot imply a live background worker or current installed status.
+    let (history_tx,history_rx)=mpsc::channel::<Result<install::HistoryResponse,String>>();
+    let history_busy=Rc::new(Cell::new(false));
+    let history_jobs=Rc::new(RefCell::new(Vec::<thread::JoinHandle<()>>::new()));
+    ui.on_load_install_history({
+        let tx=history_tx.clone();
+        let busy=Rc::clone(&history_busy);
+        let jobs=Rc::clone(&history_jobs);
+        let weak=ui.as_weak();
+        move || if let Some(w)=weak.upgrade() {
+            if w.get_page()!="activity"||busy.replace(true){return;}
+            w.set_install_history_loading(true);
+            w.set_install_history_status("Reading bounded local installation records…".into());
+            let tx=tx.clone();
+            jobs.borrow_mut().push(thread::spawn(move || {
+                let _=tx.send(install::read_local_history());
+            }));
+        }
+    });
+    let history_timer=Timer::default();
+    history_timer.start(TimerMode::Repeated,Duration::from_millis(85),{
+        let state=Rc::clone(&state);
+        let busy=Rc::clone(&history_busy);
+        let weak=ui.as_weak();
+        move || while let Ok(result)=history_rx.try_recv() {
+            busy.set(false);
+            if let Some(w)=weak.upgrade() {
+                w.set_install_history_loading(false);
+                match result {
+                    Ok(history)=>{
+                        let count=history.entries.len();
+                        let rows=history.entries.into_iter().map(|e| SessionEvent{
+                            name:format!("{} · {}",e.project_id,e.tag).into(),
+                            detail:format!("{} UTC · SHA-256 {}…",
+                                &e.timestamp[..19],&e.sha256[..12]).into(),
+                            outcome:e.state.into(),
+                        }).collect::<Vec<_>>();
+                        w.set_install_history_events(ModelRc::new(VecModel::from(rows)));
+                        w.set_install_history_count(count as i32);
+                        let note=if history.incomplete {
+                            "Incomplete trailing record; the latest attempt may be unresolved."
+                                .to_string()
+                        }else if count==0 {
+                            "No recorded Native installer attempts yet; older installations are not backfilled."
+                                .to_string()
+                        }else{
+                            format!("{count} recorded attempts (local user only). UNRESOLVED is not proof of success or failure.")
+                        };
+                        w.set_install_history_status(note.into());
+                        state.borrow_mut().event("Explicit installation history read",
+                            &format!("{count} durable attempts; incomplete={}",history.incomplete),"OK");
+                    }
+                    Err(e)=>{
+                        w.set_install_history_status(
+                            format!("History unavailable: {e}. Existing snapshot is not refreshed.").into());
+                        state.borrow_mut().event("Installation history read refused",
+                            &e,"ERROR");
+                    }
+                }
+                update_device_panels(&w,&state.borrow());
+            }
+        }
+    });
+
     let (tx, rx) = mpsc::channel::<Result<Catalog, String>>();
     let busy = Rc::new(Cell::new(false));
     let jobs = Rc::new(RefCell::new(Vec::<thread::JoinHandle<()>>::new()));
@@ -1062,6 +1127,29 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         });
     }
 
+    if args.iter().any(|a|a=="--qa-history-read") {
+        // Explicit native Activity control reads only the account-local file.
+        // No installation, online release lookup or OS inventory probe.
+        ui.invoke_navigate("activity".into());
+        ui.invoke_load_install_history();
+        let weak=ui.as_weak();
+        Timer::single_shot(Duration::from_secs(6),move || {
+            if let Some(w)=weak.upgrade(){
+                let status=w.get_install_history_status();
+                if w.get_install_history_loading() ||
+                    status.is_empty() || status.contains("History unavailable") ||
+                    status.contains("Reading bounded") {
+                    eprintln!("NATIVE_INSTALL_HISTORY_READ_FAIL {status}");
+                    std::process::exit(3);
+                }
+                eprintln!("NATIVE_INSTALL_HISTORY_READ_PASS {}",
+                    serde_json::json!({"entries":w.get_install_history_count(),
+                        "readOnly":true,"notLiveWorkerQueue":true}));
+                let _=w.hide();
+            }
+        });
+    }
+
     if smoke {
         let weak = ui.as_weak();
         Timer::single_shot(Duration::from_millis(600), move || {
@@ -1162,6 +1250,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // In-flight Refresh can never outlive the host or leave a Node engine orphaned.
     for job in jobs.borrow_mut().drain(..) { let _ = job.join(); }
     for job in device_jobs.borrow_mut().drain(..) { let _ = job.join(); }
+    for job in history_jobs.borrow_mut().drain(..) { let _ = job.join(); }
     // An approved install belongs to the session; do not abandon its verified
     // worker as an uncontrolled background process if the window is closed.
     for job in installer_jobs.borrow_mut().drain(..) { let _ = job.join(); }

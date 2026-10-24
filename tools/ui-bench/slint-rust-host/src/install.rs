@@ -37,6 +37,53 @@ struct InstallResult {
     sha256:String,
     installed_path:String,
     source_digest_verified:bool,
+    #[serde(default)]
+    history_persisted:Option<bool>,
+}
+// Persistent history is a bounded account-local audit trail, not live status.
+// A STARTED record with no verified terminal record is explicitly UNRESOLVED.
+#[derive(Clone,Debug,Deserialize)]
+#[serde(rename_all="camelCase")]
+pub struct HistoryEntry {
+    pub run_id:String,
+    pub project_id:String,
+    pub tag:String,
+    pub sha256:String,
+    pub timestamp:String,
+    pub state:String,
+}
+#[derive(Debug,Deserialize)]
+pub struct HistoryResponse {
+    pub schema:String,
+    pub entries:Vec<HistoryEntry>,
+    pub incomplete:bool,
+}
+fn valid_history(response:&HistoryResponse)->bool {
+    response.schema=="challenger.native.install-history.v1" &&
+    response.entries.len()<=30 &&
+    response.entries.iter().all(|e|
+        e.run_id.len()==36 &&
+        e.run_id.bytes().all(|c|c.is_ascii_hexdigit()||c==b'-') &&
+        (e.project_id.starts_with("curated:")||
+            e.project_id=="managed:pdfcraft") &&
+        e.project_id.len()<=96 &&
+        e.project_id.bytes().all(|c|c.is_ascii_alphanumeric()||c==b'-'||c==b':') &&
+        !e.tag.is_empty() && e.tag.len()<=100 &&
+        e.tag.bytes().all(|c|c.is_ascii_alphanumeric()||b"._+-".contains(&c)) &&
+        e.sha256.len()==64 && e.sha256.bytes().all(|c|c.is_ascii_hexdigit()) &&
+        e.timestamp.len()==24 && e.timestamp.is_ascii() &&
+        e.timestamp.ends_with('Z') &&
+        matches!(e.state.as_str(),"COMPLETED"|"CANCELED"|"FAILED"|"UNRESOLVED")
+    )
+}
+pub fn read_local_history()->Result<HistoryResponse,String> {
+    let response=sidecar::read_install_history()?;
+    let value:HistoryResponse=serde_json::from_str(response.trim())
+        .map_err(|_|"Invalid persistent install history response")?;
+    if !valid_history(&value){
+        return Err("History response failed schema and source validation".into());
+    }
+    Ok(value)
 }
 pub fn eligible_source(project:&Project)->bool {
     let curated=project.kind=="curated"&&project.id.starts_with("curated:")&&
@@ -188,8 +235,11 @@ pub fn run_approved(
         data.installed_path.len()<=plan.destination.len() {
         return Err("Installer completion does not match explicit approved package".into());
     }
-    Ok(format!("{} {} installed and SHA-256 verified at {}",
-        plan.name,plan.tag,data.installed_path))
+    let warning=if data.history_persisted==Some(false) {
+        " (WARNING: local history could not be saved)"
+    }else{""};
+    Ok(format!("{} {} installed and SHA-256 verified at {}{}",
+        plan.name,plan.tag,data.installed_path,warning))
 }
 #[cfg(test)]
 mod tests {
@@ -241,6 +291,29 @@ mod tests {
         ] {
             assert!(parse_install_progress(&bad).is_none(),"Accepted: {bad}");
         }
+    }
+    #[test]
+    fn persisted_history_rejects_forged_status_and_unbounded_rows(){
+        let valid=HistoryEntry {
+            run_id:"11111111-1111-4111-8111-111111111111".into(),
+            project_id:"managed:pdfcraft".into(),
+            tag:"v0.13.0".into(),
+            sha256:"a".repeat(64),
+            timestamp:"2026-10-24T10:00:00.000Z".into(),
+            state:"UNRESOLVED".into(),
+        };
+        let mut response=HistoryResponse{
+            schema:"challenger.native.install-history.v1".into(),
+            entries:vec![valid.clone()],incomplete:false,
+        };
+        assert!(valid_history(&response));
+        response.entries[0].state="SUCCESS_WITHOUT_PROOF".into();
+        assert!(!valid_history(&response));
+        response.entries[0]=valid.clone();
+        response.entries[0].project_id="research:pdfcraft".into();
+        assert!(!valid_history(&response));
+        response.entries=vec![valid;31];
+        assert!(!valid_history(&response));
     }
     #[test]
     fn only_exact_curated_project_can_request_review(){

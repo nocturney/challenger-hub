@@ -68,6 +68,10 @@ export component AppWindow inherits Window {
     in-out property <string> inventory-checked: "Not assessed";
     in-out property <[SessionEvent]> session-events;
     in-out property <int> session-event-count: 0;
+    in-out property <[SessionEvent]> install-history-events;
+    in-out property <int> install-history-count: 0;
+    in-out property <string> install-history-status: "Not loaded. Select Read local installation history.";
+    in-out property <bool> install-history-loading: false;
     in-out property <[DeviceEntry]> device-entries;
     in-out property <int> device-total: 0;
     in-out property <int> device-showing: 0;
@@ -127,6 +131,7 @@ export component AppWindow inherits Window {
     callback review-install();
     callback confirm-install();
     callback cancel-install();
+    callback load-install-history();
     callback toggle-theme();
 
     property <color> canvas: root.dark-mode ? #131b19 : #fafaf6;
@@ -903,6 +908,41 @@ export component AppWindow inherits Window {
                         font-size: 15px; color: root.strong; font-weight: 700; }
                     Text { text: "The backend for this preview exists only during each read. Its empty queue or history cannot prove that the actual device is idle.";
                         font-size: 12px; color: root.muted; wrap: word-wrap; }
+                }
+            }
+            HorizontalLayout {
+                Text { text: "PERSISTED INSTALL ATTEMPTS"; font-size: 11px; font-weight: 800; color: root.strong;
+                    vertical-alignment: center; }
+                Rectangle { horizontal-stretch: 1; background: transparent; }
+                Rectangle {
+                    width: 196px; height: 34px; background: root.accent-bg; border-radius: 7px;
+                    Text { text: root.install-history-loading ? "Reading local history…" :
+                        "Read local installation history";
+                        font-size: 10px; color: root.accent; font-weight: 700;
+                        horizontal-alignment: center; vertical-alignment: center; }
+                    TouchArea { enabled: !root.install-history-loading;
+                        clicked => { root.load-install-history(); } }
+                }
+            }
+            Text { text: root.install-history-status; font-size: 11px;
+                color: root.muted; wrap: word-wrap; }
+            if root.install-history-count > 0: ListView {
+                height: 145px;
+                for event in root.install-history-events : Rectangle {
+                    height: 54px; background: root.sheet; border-color: root.line; border-width: 1px;
+                    HorizontalLayout {
+                        padding-left: 15px; padding-right: 15px; spacing: 12px;
+                        VerticalLayout {
+                            spacing: 4px; horizontal-stretch: 1;
+                            Text { text: event.name; font-size: 12px; font-weight: 700;
+                                color: root.strong; overflow: elide; }
+                            Text { text: event.detail; font-size: 10px; color: root.muted;
+                                overflow: elide; }
+                        }
+                        Text { text: event.outcome; font-size: 10px;
+                            color: event.outcome == "COMPLETED" ? root.accent : #c38442;
+                            vertical-alignment: center; }
+                    }
                 }
             }
             HorizontalLayout {

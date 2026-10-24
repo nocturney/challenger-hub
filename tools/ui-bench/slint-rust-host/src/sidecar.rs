@@ -289,6 +289,21 @@ pub fn installer_bridge_with_cancel(
     }
 }
 
+// Activity history is explicitly read from the logged-in user's local file.
+// It does not start a persistent engine, inspect the OS or install software.
+pub fn read_install_history() -> Result<String, String> {
+    let (dir, packaged)=resources()?;
+    let script=dir.join("install-bridge.mjs");
+    if !script.is_file(){return Err("Missing local install history reader".into());}
+    let node=node_executable(&dir,packaged)?;
+    let mut cmd=Command::new(node);
+    cmd.arg(script).arg("history");
+    cmd.current_dir(&dir).stdin(Stdio::null())
+        .stdout(Stdio::piped()).stderr(Stdio::piped());
+    cmd.env_remove("NODE_OPTIONS").env_remove("NODE_PATH");
+    run_bounded(cmd,Duration::from_secs(6))
+}
+
 pub fn read_catalog() -> Result<Catalog, String> {
     let (dir, packaged) = resources()?;
     let node = node_executable(&dir, packaged)?;

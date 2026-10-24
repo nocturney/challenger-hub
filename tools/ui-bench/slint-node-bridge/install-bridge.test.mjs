@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {reviewedSource,reviewOfficialRelease} from './install-bridge.mjs';
+import {reviewedSource,reviewOfficialRelease,appendInstallHistory,readInstallHistory} from './install-bridge.mjs';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 
 const registry={projects:[
   {id:'compositor',name:'Compositor',repository:'robbietilton/Compositor'},
@@ -111,4 +114,61 @@ test('managed PDF adapter fails closed on impersonation, other apps and platform
   ])assert.throws(()=>reviewedSource('managed:pdfcraft',args));
   const bad=pdfRelease();bad.assets[0].digest=null;
   assert.throws(()=>reviewOfficialRelease(pdfSource(),bad));
+});
+
+
+test('approved installation history is durable, bounded and token-free',()=>{
+  const folder=fs.mkdtempSync(path.join(os.tmpdir(),'challenger-history-'));
+  try{
+    const event={runId:'11111111-1111-4111-8111-111111111111',
+      projectId:'curated:solvespace',tag:'v3.3',sha256:'a'.repeat(64),
+      state:'STARTED',timestamp:'2026-10-24T10:00:00.000Z',
+      approvalToken:'DO_NOT_STORE',installedPath:'DO_NOT_STORE'};
+    assert.deepEqual(readInstallHistory(folder).entries,[]);
+    assert(!fs.existsSync(path.join(folder,'install-history.jsonl')));
+    appendInstallHistory(folder,event);
+    assert.equal(readInstallHistory(folder).entries[0].state,'UNRESOLVED');
+    appendInstallHistory(folder,{...event,state:'COMPLETED',
+      timestamp:'2026-10-24T10:02:00.000Z'});
+    const result=readInstallHistory(folder);
+    assert.equal(result.schema,'challenger.native.install-history.v1');
+    assert.equal(result.incomplete,false);
+    assert.equal(result.entries[0].state,'COMPLETED');
+    assert.equal(result.entries[0].sha256,'a'.repeat(64));
+    const saved=fs.readFileSync(path.join(folder,'install-history.jsonl'),'utf8');
+    assert(!saved.includes('DO_NOT_STORE'));
+    assert.equal(saved.trim().split('\n').length,2);
+  }finally{fs.rmSync(folder,{recursive:true,force:true});}
+});
+
+test('interrupted or corrupt history never fabricates successful installs',()=>{
+  const folder=fs.mkdtempSync(path.join(os.tmpdir(),'challenger-history-'));
+  try{
+    const event={runId:'22222222-2222-4222-8222-222222222222',
+      projectId:'managed:pdfcraft',tag:'v0.13.0',sha256:'b'.repeat(64),
+      state:'STARTED',timestamp:'2026-10-24T10:03:00.000Z'};
+    appendInstallHistory(folder,event);
+    assert.equal(readInstallHistory(folder).entries[0].state,'UNRESOLVED');
+    fs.appendFileSync(path.join(folder,'install-history.jsonl'),'{"partial":true');
+    const damaged=readInstallHistory(folder);
+    assert.equal(damaged.incomplete,true);
+    assert.equal(damaged.entries[0].state,'UNRESOLVED');
+    assert.throws(()=>appendInstallHistory(folder,{...event,state:'COMPLETED'}));
+  }finally{fs.rmSync(folder,{recursive:true,force:true});}
+});
+
+test('tampered history and unsupported statuses are rejected',()=>{
+  const folder=fs.mkdtempSync(path.join(os.tmpdir(),'challenger-history-'));
+  try{
+    const event={runId:'33333333-3333-4333-8333-333333333333',
+      projectId:'managed:pdfcraft',tag:'v0.13.0',sha256:'c'.repeat(64),
+      state:'STARTED',timestamp:'2026-10-24T10:05:00.000Z'};
+    assert.throws(()=>appendInstallHistory(folder,{...event,state:'SUCCESS'}));
+    assert.throws(()=>appendInstallHistory(folder,{...event,projectId:'research:unknown'}));
+    appendInstallHistory(folder,event);
+    assert.throws(()=>appendInstallHistory(folder,{...event,runId:'invalid'}));
+    fs.appendFileSync(path.join(folder,'install-history.jsonl'),
+      '{"schema":"invalid","state":"COMPLETED"}\n');
+    assert.throws(()=>readInstallHistory(folder));
+  }finally{fs.rmSync(folder,{recursive:true,force:true});}
 });

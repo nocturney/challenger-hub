@@ -40,6 +40,7 @@ try {
     }
     $result = @($records | Where-Object { $_.schema -eq 'challenger.native.install-result.v1' })
     if ($result.Count -ne 1 -or $result[0].state -ne 'success' -or
+        $result[0].historyPersisted -ne $true -or
         $result[0].sourceDigestVerified -ne $true -or
         $result[0].projectId -ne $plan.projectId -or
         $result[0].sha256 -ne $plan.sha256) {
@@ -60,6 +61,15 @@ try {
     # The reviewed exe-portable adapter copies the verified EXE byte-for-byte.
     $bytesHash = (Get-FileHash -LiteralPath $installed.installedPath -Algorithm SHA256).Hash.ToLowerInvariant()
     if ($bytesHash -ne $plan.sha256) { throw 'Installed EXE SHA-256 mismatch' }
+    $history = (& node $bridge history | Out-String) | ConvertFrom-Json
+    if ($LASTEXITCODE -ne 0 -or
+        $history.schema -ne 'challenger.native.install-history.v1' -or
+        @($history.entries | Where-Object {
+            $_.projectId -eq 'curated:solvespace' -and $_.state -eq 'COMPLETED' -and
+            $_.sha256 -eq $plan.sha256
+        }).Count -ne 1) {
+        throw 'First approved install not recorded as a verified durable completion'
+    }
     # Exercise Native host -> bridge stdin -> worker cancel, only BEFORE
     # package commit. A cancel request must not kill an installer during swap.
     $beforeCancel = Get-Content -LiteralPath $meta -Raw
@@ -75,6 +85,12 @@ try {
         (Get-Content -LiteralPath $meta -Raw) -ne $beforeCancel -or
         (Test-Path -LiteralPath $lockPath)) {
         throw 'Cancelled install modified the previous app or left an orphaned lock'
+    }
+    $history = (& node $bridge history | Out-String) | ConvertFrom-Json
+    if (@($history.entries | Where-Object {
+        $_.projectId -eq 'curated:solvespace' -and $_.state -eq 'CANCELED'
+    }).Count -ne 1) {
+        throw 'Canceled approved attempt missing from durable history'
     }
     Write-Output 'WINDOWS_NATIVE_COOPERATIVE_CANCEL_PASS'
     # Inject a metadata-write failure into a SECOND reviewed SolveSpace install.
@@ -96,6 +112,12 @@ try {
     $restored = (Get-FileHash -LiteralPath $installed.installedPath -Algorithm SHA256).Hash.ToLowerInvariant()
     if ($restored -ne $bytesHash -or (Get-Content -LiteralPath $meta -Raw) -ne $priorState) {
         throw 'Previous verified app or managed record was changed by failed install'
+    }
+    $history = (& node $bridge history | Out-String) | ConvertFrom-Json
+    if (@($history.entries | Where-Object {
+        $_.projectId -eq 'curated:solvespace' -and $_.state -eq 'FAILED'
+    }).Count -ne 1) {
+        throw 'Failed approved attempt missing from durable history'
     }
     Write-Output 'WINDOWS_NATIVE_INSTALL_ROLLBACK_PASS'
     # Exercise PdfCraft's new managed route on the disposable runner only.
@@ -140,6 +162,7 @@ try {
         $last = $percent
     }
     if ($pdfResult.Count -ne 1 -or $pdfResult[0].state -ne 'success' -or
+        $pdfResult[0].historyPersisted -ne $true -or
         $pdfResult[0].sourceDigestVerified -ne $true -or
         $pdfResult[0].projectId -ne $pdfPlan.projectId -or
         $pdfResult[0].sha256 -ne $pdfPlan.sha256) {
@@ -155,6 +178,20 @@ try {
         -not (Test-Path -LiteralPath $pdfInstalled.installedPath)) {
         throw 'PdfCraft tracked portable EXE missing or outside isolated app root'
     }
+    $history = (& node $bridge history | Out-String) | ConvertFrom-Json
+    if ($LASTEXITCODE -ne 0 -or
+        @($history.entries | Where-Object {
+            $_.projectId -eq 'managed:pdfcraft' -and $_.state -eq 'COMPLETED' -and
+            $_.sha256 -eq $pdfPlan.sha256
+        }).Count -ne 1 -or
+        $history.incomplete -ne $false) {
+        throw 'PdfCraft user-approved install not persisted in durable history'
+    }
+    $historyRaw = Get-Content -LiteralPath (Join-Path $env:LOCALAPPDATA 'ChallengerNativePreview\install-state\install-history.jsonl') -Raw
+    if ($historyRaw.Contains($plan.approvalToken) -or $historyRaw.Contains($pdfPlan.approvalToken)) {
+        throw 'Installer approval token leaked into the durable history file'
+    }
+    Write-Output 'WINDOWS_NATIVE_INSTALL_HISTORY_PASS'
     Write-Output ('PDFCRAFT_NATIVE_INSTALL_SANDBOX_PASS ' + (@{
         projectId=$pdfPlan.projectId; tag=$pdfPlan.tag; sha256=$pdfPlan.sha256;
         verifiedInstalledExecutable=$true; isolatedMetadata=$true;
