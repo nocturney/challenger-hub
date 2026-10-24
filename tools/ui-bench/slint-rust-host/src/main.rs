@@ -479,7 +479,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let state = Rc::clone(&state); let weak = ui.as_weak();
         move |dest| if let Some(w) = weak.upgrade() {
             let dest = dest.to_string();
-            if ["home","library","device","activity"].contains(&dest.as_str()) {
+            if ["home","library","device","activity","about"].contains(&dest.as_str()) {
                 let mut state = state.borrow_mut();
                 state.push(Route::simple(&dest));
                 redraw(&w, &mut state);
@@ -1255,6 +1255,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     w.get_session_events().row_count() != 1 {
                     fail("native session diagnostics, not transient backend job queue");
                 }
+                w.invoke_navigate("about".into());
+                if w.get_page() != "about" { fail("top-level AboutSlint attribution route"); }
+                w.invoke_go_back();
+                if w.get_page() != "activity" { fail("return from About navigation"); }
                 w.invoke_toggle_theme();
                 if !w.get_dark_mode() { fail("dark appearance"); }
                 w.invoke_navigate("home".into());

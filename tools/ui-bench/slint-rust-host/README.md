@@ -67,15 +67,18 @@ for local development, **not** distributed/notarized. Windows/Linux packages
 need native smoke and security review.
 
 Slint 1.18.1 offers GPLv3, royalty-free desktop, and commercial terms. The
-royalty-free desktop route requires prescribed Slint attribution (an accessible
-AboutSlint widget or public distribution-page badge); a plain "powered by"
-footer is not assumed sufficient. Review third-party notices as well before
-public release. See https://github.com/slint-ui/slint/blob/master/FAQ.md .
+native top-level **About** route now contains the official `AboutSlint` widget,
+reachable through a named keyboard-accessible navigation action, addressing
+the royalty-free desktop UI-attribution route. This does **not** authorize a
+public release: first audit the bundled Node.js runtime/license notices,
+third-party media attribution and any other redistributed dependencies, and
+complete publisher signing/notarization. A generic "powered by" footer alone
+is not assumed sufficient. See https://github.com/slint-ui/slint/blob/master/FAQ.md .
 
 ## Focus/Orbit native UI — implemented read-only routes
 
 This is a **real native Slint interface**, not an Electron/WebView/CSS wrapper:
-- Approved task-first navigation: Explore, My software, Activity. The permanent
+- Approved task-first navigation: Explore, My software, Activity, About. The permanent
   sidebar and always-visible project inspector are removed.
 - Discover home: primary search and **17 canonical disciplines**, with
   live counts. The unchanged 181 source records have 79 raw category strings;
