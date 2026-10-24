@@ -163,11 +163,18 @@ or paths. This is suitable for cross-platform CI checks. The ordinary
 ## P4: reviewed exact ID → source project link
 
 A new `src/identity.rs` mapping (see [upstream verification and Worker
-source audit](IDENTITY_PROVENANCE.md)) contains **two immutable upstream-reviewed
-macOS bundle IDs**, RustDesk and OBS Studio. The exact bundle identifier must
-match *one* observed OS record, an exact **curated** project ID and its exact
-verified repository URL. Duplicated bundle claims, wrong repository/kind,
+source audit](IDENTITY_PROVENANCE.md)) contains **five immutable upstream-reviewed
+OS identity rules**: RustDesk and OBS Studio native bundle IDs on macOS;
+their official `.desktop` filenames on Linux; and the exact **RustDesk MSI
+UpgradeCode** on Windows. The exact native identity must match *one*
+observed OS registration, an exact **curated** project ID and its exact
+verified repository URL. Duplicated native claims, wrong repository/kind,
 prefixes, name similarity, unreviewed packages and mismatched OS never link.
+For Windows the on-demand PowerShell reader verifies the **allowlisted**
+upstream MSI UpgradeCode → Windows Installer packed ProductCode relationship
+against the actual machine ARP product registration. Unlike the MSI
+ProductCode this identity does not change with the app version. Missing
+Installer association fails closed; `Win32_Product` is never invoked.
 
 The on-demand OS registrations table now shows reviewed catalog ID links and
 opens the **existing standalone project dossier** only after a second native
@@ -178,11 +185,16 @@ software health, an installed-state entitlement or update authorization.
 On MacMiniOffice2, `--check-identity-only` read **88 macOS .app registrations**
 and correctly linked **one** reviewed source record, `curated:rustdesk`
 (macOS `com.carriez.rustdesk`, locally reported version `1.5.0`).
-OBS Studio is reviewed but absent from this known-root observation. On Windows
-and Linux, no OS ID mappings have yet been authoritatively reviewed; their
-link counts therefore remain zero rather than guessing by name. Identity
-unit/security regressions verify ambiguity, spoofed repos, source kind and
-wrong-platform rejections.
+OBS Studio is reviewed but absent from this known-root observation.
+The two Linux launcher ID rules are source-reviewed but are only observed if
+the actual host's exact upstream .desktop entries exist. On Chris Windows,
+the complete fixed read-only PowerShell source reader found **one** vetted
+RustDesk MSI UpgradeCode -> ARP ProductCode link among **153 registry rows**
+in that account/session context; no other Windows app was linked. This is
+not a claim about the Windows binary's Authenticode signer or an install
+permission. It is also not a substitute for interactive Windows Rust GUI QA.
+Identity regressions reject ambiguity, spoofed repos, unreviewed product
+codes, source-kind confusion and platform mismatch.
 
 Developer-only `--qa-verify-identity` exercises a real native OS read,
 rejects a forged project-open callback, opens the linked RustDesk dossier and

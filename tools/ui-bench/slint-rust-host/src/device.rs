@@ -17,7 +17,11 @@ const MAX_VERSION: usize = 64;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct DeviceApp {
     pub name: String,
+    /// Original OS registration key (Windows: version-specific MSI ProductCode).
     pub identifier: String,
+    /// Windows only: fixed, upstream-reviewed MSI UpgradeCode corroborated by
+    /// the Installer UpgradeCodes->ProductCode association. Never name-derived.
+    pub stable_identifier: String,
     pub version: String,
     pub provenance: String,
 }
@@ -45,12 +49,13 @@ fn organize(input: Vec<DeviceApp>) -> (Vec<DeviceApp>, bool) {
         let name = trimmed(&app.name, MAX_NAME);
         if name.is_empty() { continue; }
         let identifier = trimmed(&app.identifier, MAX_IDENTIFIER);
+        let stable_identifier = trimmed(&app.stable_identifier, MAX_IDENTIFIER);
         let version = trimmed(&app.version, MAX_VERSION);
         let provenance = trimmed(&app.provenance, 48);
         if provenance.is_empty() { continue; }
         let key = (name.to_lowercase(), identifier.to_lowercase(), provenance.clone());
         if unique.insert(key) {
-            found.push(DeviceApp { name, identifier, version, provenance });
+            found.push(DeviceApp { name, identifier, stable_identifier, version, provenance });
         }
     }
     found.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase())
@@ -109,10 +114,20 @@ pub fn validate(snapshot: &DeviceSnapshot) -> Result<(), String> {
     for app in &snapshot.entries {
         if app.name.trim().is_empty() || app.name.chars().count() > MAX_NAME ||
             app.identifier.chars().count() > MAX_IDENTIFIER ||
+            app.stable_identifier.chars().count() > MAX_IDENTIFIER ||
+            // Never trust a claimed stable identity from another OS.
+            (!app.stable_identifier.is_empty() && (
+                snapshot.platform != "windows" ||
+                crate::identity::pack_msi_guid(&app.identifier).is_none() ||
+                !app.provenance.starts_with("Machine ") ||
+                !crate::identity::REVIEWED.iter().any(|r|
+                    r.platform == "windows" && r.identifier == app.stable_identifier)
+            )) ||
             app.version.chars().count() > MAX_VERSION ||
             app.provenance.is_empty() || app.provenance.chars().count() > 48 ||
             !ids.insert((&app.name, &app.identifier, &app.provenance)) ||
-            [&app.name, &app.identifier, &app.version, &app.provenance]
+            [&app.name, &app.identifier, &app.stable_identifier,
+                &app.version, &app.provenance]
                 .iter().any(|s| s.chars().any(|c| c.is_control()))
         {
             return Err("Malformed native device-app evidence".into());
@@ -173,7 +188,8 @@ mod macos {
                 }
             }
         }
-        Some(DeviceApp { name, identifier, version, provenance: provenance.into() })
+        Some(DeviceApp { name, identifier, stable_identifier: String::new(),
+            version, provenance: provenance.into() })
     }
 
     fn scan(root: &Path, provenance: &str, out: &mut Vec<DeviceApp>) -> bool {
@@ -246,8 +262,8 @@ mod linux {
         // installed application's version. Never mislabel it as app version.
         let _ = version;
         Some(DeviceApp {
-            name, identifier: id.into(), version: String::new(),
-            provenance: source.into(),
+            name, identifier: id.into(), stable_identifier: String::new(),
+            version: String::new(), provenance: source.into(),
         })
     }
     fn scan(root:&Path, source:&str, out:&mut Vec<DeviceApp>) -> bool {
@@ -303,6 +319,39 @@ mod windows {
     const SCRIPT: &str = r#"
 $ErrorActionPreference='Stop'
 [Console]::OutputEncoding=[System.Text.UTF8Encoding]::new($false)
+
+# This static allowlist is rendered by Rust only from upstream-reviewed,
+# immutable MSI UpgradeCodes. Do not enumerate all Installer upgrades.
+$approvedUpgrades=@(__MSI_ID_RULES__)
+$products=@{}
+foreach($rule in $approvedUpgrades) {
+  $k=Get-Item -LiteralPath ('HKLM:\SOFTWARE\Classes\Installer\UpgradeCodes\'+$rule.packed) -ErrorAction SilentlyContinue
+  if($null -eq $k){continue}
+  foreach($code in $k.GetValueNames()){
+    if($code -notmatch '^[A-Fa-f0-9]{32}$'){continue}
+    $normalized=$code.ToUpperInvariant()
+    if($products.ContainsKey($normalized)){
+      # Ambiguous ownership: no inferred source link.
+      $products[$normalized]=''
+    }else{$products[$normalized]=[string]$rule.id}
+  }
+}
+function Reverse-Text([string]$str) {
+  $chars=$str.ToCharArray()
+  [Array]::Reverse($chars)
+  return -join $chars
+}
+function Pack-MsiProductCode([string]$code) {
+  if($code -notmatch '^\{[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}\}$'){return ''}
+  $s=$code.Trim('{}').Replace('-','').ToUpperInvariant()
+  $packed=(Reverse-Text($s.Substring(0,8)))+
+    (Reverse-Text($s.Substring(8,4)))+
+    (Reverse-Text($s.Substring(12,4)))
+  for($i=16;$i -lt 32;$i+=2){
+    $packed+=$s.Substring($i+1,1)+$s.Substring($i,1)
+  }
+  return $packed
+}
 $roots=@(
   @{path='HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*';source='Machine uninstall registry'},
   @{path='HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*';source='Machine 32-bit registry'},
@@ -311,9 +360,17 @@ $roots=@(
 $rows=@(foreach($root in $roots){
   Get-ItemProperty -Path $root.path -ErrorAction SilentlyContinue | ForEach-Object {
     if($_.DisplayName -and $_.SystemComponent -ne 1) {
+      $nativeCode=''
+      if($_.WindowsInstaller -eq 1 -and $root.source -match '^Machine ') {
+        $packed=Pack-MsiProductCode ([string]$_.PSChildName)
+        if($packed -and $products.ContainsKey($packed)){
+          $nativeCode=[string]$products[$packed]
+        }
+      }
       [pscustomobject]@{
         name=[string]$_.DisplayName;
         identifier=[string]$_.PSChildName;
+        stableIdentifier=$nativeCode;
         version=[string]$_.DisplayVersion;
         provenance=[string]$root.source
       }
@@ -324,8 +381,13 @@ ConvertTo-Json -InputObject $rows -Depth 3 -Compress
 "#;
 
     fn run() -> Result<Vec<u8>,String> {
+        let reviewed=crate::identity::reviewed_msi_upgrades()?;
+        let allowed=reviewed.iter().map(|(id, packed)|
+            format!("@{{id='{id}';packed='{packed}'}}")
+        ).collect::<Vec<_>>().join(",");
+        let script=SCRIPT.replace("__MSI_ID_RULES__", &allowed);
         let mut cmd=Command::new("powershell.exe");
-        cmd.args(["-NoProfile","-NonInteractive","-Command",SCRIPT])
+        cmd.args(["-NoProfile","-NonInteractive","-Command",&script])
             .stdin(Stdio::null()).stdout(Stdio::piped()).stderr(Stdio::piped());
         let mut child=cmd.spawn().map_err(|e|format!("Windows registry reader unavailable: {e}"))?;
         let stdout=child.stdout.take().ok_or("Missing PowerShell stdout")?;
@@ -361,6 +423,7 @@ ConvertTo-Json -InputObject $rows -Depth 3 -Compress
         let rows=list.iter().take(super::MAX_ENTRIES+1).map(|x|DeviceApp{
             name:x["name"].as_str().unwrap_or("").into(),
             identifier:x["identifier"].as_str().unwrap_or("").into(),
+            stable_identifier:x["stableIdentifier"].as_str().unwrap_or("").into(),
             version:x["version"].as_str().unwrap_or("").into(),
             provenance:x["provenance"].as_str().unwrap_or("").into(),
         }).collect();
@@ -372,7 +435,9 @@ ConvertTo-Json -InputObject $rows -Depth 3 -Compress
 mod tests {
     use super::*;
     fn app(name:&str,identifier:&str,provenance:&str)->DeviceApp {
-        DeviceApp { name:name.into(),identifier:identifier.into(),version:"1.0".into(),provenance:provenance.into() }
+        DeviceApp { name:name.into(),identifier:identifier.into(),
+            stable_identifier:String::new(), version:"1.0".into(),
+            provenance:provenance.into() }
     }
     #[test]
     fn does_not_merge_distinct_identifiers_or_provenance() {
@@ -402,6 +467,36 @@ mod tests {
         assert_eq!(list.len(),MAX_ENTRIES);
         assert!(truncated);
     }
+    #[test]
+    fn stable_windows_msi_identity_requires_windows_machine_product_code() {
+        let mut app = app("Label not trusted", "some.package.id", "Known OS registry");
+        app.stable_identifier = "D3DC41E3-3C37-5D52-BB47-F6673705C01B".into();
+        let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis() as u64;
+        let mut snapshot = DeviceSnapshot {
+            platform: std::env::consts::OS,
+            scope: match std::env::consts::OS {
+                "macos" => "known-application-bundle-roots",
+                "windows" => "windows-uninstall-registry",
+                "linux" => "registered-desktop-launchers",
+                _ => "unsupported",
+            },
+            status: "observed", timestamp_ms: now, entries: vec![app],
+            truncated: false,
+        };
+        assert!(validate(&snapshot).is_err()); // No product GUID or valid source.
+        snapshot.entries[0].identifier =
+            "{9D5F8A39-0D7B-4BC4-851D-DA8501D03DE7}".into();
+        assert!(validate(&snapshot).is_err()); // Not a machine MSI association.
+        snapshot.entries[0].provenance = "Machine uninstall registry".into();
+        if cfg!(windows) {
+            assert!(validate(&snapshot).is_ok()); // Bounded source evidence only.
+        } else {
+            assert!(validate(&snapshot).is_err()); // No Windows upgrade on other OSes.
+        }
+        snapshot.entries[0].stable_identifier = "00000000-0000-0000-0000-000000000000".into();
+        assert!(validate(&snapshot).is_err()); // Never accept an unreviewed code.
+    }
+
     #[test]
     fn snapshot_rejects_stale_or_forged_os_evidence() {
         let mut s=DeviceSnapshot {
