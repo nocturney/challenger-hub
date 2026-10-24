@@ -377,6 +377,22 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     });
 
+    // Deterministic visual QA routes. Developer-preview only; self-closing
+    // windows, no machine scans, downloads, installers or background tasks.
+    if args.iter().any(|a| a == "--qa-preview-results") {
+        ui.invoke_search_submitted("".into());
+    }
+    if args.iter().any(|a| a == "--qa-preview-dune") {
+        ui.invoke_search_submitted("Dune 3D".into());
+        ui.invoke_open_project(0);
+    }
+    if args.iter().any(|a| a == "--qa-preview-results" || a == "--qa-preview-dune") {
+        let weak = ui.as_weak();
+        Timer::single_shot(Duration::from_secs(22), move || {
+            if let Some(w) = weak.upgrade() { let _ = w.hide(); }
+        });
+    }
+
     if smoke {
         let weak = ui.as_weak();
         Timer::single_shot(Duration::from_millis(600), move || {
@@ -410,6 +426,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
                 w.invoke_load_more();
                 if w.get_showing() != 60 { fail("real show more"); }
+                w.invoke_search_submitted("intentionally-no-such-project-xyz".into());
+                if w.get_matching() != 0 { fail("empty search state"); }
+                w.invoke_search_submitted("".into());
+                if w.get_matching() != 181 { fail("clear search restores entire index"); }
                 w.invoke_navigate("home".into());
                 w.invoke_search_submitted("Dune 3D".into());
                 w.invoke_open_project(0);

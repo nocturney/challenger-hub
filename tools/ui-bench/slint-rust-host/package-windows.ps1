@@ -1,4 +1,5 @@
 # Developer-only Windows package; never installs applications or changes Production.
+param([switch]$DebugBuild)
 $ErrorActionPreference = 'Stop'
 $here = $PSScriptRoot
 $repo = (Resolve-Path (Join-Path $here '..\..\..')).Path
@@ -8,13 +9,16 @@ if (!(Test-Path (Join-Path $runtime 'desktop-manifest.json')) -or !(Test-Path $s
   throw 'Preview12 runtime or pinned research seed missing'
 }
 $node = (Get-Command node.exe -ErrorAction Stop).Source
-cargo build --manifest-path (Join-Path $here 'Cargo.toml') --release --locked
+$buildArgs = @('build', '--manifest-path', (Join-Path $here 'Cargo.toml'), '--locked')
+if (-not $DebugBuild) { $buildArgs += '--release' }
+& cargo @buildArgs
 if ($LASTEXITCODE -ne 0) { throw 'Rust build failed' }
+$profile = if ($DebugBuild) { 'debug' } else { 'release' }
 $target = if ($env:CARGO_TARGET_DIR) { $env:CARGO_TARGET_DIR } else { Join-Path $here 'target' }
 $out = Join-Path $here 'dist\ChallengerHubNativePreview-Win'
 if (Test-Path $out) { Remove-Item $out -Recurse -Force }
 New-Item -ItemType Directory -Force -Path (Join-Path $out 'resources') | Out-Null
-Copy-Item (Join-Path $target 'release\challenger-slint-rust-host.exe') $out
+Copy-Item (Join-Path (Join-Path $target $profile) 'challenger-slint-rust-host.exe') $out
 Copy-Item $node (Join-Path $out 'resources\node.exe')
 Copy-Item (Join-Path $here '..\slint-node-bridge\sidecar.mjs') (Join-Path $out 'resources')
 Copy-Item (Join-Path $here '..\slint-node-bridge\live-catalog.mjs') (Join-Path $out 'resources')

@@ -38,6 +38,11 @@ From repo root, build the existing experimental test backend once if absent:
     cargo test --locked
     cargo run -- --check-backend-only
     cargo run -- --smoke
+    cargo run -- --qa-preview-results   # self-closes after 22 seconds
+    cargo run -- --qa-preview-dune      # self-closes after 22 seconds
+
+Actual Mac window captures (Discover / Results / Dune 3D dossier) are in
+[`docs/previews/focus-native-slint`](../../../docs/previews/focus-native-slint/README.md).
 
 Package as an independent, **developer-only** Mac app with a bundled Node
 executable, research seed and Preview12 runtime (no Homebrew gettext addon):
@@ -45,9 +50,12 @@ executable, research seed and Preview12 runtime (no Homebrew gettext addon):
     bash package-macos.sh
     dist/ChallengerHubNativePreview.app/Contents/MacOS/challenger-slint-rust-host --check-backend-only
 
-Windows package recipe: `package-windows.ps1`. Install the Rust build
-toolchain on a **dedicated development runner** first; this script does not
-install tools, create scheduled tasks or modify an existing Challenger app.
+Windows package recipe: `package-windows.ps1` (optimized release by default).
+CI uses `package-windows.ps1 -DebugBuild` to package the already-tested debug
+binary without a redundant and expensive release rebuild; this checks the
+bundle/sidecar contract, **not Windows Release optimization parity**. Install
+the Rust toolchain only on a dedicated development runner. This script does
+not install tools, create tasks or modify an existing Challenger app.
 
 ## QA and limitations
 

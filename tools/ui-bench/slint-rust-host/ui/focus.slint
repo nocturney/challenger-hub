@@ -162,7 +162,7 @@ export component AppWindow inherits Window {
                     border-radius: 11px; border-color: root.line; border-width: 1px;
                     HorizontalLayout {
                         padding-left: 15px; padding-right: 10px; spacing: 10px;
-                        Text { text: "⌕"; font-size: 25px; color: root.accent; vertical-alignment: center; }
+                        Text { text: "SEARCH"; font-size: 10px; font-weight: 800; color: root.accent; vertical-alignment: center; }
                         LineEdit {
                             horizontal-stretch: 1; height: 47px;
                             text: root.query;
@@ -265,7 +265,7 @@ export component AppWindow inherits Window {
                     horizontal-stretch: 1;
                     HorizontalLayout {
                         padding-left: 12px; padding-right: 12px;
-                        Text { text: "⌕"; font-size: 23px; color: root.accent; vertical-alignment: center; }
+                        Text { text: "SEARCH"; font-size: 10px; font-weight: 800; color: root.accent; vertical-alignment: center; }
                         LineEdit {
                             horizontal-stretch: 1; height: 40px; text: root.query;
                             placeholder-text: "Search all source-linked projects…";
@@ -288,6 +288,15 @@ export component AppWindow inherits Window {
                     Text { text: "DISCIPLINE"; font-size: 9px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
                     Text { text: "REVIEW STATE"; font-size: 9px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
                     if root.width > 980px: Text { text: "PLATFORMS (REPORTED)"; font-size: 9px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
+                }
+            }
+            if root.matching == 0: Rectangle {
+                height: 98px; background: root.muted-sheet; border-radius: 9px;
+                VerticalLayout {
+                    padding: 19px; spacing: 9px;
+                    Text { text: "No matching projects"; color: root.strong; font-size: 14px; font-weight: 700; }
+                    Text { text: "Try a different term. Research entries remain searchable in the full index.";
+                        color: root.muted; font-size: 11px; wrap: word-wrap; }
                 }
             }
             ListView {
@@ -383,22 +392,6 @@ export component AppWindow inherits Window {
                     spacing: 20px;
                     VerticalLayout {
                         spacing: 18px; horizontal-stretch: 3;
-                        Rectangle {
-                            height: 152px; background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 11px;
-                            VerticalLayout {
-                                padding: 18px; spacing: 10px;
-                                Text { text: "ABOUT THIS PROJECT"; font-size: 10px; color: root.accent; font-weight: 800; }
-                                Text { text: root.detail-summary; font-size: 13px; color: root.strong; wrap: word-wrap; }
-                            }
-                        }
-                        Rectangle {
-                            height: 125px; background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 11px;
-                            VerticalLayout {
-                                padding: 18px; spacing: 11px;
-                                Text { text: "COMMERCIAL ALTERNATIVE / CHALLENGED SOFTWARE"; font-size: 10px; font-weight: 800; color: root.accent; }
-                                Text { text: root.detail-challenges; font-size: 13px; color: root.strong; wrap: word-wrap; }
-                            }
-                        }
                         if root.detail-media == "dune3d": Rectangle {
                             height: 400px; background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 11px;
                             VerticalLayout {
@@ -415,6 +408,22 @@ export component AppWindow inherits Window {
                                 Text { text: "OFFICIAL INTERFACE SCREENSHOT"; font-size: 10px; font-weight: 800; color: root.accent; }
                                 Image { source: @image-url("material-maker.png"); height: 326px; image-fit: contain; }
                                 Text { text: root.detail-media-caption; font-size: 10px; color: root.subtle; wrap: word-wrap; }
+                            }
+                        }
+                        Rectangle {
+                            height: 152px; background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 11px;
+                            VerticalLayout {
+                                padding: 18px; spacing: 10px;
+                                Text { text: "ABOUT THIS PROJECT"; font-size: 10px; color: root.accent; font-weight: 800; }
+                                Text { text: root.detail-summary; font-size: 13px; color: root.strong; wrap: word-wrap; }
+                            }
+                        }
+                        Rectangle {
+                            height: 125px; background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 11px;
+                            VerticalLayout {
+                                padding: 18px; spacing: 11px;
+                                Text { text: "COMMERCIAL ALTERNATIVE / CHALLENGED SOFTWARE"; font-size: 10px; font-weight: 800; color: root.accent; }
+                                Text { text: root.detail-challenges; font-size: 13px; color: root.strong; wrap: word-wrap; }
                             }
                         }
                         if root.detail-media == "": Rectangle {
