@@ -35,7 +35,11 @@ function normalize(item,kind){
     const raw=limited(item.repoUrl||item.repository||(kind==='managed'?'storytold/'+item.repo:''),250);
     return raw.startsWith('https://')?raw:raw.includes('/')?'https://github.com/'+raw:'';
   })(),
-  kind
+  kind,
+  // Only source-provided dossier facts. Missing values remain explicitly unknown.
+  challenges:limited(item.original||(Array.isArray(item.challenges)?item.challenges.join(', '):''),180),
+  license:limited(item.officialLicense||item.license||'',90),
+  release:limited(item.latestPublishedStableTag||item.latestVersion||item.releaseTag||'',90)
  };
 }
 export function filterCatalog(items,term='',category='All disciplines'){

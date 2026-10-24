@@ -1,7 +1,28 @@
 use serde::Deserialize;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 
 pub const EXPECTED_VERSION: &str = "4.0.0-desktop.preview.12";
+
+// Approved Focus 4.0 taxonomy from app.js. Source categories are NOT rewritten.
+pub const DOMAINS: [(&str, &str); 17] = [
+    ("Design & Imaging", "Design & Imaging"),
+    ("Video & Animation", "Video & Motion"),
+    ("Live Production", "Live Production"),
+    ("3D & Manufacturing", "3D & CAD"),
+    ("Science & GIS", "Science & GIS"),
+    ("Audio & Music", "Audio & Music"),
+    ("Game Creation", "Game Creation"),
+    ("Office & Productivity", "Office & Productivity"),
+    ("CRM & Sales", "CRM & Sales"),
+    ("ERP & Operations", "ERP & Operations"),
+    ("Business & Legal", "Business & Legal"),
+    ("Data & Internal Tools", "Data & Apps"),
+    ("Marketing & Publishing", "Marketing"),
+    ("AI & Agents", "AI & Agents"),
+    ("Developer & Automation", "Dev & Automation"),
+    ("Security & Infrastructure", "Security & Infra"),
+    ("Finance & Accounting", "Finance"),
+];
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Project {
@@ -14,6 +35,12 @@ pub struct Project {
     pub evidence: String,
     pub source: String,
     pub kind: String,
+    #[serde(default)]
+    pub license: String,
+    #[serde(default)]
+    pub challenges: String,
+    #[serde(default)]
+    pub release: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -68,7 +95,6 @@ pub fn validate(c: &Catalog) -> Result<(), String> {
     if c.host_arch != actual_arch {
         return Err(format!("Backend architecture mismatch: {}", c.host_arch));
     }
-
     let mut ids = HashSet::new();
     let mut managed = 0;
     let mut curated = 0;
@@ -90,29 +116,86 @@ pub fn validate(c: &Catalog) -> Result<(), String> {
     Ok(())
 }
 
-pub fn filtered<'a>(all: &'a [Project], q: &str, category: &str) -> Vec<&'a Project> {
-    let term = q.trim().to_lowercase();
-    all.iter()
-        .filter(|p| {
-            (category == "All disciplines" || p.category == category)
-                && (term.is_empty()
-                    || [&p.name, &p.maker, &p.category, &p.summary]
-                        .iter()
-                        .any(|v| v.to_lowercase().contains(&term)))
-        })
-        .collect()
+fn any(g: &str, terms: &[&str]) -> bool {
+    terms.iter().any(|term| g.contains(term))
 }
 
-pub fn categories(all: &[Project]) -> Vec<String> {
-    let mut counts = HashMap::<String, usize>::new();
-    for p in all {
-        *counts.entry(p.category.clone()).or_default() += 1;
+pub fn domain_of(p: &Project) -> &'static str {
+    if let Some((id, _)) = DOMAINS.iter().find(|(id, _)| *id == p.category) {
+        return id;
     }
-    let mut sorted: Vec<_> = counts.into_iter().collect();
-    sorted.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(&b.0)));
-    std::iter::once("All disciplines".to_string())
-        .chain(sorted.into_iter().take(11).map(|(name, _)| name))
-        .collect()
+    let g = p.category.to_lowercase();
+    if any(&g, &["audio", "music", "sound", "daw", "synth"]) {
+        return "Audio & Music";
+    }
+    if any(&g, &["video", "motion", "animation", "compositing", "rigging"]) {
+        return "Video & Animation";
+    }
+    if any(&g, &["live production", "broadcast", "streaming"]) {
+        return "Live Production";
+    }
+    if any(&g, &["crm", "sales"]) {
+        return "CRM & Sales";
+    }
+    if any(&g, &["erp", "inventory", "operations", "supply", "mrp", "mes"]) {
+        return "ERP & Operations";
+    }
+    if any(&g, &["finance", "accounting", "bookkeep"]) {
+        return "Finance & Accounting";
+    }
+    if any(&g, &["marketing", "publish", "social media"]) {
+        return "Marketing & Publishing";
+    }
+    if any(&g, &["ai", "agent", "memory", "knowledge graph", "rag", "llm"]) {
+        return "AI & Agents";
+    }
+    if any(&g, &["dev", "automati", "workflow", "gateway", "api", "code editor"]) {
+        return "Developer & Automation";
+    }
+    if any(&g, &["security", "infrastructure", "credential", "secret", "remote"]) {
+        return "Security & Infrastructure";
+    }
+    if any(&g, &["science", "gis", "geospatial"]) {
+        return "Science & GIS";
+    }
+    if any(&g, &["game creation", "game engine"]) {
+        return "Game Creation";
+    }
+    if any(&g, &["business and legal", "business & legal", "legal", "esign"]) {
+        return "Business & Legal";
+    }
+    if any(&g, &["database", "data", "internal", "no-code", "low-code", "bi"]) {
+        return "Data & Internal Tools";
+    }
+    if any(&g, &["image", "vector", "photo", "typography", "font", "design", "illustrat"]) {
+        return "Design & Imaging";
+    }
+    if any(&g, &["cad", "draft", "3d", "material", "engineering", "point cloud",
+                  "mesh", "voxel", "manufactur", "electronic", "pcb", "cam"]) {
+        return "3D & Manufacturing";
+    }
+    "Office & Productivity"
+}
+
+pub fn domain_label(id: &str) -> &'static str {
+    DOMAINS.iter().find(|(key, _)| *key == id)
+        .map(|(_, label)| *label).unwrap_or("All software")
+}
+
+pub fn filtered_domain<'a>(all: &'a [Project], term: &str, domain: &str) -> Vec<&'a Project> {
+    let q = term.trim().to_lowercase();
+    all.iter().filter(|p| {
+        (domain == "all" || domain_of(p) == domain) &&
+        (q.is_empty() || [&p.name, &p.maker, &p.category, &p.summary, &p.challenges]
+            .iter().any(|v| v.to_lowercase().contains(&q)) ||
+            domain_label(domain_of(p)).to_lowercase().contains(&q))
+    }).collect()
+}
+
+pub fn domain_counts(all: &[Project]) -> Vec<(&'static str, &'static str, usize)> {
+    DOMAINS.iter().map(|(id,label)| {
+        (*id, *label, all.iter().filter(|p| domain_of(p) == *id).count())
+    }).collect()
 }
 
 #[cfg(test)]
@@ -122,12 +205,20 @@ mod tests {
     fn example() -> Catalog {
         let items = (0..181).map(|i| {
             let kind = if i < 14 { "managed" } else if i < 166 { "curated" } else { "research" };
+            let category = match i % 5 {
+                0 => "Engineering and manufacturing",
+                1 => "AI agents & workflows",
+                2 => "Science and GIS",
+                3 => "Audio & music",
+                _ => "Design & Imaging"
+            };
             Project {
                 id: format!("{}:{}", kind, i), name: format!("Tool {}", i),
-                maker: "Independent".into(), category: "Image editing".into(),
-                summary: "A real native catalogue entry".into(),
-                platforms: "macOS, Windows".into(), evidence: "Curated".into(),
-                source: "https://github.com/example/tool".into(), kind: kind.into()
+                maker: "Independent".into(), category: category.into(),
+                summary: "A native catalogue entry".into(),
+                platforms: "macOS, Windows".into(), evidence: "Source listed".into(),
+                source: "https://github.com/example/tool".into(), kind: kind.into(),
+                license: "".into(), challenges: "".into(), release: "".into(),
             }
         }).collect();
         Catalog {
@@ -158,11 +249,27 @@ mod tests {
     }
 
     #[test]
-    fn search_and_categories_preserve_research_visibility() {
+    fn exactly_seventeen_focus_disciplines_preserve_every_project() {
         let c = example();
-        assert_eq!(filtered(&c.items, "", "All disciplines").len(), 181);
-        assert_eq!(filtered(&c.items, "Tool 180", "All disciplines").len(), 1);
-        assert!(filtered(&c.items, "never-a-project", "All disciplines").is_empty());
-        assert_eq!(categories(&c.items), vec!["All disciplines", "Image editing"]);
+        let count = domain_counts(&c.items);
+        assert_eq!(count.len(),17);
+        assert_eq!(count.iter().map(|(_,_,n)| n).sum::<usize>(),181);
+        assert_eq!(filtered_domain(&c.items,"","all").len(),181);
+        assert_eq!(filtered_domain(&c.items,"tool 180","all").len(),1);
+        assert!(filtered_domain(&c.items,"never-a-project","all").is_empty());
+        assert_eq!(domain_of(&c.items[0]),"3D & Manufacturing");
+        assert_eq!(domain_of(&c.items[1]),"AI & Agents");
+        assert_eq!(domain_of(&c.items[2]),"Science & GIS");
+        assert_eq!(domain_label("3D & Manufacturing"),"3D & CAD");
+    }
+
+    #[test]
+    fn research_visible_and_not_mistaken_for_installer_approved() {
+        let c = example();
+        let pending = filtered_domain(&c.items,"tool 180","all");
+        assert_eq!(pending.len(),1);
+        assert_eq!(pending[0].kind,"research");
+        assert!(pending[0].id.starts_with("research:"));
+        assert!(!pending[0].evidence.contains("Approved installer"));
     }
 }

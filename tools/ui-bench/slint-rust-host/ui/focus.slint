@@ -1,0 +1,531 @@
+import { LineEdit, ListView, ScrollView } from "std-widgets.slint";
+
+// This is the approved Focus/Orbit information architecture implemented in genuine
+// native Slint. The old Slint/Node experiment has a separate, unchanged UI.
+export struct Discipline {
+    id: string,
+    label: string,
+    count: int,
+}
+export struct ProjectEntry {
+    id: string,
+    name: string,
+    maker: string,
+    domain: string,
+    summary: string,
+    platforms: string,
+    status: string,
+    kind: string,
+    media: string,
+    initial: string,
+}
+export component AppWindow inherits Window {
+    title: "Challenger · Focus Native Preview";
+    width: 1210px;
+    height: 805px;
+    background: root.canvas;
+    default-font-family: "Arial";
+
+    in-out property <string> page: "home";
+    in-out property <bool> dark-mode: false;
+    in-out property <bool> can-back: false;
+    in-out property <bool> can-forward: false;
+    in-out property <bool> refreshing: false;
+    in-out property <string> query: "";
+    in-out property <string> selected-domain: "all";
+    in-out property <string> selected-domain-label: "All software";
+    in-out property <[Discipline]> disciplines-left;
+    in-out property <[Discipline]> disciplines-right;
+    in-out property <[ProjectEntry]> entries;
+    in-out property <int> total: 0;
+    in-out property <int> matching: 0;
+    in-out property <int> showing: 0;
+    in-out property <bool> has-more: false;
+
+    in-out property <string> detail-name: "";
+    in-out property <string> detail-maker: "";
+    in-out property <string> detail-summary: "";
+    in-out property <string> detail-domain: "";
+    in-out property <string> detail-category: "";
+    in-out property <string> detail-platforms: "";
+    in-out property <string> detail-kind: "";
+    in-out property <string> detail-status: "";
+    in-out property <string> detail-source: "";
+    in-out property <string> detail-license: "";
+    in-out property <string> detail-challenges: "";
+    in-out property <string> detail-release: "";
+    in-out property <string> detail-media: "";
+    in-out property <string> detail-media-caption: "";
+    in-out property <string> detail-evidence: "";
+
+    callback navigate(string);
+    callback go-back();
+    callback go-forward();
+    callback open-discipline(string);
+    callback search-edited(string);
+    callback search-submitted(string);
+    callback open-project(int);
+    callback load-more();
+    callback open-source();
+    callback refresh-requested();
+    callback toggle-theme();
+
+    property <color> canvas: root.dark-mode ? #131b19 : #fafaf6;
+    property <color> sheet: root.dark-mode ? #1e2925 : #ffffff;
+    property <color> muted-sheet: root.dark-mode ? #24312c : #f3f6f1;
+    property <color> strong: root.dark-mode ? #eaf0e8 : #263a2e;
+    property <color> muted: root.dark-mode ? #b0beb4 : #718376;
+    property <color> subtle: root.dark-mode ? #8b9b91 : #899a8f;
+    property <color> line: root.dark-mode ? #3b4941 : #dfe7df;
+    property <color> accent: root.dark-mode ? #b7d6b9 : #47765a;
+    property <color> accent-bg: root.dark-mode ? #2d4534 : #eaf2e8;
+
+    VerticalLayout {
+        spacing: 0px;
+        Rectangle {
+            height: 72px;
+            background: root.sheet;
+            border-color: root.line;
+            border-width: 1px;
+            HorizontalLayout {
+                padding-left: root.width < 950px ? 20px : 38px;
+                padding-right: root.width < 950px ? 20px : 38px;
+                spacing: 16px;
+                Image {
+                    source: @image-url("orbit-app-128.png");
+                    width: 38px;
+                    height: 38px;
+                    image-fit: contain;
+                    vertical-alignment: center;
+                }
+                VerticalLayout {
+                    spacing: 0px;
+                    Text { text: "C H A L L E N G E R"; color: root.strong; font-size: 13px; font-weight: 800; }
+                    Text { text: "Independent tools, discovered."; color: root.subtle; font-size: 10px; }
+                }
+                Rectangle { horizontal-stretch: 1; background: transparent; }
+                Rectangle {
+                    width: 90px; background: root.page == "home" || root.page == "results" || root.page == "detail" ? root.accent-bg : transparent;
+                    border-radius: 8px;
+                    Text { text: "Explore"; color: root.page == "home" || root.page == "results" || root.page == "detail" ? root.accent : root.muted;
+                           font-size: 12px; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
+                    TouchArea { clicked => { root.navigate("home"); } }
+                }
+                Rectangle {
+                    width: root.width < 980px ? 94px : 114px;
+                    background: root.page == "library" ? root.accent-bg : transparent;
+                    border-radius: 8px;
+                    Text { text: "My software"; color: root.page == "library" ? root.accent : root.muted;
+                           font-size: 12px; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
+                    TouchArea { clicked => { root.navigate("library"); } }
+                }
+                Rectangle {
+                    width: 78px; background: root.page == "activity" ? root.accent-bg : transparent;
+                    border-radius: 8px;
+                    Text { text: "Activity"; color: root.page == "activity" ? root.accent : root.muted;
+                           font-size: 12px; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
+                    TouchArea { clicked => { root.navigate("activity"); } }
+                }
+                Rectangle {
+                    width: 60px;
+                    Text { text: root.dark-mode ? "Light" : "Dark"; color: root.subtle; font-size: 11px;
+                        horizontal-alignment: center; vertical-alignment: center; }
+                    TouchArea { clicked => { root.toggle-theme(); } }
+                }
+                Rectangle {
+                    width: 79px; border-radius: 8px; background: root.accent-bg;
+                    Text { text: root.refreshing ? "Reading..." : "Refresh";
+                        font-size: 11px; font-weight: 700; color: root.accent;
+                        horizontal-alignment: center; vertical-alignment: center; }
+                    TouchArea { enabled: !root.refreshing; clicked => { root.refresh-requested(); } }
+                }
+            }
+        }
+
+        // DISCOVER / HOME: no permanent sidebar, hero dashboard, or project cards.
+        if root.page == "home": ScrollView {
+            vertical-stretch: 1;
+            VerticalLayout {
+                padding-left: root.width < 950px ? 34px : 80px;
+                padding-right: root.width < 950px ? 34px : 80px;
+                padding-top: 40px;
+                padding-bottom: 34px;
+                spacing: 17px;
+                Text { text: "EXPLORE  /  THE INDEPENDENT SOFTWARE INDEX"; font-size: 10px; color: root.accent; font-weight: 800; }
+                Text { text: "Find the tool that fits."; font-size: root.width < 950px ? 33px : 43px;
+                    font-weight: 800; color: root.strong; }
+                Text { text: "Start with the software you know, or explore a discipline. No noise, no sponsored rankings.";
+                    font-size: 13px; color: root.muted; wrap: word-wrap; }
+                Rectangle { height: 12px; background: transparent; }
+                Rectangle {
+                    height: 65px; background: root.sheet;
+                    border-radius: 11px; border-color: root.line; border-width: 1px;
+                    HorizontalLayout {
+                        padding-left: 15px; padding-right: 10px; spacing: 10px;
+                        Text { text: "⌕"; font-size: 25px; color: root.accent; vertical-alignment: center; }
+                        LineEdit {
+                            horizontal-stretch: 1; height: 47px;
+                            text: root.query;
+                            placeholder-text: "Software, category, capability…";
+                            edited(value) => { root.search-edited(value); }
+                            accepted(value) => { root.search-submitted(value); }
+                        }
+                        Rectangle {
+                            width: 115px; height: 44px; border-radius: 8px; background: root.strong;
+                            Text { text: "Find tools  ↗"; color: root.sheet; font-size: 12px; font-weight: 700;
+                                horizontal-alignment: center; vertical-alignment: center; }
+                            TouchArea { clicked => { root.search-submitted(root.query); } }
+                        }
+                    }
+                }
+                Rectangle { height: 9px; background: transparent; }
+                HorizontalLayout {
+                    spacing: 8px;
+                    Text { text: "BROWSE BY DISCIPLINE"; font-size: 11px; font-weight: 800; color: root.strong; }
+                    Rectangle { horizontal-stretch: 1; background: transparent; }
+                    Text { text: "17 fields   ·   " + root.total + " source-linked projects"; font-size: 11px; color: root.subtle; }
+                }
+                HorizontalLayout {
+                    spacing: 14px;
+                    VerticalLayout {
+                        spacing: 6px;
+                        for group in root.disciplines-left : Rectangle {
+                            height: 40px; background: root.sheet; border-radius: 7px;
+                            border-color: root.line; border-width: 1px;
+                            HorizontalLayout {
+                                padding-left: 12px; padding-right: 12px;
+                                Text { text: group.label; color: root.strong; font-size: 12px;
+                                    vertical-alignment: center; overflow: elide; }
+                                Rectangle { horizontal-stretch: 1; background: transparent; }
+                                Text { text: group.count; color: root.accent; font-size: 11px;
+                                    font-weight: 700; vertical-alignment: center; }
+                                Text { text: "  ↗"; font-size: 12px; color: root.subtle; vertical-alignment: center; }
+                            }
+                            TouchArea { clicked => { root.open-discipline(group.id); } }
+                        }
+                    }
+                    VerticalLayout {
+                        spacing: 6px;
+                        for group in root.disciplines-right : Rectangle {
+                            height: 40px; background: root.sheet; border-radius: 7px;
+                            border-color: root.line; border-width: 1px;
+                            HorizontalLayout {
+                                padding-left: 12px; padding-right: 12px;
+                                Text { text: group.label; color: root.strong; font-size: 12px;
+                                    vertical-alignment: center; overflow: elide; }
+                                Rectangle { horizontal-stretch: 1; background: transparent; }
+                                Text { text: group.count; color: root.accent; font-size: 11px;
+                                    font-weight: 700; vertical-alignment: center; }
+                                Text { text: "  ↗"; font-size: 12px; color: root.subtle; vertical-alignment: center; }
+                            }
+                            TouchArea { clicked => { root.open-discipline(group.id); } }
+                        }
+                    }
+                }
+                Text { text: "Research candidates remain visible and labeled. Source presence does not authorize installation.";
+                    font-size: 10px; color: root.subtle; }
+            }
+        }
+
+        // RESULTS: compact index, not another set of project cards.
+        if root.page == "results": VerticalLayout {
+            padding-left: root.width < 950px ? 26px : 48px;
+            padding-right: root.width < 950px ? 26px : 48px;
+            padding-top: 22px;
+            padding-bottom: 20px;
+            spacing: 15px;
+            HorizontalLayout {
+                spacing: 12px;
+                Rectangle {
+                    width: 90px; height: 35px; background: root.accent-bg; border-radius: 7px;
+                    Text { text: "← Explore"; font-size: 11px; color: root.accent;
+                        vertical-alignment: center; horizontal-alignment: center; }
+                    TouchArea { clicked => { root.navigate("home"); } }
+                }
+                Rectangle { horizontal-stretch: 1; background: transparent; }
+                Rectangle {
+                    width: 64px; height: 35px; background: root.can-back ? root.accent-bg : root.muted-sheet; border-radius: 7px;
+                    Text { text: "← Back"; color: root.can-back ? root.accent : root.subtle; font-size: 11px;
+                        vertical-alignment: center; horizontal-alignment: center; }
+                    TouchArea { enabled: root.can-back; clicked => { root.go-back(); } }
+                }
+                Rectangle {
+                    width: 76px; height: 35px; background: root.can-forward ? root.accent-bg : root.muted-sheet; border-radius: 7px;
+                    Text { text: "Forward →"; color: root.can-forward ? root.accent : root.subtle; font-size: 11px;
+                        vertical-alignment: center; horizontal-alignment: center; }
+                    TouchArea { enabled: root.can-forward; clicked => { root.go-forward(); } }
+                }
+            }
+            Text { text: root.selected-domain == "all" ? "The full index" : root.selected-domain-label;
+                color: root.strong; font-size: 30px; font-weight: 800; }
+            HorizontalLayout {
+                spacing: 12px;
+                Rectangle {
+                    height: 52px; background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 9px;
+                    horizontal-stretch: 1;
+                    HorizontalLayout {
+                        padding-left: 12px; padding-right: 12px;
+                        Text { text: "⌕"; font-size: 23px; color: root.accent; vertical-alignment: center; }
+                        LineEdit {
+                            horizontal-stretch: 1; height: 40px; text: root.query;
+                            placeholder-text: "Search all source-linked projects…";
+                            edited(value) => { root.search-edited(value); }
+                            accepted(value) => { root.search-submitted(value); }
+                        }
+                    }
+                }
+                Rectangle {
+                    width: 140px; height: 52px; background: root.muted-sheet; border-radius: 9px;
+                    Text { text: root.matching + " matches"; font-size: 12px; font-weight: 700; color: root.accent;
+                        vertical-alignment: center; horizontal-alignment: center; }
+                }
+            }
+            Rectangle {
+                height: 35px; background: root.muted-sheet; border-radius: 5px;
+                HorizontalLayout {
+                    padding-left: 15px; padding-right: 15px; spacing: 13px;
+                    Text { text: "PROJECT / SOURCE"; font-size: 9px; font-weight: 800; color: root.subtle; horizontal-stretch: 3; vertical-alignment: center; }
+                    Text { text: "DISCIPLINE"; font-size: 9px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
+                    Text { text: "REVIEW STATE"; font-size: 9px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
+                    if root.width > 980px: Text { text: "PLATFORMS (REPORTED)"; font-size: 9px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
+                }
+            }
+            ListView {
+                vertical-stretch: 1;
+                for project[i] in root.entries : Rectangle {
+                    height: 66px; background: Math.mod(i, 2) == 0 ? root.sheet : root.canvas;
+                    border-color: root.line; border-width: 1px;
+                    HorizontalLayout {
+                        padding-left: 15px; padding-right: 15px; spacing: 13px;
+                        HorizontalLayout {
+                            horizontal-stretch: 3; spacing: 9px;
+                            if project.media == "dune3d": Image {
+                                source: @image-url("dune3d.svg"); width: 32px; height: 32px;
+                                image-fit: contain; vertical-alignment: center;
+                            }
+                            if project.media == "material-maker": Image {
+                                source: @image-url("material-maker-icon.png"); width: 32px; height: 32px;
+                                image-fit: contain; vertical-alignment: center;
+                            }
+                            if project.media == "": Rectangle {
+                                width: 32px; height: 32px; border-radius: 7px; background: root.accent-bg;
+                                Text { text: project.initial; color: root.accent; font-size: 14px; font-weight: 800;
+                                    horizontal-alignment: center; vertical-alignment: center; }
+                            }
+                            VerticalLayout {
+                                spacing: 2px;
+                                Text { text: project.name; font-size: 14px; font-weight: 700; color: root.strong; overflow: elide; }
+                                Text { text: project.maker; font-size: 10px; color: root.subtle; overflow: elide; }
+                            }
+                        }
+                        Text { text: project.domain; font-size: 11px; color: root.muted;
+                            horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
+                        Text { text: project.status; font-size: 10px; font-weight: 700; color: project.kind == "research" ? #ba8739 : root.accent;
+                            horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
+                        if root.width > 980px: Text { text: project.platforms; font-size: 10px; color: root.muted;
+                            horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
+                    }
+                    TouchArea { clicked => { root.open-project(i); } }
+                }
+            }
+            HorizontalLayout {
+                spacing: 15px;
+                Text { text: "Showing " + root.showing + " of " + root.matching + " projects"; font-size: 11px; color: root.subtle;
+                    vertical-alignment: center; }
+                Rectangle { horizontal-stretch: 1; background: transparent; }
+                if root.has-more: Rectangle {
+                    width: 123px; height: 36px; background: root.accent-bg; border-radius: 8px;
+                    Text { text: "Show 30 more ↓"; font-size: 11px; font-weight: 700; color: root.accent;
+                        horizontal-alignment: center; vertical-alignment: center; }
+                    TouchArea { clicked => { root.load-more(); } }
+                }
+            }
+        }
+
+        // A full-page dossier, not a fixed right-hand inspector.
+        if root.page == "detail": ScrollView {
+            vertical-stretch: 1;
+            VerticalLayout {
+                padding-left: root.width < 950px ? 32px : 76px;
+                padding-right: root.width < 950px ? 32px : 76px;
+                padding-top: 22px; padding-bottom: 42px; spacing: 19px;
+                HorizontalLayout {
+                    spacing: 12px;
+                    Rectangle {
+                        width: 138px; height: 35px; background: root.accent-bg; border-radius: 7px;
+                        Text { text: "← Back to results"; font-size: 11px; color: root.accent;
+                            horizontal-alignment: center; vertical-alignment: center; }
+                        TouchArea { clicked => { root.go-back(); } }
+                    }
+                    Rectangle { horizontal-stretch: 1; background: transparent; }
+                    Rectangle {
+                        width: 80px; height: 35px; background: root.can-forward ? root.accent-bg : root.muted-sheet; border-radius: 7px;
+                        Text { text: "Forward →"; font-size: 11px; color: root.can-forward ? root.accent : root.subtle;
+                            horizontal-alignment: center; vertical-alignment: center; }
+                        TouchArea { enabled: root.can-forward; clicked => { root.go-forward(); } }
+                    }
+                }
+                Text { text: root.detail-domain + "  /  PROJECT DOSSIER"; color: root.accent; font-size: 10px; font-weight: 800; }
+                HorizontalLayout {
+                    spacing: 14px;
+                    if root.detail-media == "dune3d": Image {
+                        source: @image-url("dune3d.svg"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "material-maker": Image {
+                        source: @image-url("material-maker-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    Text { text: root.detail-name; font-size: root.width < 950px ? 31px : 43px;
+                        color: root.strong; font-weight: 800; }
+                }
+                Text { text: root.detail-summary; font-size: 14px; color: root.muted; wrap: word-wrap; }
+                Rectangle { height: 1px; background: root.line; }
+                HorizontalLayout {
+                    spacing: 20px;
+                    VerticalLayout {
+                        spacing: 18px; horizontal-stretch: 3;
+                        Rectangle {
+                            height: 152px; background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 11px;
+                            VerticalLayout {
+                                padding: 18px; spacing: 10px;
+                                Text { text: "ABOUT THIS PROJECT"; font-size: 10px; color: root.accent; font-weight: 800; }
+                                Text { text: root.detail-summary; font-size: 13px; color: root.strong; wrap: word-wrap; }
+                            }
+                        }
+                        Rectangle {
+                            height: 125px; background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 11px;
+                            VerticalLayout {
+                                padding: 18px; spacing: 11px;
+                                Text { text: "COMMERCIAL ALTERNATIVE / CHALLENGED SOFTWARE"; font-size: 10px; font-weight: 800; color: root.accent; }
+                                Text { text: root.detail-challenges; font-size: 13px; color: root.strong; wrap: word-wrap; }
+                            }
+                        }
+                        if root.detail-media == "dune3d": Rectangle {
+                            height: 400px; background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 11px;
+                            VerticalLayout {
+                                padding: 13px; spacing: 8px;
+                                Text { text: "OFFICIAL INTERFACE SCREENSHOT"; font-size: 10px; font-weight: 800; color: root.accent; }
+                                Image { source: @image-url("dune3d.png"); height: 326px; image-fit: contain; }
+                                Text { text: root.detail-media-caption; font-size: 10px; color: root.subtle; wrap: word-wrap; }
+                            }
+                        }
+                        if root.detail-media == "material-maker": Rectangle {
+                            height: 400px; background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 11px;
+                            VerticalLayout {
+                                padding: 13px; spacing: 8px;
+                                Text { text: "OFFICIAL INTERFACE SCREENSHOT"; font-size: 10px; font-weight: 800; color: root.accent; }
+                                Image { source: @image-url("material-maker.png"); height: 326px; image-fit: contain; }
+                                Text { text: root.detail-media-caption; font-size: 10px; color: root.subtle; wrap: word-wrap; }
+                            }
+                        }
+                        if root.detail-media == "": Rectangle {
+                            height: 138px; background: root.muted-sheet; border-radius: 11px;
+                            VerticalLayout {
+                                padding: 18px; spacing: 10px;
+                                Text { text: "OFFICIAL INTERFACE PREVIEW"; font-size: 10px; font-weight: 800; color: root.subtle; }
+                                Text { text: "No source-verified, redistribution-approved screenshot is attached to this native project view yet.";
+                                    font-size: 12px; color: root.muted; wrap: word-wrap; }
+                                Text { text: "Placeholder only — no fabricated product imagery."; font-size: 10px; color: root.subtle; }
+                            }
+                        }
+                    }
+                    VerticalLayout {
+                        spacing: 12px; horizontal-stretch: 2;
+                        Rectangle {
+                            height: 115px; background: root.accent-bg; border-radius: 11px;
+                            VerticalLayout {
+                                padding: 17px; spacing: 9px;
+                                Text { text: "SOURCE / REVIEW STATUS"; font-size: 10px; color: root.accent; font-weight: 800; }
+                                Text { text: root.detail-status; font-size: 14px; color: root.strong; font-weight: 700; wrap: word-wrap; }
+                                Text { text: root.detail-evidence; font-size: 10px; color: root.muted; }
+                                Text { text: "Source listing does not grant installation permission."; color: root.muted; font-size: 10px; wrap: word-wrap; }
+                            }
+                        }
+                        Rectangle {
+                            height: 250px; background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 11px;
+                            VerticalLayout {
+                                padding: 17px; spacing: 12px;
+                                Text { text: "PROJECT FACTS"; font-size: 10px; font-weight: 800; color: root.accent; }
+                                Text { text: "Creator"; font-size: 10px; color: root.subtle; }
+                                Text { text: root.detail-maker; font-size: 12px; color: root.strong; overflow: elide; }
+                                Text { text: "Discipline / source category"; font-size: 10px; color: root.subtle; }
+                                Text { text: root.detail-domain + " · " + root.detail-category; font-size: 11px; color: root.strong; wrap: word-wrap; }
+                                Text { text: "Platforms / license"; font-size: 10px; color: root.subtle; }
+                                Text { text: root.detail-platforms + "  ·  " + root.detail-license; font-size: 11px; color: root.strong; wrap: word-wrap; }
+                                Text { text: "Release (source-reported)"; font-size: 10px; color: root.subtle; }
+                                Text { text: root.detail-release; font-size: 11px; color: root.strong; overflow: elide; }
+                            }
+                        }
+                    }
+                }
+                Rectangle {
+                    height: 78px; background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 10px;
+                    HorizontalLayout {
+                        padding-left: 18px; padding-right: 18px; spacing: 18px;
+                        VerticalLayout {
+                            spacing: 4px; horizontal-stretch: 1;
+                            Text { text: "VERIFIED OUTBOUND SOURCE RULES"; font-size: 10px; font-weight: 800; color: root.accent; }
+                            Text { text: root.detail-source == "" ? "No verified repository link in this source snapshot." : root.detail-source;
+                                color: root.muted; font-size: 11px; overflow: elide; }
+                        }
+                        Rectangle {
+                            width: 127px; height: 38px; background: root.accent-bg; border-radius: 8px;
+                            Text { text: "Open source ↗"; color: root.accent; font-size: 12px; font-weight: 700;
+                                horizontal-alignment: center; vertical-alignment: center; }
+                            TouchArea { enabled: root.detail-source != ""; clicked => { root.open-source(); } }
+                        }
+                    }
+                }
+            }
+        }
+
+        if root.page == "library": VerticalLayout {
+            padding: 52px;
+            spacing: 20px;
+            Text { text: "MY SOFTWARE"; font-size: 10px; font-weight: 800; color: root.accent; }
+            Text { text: "Your software, in one place."; font-size: 35px; font-weight: 800; color: root.strong; }
+            Rectangle {
+                height: 182px; background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 12px;
+                VerticalLayout {
+                    padding: 26px; spacing: 13px;
+                    Text { text: "Installed  /  Available updates"; font-size: 13px; font-weight: 800; color: root.strong; }
+                    Text { text: "Device installation and update state is not exposed by this read-only Native Preview.";
+                        font-size: 13px; wrap: word-wrap; color: root.muted; }
+                    Text { text: "No invented installed count, update count or approval state. Operational adapters remain unchanged.";
+                        font-size: 11px; wrap: word-wrap; color: root.subtle; }
+                }
+            }
+            Rectangle { vertical-stretch: 1; background: transparent; }
+        }
+
+        if root.page == "activity": VerticalLayout {
+            padding: 52px; spacing: 20px;
+            Text { text: "ACTIVITY"; font-size: 10px; font-weight: 800; color: root.accent; }
+            Text { text: "Operations stay separate."; font-size: 35px; font-weight: 800; color: root.strong; }
+            Rectangle {
+                height: 180px; background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 12px;
+                VerticalLayout {
+                    padding: 26px; spacing: 13px;
+                    Text { text: "Worker  /  Queue  /  Timeline"; font-size: 13px; font-weight: 800; color: root.strong; }
+                    Text { text: "A native read-only activity feed has not been connected to this prototype.";
+                        font-size: 13px; color: root.muted; wrap: word-wrap; }
+                    Text { text: "No jobs were started by this UI. Absence of data must not be displayed as an empty queue.";
+                        font-size: 11px; color: root.subtle; wrap: word-wrap; }
+                }
+            }
+            Rectangle { vertical-stretch: 1; background: transparent; }
+        }
+
+        Rectangle {
+            height: 40px; background: root.sheet; border-color: root.line; border-width: 1px;
+            HorizontalLayout {
+                padding-left: root.width < 950px ? 22px : 38px;
+                padding-right: root.width < 950px ? 22px : 38px;
+                Text { text: "LOCAL SOURCE CATALOG  /  READ ONLY"; font-size: 9px; font-weight: 800; color: root.accent;
+                    vertical-alignment: center; }
+                Rectangle { horizontal-stretch: 1; background: transparent; }
+                Text { text: root.total + " projects  ·  no install/update permissions  ·  native preview";
+                    color: root.subtle; font-size: 10px; vertical-alignment: center; }
+            }
+        }
+    }
+}

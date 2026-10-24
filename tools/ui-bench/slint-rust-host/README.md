@@ -1,9 +1,10 @@
 # Challenger Hub — Rust-native Slint host + one-shot Node sidecar
 
-Isolated P0 implementation over PR #28. The existing `main.slint` is compiled
-directly into the Rust executable; **the beta `slint-ui` Node binding is not
-loaded**. The existing Preview12 engine is kept temporarily, never rewritten
-or granted install/update actions by this bridge.
+Isolated P0/P1 implementation over PR #28. A new **`ui/focus.slint`**
+compiles directly into the Rust executable; the former Slint/Node benchmark
+`../slint-node-bridge/main.slint` is preserved untouched for comparison.
+**The beta `slint-ui` Node binding is not loaded**. The existing Preview12
+engine is retained temporarily without install/update permissions.
 
 ## Flow and safety
 
@@ -63,7 +64,42 @@ AboutSlint widget or public distribution-page badge); a plain "powered by"
 footer is not assumed sufficient. Review third-party notices as well before
 public release. See https://github.com/slint-ui/slint/blob/master/FAQ.md .
 
-This P0 bridge deliberately reuses the PR #28 UI. Full Focus/Orbit feature
-parity, 17 disciplines, source-pinned artwork, navigation, accessibility,
-IME, DPI and installation gates remain separate P1–P3 work. No benchmark
-numbers should be inferred from the previous Rust-only fixture benchmark.
+## Focus/Orbit native UI — implemented read-only routes
+
+This is a **real native Slint interface**, not an Electron/WebView/CSS wrapper:
+- Approved task-first navigation: Explore, My software, Activity. The permanent
+  sidebar and always-visible project inspector are removed.
+- Discover home: primary search and **17 canonical disciplines**, with
+  live counts. The unchanged 181 source records have 79 raw category strings;
+  Rust maps them to the 17 approved Focus domains *only in the view*, with
+  a regression asserting that no record disappears.
+- Explicit results route: compact sortable-style list with native input
+  filtering and a truthful **30-record initial page / Show 30 more** control.
+  The list is not yet user-sortable; do not claim sorting parity.
+- Dedicated full-page project dossier: facts only from the live backend,
+  source/research status, source-provided category/platform/license/version,
+  optional challenged software and an HTTPS repository link that is opened
+  only on user click after strict host/scheme checks.
+- Back/Forward stack (native app navigation) preserves query and selection;
+  manual Refresh rereads the authentic backend without UI-thread blocking.
+- Light/Dark appearance. All 15 research candidates remain searchable and
+  explicitly tagged unverified; no action can promote or install them.
+- The actual project-owned Orbit icon is embedded. Dune 3D and Material Maker
+  have **source-verified upstream icons and true application screenshots**
+  from the existing approved media manifest, matched only by exact
+  repository ID/source. Asset SHA256, licenses and source commits are recorded
+  in `ui/MEDIA_PROVENANCE.md`. Other projects have a neutral, non-fabricated
+  fallback until their assets are independently vetted.
+- My software and Activity are visible but intentionally display **data
+  unavailable** — not fake installed counts, fake empty queues or invented
+  worker status. Live device-state parity is unfinished.
+
+## Next gates — not yet implemented
+
+Actual installed/update state, worker queue/timeline, deeper metadata and
+additional source-pinned screenshots; accessibility, keyboard shortcuts,
+IME/RTL, DPI and responsive small-screen visual QA; native Windows/Linux
+interactive desktop tests, full resource/performance sampling, authenticated
+distribution signing/notarization, Slint attribution and permission-gated
+third-party installers. These remain blocked from Production. Do not infer
+resource usage from the old Rust-only fixture benchmark.
