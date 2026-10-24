@@ -39,6 +39,39 @@ export struct SessionEvent {
     detail: string,
     outcome: string,
 }
+// Native button semantics for custom Focus/Orbit click targets. Without this,
+ // a TouchArea looks clickable but provides no keyboard focus or UIA Button.
+component KeyboardAction inherits Rectangle {
+    in property <string> action-label;
+    in property <bool> action-enabled: true;
+    callback activated();
+    background: transparent;
+    border-color: key-focus.has-focus ? #e8a64f : transparent;
+    border-width: key-focus.has-focus ? 2px : 0px;
+    accessible-role: button;
+    accessible-label: root.action-label;
+    accessible-enabled: root.action-enabled;
+    accessible-action-default => {
+        if (root.action-enabled) { root.activated(); }
+    }
+    forward-focus: key-focus;
+    TouchArea {
+        enabled: root.action-enabled;
+        clicked => { root.activated(); }
+    }
+    key-focus := FocusScope {
+        width: 0px; height: 0px;
+        enabled: root.action-enabled;
+        key-pressed(event) => {
+            if (event.text == Key.Return || event.text == Key.Space) {
+                root.activated();
+                return accept;
+            }
+            return reject;
+        }
+    }
+}
+
 export component AppWindow inherits Window {
     title: "Challenger · Focus Native Preview";
     width: 1210px;
@@ -179,7 +212,7 @@ export component AppWindow inherits Window {
                     border-radius: 8px;
                     Text { text: "Explore"; color: root.page == "home" || root.page == "results" || root.page == "detail" ? root.accent : root.muted;
                            font-size: 12px; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
-                    TouchArea { clicked => { root.navigate("home"); } }
+                    KeyboardAction { action-label: "Explore software"; activated => { root.navigate("home"); } }
                 }
                 Rectangle {
                     width: root.width < 980px ? 94px : 114px;
@@ -187,27 +220,27 @@ export component AppWindow inherits Window {
                     border-radius: 8px;
                     Text { text: "My software"; color: root.page == "library" || root.page == "device" ? root.accent : root.muted;
                            font-size: 12px; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
-                    TouchArea { clicked => { root.navigate("library"); } }
+                    KeyboardAction { action-label: "My software"; activated => { root.navigate("library"); } }
                 }
                 Rectangle {
                     width: 78px; background: root.page == "activity" ? root.accent-bg : transparent;
                     border-radius: 8px;
                     Text { text: "Activity"; color: root.page == "activity" ? root.accent : root.muted;
                            font-size: 12px; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
-                    TouchArea { clicked => { root.navigate("activity"); } }
+                    KeyboardAction { action-label: "Activity"; activated => { root.navigate("activity"); } }
                 }
                 Rectangle {
                     width: 60px;
                     Text { text: root.dark-mode ? "Light" : "Dark"; color: root.subtle; font-size: 11px;
                         horizontal-alignment: center; vertical-alignment: center; }
-                    TouchArea { clicked => { root.toggle-theme(); } }
+                    KeyboardAction { action-label: root.dark-mode ? "Switch to light theme" : "Switch to dark theme"; activated => { root.toggle-theme(); } }
                 }
                 Rectangle {
                     width: 79px; border-radius: 8px; background: root.accent-bg;
                     Text { text: root.refreshing ? "Reading..." : "Refresh";
                         font-size: 11px; font-weight: 700; color: root.accent;
                         horizontal-alignment: center; vertical-alignment: center; }
-                    TouchArea { enabled: !root.refreshing; clicked => { root.refresh-requested(); } }
+                    KeyboardAction { action-label: "Refresh catalog"; action-enabled: !root.refreshing; activated => { root.refresh-requested(); } }
                 }
             }
         }
@@ -237,6 +270,7 @@ export component AppWindow inherits Window {
                             horizontal-stretch: 1; height: 47px;
                             text: root.query;
                             placeholder-text: "Software, category, capability…";
+                            accessible-label: "Search software catalog";
                             edited(value) => { root.search-edited(value); }
                             accepted(value) => { root.search-submitted(value); }
                         }
@@ -244,7 +278,7 @@ export component AppWindow inherits Window {
                             width: 115px; height: 44px; border-radius: 8px; background: root.strong;
                             Text { text: "Find tools  ↗"; color: root.sheet; font-size: 12px; font-weight: 700;
                                 horizontal-alignment: center; vertical-alignment: center; }
-                            TouchArea { clicked => { root.search-submitted(root.query); } }
+                            KeyboardAction { action-label: "Find tools"; activated => { root.search-submitted(root.query); } }
                         }
                     }
                 }
@@ -271,7 +305,7 @@ export component AppWindow inherits Window {
                                     font-weight: 700; vertical-alignment: center; }
                                 Text { text: "  ↗"; font-size: 12px; color: root.subtle; vertical-alignment: center; }
                             }
-                            TouchArea { clicked => { root.open-discipline(group.id); } }
+                            KeyboardAction { action-label: "Browse " + group.label; activated => { root.open-discipline(group.id); } }
                         }
                     }
                     VerticalLayout {
@@ -288,7 +322,7 @@ export component AppWindow inherits Window {
                                     font-weight: 700; vertical-alignment: center; }
                                 Text { text: "  ↗"; font-size: 12px; color: root.subtle; vertical-alignment: center; }
                             }
-                            TouchArea { clicked => { root.open-discipline(group.id); } }
+                            KeyboardAction { action-label: "Browse " + group.label; activated => { root.open-discipline(group.id); } }
                         }
                     }
                 }
@@ -310,20 +344,20 @@ export component AppWindow inherits Window {
                     width: 90px; height: 35px; background: root.accent-bg; border-radius: 7px;
                     Text { text: "← Explore"; font-size: 11px; color: root.accent;
                         vertical-alignment: center; horizontal-alignment: center; }
-                    TouchArea { clicked => { root.navigate("home"); } }
+                    KeyboardAction { action-label: "Return to Explore"; activated => { root.navigate("home"); } }
                 }
                 Rectangle { horizontal-stretch: 1; background: transparent; }
                 Rectangle {
                     width: 64px; height: 35px; background: root.can-back ? root.accent-bg : root.muted-sheet; border-radius: 7px;
                     Text { text: "← Back"; color: root.can-back ? root.accent : root.subtle; font-size: 11px;
                         vertical-alignment: center; horizontal-alignment: center; }
-                    TouchArea { enabled: root.can-back; clicked => { root.go-back(); } }
+                    KeyboardAction { action-label: "Go back"; action-enabled: root.can-back; activated => { root.go-back(); } }
                 }
                 Rectangle {
                     width: 76px; height: 35px; background: root.can-forward ? root.accent-bg : root.muted-sheet; border-radius: 7px;
                     Text { text: "Forward →"; color: root.can-forward ? root.accent : root.subtle; font-size: 11px;
                         vertical-alignment: center; horizontal-alignment: center; }
-                    TouchArea { enabled: root.can-forward; clicked => { root.go-forward(); } }
+                    KeyboardAction { action-label: "Go forward"; action-enabled: root.can-forward; activated => { root.go-forward(); } }
                 }
             }
             Text { text: root.selected-domain == "all" ? "The full index" : root.selected-domain-label;
@@ -339,6 +373,7 @@ export component AppWindow inherits Window {
                         LineEdit {
                             horizontal-stretch: 1; height: 40px; text: root.query;
                             placeholder-text: "Search all source-linked projects…";
+                            accessible-label: "Search software catalog";
                             edited(value) => { root.search-edited(value); }
                             accepted(value) => { root.search-submitted(value); }
                         }
@@ -458,7 +493,7 @@ export component AppWindow inherits Window {
                     width: 123px; height: 36px; background: root.accent-bg; border-radius: 8px;
                     Text { text: "Show 30 more ↓"; font-size: 11px; font-weight: 700; color: root.accent;
                         horizontal-alignment: center; vertical-alignment: center; }
-                    TouchArea { clicked => { root.load-more(); } }
+                    KeyboardAction { action-label: "Show 30 more projects"; activated => { root.load-more(); } }
                 }
             }
         }
@@ -476,14 +511,14 @@ export component AppWindow inherits Window {
                         width: 138px; height: 35px; background: root.accent-bg; border-radius: 7px;
                         Text { text: "← Back to results"; font-size: 11px; color: root.accent;
                             horizontal-alignment: center; vertical-alignment: center; }
-                        TouchArea { clicked => { root.go-back(); } }
+                        KeyboardAction { action-label: "Back to results"; activated => { root.go-back(); } }
                     }
                     Rectangle { horizontal-stretch: 1; background: transparent; }
                     Rectangle {
                         width: 80px; height: 35px; background: root.can-forward ? root.accent-bg : root.muted-sheet; border-radius: 7px;
                         Text { text: "Forward →"; font-size: 11px; color: root.can-forward ? root.accent : root.subtle;
                             horizontal-alignment: center; vertical-alignment: center; }
-                        TouchArea { enabled: root.can-forward; clicked => { root.go-forward(); } }
+                        KeyboardAction { action-label: "Go forward"; action-enabled: root.can-forward; activated => { root.go-forward(); } }
                     }
                 }
                 Text { text: root.detail-domain + "  /  PROJECT DOSSIER"; color: root.accent; font-size: 10px; font-weight: 800; }
@@ -758,7 +793,7 @@ export component AppWindow inherits Window {
                             width: 127px; height: 38px; background: root.accent-bg; border-radius: 8px;
                             Text { text: "Open source ↗"; color: root.accent; font-size: 12px; font-weight: 700;
                                 horizontal-alignment: center; vertical-alignment: center; }
-                            TouchArea { enabled: root.detail-source != ""; clicked => { root.open-source(); } }
+                            KeyboardAction { action-label: "Open verified project source"; action-enabled: root.detail-source != ""; activated => { root.open-source(); } }
                         }
                     }
                 }
@@ -781,7 +816,7 @@ export component AppWindow inherits Window {
                     width: 182px; height: 36px; background: root.accent-bg; border-radius: 7px;
                     Text { text: "OS app registrations  →"; font-size: 11px; font-weight: 700; color: root.accent;
                         horizontal-alignment: center; vertical-alignment: center; }
-                    TouchArea { clicked => { root.navigate("device"); } }
+                    KeyboardAction { action-label: "View OS app registrations"; activated => { root.navigate("device"); } }
                 }
             }
             Rectangle {
@@ -868,7 +903,7 @@ export component AppWindow inherits Window {
                     width: 142px; height: 35px; background: root.accent-bg; border-radius: 7px;
                     Text { text: "← My software"; font-size: 11px; font-weight: 700; color: root.accent;
                         horizontal-alignment: center; vertical-alignment: center; }
-                    TouchArea { clicked => { root.navigate("library"); } }
+                    KeyboardAction { action-label: "Back to My software"; activated => { root.navigate("library"); } }
                 }
                 Rectangle { horizontal-stretch: 1; background: transparent; }
                 Text { text: "LOCAL / READ ONLY / ON DEMAND"; font-size: 10px; color: root.accent;
@@ -896,7 +931,7 @@ export component AppWindow inherits Window {
                         Text { text: root.device-reading ? "Reading system…" : "Inspect local apps";
                             font-size: 12px; font-weight: 700; color: root.sheet;
                             horizontal-alignment: center; vertical-alignment: center; }
-                        TouchArea { enabled: !root.device-reading; clicked => { root.device-read-requested(); } }
+                        KeyboardAction { action-label: "Inspect local registered apps"; action-enabled: !root.device-reading; activated => { root.device-read-requested(); } }
                     }
                 }
             }
@@ -958,6 +993,7 @@ export component AppWindow inherits Window {
                                 horizontal-stretch: 1; height: 35px;
                                 text: root.device-query;
                                 placeholder-text: "Name or registered identifier…";
+                                accessible-label: "Filter local app registrations";
                                 edited(v) => { root.device-search-edited(v); }
                             }
                         }
@@ -1009,10 +1045,7 @@ export component AppWindow inherits Window {
                         if root.width > 950px: Text { text: app.provenance; font-size: 10px; color: root.subtle;
                             horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
                     }
-                    TouchArea {
-                        enabled: app.linked-id != "";
-                        clicked => { root.open-device-project(app.linked-id); }
-                    }
+                    if app.linked-id != "": KeyboardAction { action-label: "Open reviewed project " + app.linked-project; activated => { root.open-device-project(app.linked-id); } }
                 }
             }
             if (root.device-status == "observed" || root.device-status == "stale") && root.device-showing == 0: Text {
@@ -1053,8 +1086,7 @@ export component AppWindow inherits Window {
                         "Read local installation history";
                         font-size: 10px; color: root.accent; font-weight: 700;
                         horizontal-alignment: center; vertical-alignment: center; }
-                    TouchArea { enabled: !root.install-history-loading;
-                        clicked => { root.load-install-history(); } }
+                    KeyboardAction { action-label: "Read local installation history"; action-enabled: !root.install-history-loading; activated => { root.load-install-history(); } }
                 }
             }
             Text { text: root.install-history-status; font-size: 11px;
