@@ -44,6 +44,8 @@ jobs:
         run: cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --check-device-only
       - name: Reviewed native ID to source project cross-reference
         run: cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --check-identity-only
+      - name: Expired OS observation retains rows but disables links
+        run: cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --qa-verify-stale
       - name: macOS developer app packaging and bundled-engine smoke
         if: runner.os == 'macOS'
         run: |
