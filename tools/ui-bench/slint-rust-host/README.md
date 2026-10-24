@@ -57,6 +57,45 @@ bundle/sidecar contract, **not Windows Release optimization parity**. Install
 the Rust toolchain only on a dedicated development runner. This script does
 not install tools, create tasks or modify an existing Challenger app.
 
+
+## Temporary portable downloads — free GitHub Actions path
+
+The native CI workflow builds **temporary developer-preview** archives for
+**macOS (the CI runner architecture)** and **Windows x64** after platform smoke
+and read-only backend checks. The macOS app is ad-hoc signed (not Developer ID
+signed or notarized); the Windows EXE remains unsigned. Neither package
+automatically installs programs, modifies Preview11/Production or constitutes
+a public release. No code signing secrets, paid services, or user-computer
+installations are involved.
+
+Open the green **Native Rust / Slint + read-only Node sidecar** workflow run
+in the repository Actions tab. Under **Artifacts**, download
+\`challenger-native-portable-macOS-<run-id>\` or
+\`challenger-native-portable-Windows-<run-id>\` while available (7-day retention).
+Extract the Actions artifact once; it contains a platform ZIP,
+\`SHA256SUMS.txt\`, \`BUILD_INFO.json\` and \`READ_ME_FIRST.txt\`. Verify the
+**inner** ZIP checksum before extraction and, optionally, the signed GitHub
+artifact provenance with:
+
+    gh attestation verify <inner-archive.zip> --repo nocturney/challenger-hub
+
+Build metadata identifies both the CI checkout commit and the PR head SHA,
+because pull-request workflows normally checkout a synthetic GitHub merge
+commit. Archives use a release-mode Rust executable; CI extracts them and
+rechecks the backend and (on Windows) a native GUI smoke. macOS uses \`ditto\`
+to preserve the app's permissions and checks the extracted app's code
+signature. Node v24.22.1 and the matching full Node LICENSE are included.
+
+Artifacts are intentionally **not** GitHub Releases or permanent downloads.
+This repository is public, so **do not put secrets or private customer data in
+CI artifacts**. GitHub Actions may require signing in to download artifacts.
+A manual \`workflow_dispatch\` is configured, but GitHub requires workflows to
+exist on the default branch before displaying the normal manual Run button;
+while PR #28 is unmerged, use its normal PR-triggered CI run for these files.
+Windows SmartScreen and macOS Gatekeeper may warn about development builds;
+do not bypass security features by automation. Public distribution still needs
+an independent authorization/licensing review and approved signing.
+
 ## QA and limitations
 
 Only claim each platform as validated after running its native GUI and package

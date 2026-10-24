@@ -22,6 +22,11 @@ permissions:
   contents: read
 jobs:
   native-read-only:
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+      artifact-metadata: write
     strategy:
       fail-fast: false
       matrix:
@@ -52,6 +57,8 @@ jobs:
           sudo apt-get install -y libfontconfig1-dev libxkbcommon-dev libxkbcommon-x11-dev libwayland-dev libxcb-shape0-dev libxcb-xfixes0-dev libgl1-mesa-dev xvfb
       - name: Build reviewed Preview12 test runtime only
         run: node tools/desktop-build/build-runtime.cjs 12
+      - name: Validate portable artifact manifest script syntax
+        run: node --check tools/ui-bench/slint-rust-host/portable-artifact.mjs
       - name: Rust read-only protocol regression tests
         run: cargo test --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked
       - name: Native bridge plus explicit install-policy security regressions
@@ -120,3 +127,72 @@ jobs:
       - name: Linux native Slint GUI smoke in Xvfb
         if: runner.os == 'Linux'
         run: xvfb-run -a cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --smoke
+
+      # Downloadable developer previews are created only after all native QA gates.
+      # These are temporary Actions artifacts; no GitHub Release or user install.
+      - name: Build and verify macOS portable ZIP
+        if: runner.os == 'macOS' && (github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository)
+        shell: bash
+        env:
+          GITHUB_PR_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          host="tools/ui-bench/slint-rust-host"
+          app="$host/dist/ChallengerHubNativePreview.app"
+          stage="$host/dist/ci-download"
+          mkdir -p "$stage"
+          platform="macos-$(uname -m)"
+          filename="$(node "$host/portable-artifact.mjs" name "$platform")"
+          archive="$stage/$filename"
+          /usr/bin/ditto -c -k --sequesterRsrc --keepParent "$app" "$archive"
+          verified="$RUNNER_TEMP/portable-macos-extract"
+          mkdir -p "$verified"
+          /usr/bin/ditto -x -k "$archive" "$verified"
+          /usr/bin/codesign --verify --deep --strict "$verified/ChallengerHubNativePreview.app"
+          "$verified/ChallengerHubNativePreview.app/Contents/MacOS/challenger-slint-rust-host" --check-backend-only
+          node "$host/portable-artifact.mjs" write "$platform" "$archive"
+      - name: Build and verify Windows release-mode portable ZIP
+        if: runner.os == 'Windows' && (github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository)
+        shell: pwsh
+        env:
+          GITHUB_PR_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          SLINT_BACKEND: winit-software
+        run: |
+          $hostDir = 'tools/ui-bench/slint-rust-host'
+          & "./$hostDir/package-windows.ps1"
+          if ($LASTEXITCODE -ne 0) { throw 'Release-mode Windows native packaging failed' }
+          $platform = 'windows-x64'
+          $fileName = (& node "$hostDir/portable-artifact.mjs" name $platform | Out-String).Trim()
+          if ($LASTEXITCODE -ne 0 -or !($fileName -match '^ChallengerHubNativePreview-v')) { throw 'Portable filename invalid' }
+          $stage = Join-Path $hostDir 'dist/ci-download'
+          New-Item -ItemType Directory -Force -Path $stage | Out-Null
+          $archive = Join-Path $stage $fileName
+          Compress-Archive -Path "$hostDir/dist/ChallengerHubNativePreview-Win" -DestinationPath $archive -CompressionLevel Optimal
+          $verifyDir = Join-Path $env:RUNNER_TEMP 'portable-windows-extract'
+          Expand-Archive -Path $archive -DestinationPath $verifyDir -Force
+          $exe = Join-Path $verifyDir 'ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe'
+          $bundledNode = Join-Path $verifyDir 'ChallengerHubNativePreview-Win/resources/node.exe'
+          $license = Join-Path $verifyDir 'ChallengerHubNativePreview-Win/resources/NODE_LICENSE.txt'
+          if (!(Test-Path $exe) -or !(Test-Path $license) -or (& $bundledNode --version) -ne 'v24.22.1') {
+            throw 'Extracted Windows portable bundle is incomplete'
+          }
+          & $exe --check-backend-only
+          if ($LASTEXITCODE -ne 0) { throw 'Extracted Windows bundled backend failed' }
+          & $exe --smoke
+          if ($LASTEXITCODE -ne 0) { throw 'Extracted Windows release GUI smoke failed' }
+          & node "$hostDir/portable-artifact.mjs" write $platform $archive
+          if ($LASTEXITCODE -ne 0) { throw 'Windows portable metadata failed' }
+      - name: Attest portable ZIP source and build provenance (no publisher signing)
+        if: runner.os != 'Linux' && (github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository)
+        uses: actions/attest@v4
+        with:
+          subject-path: tools/ui-bench/slint-rust-host/dist/ci-download/*.zip
+      - name: Save portable preview for 7 days (no public Release)
+        if: runner.os != 'Linux' && (github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository)
+        uses: actions/upload-artifact@v4
+        with:
+          name: challenger-native-portable-${{ runner.os }}-${{ github.run_id }}
+          path: tools/ui-bench/slint-rust-host/dist/ci-download/
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
