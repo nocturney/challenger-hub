@@ -338,3 +338,13 @@ The route reuses the original Challenger `Install-Challenger.js` worker and its 
 Windows CI has a disposable-runner-only regression that plans and installs the actual portable ZIP, checks the installed executable and verified managed state, then removes the isolated `D:\Velvet` tree. Do **not** run that sandbox script on Chris or another real workstation. The regular-user Chris Session 1 UI acceptance and first user-approved real installation are separate gates; no normal user software is installed by these changes.
 
 Do not describe PdfCraft as having full editing parity with Acrobat: upstream lists editing *existing* PDF text (especially RTL/CJK) among unfinished or thin areas. Use this as a native installer acceptance candidate first, with an actual editor smoke test later.
+
+## Native install progress — source-backed, not fabricated
+
+The approved install worker emits `download`, `download-progress`, `verified`, `extract`, `installed`, and terminal `success` events. The `download-progress` steps report actual received bytes in 10% increments, capped at 90% until the **complete** SHA-256 check passes. They are **download** percentages, not speculative percentages for an entire installation.
+
+The Rust host now drains bounded installer stdout while the worker is running and surfaces only known, schema-checked statuses in the dossier; the completion remains a *separate* SHA-256, project, destination and persisted-worker-record check. A worker's interim `success` line is labeled **FINALIZING**, never as final success. Malformed, forged, oversized, and unknown status messages do not advance the GUI. All messages are tied to the active project. The existing explicit approval, normal-user boundary, process-tree timeout, and non-automatic startup remain unchanged.
+
+Regressions include an in-flight stdout timing/size test, event allowlisting, all previous Rust/Node security tests, and an isolated Windows-runner integration assertion that genuine PdfCraft download percentages are monotonic and appear before SHA-256 verification and managed-state completion.
+
+**Not implemented here:** safe mid-download cancellation, guaranteed rollback for every interrupted installation, or durable cross-session worker history. Do not present the current Activity panel as a persistent queue or state these gaps have been closed.

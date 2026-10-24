@@ -81,6 +81,26 @@ try {
         try { $_ | ConvertFrom-Json } catch { $null }
     }
     $pdfResult = @($pdfRecords | Where-Object { $_.schema -eq 'challenger.native.install-result.v1' })
+    # The actual Windows release must emit verifiable, pre-completion stage
+    # events, including monotonic received-byte percentages (never a fake timer).
+    $pdfStages = @($pdfRecords | Where-Object { $_.state -eq 'worker' } | ForEach-Object {
+        try { $_.detail | ConvertFrom-Json } catch { $null }
+    } | Where-Object { $null -ne $_ })
+    $progress = @($pdfStages | Where-Object { $_.state -eq 'download-progress' } | ForEach-Object {
+        [int]$_.detail
+    })
+    if ($progress.Count -lt 1 -or
+        @($pdfStages | Where-Object { $_.state -eq 'verified' }).Count -lt 1 -or
+        @($pdfStages | Where-Object { $_.state -eq 'installed' }).Count -lt 1) {
+        throw 'PdfCraft installer lost its verified live progress events'
+    }
+    $last = 0
+    foreach ($percent in $progress) {
+        if ($percent -le $last -or $percent -gt 90 -or ($percent % 10) -ne 0) {
+            throw 'PdfCraft byte progress must increase in exact bounded steps'
+        }
+        $last = $percent
+    }
     if ($pdfResult.Count -ne 1 -or $pdfResult[0].state -ne 'success' -or
         $pdfResult[0].sourceDigestVerified -ne $true -or
         $pdfResult[0].projectId -ne $pdfPlan.projectId -or

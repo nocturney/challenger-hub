@@ -56,7 +56,7 @@ async function getRelease(asset,dest){
  const allowed=['github.com','objects.githubusercontent.com','release-assets.githubusercontent.com','github-releases.githubusercontent.com'];
  if(final.protocol!=='https:'||!allowed.includes(final.hostname))fail('Release asset redirected to an unapproved host');
  const file=fs.openSync(dest,'wx',0o600);
- const hasher=crypto.createHash('sha256');let size=0;
+ const hasher=crypto.createHash('sha256');let size=0,lastReported=0;
  try{
   const reader=response.body.getReader();
   while(true){
@@ -65,6 +65,10 @@ async function getRelease(asset,dest){
    size+=value.byteLength;
    if(size>MAX_PACKAGE||size>asset.size+2048)fail('Download exceeded declared release asset size');
    hasher.update(value);fs.writeSync(file,value);
+   // Report actual received bytes, not a timer-based or guessed percentage.
+   // 100% is intentionally withheld until the complete SHA-256 check passes.
+   const completed=Math.min(90,Math.floor(size/asset.size*10)*10);
+   if(completed>lastReported){lastReported=completed;out('download-progress',String(completed));}
   }
  }finally{fs.closeSync(file)}
  if(size!==asset.size)fail('Release asset size mismatch ('+size+' vs '+asset.size+')');

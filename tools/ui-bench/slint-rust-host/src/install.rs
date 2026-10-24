@@ -87,9 +87,72 @@ pub fn review(project:&Project)->Result<InstallPlan,String> {
     validate_plan(&plan,project)?;
     Ok(plan)
 }
-pub fn run_approved(plan:&InstallPlan)->Result<String,String> {
+// Only allowlisted, syntactically valid worker status events appear in the UI.
+// Nested JSON is never executed; untrusted text is never used as a terminal state.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct InstallProgress {
+    pub stage: &'static str,
+    pub message: String,
+    pub percent: Option<u8>,
+}
+pub fn parse_install_progress(line: &str) -> Option<InstallProgress> {
+    let outer: serde_json::Value = serde_json::from_str(line).ok()?;
+    let top = outer.get("state")?.as_str()?;
+    if top == "approved" {
+        return Some(InstallProgress {
+            stage: "STARTING", message: "Starting the explicitly approved install".into(),
+            percent: None,
+        });
+    }
+    if top != "worker" { return None; }
+    let inner: serde_json::Value = serde_json::from_str(outer.get("detail")?.as_str()?).ok()?;
+    let event = inner.get("state")?.as_str()?;
+    match event {
+        "download" => Some(InstallProgress {
+            stage: "DOWNLOADING", message: "Downloading the reviewed official release".into(),
+            percent: Some(0),
+        }),
+        "download-progress" => {
+            let value: u8 = inner.get("detail")?.as_str()?.parse().ok()?;
+            if value == 0 || value > 90 || value % 10 != 0 { return None; }
+            Some(InstallProgress {
+                stage: "DOWNLOADING",
+                message: format!("Received {value}% of the declared release bytes"),
+                percent: Some(value),
+            })
+        },
+        "verified" => Some(InstallProgress {
+            stage: "VERIFIED",
+            message: "Official release bytes passed the complete SHA-256 check".into(),
+            percent: None,
+        }),
+        "extract" => Some(InstallProgress {
+            stage: "EXTRACTING",
+            message: "Checking package contents and installing to the approved location".into(),
+            percent: None,
+        }),
+        "installed" => Some(InstallProgress {
+            stage: "RECORDING",
+            message: "Application files placed; validating the managed install record".into(),
+            percent: None,
+        }),
+        "success" => Some(InstallProgress {
+            stage: "FINALIZING",
+            message: "Worker completed; independently checking the final install record".into(),
+            percent: None,
+        }),
+        _ => None,
+    }
+}
+pub fn run_approved(
+    plan:&InstallPlan,
+    mut on_progress: impl FnMut(InstallProgress),
+) -> Result<String,String> {
     if plan.approval_token.len()!=64 {return Err("Missing confirmed install plan".into());}
-    let stdout=sidecar::installer_bridge("install",&plan.project_id,Some(&plan.approval_token))?;
+    let stdout=sidecar::installer_bridge_with_progress(
+        "install",&plan.project_id,Some(&plan.approval_token),
+        |line| if let Some(progress)=parse_install_progress(line) {on_progress(progress)}
+    )?;
     let last=stdout.lines().rev().find(|line|line.contains("challenger.native.install-result.v1"))
         .ok_or("Installer did not return a completed installation record")?;
     let data:InstallResult=serde_json::from_str(last)
@@ -117,6 +180,39 @@ mod tests {
         kind:kind.into(),license:"".into(),challenges:"".into(),release:"".into(),
         managed_install_signal:"".into(),installed_version:"".into(),
         latest_version:"".into(),update_hint:false}
+    }
+    fn line(stage: &str, detail: &str) -> String {
+        let inner=serde_json::json!({"state":stage,"detail":detail}).to_string();
+        serde_json::json!({"state":"worker","detail":inner}).to_string()
+    }
+    #[test]
+    fn installation_progress_only_parses_allowlisted_verified_worker_stages() {
+        assert_eq!(parse_install_progress(&line("download-progress","20")),
+            Some(InstallProgress {
+                stage:"DOWNLOADING",
+                message:"Received 20% of the declared release bytes".into(),
+                percent:Some(20),
+            }));
+        assert_eq!(parse_install_progress(&line("verified","SHA-256 checked"))
+            .unwrap().stage,"VERIFIED");
+        assert_eq!(parse_install_progress(&line("installed","some executable path"))
+            .unwrap().stage,"RECORDING");
+        assert_eq!(parse_install_progress(&line("success","worker may say success"))
+            .unwrap().stage,"FINALIZING");
+        for bad in [
+            "invalid JSON".to_string(),
+            r#"{"state":"worker","detail":"not JSON"}"#.to_string(),
+            line("download-progress","101"),
+            line("download-progress","95"),
+            line("download-progress","-1"),
+            line("download-progress","nan"),
+            line("worker-error","fake"),
+            r#"{"state":"worker-error","detail":"{\"state\":\"verified\"}"}"#.to_string(),
+            r#"{"state":"success","detail":"unreviewed"}"#.to_string(),
+            line("unknown-stage","100"),
+        ] {
+            assert!(parse_install_progress(&bad).is_none(),"Accepted: {bad}");
+        }
     }
     #[test]
     fn only_exact_curated_project_can_request_review(){

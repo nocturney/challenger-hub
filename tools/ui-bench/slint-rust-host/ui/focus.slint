@@ -98,6 +98,9 @@ export component AppWindow inherits Window {
     in-out property <string> install-project-id: "";
     in-out property <bool> pdfcraft-install-supported: false;
     in-out property <string> install-message: "Review the official release before approving an install.";
+    in-out property <string> install-stage: "";
+    // Percentage applies to the download bytes only, never the overall install.
+    in-out property <int> install-percent: -1;
     in-out property <string> install-version: "";
     in-out property <string> install-asset: "";
     in-out property <string> install-hash: "";
@@ -442,7 +445,7 @@ export component AppWindow inherits Window {
                 Text { text: root.detail-summary; font-size: 14px; color: root.muted; wrap: word-wrap; }
                 Rectangle { height: 1px; background: root.line; }
                 if root.detail-kind == "curated" || (root.install-project-id == "managed:pdfcraft" && root.pdfcraft-install-supported): Rectangle {
-                    height: root.install-ready ? 305px : 172px;
+                    height: root.install-ready ? 336px : 194px;
                     background: root.accent-bg; border-radius: 11px;
                     VerticalLayout {
                         padding: 18px; spacing: 9px;
@@ -464,6 +467,11 @@ export component AppWindow inherits Window {
                             Text { text: root.install-ready ? "Reviewed official release — not yet downloaded" :
                                 "Review is read-only: checks upstream release, adapter, asset and digest.";
                                 font-size: 11px; color: root.muted; wrap: word-wrap; vertical-alignment: center; }
+                        }
+                        if root.install-stage != "": Text {
+                            text: "CURRENT STEP  /  " + root.install-stage
+                              + (root.install-percent >= 0 ? " · Download " + root.install-percent + "%" : "");
+                            font-size: 10px; font-weight: 800; color: root.accent;
                         }
                         Text { text: root.install-message; font-size: 11px; color: root.strong; wrap: word-wrap; }
                         if root.install-ready: VerticalLayout {

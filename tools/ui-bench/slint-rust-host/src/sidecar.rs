@@ -3,6 +3,7 @@ use std::{
     io::Read,
     path::{Path, PathBuf},
     process::{Child, Command, Stdio},
+    sync::mpsc,
     thread,
     time::{Duration, Instant},
 };
@@ -118,12 +119,107 @@ fn run_bounded(mut cmd: Command, timeout: Duration) -> Result<String, String> {
     String::from_utf8(out).map_err(|_| "Sidecar sent non-UTF-8 JSON".into())
 }
 
+// Read installer stdout while it runs. Every line is bounded, and the full
+// stdout is separately retained for the final authenticated completion record.
+// The live lines are progress hints only, NEVER proof of an installation.
+fn captured_install_stdout(
+    mut reader: impl Read + Send + 'static,
+    limit: u64,
+    sender: mpsc::Sender<String>,
+) -> thread::JoinHandle<Vec<u8>> {
+    thread::spawn(move || {
+        let mut output = Vec::new();
+        let mut chunk = [0u8; 4096];
+        let mut pending = Vec::new();
+        let mut oversized_line = false;
+        let mut emitted = 0usize;
+        loop {
+            let count = match reader.read(&mut chunk) {
+                Ok(0) | Err(_) => break,
+                Ok(n) => n,
+            };
+            let capacity = (limit as usize + 1).saturating_sub(output.len());
+            output.extend_from_slice(&chunk[..count.min(capacity)]);
+            for &byte in &chunk[..count] {
+                if byte == b'\n' {
+                    if !oversized_line && !pending.is_empty() && emitted < 256 {
+                        if let Ok(line) = String::from_utf8(std::mem::take(&mut pending)) {
+                            let _ = sender.send(line);
+                            emitted += 1;
+                        }
+                    }
+                    pending.clear();
+                    oversized_line = false;
+                } else if !oversized_line {
+                    if pending.len() < 2048 { pending.push(byte); }
+                    else { pending.clear(); oversized_line = true; }
+                }
+            }
+        }
+        output
+    })
+}
+
+// Unlike the regular bounded sidecar read, installer stdout is surfaced
+// incrementally to the already-running native session. We continue draining
+// beyond the cap so a verbose worker cannot deadlock on a full stdout pipe.
+fn run_bounded_progress(
+    mut cmd: Command,
+    timeout: Duration,
+    mut on_line: impl FnMut(&str),
+) -> Result<String, String> {
+    configure_group(&mut cmd);
+    let mut child = cmd.spawn().map_err(|e| format!("Cannot launch installer sidecar: {e}"))?;
+    let (sender, receiver) = mpsc::channel();
+    let stdout = captured_install_stdout(
+        child.stdout.take().ok_or("Missing installer stdout")?, MAX_STDOUT, sender);
+    let stderr = captured(child.stderr.take().ok_or("Missing installer stderr")?, MAX_STDERR);
+    let started = Instant::now();
+    let status = loop {
+        while let Ok(line) = receiver.try_recv() { on_line(&line); }
+        match child.try_wait() {
+            Ok(Some(status)) => break Ok(status),
+            Ok(None) if started.elapsed() < timeout =>
+                thread::sleep(Duration::from_millis(35)),
+            Ok(None) => {
+                stop_tree(&mut child);
+                break Err("Installer timed out; its process tree was terminated".to_string());
+            }
+            Err(e) => {
+                stop_tree(&mut child);
+                break Err(format!("Cannot monitor installer sidecar: {e}"));
+            }
+        }
+    };
+    let out = stdout.join().map_err(|_| "Installer stdout reader failed")?;
+    let err = stderr.join().map_err(|_| "Installer stderr reader failed")?;
+    for line in receiver.try_iter() { on_line(&line); }
+    let status = status?;
+    if out.len() as u64 > MAX_STDOUT || err.len() as u64 > MAX_STDERR {
+        return Err("Installer IPC output exceeded bounded protocol limits".into());
+    }
+    if !status.success() {
+        return Err(format!("Installer failed ({status}): {}",
+            String::from_utf8_lossy(&err).trim()));
+    }
+    String::from_utf8(out).map_err(|_| "Installer emitted non-UTF-8 output".into())
+}
+
 /// The native installer bridge is separate from the read-only catalog IPC.
 //// Only explicit project-review / approved-install callbacks may invoke it.
 /// It reuses the original vetted worker and never executes arbitrary commands.
 pub fn installer_bridge(mode: &str, project_id: &str, approval_token: Option<&str>)
     -> Result<String, String>
 {
+    installer_bridge_with_progress(mode, project_id, approval_token, |_| {})
+}
+
+pub fn installer_bridge_with_progress(
+    mode: &str,
+    project_id: &str,
+    approval_token: Option<&str>,
+    on_line: impl FnMut(&str),
+) -> Result<String, String> {
     // One exact managed exception: PdfCraft's vetted Windows portable archive.
     // Research and every other managed project remain installation-ineligible.
     let source_id = project_id.strip_prefix("curated:")
@@ -163,9 +259,11 @@ pub fn installer_bridge(mode: &str, project_id: &str, approval_token: Option<&st
         }
         cmd.env("CHALLENGER_PREVIEW_RUNTIME", path);
     }
-    run_bounded(cmd, if mode == "install" {
-        Duration::from_secs(12 * 60)
-    } else { Duration::from_secs(22) })
+    if mode == "install" {
+        run_bounded_progress(cmd, Duration::from_secs(12 * 60), on_line)
+    } else {
+        run_bounded(cmd, Duration::from_secs(22))
+    }
 }
 
 pub fn read_catalog() -> Result<Catalog, String> {
@@ -197,6 +295,36 @@ pub fn read_catalog() -> Result<Catalog, String> {
 mod tests {
     use super::*;
 
+    #[test]
+    fn streaming_stdout_is_bounded_and_delivers_real_lines() {
+        let mut bytes=Vec::new();
+        for idx in 0..270 { bytes.extend_from_slice(format!("stage-{idx}\n").as_bytes()); }
+        bytes.extend_from_slice(&vec![b'A';4096]);
+        bytes.extend_from_slice(b"\naccepted-after-overlong-line\n");
+        let (tx,rx)=mpsc::channel();
+        let handle=captured_install_stdout(std::io::Cursor::new(bytes),64,tx);
+        let out=handle.join().unwrap();
+        assert_eq!(out.len(),65);
+        let events:Vec<_>=rx.try_iter().collect();
+        assert_eq!(events.len(),256);
+        assert_eq!(events[0],"stage-0");
+        assert_eq!(events[255],"stage-255");
+    }
+    #[cfg(unix)]
+    #[test]
+    fn streaming_stdout_is_delivered_before_process_completes() {
+        let mut cmd=Command::new("/bin/sh");
+        cmd.args(["-c","printf 'stream-stage\\n'; sleep 2; printf 'done\\n'"]);
+        cmd.stdout(Stdio::piped()).stderr(Stdio::piped());
+        let started=Instant::now();
+        let mut first=None;
+        let output=run_bounded_progress(cmd,Duration::from_secs(5),|line| {
+            if first.is_none() { first=Some((line.to_string(),started.elapsed())); }
+        }).unwrap();
+        assert_eq!(first.as_ref().map(|x|x.0.as_str()),Some("stream-stage"));
+        assert!(first.unwrap().1<Duration::from_millis(1500));
+        assert!(output.contains("done"));
+    }
     #[test]
     fn absent_binary_is_not_misreported_as_catalog_success() {
         let mut cmd = Command::new("nonexistent-challenger-sidecar-test-executable");
