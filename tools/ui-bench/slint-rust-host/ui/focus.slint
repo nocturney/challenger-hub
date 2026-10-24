@@ -25,6 +25,12 @@ export struct ManagedEntry {
     latest: string,
     status: string,
 }
+export struct DeviceEntry {
+    name: string,
+    identifier: string,
+    version: string,
+    provenance: string,
+}
 export struct SessionEvent {
     name: string,
     detail: string,
@@ -60,6 +66,15 @@ export component AppWindow inherits Window {
     in-out property <string> inventory-checked: "Not assessed";
     in-out property <[SessionEvent]> session-events;
     in-out property <int> session-event-count: 0;
+    in-out property <[DeviceEntry]> device-entries;
+    in-out property <int> device-total: 0;
+    in-out property <int> device-showing: 0;
+    in-out property <string> device-scope: "Not inspected";
+    in-out property <string> device-status: "not-read";
+    in-out property <string> device-query: "";
+    in-out property <bool> device-truncated: false;
+    in-out property <bool> device-reading: false;
+    in-out property <string> device-error: "";
 
     in-out property <string> detail-name: "";
     in-out property <string> detail-maker: "";
@@ -87,6 +102,8 @@ export component AppWindow inherits Window {
     callback load-more();
     callback open-source();
     callback refresh-requested();
+    callback device-read-requested();
+    callback device-search-edited(string);
     callback toggle-theme();
 
     property <color> canvas: root.dark-mode ? #131b19 : #fafaf6;
@@ -132,9 +149,9 @@ export component AppWindow inherits Window {
                 }
                 Rectangle {
                     width: root.width < 980px ? 94px : 114px;
-                    background: root.page == "library" ? root.accent-bg : transparent;
+                    background: root.page == "library" || root.page == "device" ? root.accent-bg : transparent;
                     border-radius: 8px;
-                    Text { text: "My software"; color: root.page == "library" ? root.accent : root.muted;
+                    Text { text: "My software"; color: root.page == "library" || root.page == "device" ? root.accent : root.muted;
                            font-size: 12px; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
                     TouchArea { clicked => { root.navigate("library"); } }
                 }
@@ -514,6 +531,17 @@ export component AppWindow inherits Window {
             padding-top: 29px; padding-bottom: 20px; spacing: 15px;
             Text { text: "MY SOFTWARE  /  MANAGED APP SIGNALS"; font-size: 10px; font-weight: 800; color: root.accent; }
             Text { text: "What this device reports."; font-size: 31px; font-weight: 800; color: root.strong; }
+            HorizontalLayout {
+                spacing: 12px;
+                Text { text: "MANAGED / CATALOG"; font-size: 10px; font-weight: 800; color: root.accent; vertical-alignment: center; }
+                Rectangle { horizontal-stretch: 1; background: transparent; }
+                Rectangle {
+                    width: 182px; height: 36px; background: root.accent-bg; border-radius: 7px;
+                    Text { text: "OS app registrations  →"; font-size: 11px; font-weight: 700; color: root.accent;
+                        horizontal-alignment: center; vertical-alignment: center; }
+                    TouchArea { clicked => { root.navigate("device"); } }
+                }
+            }
             Rectangle {
                 height: 112px; background: root.accent-bg; border-radius: 11px;
                 HorizontalLayout {
@@ -583,6 +611,143 @@ export component AppWindow inherits Window {
                 }
             }
             Text { text: "Read-only. Curated and research projects are NOT checked for installation. Refresh reruns only the original local detector.";
+                font-size: 10px; color: root.subtle; wrap: word-wrap; }
+        }
+
+        // Explicit user-triggered OS registration evidence; NOT a package
+        // install verification, launch capability, catalog auto-match or job.
+        if root.page == "device": VerticalLayout {
+            padding-left: root.width < 950px ? 25px : 52px;
+            padding-right: root.width < 950px ? 25px : 52px;
+            padding-top: 25px; padding-bottom: 20px; spacing: 14px;
+            HorizontalLayout {
+                spacing: 12px;
+                Rectangle {
+                    width: 142px; height: 35px; background: root.accent-bg; border-radius: 7px;
+                    Text { text: "← My software"; font-size: 11px; font-weight: 700; color: root.accent;
+                        horizontal-alignment: center; vertical-alignment: center; }
+                    TouchArea { clicked => { root.navigate("library"); } }
+                }
+                Rectangle { horizontal-stretch: 1; background: transparent; }
+                Text { text: "LOCAL / READ ONLY / ON DEMAND"; font-size: 10px; color: root.accent;
+                    font-weight: 800; vertical-alignment: center; }
+            }
+            Text { text: "OS app registrations."; font-size: 33px; font-weight: 800; color: root.strong; }
+            Text { text: "A separate native OS evidence view, not the 181-project source catalog or the 14 managed-app status signals.";
+                font-size: 12px; color: root.muted; wrap: word-wrap; }
+            Rectangle {
+                height: 112px; background: root.accent-bg; border-radius: 12px;
+                HorizontalLayout {
+                    padding: 20px; spacing: 15px;
+                    VerticalLayout {
+                        spacing: 8px; horizontal-stretch: 1;
+                        Text { text: "OBSERVED REGISTRATION RECORDS"; font-size: 10px; font-weight: 800; color: root.accent; }
+                        Text { text: root.device-status == "observed" ? root.device-total : "Not read";
+                            font-size: 25px; font-weight: 800; color: root.strong; }
+                        Text { text: root.device-scope; font-size: 10px; color: root.muted; wrap: word-wrap; }
+                    }
+                    Rectangle {
+                        width: 174px; height: 42px; background: root.strong; border-radius: 8px;
+                        Text { text: root.device-reading ? "Reading system…" : "Inspect local apps";
+                            font-size: 12px; font-weight: 700; color: root.sheet;
+                            horizontal-alignment: center; vertical-alignment: center; }
+                        TouchArea { enabled: !root.device-reading; clicked => { root.device-read-requested(); } }
+                    }
+                }
+            }
+            if root.device-status == "not-read": Rectangle {
+                height: 112px; background: root.muted-sheet; border-radius: 9px;
+                VerticalLayout {
+                    padding: 22px; spacing: 9px;
+                    Text { text: "No local device read has been requested."; font-size: 13px; font-weight: 700; color: root.strong; }
+                    Text { text: "Use Inspect local apps to read only OS-registered application evidence. This does not scan all directories or discover executables.";
+                        font-size: 12px; color: root.muted; wrap: word-wrap; }
+                }
+            }
+            if root.device-status == "error": Rectangle {
+                height: 96px; background: root.muted-sheet; border-radius: 9px;
+                VerticalLayout {
+                    padding: 17px; spacing: 8px;
+                    Text { text: "Native OS read not available"; font-size: 13px; font-weight: 700; color: root.strong; }
+                    Text { text: root.device-error; font-size: 11px; color: root.muted; wrap: word-wrap; }
+                }
+            }
+            if root.device-status == "observed": VerticalLayout {
+                spacing: 12px;
+                Text {
+                    text: root.device-scope == "known-application-bundle-roots" ?
+                        "macOS: .app bundles in known system/user Application folders only. Does not include every portable app." :
+                        root.device-scope == "windows-uninstall-registry" ?
+                        "Windows: Add/Remove Programs registry entries. Does not include unregistered or portable apps." :
+                        "Linux: visible desktop launcher entries, NOT a list of installed packages.";
+                    font-size: 11px; color: root.muted; wrap: word-wrap;
+                }
+                HorizontalLayout {
+                    spacing: 10px;
+                    Rectangle {
+                        height: 43px; horizontal-stretch: 1; background: root.sheet;
+                        border-color: root.line; border-width: 1px; border-radius: 8px;
+                        HorizontalLayout {
+                            padding-left: 12px; padding-right: 12px; spacing: 9px;
+                            Text { text: "FILTER"; font-size: 10px; font-weight: 800; color: root.accent;
+                                vertical-alignment: center; }
+                            LineEdit {
+                                horizontal-stretch: 1; height: 35px;
+                                text: root.device-query;
+                                placeholder-text: "Name or registered identifier…";
+                                edited(v) => { root.device-search-edited(v); }
+                            }
+                        }
+                    }
+                    Rectangle {
+                        width: 124px; height: 43px; background: root.muted-sheet; border-radius: 8px;
+                        Text { text: root.device-showing + " matching"; font-size: 11px; font-weight: 700;
+                            color: root.accent; horizontal-alignment: center; vertical-alignment: center; }
+                    }
+                }
+                if root.device-truncated: Text {
+                    text: "Safety cap reached: first 512 distinct records only. This is an incomplete observation.";
+                    font-size: 11px; color: #b18140; wrap: word-wrap;
+                }
+                Rectangle {
+                    height: 34px; background: root.muted-sheet; border-radius: 5px;
+                    HorizontalLayout {
+                        padding-left: 13px; padding-right: 13px; spacing: 10px;
+                        Text { text: "REGISTERED NAME"; font-size: 9px; font-weight: 800; color: root.subtle;
+                            horizontal-stretch: 3; vertical-alignment: center; }
+                        Text { text: "VERSION (IF REPORTED)"; font-size: 9px; font-weight: 800; color: root.subtle;
+                            horizontal-stretch: 2; vertical-alignment: center; }
+                        Text { text: "ID"; font-size: 9px; font-weight: 800; color: root.subtle;
+                            horizontal-stretch: 3; vertical-alignment: center; }
+                        if root.width > 950px: Text { text: "REGISTRY SOURCE"; font-size: 9px; font-weight: 800;
+                            color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
+                    }
+                }
+            }
+            if root.device-status == "observed": ListView {
+                vertical-stretch: 1;
+                for app in root.device-entries: Rectangle {
+                    height: 49px; background: root.sheet; border-color: root.line; border-width: 1px;
+                    HorizontalLayout {
+                        padding-left: 13px; padding-right: 13px; spacing: 10px;
+                        Text { text: app.name; font-size: 12px; font-weight: 700; color: root.strong;
+                            horizontal-stretch: 3; vertical-alignment: center; overflow: elide; }
+                        Text { text: app.version == "" ? "Not reported" : app.version; font-size: 11px; color: root.muted;
+                            horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
+                        Text { text: app.identifier == "" ? "Not reported" : app.identifier;
+                            font-size: 10px; color: root.muted; horizontal-stretch: 3;
+                            vertical-alignment: center; overflow: elide; }
+                        if root.width > 950px: Text { text: app.provenance; font-size: 10px; color: root.subtle;
+                            horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
+                    }
+                }
+            }
+            if root.device-status == "observed" && root.device-showing == 0: Text {
+                text: "No registration records match the current filter. This does not prove any app is absent.";
+                color: root.subtle; font-size: 12px;
+            }
+            Rectangle { vertical-stretch: root.device-status == "observed" ? 0 : 1; background: transparent; }
+            Text { text: "No installs, launches, network requests, source-catalog promotion or file writes. The OS read runs only on request; missing records never imply uninstalled.";
                 font-size: 10px; color: root.subtle; wrap: word-wrap; }
         }
 

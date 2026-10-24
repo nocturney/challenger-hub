@@ -1,4 +1,5 @@
 mod catalog;
+mod device;
 mod sidecar;
 
 use catalog::{domain_counts, domain_label, domain_of, filtered_domain, Catalog, Inventory, Project, DOMAINS};
@@ -44,6 +45,9 @@ struct State {
     history: Vec<Route>,
     cursor: usize,
     inventory: Option<Inventory>,
+    device_snapshot: Option<device::DeviceSnapshot>,
+    device_query: String,
+    device_error: Option<String>,
     events: Vec<SessionEvent>,
 }
 
@@ -52,6 +56,7 @@ impl Default for State {
         Self {
             all: Vec::new(), visible: Vec::new(), history: vec![Route::home()], cursor: 0,
             inventory: None, events: Vec::new(),
+            device_snapshot: None, device_query: String::new(), device_error: None,
         }
     }
 }
@@ -225,6 +230,33 @@ fn update_device_panels(ui: &AppWindow, state: &State) {
     )));
 }
 
+fn update_os_device_panel(ui: &AppWindow, state: &State) {
+    ui.set_device_query(state.device_query.clone().into());
+    ui.set_device_error(state.device_error.as_deref().unwrap_or("").into());
+    if let Some(snapshot) = &state.device_snapshot {
+        ui.set_device_status("observed".into());
+        ui.set_device_scope(snapshot.scope.into());
+        ui.set_device_total(snapshot.entries.len() as i32);
+        ui.set_device_truncated(snapshot.truncated);
+        let visible = device::search(snapshot, &state.device_query)
+            .iter().map(|a| DeviceEntry {
+                name: a.name.clone().into(),
+                version: a.version.clone().into(),
+                identifier: a.identifier.clone().into(),
+                provenance: a.provenance.clone().into(),
+            }).collect::<Vec<_>>();
+        ui.set_device_showing(visible.len() as i32);
+        ui.set_device_entries(ModelRc::new(VecModel::from(visible)));
+    } else {
+        ui.set_device_status(if state.device_error.is_some() { "error" } else { "not-read" }.into());
+        ui.set_device_scope("Not inspected".into());
+        ui.set_device_total(0);
+        ui.set_device_showing(0);
+        ui.set_device_truncated(false);
+        ui.set_device_entries(ModelRc::new(VecModel::from(Vec::<DeviceEntry>::new())));
+    }
+}
+
 fn redraw(ui: &AppWindow, state: &mut State) {
     let route = state.route().clone();
     let counts = domain_counts(&state.all);
@@ -257,6 +289,7 @@ fn redraw(ui: &AppWindow, state: &mut State) {
     let detail = route.selected.as_ref().and_then(|id| state.all.iter().find(|p| &p.id == id));
     set_detail(ui, detail);
     update_device_panels(ui, state);
+    update_os_device_panel(ui, state);
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -264,6 +297,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = std::env::args().collect();
     let check_backend = args.iter().any(|a| a == "--check-backend-only");
     let smoke = args.iter().any(|a| a == "--smoke");
+    if args.iter().any(|a| a == "--check-device-only") {
+        let snapshot = device::collect().map_err(|e| format!("Local OS discovery refused: {e}"))?;
+        device::validate(&snapshot).map_err(|e| format!("Untrusted native device evidence: {e}"))?;
+        println!("NATIVE_OS_REGISTRATION_PASS {}", serde_json::json!({
+            "platform": snapshot.platform, "scope": snapshot.scope,
+            "status": snapshot.status, "rows": snapshot.entries.len(),
+            "truncated": snapshot.truncated, "readOnly": true,
+            "installedCertainty": false, "networkOrInstaller": false
+        }));
+        return Ok(());
+    }
     let initial = sidecar::read_catalog().map_err(|e| format!("Native startup denied: {e}"))?;
 
     if check_backend {
@@ -305,7 +349,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let state = Rc::clone(&state); let weak = ui.as_weak();
         move |dest| if let Some(w) = weak.upgrade() {
             let dest = dest.to_string();
-            if ["home","library","activity"].contains(&dest.as_str()) {
+            if ["home","library","device","activity"].contains(&dest.as_str()) {
                 let mut state = state.borrow_mut();
                 state.push(Route::simple(&dest));
                 redraw(&w, &mut state);
@@ -401,6 +445,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             w.set_dark_mode(!w.get_dark_mode());
         }
     });
+    ui.on_device_search_edited({
+        let state = Rc::clone(&state); let weak = ui.as_weak();
+        move |value| if let Some(w) = weak.upgrade() {
+            let mut s = state.borrow_mut();
+            s.device_query = value.to_string();
+            update_os_device_panel(&w, &s);
+        }
+    });
 
     let (tx, rx) = mpsc::channel::<Result<Catalog, String>>();
     let busy = Rc::new(Cell::new(false));
@@ -454,10 +506,74 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     });
 
+    // A second, independent one-shot channel: OS registration evidence is read
+    // ONLY after the user explicitly invokes Inspect local apps. Neither the
+    // initial catalog read nor general Refresh starts this device probe.
+    let (device_tx, device_rx) = mpsc::channel::<Result<device::DeviceSnapshot, String>>();
+    let device_busy = Rc::new(Cell::new(false));
+    let device_jobs = Rc::new(RefCell::new(Vec::<thread::JoinHandle<()>>::new()));
+    ui.on_device_read_requested({
+        let tx = device_tx.clone();
+        let busy = Rc::clone(&device_busy);
+        let jobs = Rc::clone(&device_jobs);
+        let weak = ui.as_weak();
+        move || {
+            if busy.replace(true) { return; }
+            if let Some(w) = weak.upgrade() { w.set_device_reading(true); }
+            let tx = tx.clone();
+            jobs.borrow_mut().push(thread::spawn(move || {
+                let snapshot = device::collect().and_then(|s| {
+                    device::validate(&s)?;
+                    Ok(s)
+                });
+                let _ = tx.send(snapshot);
+            }));
+        }
+    });
+    let device_timer = Timer::default();
+    device_timer.start(TimerMode::Repeated, Duration::from_millis(75), {
+        let state = Rc::clone(&state);
+        let busy = Rc::clone(&device_busy);
+        let weak = ui.as_weak();
+        move || {
+            while let Ok(result) = device_rx.try_recv() {
+                busy.set(false);
+                if let Some(w) = weak.upgrade() {
+                    w.set_device_reading(false);
+                    let mut s = state.borrow_mut();
+                    match result {
+                        Ok(snapshot) => {
+                            s.event("Explicit native OS registration read",
+                                &format!("{} observed {} records; truncated={}",
+                                    snapshot.scope, snapshot.entries.len(), snapshot.truncated),
+                                "OK");
+                            eprintln!("NATIVE_DEVICE_READ_PASS scope={} rows={} capped={}",
+                                snapshot.scope, snapshot.entries.len(), snapshot.truncated);
+                            s.device_snapshot = Some(snapshot);
+                            s.device_error = None;
+                        }
+                        Err(error) => {
+                            s.event("Native OS registration read refused",
+                                "No new local observations applied; prior snapshot preserved", "ERROR");
+                            eprintln!("NATIVE_DEVICE_READ_REFUSED {error}");
+                            s.device_error = Some(error.chars().take(180).collect());
+                        }
+                    }
+                    update_os_device_panel(&w, &s);
+                    update_device_panels(&w, &s);
+                }
+            }
+        }
+    });
+
     // Deterministic visual QA routes. Developer-preview only; self-closing
     // windows, no machine scans, downloads, installers or background tasks.
     if args.iter().any(|a| a == "--qa-preview-library") {
         ui.invoke_navigate("library".into());
+    }
+    if args.iter().any(|a| a == "--qa-preview-device") {
+        ui.invoke_navigate("device".into());
+        ui.invoke_device_read_requested();
     }
     if args.iter().any(|a| a == "--qa-preview-activity" || a == "--qa-preview-activity-refresh") {
         ui.invoke_navigate("activity".into());
@@ -475,7 +591,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     if args.iter().any(|a| ["--qa-preview-results", "--qa-preview-dune",
         "--qa-preview-library", "--qa-preview-activity",
-        "--qa-preview-activity-refresh"].contains(&a.as_str())) {
+        "--qa-preview-activity-refresh", "--qa-preview-device"].contains(&a.as_str())) {
         let weak = ui.as_weak();
         Timer::single_shot(Duration::from_secs(22), move || {
             if let Some(w) = weak.upgrade() { let _ = w.hide(); }
@@ -515,6 +631,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     w.get_managed_assessed() != 14 || w.get_managed_detected() > 14 ||
                     w.get_managed_updates() > w.get_managed_detected() {
                     fail("real managed inventory counts or provenance");
+                }
+                w.invoke_navigate("device".into());
+                if w.get_page() != "device" || w.get_device_status() != "not-read"
+                    || w.get_device_total() != 0 {
+                    fail("native OS probe must NOT execute without explicit request");
                 }
                 w.invoke_navigate("activity".into());
                 if w.get_page() != "activity" || w.get_session_event_count() != 1 ||
@@ -566,6 +687,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     ui.run()?;
     // In-flight Refresh can never outlive the host or leave a Node engine orphaned.
     for job in jobs.borrow_mut().drain(..) { let _ = job.join(); }
+    for job in device_jobs.borrow_mut().drain(..) { let _ = job.join(); }
     Ok(())
 }
 

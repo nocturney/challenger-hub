@@ -118,9 +118,50 @@ This is a **real native Slint interface**, not an Electron/WebView/CSS wrapper:
   metadata. Network/source scanning stays disabled; this UI never triggers
   OS-wide software discovery or an install/update/launch.
 
+## P3: explicit native OS registrations — on-demand only
+
+The dedicated **My software → OS app registrations** view now reads real OS
+registration evidence directly from the native Rust host, independent of the
+181-project source catalog and the 14-app managed detector:
+
+- macOS: bounded, non-recursive .app bundle observations at fixed
+  /Applications, /System/Applications, Utilities and ~/Applications roots.
+  Bundle IDs and versions come from Info.plist via system-owned plutil,
+  without executing application code. Untrusted symlinks are skipped.
+- Windows: existing Add/Remove Programs uninstall entries from HKLM/HKCU
+  (including 32-bit registrations) through a fixed read-only PowerShell
+  command. It does not launch, download, verify, repair or uninstall apps.
+- Linux: .desktop launchers in fixed system and user desktop-entry roots
+  (including Flatpak/Snap launcher export locations), **not** package-manager
+  or complete executable inventories. The .desktop Version key is explicitly
+  ignored because it describes the desktop-entry format, not an app version.
+- All platforms: at most **512** distinct records per observation, sanitized
+  bounded names, explicit truncation and source/coverage metadata. UI displays
+  a searchable native table with name, reported version, identifier and
+  registration source. The scan runs only after **Inspect local apps**, on a
+  separate thread, and is neither scheduled nor coupled to catalog Refresh.
+  Failure is reported and preserves the last valid read.
+- Platform-specific registration **does not prove installation correctness or
+  absence**. Missing a record is not evidence of "not installed"; records are
+  not automatically matched to Challenger projects or granted install gates.
+  Nothing persists on disk or is sent to an external service.
+
+Local observations (24 Oct 2026): MacMiniOffice2 yielded **88 visible .app
+bundle records** in its known application roots (bounded complete in that
+scope). A separate read-only PowerShell source check on Chris Windows found
+**154 uninstall registry entries** in the account/session context used by the
+remote tool; this is not yet a Windows-native Rust UI acceptance test.
+Actual Mac window QA at
+[`docs/previews/focus-native-slint/07-os-app-registrations-macos.png`](../../../docs/previews/focus-native-slint/07-os-app-registrations-macos.png).
+
+Developer CLI `--check-device-only` explicitly runs the same bounded OS
+read with validation, emitting only its count/scope, never application names
+or paths. This is suitable for cross-platform CI checks. The ordinary
+`--smoke` asserts no implicit OS scan occurred on navigation.
+
 ## Next gates — not yet implemented
 
-Full OS-wide inventory, authoritative package/application IDs and genuine
+A truly exhaustive OS-wide package/application inventory, authoritative package/application IDs and genuine
 persistent-worker queue/history (distinct from these P2 managed-only signals
 and preview session diagnostics), user-controlled sorting, deeper metadata,
 and additional source-pinned screenshots; accessibility, keyboard shortcuts,
