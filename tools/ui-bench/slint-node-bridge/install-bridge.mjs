@@ -150,8 +150,25 @@ function userState(){
 async function install(projectId,token){
   assert(hashOk(token),'Missing exact user-approved release token');
   requireNormalUser();
+  let cancellationRequested=false,activeWorker=null,input='';
+  const onCancelInput=bytes=>{
+    // Local Native host pipe only. Never force-kill the child during commit.
+    const chunk=bytes.toString('utf8');
+    if(input.length+chunk.length>64){input='';return;}
+    input+=chunk;
+    if(!input.includes('cancel\n'))return;
+    input='';
+    cancellationRequested=true;
+    if(activeWorker?.stdin?.writable){
+      activeWorker.stdin.write('cancel\n',()=>{});
+    }
+  };
+  process.stdin.on('data',onCancelInput);
+  process.stdin.resume();
+  try{
   const plan=await fetchPlan(projectId);
   assert(plan.approvalToken===token,'Release changed since approval; review again');
+  if(cancellationRequested)throw Error('INSTALL_CANCELLED_BEFORE_COMMIT');
   const base=userState();
   fs.mkdirSync(base,{recursive:true,mode:0o700});
   assert(fs.lstatSync(base).isDirectory()&&!fs.lstatSync(base).isSymbolicLink(),
@@ -175,12 +192,19 @@ async function install(projectId,token){
           sha256:plan.sha256,url:plan.downloadURL}]}}};
     fs.writeFileSync(path.join(sandbox,'release-index.json'),JSON.stringify(snapshot),{mode:0o600});
     console.log(JSON.stringify({state:'approved',detail:'Explicit approved install: '+plan.name+' '+plan.tag}));
-    const args=[path.join(sandbox,'Install-Challenger.js'),plan.id];
+    const args=[path.join(sandbox,'Install-Challenger.js'),plan.id,'--native-approved-install'];
     if(plan.projectId==='managed:pdfcraft')args.push('--native-pdfcraft-install');
     const child=spawn(process.execPath,args,{
-      cwd:sandbox,windowsHide:true,stdio:['ignore','pipe','pipe'],
+      cwd:sandbox,windowsHide:true,stdio:['pipe','pipe','pipe'],
       env:{...process.env,NODE_OPTIONS:'',NODE_PATH:''}
     });
+    activeWorker=child;
+    // An EPIPE after the worker has already committed must not crash the
+    // trusted parent. Only the worker's own terminal record determines outcome.
+    child.stdin.on('error',()=>{});
+    if(cancellationRequested && child.stdin.writable)
+      child.stdin.write('cancel\n',()=>{});
+    let confirmedWorkerCancellation=false;
     const copyLines=(stream,kind)=>new Promise((resolve,reject)=>{
       let partial='',count=0;
       stream.on('data',bytes=>{
@@ -189,6 +213,10 @@ async function install(projectId,token){
         let n;
         while((n=partial.indexOf('\n'))>=0){
           const line=partial.slice(0,n);partial=partial.slice(n+1);
+          if(kind==='worker' && cancellationRequested){
+            try {if(JSON.parse(line).state==='cancelled')confirmedWorkerCancellation=true;}
+            catch {}
+          }
           if(++count<=160)console.log(JSON.stringify({state:kind,detail:line.slice(0,300)}));
         }
       });
@@ -199,6 +227,8 @@ async function install(projectId,token){
       child.on('close',resolve);child.on('error',reject);
     });
     await Promise.all(outputs);
+    if(code!==0 && cancellationRequested && confirmedWorkerCancellation)
+      throw Error('INSTALL_CANCELLED_BEFORE_COMMIT');
     assert(code===0,'Vetted installer reported failure (exit '+code+')');
     const state=read(path.join(sandbox,'managed-installs.json'));
     const verified=state?.installed?.[plan.id];
@@ -215,13 +245,17 @@ async function install(projectId,token){
     fs.rmSync(sandbox,{recursive:true,force:true});
     fs.closeSync(fd);fs.rmSync(lock,{force:true});
   }
+  }finally{
+    process.stdin.off('data',onCancelInput);
+    process.stdin.pause();
+  }
 }
 async function cli(){
   const [mode,projectId,token,...extra]=process.argv.slice(2);
   assert(!extra.length,'Unexpected install arguments');
   if(mode==='plan'&&!token){console.log(JSON.stringify(await fetchPlan(projectId)));return;}
   if(mode==='install'&&token){await install(projectId,token);return;}
-  throw Error('Usage: install-bridge.mjs plan <curated:id> | install <curated:id> <approved-token>');
+  throw Error('Usage: install-bridge.mjs plan <reviewed-id> | install <reviewed-id> <approved-token>');
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))
   cli().catch(e=>{

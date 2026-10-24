@@ -108,6 +108,8 @@ export component AppWindow inherits Window {
     in-out property <bool> install-ready: false;
     in-out property <bool> install-busy: false;
     in-out property <bool> install-approved: false;
+    in-out property <bool> install-cancel-allowed: false;
+    in-out property <bool> install-cancel-requested: false;
 
     callback navigate(string);
     callback go-back();
@@ -124,6 +126,7 @@ export component AppWindow inherits Window {
     callback open-device-project(string);
     callback review-install();
     callback confirm-install();
+    callback cancel-install();
     callback toggle-theme();
 
     property <color> canvas: root.dark-mode ? #131b19 : #fafaf6;
@@ -445,7 +448,8 @@ export component AppWindow inherits Window {
                 Text { text: root.detail-summary; font-size: 14px; color: root.muted; wrap: word-wrap; }
                 Rectangle { height: 1px; background: root.line; }
                 if root.detail-kind == "curated" || (root.install-project-id == "managed:pdfcraft" && root.pdfcraft-install-supported): Rectangle {
-                    height: root.install-ready ? 336px : 194px;
+                    height: root.install-ready ? 336px :
+                        (root.install-busy && (root.install-cancel-allowed || root.install-cancel-requested) ? 245px : 194px);
                     background: root.accent-bg; border-radius: 11px;
                     VerticalLayout {
                         padding: 18px; spacing: 9px;
@@ -472,6 +476,16 @@ export component AppWindow inherits Window {
                             text: "CURRENT STEP  /  " + root.install-stage
                               + (root.install-percent >= 0 ? " · Download " + root.install-percent + "%" : "");
                             font-size: 10px; font-weight: 800; color: root.accent;
+                        }
+                        if root.install-busy && (root.install-cancel-allowed || root.install-cancel-requested): Rectangle {
+                            width: 245px; height: 34px; border-radius: 7px;
+                            background: root.install-cancel-requested ? root.muted-sheet : root.sheet;
+                            border-color: root.line; border-width: 1px;
+                            Text { text: root.install-cancel-requested ? "Cancellation requested" : "Request safe cancellation";
+                                font-size: 11px; font-weight: 700; color: root.strong;
+                                horizontal-alignment: center; vertical-alignment: center; }
+                            TouchArea { enabled: root.install-cancel-allowed && !root.install-cancel-requested;
+                                clicked => { root.cancel-install(); } }
                         }
                         Text { text: root.install-message; font-size: 11px; color: root.strong; wrap: word-wrap; }
                         if root.install-ready: VerticalLayout {

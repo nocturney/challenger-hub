@@ -1,9 +1,9 @@
 use crate::catalog::{validate, Catalog};
 use std::{
-    io::Read,
+    io::{Read, Write},
     path::{Path, PathBuf},
     process::{Child, Command, Stdio},
-    sync::mpsc,
+    sync::{atomic::{AtomicBool, Ordering}, mpsc},
     thread,
     time::{Duration, Instant},
 };
@@ -166,10 +166,13 @@ fn captured_install_stdout(
 fn run_bounded_progress(
     mut cmd: Command,
     timeout: Duration,
+    cancel_requested: &AtomicBool,
     mut on_line: impl FnMut(&str),
 ) -> Result<String, String> {
     configure_group(&mut cmd);
     let mut child = cmd.spawn().map_err(|e| format!("Cannot launch installer sidecar: {e}"))?;
+    let mut command_input = child.stdin.take();
+    let mut cancellation_sent = false;
     let (sender, receiver) = mpsc::channel();
     let stdout = captured_install_stdout(
         child.stdout.take().ok_or("Missing installer stdout")?, MAX_STDOUT, sender);
@@ -177,6 +180,15 @@ fn run_bounded_progress(
     let started = Instant::now();
     let status = loop {
         while let Ok(line) = receiver.try_recv() { on_line(&line); }
+        if !cancellation_sent && cancel_requested.load(Ordering::SeqCst) {
+            // A cooperative request, never a kill. Worker may already be
+            // committing the verified package and legitimately finish instead.
+            if let Some(stdin) = command_input.as_mut() {
+                let _ = stdin.write_all(b"cancel\n");
+                let _ = stdin.flush();
+            }
+            cancellation_sent = true;
+        }
         match child.try_wait() {
             Ok(Some(status)) => break Ok(status),
             Ok(None) if started.elapsed() < timeout =>
@@ -220,6 +232,17 @@ pub fn installer_bridge_with_progress(
     approval_token: Option<&str>,
     on_line: impl FnMut(&str),
 ) -> Result<String, String> {
+    installer_bridge_with_cancel(mode,project_id,approval_token,
+        &AtomicBool::new(false),on_line)
+}
+
+pub fn installer_bridge_with_cancel(
+    mode: &str,
+    project_id: &str,
+    approval_token: Option<&str>,
+    cancel_requested: &AtomicBool,
+    on_line: impl FnMut(&str),
+) -> Result<String, String> {
     // One exact managed exception: PdfCraft's vetted Windows portable archive.
     // Research and every other managed project remain installation-ineligible.
     let source_id = project_id.strip_prefix("curated:")
@@ -244,7 +267,7 @@ pub fn installer_bridge_with_progress(
     let mut cmd = Command::new(node);
     cmd.arg(script).args([mode, project_id]);
     if let Some(token) = approval_token { cmd.arg(token); }
-    cmd.current_dir(&dir).stdin(Stdio::null())
+    cmd.current_dir(&dir).stdin(if mode=="install" {Stdio::piped()} else {Stdio::null()})
         .stdout(Stdio::piped()).stderr(Stdio::piped());
     cmd.env_remove("NODE_OPTIONS").env_remove("NODE_PATH");
     if packaged {
@@ -260,7 +283,7 @@ pub fn installer_bridge_with_progress(
         cmd.env("CHALLENGER_PREVIEW_RUNTIME", path);
     }
     if mode == "install" {
-        run_bounded_progress(cmd, Duration::from_secs(12 * 60), on_line)
+        run_bounded_progress(cmd, Duration::from_secs(12 * 60), cancel_requested, on_line)
     } else {
         run_bounded(cmd, Duration::from_secs(22))
     }
@@ -318,12 +341,24 @@ mod tests {
         cmd.stdout(Stdio::piped()).stderr(Stdio::piped());
         let started=Instant::now();
         let mut first=None;
-        let output=run_bounded_progress(cmd,Duration::from_secs(5),|line| {
+        let output=run_bounded_progress(cmd,Duration::from_secs(5),&AtomicBool::new(false),|line| {
             if first.is_none() { first=Some((line.to_string(),started.elapsed())); }
         }).unwrap();
         assert_eq!(first.as_ref().map(|x|x.0.as_str()),Some("stream-stage"));
         assert!(first.unwrap().1<Duration::from_millis(1500));
         assert!(output.contains("done"));
+    }
+    #[cfg(unix)]
+    #[test]
+    fn explicit_cancel_is_sent_cooperatively_via_installer_stdin() {
+        let flag=AtomicBool::new(false);
+        let mut cmd=Command::new("/bin/sh");
+        cmd.args(["-c","printf 'download-started\\n'; read line; printf 'response:%s\\n' \"$line\""]);
+        cmd.stdin(Stdio::piped()).stdout(Stdio::piped()).stderr(Stdio::piped());
+        let out=run_bounded_progress(cmd,Duration::from_secs(3),&flag,|line| {
+            if line=="download-started" {flag.store(true,Ordering::SeqCst);}
+        }).unwrap();
+        assert!(out.contains("response:cancel"),"No safe cancel reached child: {out}");
     }
     #[test]
     fn absent_binary_is_not_misreported_as_catalog_success() {

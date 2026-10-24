@@ -3,6 +3,7 @@
 
 use crate::{catalog::Project,sidecar};
 use serde::Deserialize;
+use std::sync::atomic::AtomicBool;
 
 #[derive(Clone,Debug,Deserialize)]
 #[serde(rename_all="camelCase")]
@@ -131,6 +132,21 @@ pub fn parse_install_progress(line: &str) -> Option<InstallProgress> {
             message: "Checking package contents and installing to the approved location".into(),
             percent: None,
         }),
+        "cancel-ready" => Some(InstallProgress {
+            stage: "CANCELABLE",
+            message: "Ready to download; cancellation is available".into(),
+            percent: None,
+        }),
+        "committing" => Some(InstallProgress {
+            stage: "COMMITTING",
+            message: "Applying verified files; cancellation is now unsafe".into(),
+            percent: None,
+        }),
+        "cancelled" => Some(InstallProgress {
+            stage: "CANCELED",
+            message: "Worker confirmed cancellation before application replacement".into(),
+            percent: None,
+        }),
         "installed" => Some(InstallProgress {
             stage: "RECORDING",
             message: "Application files placed; validating the managed install record".into(),
@@ -152,10 +168,11 @@ pub fn parse_install_progress(line: &str) -> Option<InstallProgress> {
 pub fn run_approved(
     plan:&InstallPlan,
     mut on_progress: impl FnMut(InstallProgress),
+    cancel_requested: &AtomicBool,
 ) -> Result<String,String> {
     if plan.approval_token.len()!=64 {return Err("Missing confirmed install plan".into());}
-    let stdout=sidecar::installer_bridge_with_progress(
-        "install",&plan.project_id,Some(&plan.approval_token),
+    let stdout=sidecar::installer_bridge_with_cancel(
+        "install",&plan.project_id,Some(&plan.approval_token),cancel_requested,
         |line| if let Some(progress)=parse_install_progress(line) {on_progress(progress)}
     )?;
     let last=stdout.lines().rev().find(|line|line.contains("challenger.native.install-result.v1"))
@@ -204,6 +221,10 @@ mod tests {
             .unwrap().stage,"RECORDING");
         assert_eq!(parse_install_progress(&line("rolled-back","managed backup restored"))
             .unwrap().stage,"RESTORED");
+        assert_eq!(parse_install_progress(&line("committing","boundary"))
+            .unwrap().stage,"COMMITTING");
+        assert_eq!(parse_install_progress(&line("cancelled","before commit"))
+            .unwrap().stage,"CANCELED");
         assert_eq!(parse_install_progress(&line("success","worker may say success"))
             .unwrap().stage,"FINALIZING");
         for bad in [

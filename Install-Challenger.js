@@ -7,6 +7,27 @@ const PORTABLE=process.argv.includes('--download-only');
 // A separate, explicit native UI approval can install the reviewed PdfCraft portable ZIP.
 // No MSI execution, silent installer, elevated rights or generic managed-app exception.
 const NATIVE_PDFCRAFT_INSTALL=process.argv.includes('--native-pdfcraft-install');
+const NATIVE_CANCELABLE=process.argv.includes('--native-approved-install');
+let cancelRequested=false,commitStarted=false;
+const cancelController=new AbortController();
+if(NATIVE_CANCELABLE){
+ let input='';
+ process.stdin.setEncoding('utf8');
+ process.stdin.on('data',chunk=>{
+  if(input.length+chunk.length>64){input='';return}
+  input+=chunk;
+  if(input.includes('cancel\n')){
+   cancelRequested=true;
+   if(!commitStarted)cancelController.abort(Error('INSTALL_CANCELLED_BEFORE_COMMIT'));
+   input='';
+  }
+ });
+ process.stdin.resume();
+}
+function checkCancelable(){
+ if(NATIVE_CANCELABLE&&cancelRequested&&!commitStarted)
+  fail('INSTALL_CANCELLED_BEFORE_COMMIT');
+}
 if(NATIVE_PDFCRAFT_INSTALL&&(PORTABLE||ID!=='pdfcraft'||PLATFORM!=='win32'||process.arch!=='x64'))
  throw Error('Managed PdfCraft install is only for Windows x64 with explicit native approval');
 const DOWNLOAD_ROOT=PLATFORM==='win32'?'D:\\Downloads\\ChallengerHub\\Portable':path.join(os.homedir(),'Downloads','ChallengerHub','Portable');
@@ -50,7 +71,9 @@ function exec(file,args,timeout=120000){
 }
 async function getRelease(asset,dest){
  out('download','Downloading '+asset.name+' ('+(asset.size/1048576).toFixed(1)+' MiB)');
- const response=await fetch(asset.url,{redirect:'follow',headers:{'User-Agent':'ChallengerHub/2.4'},signal:AbortSignal.timeout(6*60*1000)});
+ checkCancelable();
+ const response=await fetch(asset.url,{redirect:'follow',headers:{'User-Agent':'ChallengerHub/2.4'},
+  signal:AbortSignal.any([AbortSignal.timeout(6*60*1000),cancelController.signal])});
  if(!response.ok||!response.body)fail('Official release download HTTP '+response.status);
  const final=new URL(response.url);
  const allowed=['github.com','objects.githubusercontent.com','release-assets.githubusercontent.com','github-releases.githubusercontent.com'];
@@ -219,6 +242,24 @@ function installMac({p,spec},src,stage){
  const stage=fs.mkdtempSync(path.join(PORTABLE?path.join(DOWNLOAD_ROOT,'.stage'):WORK_ROOT,ID+'-'));
  try{
   out('source','Approved '+entry.p.repository+' '+entry.rel.tag+' for '+PLATFORM);
+  if(NATIVE_CANCELABLE)out('cancel-ready','Cancellation is permitted before package replacement');
+  // Deterministic integration gate; permitted ONLY in a disposable Windows
+  // Actions runner, never in a regular Windows user profile.
+  if(process.env.CHALLENGER_CI_CANCEL_GATE==='1'){
+   const runner=process.env.RUNNER_TEMP||'',local=process.env.LOCALAPPDATA||'';
+   if(process.env.GITHUB_ACTIONS!=='true'||process.env.RUNNER_OS!=='Windows'||
+      !runner||!local||!path.resolve(local).toLowerCase()
+        .startsWith(path.resolve(runner).toLowerCase()+path.sep.toLowerCase()))
+     fail('CI cancel gate refused outside disposable Windows runner');
+   if(!cancelRequested)await new Promise(resolve=>{
+    const timer=setTimeout(resolve,8000);
+    cancelController.signal.addEventListener('abort',()=>{
+     clearTimeout(timer);resolve();
+    },{once:true});
+   });
+   if(!cancelRequested)fail('CI cooperative cancellation never reached worker');
+  }
+  checkCancelable();
   const asset=path.join(stage,entry.asset.name);
   await getRelease(entry.asset,asset);
   if(PORTABLE){
@@ -245,6 +286,11 @@ function installMac({p,spec},src,stage){
     out('verified','Package structure and integrity inspected without installation.');return;
   }
   out('extract','Validating the downloaded application');
+  checkCancelable();
+  // The replacement is synchronous; after this boundary, cancellation
+  // requests do not kill the worker or abandon a partially swapped app.
+  commitStarted=true;
+  out('committing','Applying verified package; cancellation is no longer safe');
   const installed=PLATFORM==='win32'?installWindows(entry,asset,stage):installMac(entry,asset,stage);
   try{
    const data=safeReadState();if(!data.installed||typeof data.installed!=='object')data.installed={};
@@ -264,4 +310,11 @@ function installMac({p,spec},src,stage){
   }
   out('success',entry.p.name+' '+entry.rel.tag+' installed and tracked');
  }finally{try{fs.rmSync(stage,{recursive:true,force:true})}catch(_){}}
-})().catch(e=>{out('failed',String(e.message));process.exitCode=1});
+})().catch(e=>{
+ if(cancelRequested&&!commitStarted){
+  out('cancelled','User cancellation confirmed before application replacement');
+  process.exitCode=2;
+ }else{
+  out('failed',String(e.message));process.exitCode=1;
+ }
+}).finally(()=>{if(NATIVE_CANCELABLE)process.stdin.pause()});

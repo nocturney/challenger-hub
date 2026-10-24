@@ -60,6 +60,23 @@ try {
     # The reviewed exe-portable adapter copies the verified EXE byte-for-byte.
     $bytesHash = (Get-FileHash -LiteralPath $installed.installedPath -Algorithm SHA256).Hash.ToLowerInvariant()
     if ($bytesHash -ne $plan.sha256) { throw 'Installed EXE SHA-256 mismatch' }
+    # Exercise Native host -> bridge stdin -> worker cancel, only BEFORE
+    # package commit. A cancel request must not kill an installer during swap.
+    $beforeCancel = Get-Content -LiteralPath $meta -Raw
+    $cancelScript = Join-Path $PSScriptRoot 'native-cancel-sandbox.mjs'
+    if (-not (Test-Path $cancelScript)) { throw 'Missing native cancel QA harness' }
+    $cancelOutput = & node $cancelScript $plan.approvalToken | Out-String
+    if ($LASTEXITCODE -ne 0 -or $cancelOutput -notmatch 'NATIVE_COOPERATIVE_CANCEL_PASS') {
+        throw 'End-to-end Native cooperative cancellation did not complete'
+    }
+    $afterCancelHash = (Get-FileHash -LiteralPath $installed.installedPath -Algorithm SHA256).Hash.ToLowerInvariant()
+    $lockPath = Join-Path $env:LOCALAPPDATA 'ChallengerNativePreview\install-state\.install.lock'
+    if ($afterCancelHash -ne $bytesHash -or
+        (Get-Content -LiteralPath $meta -Raw) -ne $beforeCancel -or
+        (Test-Path -LiteralPath $lockPath)) {
+        throw 'Cancelled install modified the previous app or left an orphaned lock'
+    }
+    Write-Output 'WINDOWS_NATIVE_COOPERATIVE_CANCEL_PASS'
     # Inject a metadata-write failure into a SECOND reviewed SolveSpace install.
     # This fault is denied outside a disposable GitHub Windows runner. The prior
     # owned executable and managed-state bytes must be restored byte-for-byte.

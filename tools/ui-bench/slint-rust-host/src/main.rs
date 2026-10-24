@@ -9,7 +9,7 @@ use slint::{ComponentHandle, Model, ModelRc, SharedString, Timer, TimerMode, Vec
 use std::{
     cell::{Cell, RefCell},
     rc::Rc,
-    sync::mpsc,
+    sync::{atomic::{AtomicBool,Ordering},mpsc,Arc},
     thread,
     time::{Duration, Instant},
 };
@@ -185,6 +185,8 @@ fn set_detail(ui: &AppWindow, project: Option<&Project>) {
             ui.set_install_hash("".into());
             ui.set_install_destination("".into());
             ui.set_install_message("Review the official release before approving an install.".into());
+            ui.set_install_cancel_allowed(false);
+            ui.set_install_cancel_requested(false);
             ui.set_install_stage("".into());
             ui.set_install_percent(-1);
         }
@@ -210,6 +212,8 @@ fn set_detail(ui: &AppWindow, project: Option<&Project>) {
         ui.set_install_project_id("".into());
         ui.set_install_ready(false);
         ui.set_install_approved(false);
+        ui.set_install_cancel_allowed(false);
+        ui.set_install_cancel_requested(false);
         ui.set_detail_name("".into());
         ui.set_detail_source("".into());
         ui.set_detail_media("".into());
@@ -360,7 +364,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let p = catalog.items.iter().find(|p|p.id=="curated:compositor")
             .ok_or("Curated Compositor is missing from the real source catalog")?;
         let plan = install::review(p)?;
-        let completed = install::run_approved(&plan, |_| {})?;
+        let completed = install::run_approved(&plan, |_| {}, &AtomicBool::new(false))?;
         println!("NATIVE_INSTALL_SANDBOX_E2E_PASS {}",serde_json::json!({
             "projectId": plan.project_id,"tag":plan.tag,
             "sha256":plan.sha256,"installedUnderTemporaryHome":true,
@@ -570,6 +574,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let (installer_tx, installer_rx) = mpsc::channel::<InstallerEvent>();
     let installer_plan = Rc::new(RefCell::new(None::<install::InstallPlan>));
     let installer_busy = Rc::new(Cell::new(false));
+    let installer_cancel = Rc::new(RefCell::new(None::<Arc<AtomicBool>>));
     let installer_jobs = Rc::new(RefCell::new(Vec::<thread::JoinHandle<()>>::new()));
 
     ui.on_review_install({
@@ -593,6 +598,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             w.set_install_busy(true);
             w.set_install_ready(false);
             w.set_install_approved(false);
+            w.set_install_cancel_allowed(false);
+            w.set_install_cancel_requested(false);
             w.set_install_message("Checking GitHub's official release digest and reviewed installer policy…".into());
             w.set_install_stage("REVIEWING".into());
             w.set_install_percent(-1);
@@ -611,6 +618,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let plan = Rc::clone(&installer_plan);
         let busy = Rc::clone(&installer_busy);
         let jobs = Rc::clone(&installer_jobs);
+        let cancel = Rc::clone(&installer_cancel);
         let weak = ui.as_weak();
         move || if let Some(w) = weak.upgrade() {
             if w.get_page() != "detail" || !w.get_install_approved() ||
@@ -632,21 +640,48 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             busy.set(true);
             w.set_install_busy(true);
+            w.set_install_cancel_allowed(true);
+            w.set_install_cancel_requested(false);
             w.set_install_message("Starting approved installation. Keep this window open.".into());
             w.set_install_stage("STARTING".into());
             w.set_install_percent(-1);
             state.borrow_mut().event("Explicitly approved native install",
                 &format!("{} · {} · {}",approved.project_id,approved.tag,approved.asset_name),"RUNNING");
             let tx=tx.clone();
+            let cancel_flag=Arc::new(AtomicBool::new(false));
+            *cancel.borrow_mut()=Some(Arc::clone(&cancel_flag));
             jobs.borrow_mut().push(thread::spawn(move || {
                 let id=approved.project_id.clone();
                 let result=install::run_approved(&approved, |progress| {
                     let _=tx.send(InstallerEvent::Progress {
                         project_id:id.clone(),progress
                     });
-                });
+                }, &cancel_flag);
                 let _=tx.send(InstallerEvent::Finished{project_id:id,result});
             }));
+        }
+    });
+
+    // A request is advisory until the worker proves it stopped before commit.
+    // The Rust host never uses taskkill to implement a user's cancel click.
+    ui.on_cancel_install({
+        let state=Rc::clone(&state);
+        let plan=Rc::clone(&installer_plan);
+        let cancel=Rc::clone(&installer_cancel);
+        let weak=ui.as_weak();
+        move || if let Some(w)=weak.upgrade() {
+            if w.get_page()!="detail" || !w.get_install_busy() ||
+               !w.get_install_cancel_allowed() || w.get_install_cancel_requested() {return;}
+            let id=plan.borrow().as_ref().map(|p|p.project_id.clone());
+            let Some(id)=id else {return;};
+            if state.borrow().route().selected.as_deref()!=Some(id.as_str()){return;}
+            if let Some(flag)=cancel.borrow().as_ref(){
+                flag.store(true,Ordering::SeqCst);
+                w.set_install_cancel_requested(true);
+                w.set_install_cancel_allowed(false);
+                w.set_install_message("Safe cancellation requested. If file replacement already began, the verified install will finish instead.".into());
+                state.borrow_mut().event("Explicit installer cancel request",&id,"REQUESTED");
+            }
         }
     });
 
@@ -656,6 +691,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let weak=ui.as_weak();
         let plan=Rc::clone(&installer_plan);
         let busy=Rc::clone(&installer_busy);
+        let cancel=Rc::clone(&installer_cancel);
         move || while let Ok(message)=installer_rx.try_recv() {
             let terminal=!matches!(message,InstallerEvent::Progress {..});
             if terminal {busy.set(false);}
@@ -701,9 +737,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         let same=s.route().page=="detail" &&
                             s.route().selected.as_deref()==Some(project_id.as_str());
                         if same && busy.get() {
+                            if matches!(progress.stage,"COMMITTING"|"RECORDING"|"FINALIZING"|"RESTORED"){
+                                w.set_install_cancel_allowed(false);
+                            }
                             w.set_install_stage(progress.stage.into());
                             w.set_install_percent(progress.percent.map_or(-1,i32::from));
-                            w.set_install_message(progress.message.clone().into());
+                            if !w.get_install_cancel_requested() ||
+                                progress.stage=="COMMITTING" {
+                                w.set_install_message(progress.message.clone().into());
+                            }
                         }
                         s.event("Native installer progress",
                             &format!("{} · {} · {}",project_id,progress.stage,progress.message),
@@ -713,7 +755,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         let same=s.route().page=="detail" &&
                             s.route().selected.as_deref()==Some(project_id.as_str());
                         *plan.borrow_mut()=None;
-                        if same { w.set_install_ready(false);w.set_install_approved(false); }
+                        *cancel.borrow_mut()=None;
+                        if same {
+                            w.set_install_ready(false);
+                            w.set_install_approved(false);
+                            w.set_install_cancel_allowed(false);
+                            w.set_install_cancel_requested(false);
+                        }
                         match result {
                             Ok(info) => {
                                 s.event("Verified installation completed",&info,"OK");
@@ -724,13 +772,22 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                 }
                             }
                             Err(err) => {
-                                s.event("Approved installation failed",
-                                    &format!("{} · {}",project_id,err),"ERROR");
+                                let canceled=err.contains("INSTALL_CANCELLED_BEFORE_COMMIT");
+                                if canceled {
+                                    s.event("Installer safely canceled before commit",
+                                        &project_id,"CANCELED");
+                                }else{
+                                    s.event("Approved installation failed",
+                                        &format!("{} · {}",project_id,err),"ERROR");
+                                }
                                 if same {
-                                    w.set_install_stage("FAILED".into());
+                                    w.set_install_stage(if canceled{"CANCELED"}else{"FAILED"}.into());
                                     w.set_install_percent(-1);
-                                    w.set_install_message(
-                                        format!("Installation stopped/failed: {err}").into());
+                                    w.set_install_message(if canceled {
+                                        "Cancellation confirmed before any application replacement.".into()
+                                    }else{
+                                        format!("Installation stopped/failed: {err}").into()
+                                    });
                                 }
                             }
                         }
@@ -1022,7 +1079,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     fail("Installer must not initialize automatically on dossier navigation");
                 }
                 w.invoke_confirm_install();
-                if w.get_install_busy() { fail("Installer started without review and explicit approval"); }
+                w.invoke_cancel_install();
+                if w.get_install_busy() || w.get_install_cancel_requested() {
+                    fail("Installer or cancel accepted without explicit install approval");
+                }
                 w.invoke_go_back();
                 if w.get_page() != "results" { fail("back to results"); }
                 w.invoke_go_forward();
