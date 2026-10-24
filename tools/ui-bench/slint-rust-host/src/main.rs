@@ -979,6 +979,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 if w.get_page() != "results" || w.get_matching() == 0 { fail("home search navigation"); }
                 w.invoke_open_project(0);
                 if w.get_page() != "detail" || w.get_detail_name().is_empty() { fail("full page dossier"); }
+                if w.get_install_ready() || w.get_install_busy() || w.get_install_approved() {
+                    fail("Installer must not initialize automatically on dossier navigation");
+                }
+                w.invoke_confirm_install();
+                if w.get_install_busy() { fail("Installer started without review and explicit approval"); }
                 w.invoke_go_back();
                 if w.get_page() != "results" { fail("back to results"); }
                 w.invoke_go_forward();
