@@ -40,6 +40,8 @@ jobs:
         run: node --test tools/ui-bench/slint-node-bridge/bridge.test.mjs
       - name: Real Node backend / 181-record IPC acceptance
         run: cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --check-backend-only
+      - name: Native OS registration evidence (explicit read, no installation)
+        run: cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --check-device-only
       - name: macOS developer app packaging and bundled-engine smoke
         if: runner.os == 'macOS'
         run: |
