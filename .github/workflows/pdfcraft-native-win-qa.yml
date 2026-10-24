@@ -1,0 +1,48 @@
+name: PdfCraft Native Windows installation QA
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/pdfcraft-native-win-qa.yml"
+      - "Install-Challenger.js"
+      - "portable-assets.json"
+      - "tools/ui-bench/slint-node-bridge/install-bridge.mjs"
+      - "tools/ui-bench/slint-node-bridge/install-bridge.test.mjs"
+      - "tools/ui-bench/slint-node-bridge/windows-install-sandbox.ps1"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pdfcraft-native-windows:
+    runs-on: windows-2022
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Build isolated Preview12 runtime
+        run: node tools/desktop-build/build-runtime.cjs 12
+      - name: Test strict PdfCraft source and approval policy
+        run: node --test tools/ui-bench/slint-node-bridge/install-bridge.test.mjs
+      - name: Build native Windows Slint host
+        run: cargo build --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked
+      - name: Build standalone developer preview
+        shell: pwsh
+        run: |
+          ./tools/ui-bench/slint-rust-host/package-windows.ps1 -DebugBuild
+          $exe = "./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe"
+          $env:SLINT_BACKEND = "winit-software"
+          & $exe --smoke
+          if ($LASTEXITCODE -ne 0) { throw "Packaged native GUI smoke failed" }
+      - name: Real portable install test in disposable runner only
+        shell: pwsh
+        run: ./tools/ui-bench/slint-node-bridge/windows-install-sandbox.ps1
+      - name: Upload temporary Windows preview for approved Chris Session 1 QA
+        uses: actions/upload-artifact@v4
+        with:
+          name: challenger-pdfcraft-native-win-preview
+          path: tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/
+          retention-days: 1
+          compression-level: 3
+          if-no-files-found: error

@@ -1,0 +1,101 @@
+name: Native Rust / Slint + read-only Node sidecar
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/native-rust-sidecar.yml"
+      - "tools/ui-bench/slint-rust-host/**"
+      - "tools/ui-bench/slint-node-bridge/main.slint"
+      - "tools/ui-bench/slint-node-bridge/sidecar.mjs"
+      - "tools/ui-bench/slint-node-bridge/live-catalog.mjs"
+      - "tools/ui-bench/slint-node-bridge/bridge.test.mjs"
+      - "tools/ui-bench/slint-node-bridge/install-bridge.mjs"
+      - "tools/ui-bench/slint-node-bridge/install-bridge.test.mjs"
+      - "tools/ui-bench/slint-node-bridge/windows-install-sandbox.ps1"
+      - "tools/desktop-build/seeds/managed-catalog.preview10.json"
+      - "tools/desktop-build/seeds/catalog-candidates.preview10.json"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-read-only:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, windows-2022, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Linux native Slint development libraries
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libfontconfig1-dev libxkbcommon-dev libxkbcommon-x11-dev libwayland-dev libxcb-shape0-dev libxcb-xfixes0-dev libgl1-mesa-dev xvfb
+      - name: Build reviewed Preview12 test runtime only
+        run: node tools/desktop-build/build-runtime.cjs 12
+      - name: Rust read-only protocol regression tests
+        run: cargo test --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked
+      - name: Native bridge plus explicit install-policy security regressions
+        run: node --test tools/ui-bench/slint-node-bridge/bridge.test.mjs tools/ui-bench/slint-node-bridge/install-bridge.test.mjs
+      - name: Real Node backend / 181-record IPC acceptance
+        run: cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --check-backend-only
+      - name: Native OS registration evidence (explicit read, no installation)
+        run: cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --check-device-only
+      - name: Reviewed native ID to source project cross-reference
+        run: cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --check-identity-only
+      - name: Expired OS observation retains rows but disables links
+        if: runner.os != 'Linux'
+        run: cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --qa-verify-stale
+      - name: Linux expired observation UI state under Xvfb
+        if: runner.os == 'Linux'
+        run: xvfb-run -a cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --qa-verify-stale
+      - name: macOS developer app packaging and bundled-engine smoke
+        if: runner.os == 'macOS'
+        run: |
+          bash tools/ui-bench/slint-rust-host/package-macos.sh
+          app="tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview.app"
+          codesign --verify --deep --strict "$app"
+          test -f "$app/Contents/Resources/install-bridge.mjs"
+          node --check "$app/Contents/Resources/install-bridge.mjs"
+          "$app/Contents/MacOS/challenger-slint-rust-host" --check-backend-only
+          "$app/Contents/MacOS/challenger-slint-rust-host" --check-device-only
+          "$app/Contents/MacOS/challenger-slint-rust-host" --check-identity-only
+      - name: Windows developer package and bundled-engine smoke
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          ./tools/ui-bench/slint-rust-host/package-windows.ps1 -DebugBuild
+          $bridge = "./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/resources/install-bridge.mjs"
+          if (!(Test-Path $bridge)) { throw "Bundled native installer policy bridge missing" }
+          & node --check $bridge
+          if ($LASTEXITCODE -ne 0) { throw "Bundled install bridge syntax invalid" }
+          & ./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe --check-backend-only
+          & ./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe --check-device-only
+          & ./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe --check-identity-only
+      - name: Windows native Slint GUI smoke (GPU-free software renderer)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        env:
+          SLINT_BACKEND: winit-software
+        run: |
+          & ./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe --smoke
+      - name: Real Windows install QA in disposable GitHub runner only
+        if: runner.os == 'Windows' && github.event_name == 'workflow_dispatch'
+        shell: pwsh
+        run: ./tools/ui-bench/slint-node-bridge/windows-install-sandbox.ps1
+      - name: Isolated Windows developer QA bundle (24h retention, on request)
+        if: runner.os == 'Windows' && github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: challenger-native-windows-qa-${{ github.run_id }}
+          path: tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/
+          retention-days: 1
+          if-no-files-found: error
+          compression-level: 3
+      - name: Linux native Slint GUI smoke in Xvfb
+        if: runner.os == 'Linux'
+        run: xvfb-run -a cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --smoke
