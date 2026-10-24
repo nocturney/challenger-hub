@@ -45,7 +45,11 @@ jobs:
       - name: Reviewed native ID to source project cross-reference
         run: cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --check-identity-only
       - name: Expired OS observation retains rows but disables links
+        if: runner.os != 'Linux'
         run: cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --qa-verify-stale
+      - name: Linux expired observation UI state under Xvfb
+        if: runner.os == 'Linux'
+        run: xvfb-run -a cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --qa-verify-stale
       - name: macOS developer app packaging and bundled-engine smoke
         if: runner.os == 'macOS'
         run: |
