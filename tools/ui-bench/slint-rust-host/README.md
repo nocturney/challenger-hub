@@ -206,6 +206,23 @@ the dossier/back assertions passed with code 0, but this is **not** visual
 user-desktop QA. Windows application packaging was transferred from the
 CI head SHA as an isolated portable bundle, not installed or merged.
 
+## Headless Windows CI: explicit Slint software renderer
+
+The normal native app retains its existing GPU-backed FemtoVG renderer. A
+GitHub-hosted Windows Server 2022 runner does not provide an OpenGL 2.0 driver,
+so a native `--smoke` under the default renderer failed with `FemtoVG ...
+requires an OpenGL 2.0 driver` despite the same packaged Windows binary
+passing `--smoke` on Chris. Slint 1.18.1's `renderer-software` Cargo feature
+is explicitly enabled **alongside**, not instead of, `renderer-femtovg`.
+The Windows CI smoke sets only `SLINT_BACKEND=winit-software`, so the renderer
+runs without an OpenGL dependency and still must return `FOCUS_NATIVE_GUI_PASS`
+and exit code 0. No `continue-on-error`, GUI fake, production renderer override,
+user profile change, GPU driver install or alternate test application is used.
+A local native software-renderer smoke on MacMiniOffice2 passed. GitHub Windows
+CI on the latest HEAD must still pass before the headless Windows gate is
+considered green. User-desktop Session 1 visual and accessibility QA remain
+separate uncompleted gates.
+
 ## Next gates — not yet implemented
 
 A truly exhaustive OS-wide package/application inventory, cryptographic
