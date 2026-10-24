@@ -10,6 +10,7 @@ on:
       - "tools/ui-bench/slint-node-bridge/bridge.test.mjs"
       - "tools/ui-bench/slint-node-bridge/install-bridge.mjs"
       - "tools/ui-bench/slint-node-bridge/install-bridge.test.mjs"
+      - "tools/ui-bench/slint-node-bridge/windows-install-sandbox.ps1"
       - "tools/desktop-build/seeds/managed-catalog.preview10.json"
       - "tools/desktop-build/seeds/catalog-candidates.preview10.json"
   workflow_dispatch:
@@ -82,6 +83,10 @@ jobs:
           SLINT_BACKEND: winit-software
         run: |
           & ./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe --smoke
+      - name: Real Windows install QA in disposable GitHub runner only
+        if: runner.os == 'Windows' && github.event_name == 'workflow_dispatch'
+        shell: pwsh
+        run: ./tools/ui-bench/slint-node-bridge/windows-install-sandbox.ps1
       - name: Isolated Windows developer QA bundle (24h retention, on request)
         if: runner.os == 'Windows' && github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
