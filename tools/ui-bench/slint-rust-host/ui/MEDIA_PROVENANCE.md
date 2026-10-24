@@ -18,4 +18,31 @@ Assets were copied from the existing approved `tools/preview-build/media-source/
 | real-video-enhancer-icon.svg | https://github.com/TNTwise/REAL-Video-Enhancer/blob/v2-main/icons/logo-v2.svg | f84b7f92a2663a53409d65276c81e685a3dc43505f86844916465ff91f26d11c | AGPL-3.0 |
 | real-video-enhancer.png | https://github.com/TNTwise/REAL-Video-Enhancer/blob/8541c46ca14e6f84fc86c5b9d3b75373e25732e5/screenshots/settings.png | c7ef740510585be4f19573e348595216f5d407328424c2b0faba532e654acd6b | AGPL-3.0 |
 
+## Managed Craft icons
+
+The 13 managed product icons below come from the existing reviewed
+`tools/preview-build/media-source/craft-suite-media.v1.json` and
+`assets/media/craft/icons/`. Provenance points to the developer's official
+app icons (storytold/craft-launcher@9419d89), not an invented logo.
+They are shown only for exact `managed:<app>` IDs and matching
+`https://github.com/storytold/<app>` sources. Follow the existing
+`CRAFT_SUITE_MEDIA_NOTICES.md` and `craft-suite-MIT/Apache-2.0`
+licenses; do not use an ArtCraft wordmark or brand symbol.
+
+| Native icon | Original SHA-256 | Source license |
+| --- | --- | --- |
+| craft-photocraft-icon.png | f1afe9ccdb125a34089babecb6c1533f3fbf41ddffe81e0856f158c5b5fb9389 | MIT OR Apache-2.0 |
+| craft-lightcraft-icon.png | a1fc54a714b769fa627eb44b0dcc1230e5fc3643890fd3504811b4c05c4a913a | MIT OR Apache-2.0 |
+| craft-filmcraft-icon.png | 7ca8adb57a34d1f4bff8c7e976ac5fe73e69a89b4268d15b3b861c7e51c45a74 | MIT OR Apache-2.0 |
+| craft-designcraft-icon.png | 0895763da92947cb6b1d38a018a6c7ffcda1cbb714a58f2e9bc08e0e2a2b94b4 | MIT OR Apache-2.0 |
+| craft-vectorcraft-icon.png | 47f2061e3683ba8e7241c4783ca02207d29dfef0a7c94cd0eb8ea0a88dfc0b1e | MIT OR Apache-2.0 |
+| craft-pdfcraft-icon.png | 6ef927ca252b40bc9b5d8843d84137334362f8aa1acbb1bf8c15a02affd25b2b | MIT OR Apache-2.0 |
+| craft-effectcraft-icon.png | 4ad7caa4f43b4cbf3bcddda0ed23e471d392efbe8d0b4ce18107b5849f20dd2d | MIT OR Apache-2.0 |
+| craft-wordcraft-icon.png | 96505c7153c1b8a7e0cf0f90353fae669f4ed9de5524ba50ba99af79003cff43 | MIT OR Apache-2.0 |
+| craft-deckcraft-icon.png | 1bf98b43bb0b21cb038ce063e71b9922e7f48c10d5b99afd046aa6c30642ca69 | MIT OR Apache-2.0 |
+| craft-gridcraft-icon.png | 01ef35442b8d466b52068fda67ab740309321c8bc813b62b9207dfc4116208e7 | MIT OR Apache-2.0 |
+| craft-cadcraft-icon.png | c126ff5030d0a0f3e63f039bae81ca63ba71230da2e6fca54e08df1119ea3443 | MIT OR Apache-2.0 |
+| craft-soundcraft-icon.png | 0e7f4f83d82f5539530f62f85ccf8717dcc00c6d25a3dba57e2a65111e3b248b | MIT OR Apache-2.0 |
+| craft-figcraft-icon.png | 13d5236adb30c2bd4ff3eb7bcb7bb5a70d8de2ef36a81a5ffaf43ea171c7f51b | MIT OR Apache-2.0 |
+
 These assets already appeared in the audited Focus preview media manifest (with source commits, license links and image checksums). For third-party redistribution, retain the full accompanying source/license notices in `tools/preview-build/media-source/licenses/` and review Slint's own license obligations before publishing a release. This is a local developer preview only, not public distribution.

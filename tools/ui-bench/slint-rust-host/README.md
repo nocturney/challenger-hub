@@ -115,11 +115,12 @@ explicit installer consent gates. Dossier content remains scrollable.
 For visual depth, the header and primary search have restrained elevation;
 Explore features two **non-sponsored, source-verified** screenshot previews from
 Dune 3D and Material Maker. Results/dossiers now have authentic icons for
-**nine exact source-matched projects**, plus three genuine interface screenshots
-(Dune 3D, Material Maker, REAL Video Enhancer). The other catalog entries
-retain honest neutral initial badges; no synthetic manufacturer icons or
-unreviewed image links. All included bytes are copied from the repository's
-existing approved media manifest and checked with:
+**22 exact source-matched projects** (nine curated and 13 managed Craft
+apps), plus three genuine interface screenshots (Dune 3D, Material Maker,
+REAL Video Enhancer). The remaining catalog entries retain honest neutral
+initial badges; no synthetic manufacturer icons or unreviewed image links.
+All included bytes are copied from the repository's existing reviewed
+project/Craft media manifests and checked with:
 
     node tools/ui-bench/slint-rust-host/verify-native-media.mjs
 

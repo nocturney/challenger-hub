@@ -37,9 +37,29 @@ for (const [project, kind, name] of items) {
     throw new Error('Checksum/size mismatch: ' + name);
   }
 }
+
+const craftManifest = JSON.parse(
+  readFileSync(join(sourceRoot, 'craft-suite-media.v1.json'), 'utf8'));
+if (craftManifest.schema !== 'challenger-craft-media.v1' ||
+    Object.keys(craftManifest.apps).length !== 13) {
+  throw new Error('Unexpected reviewed Craft icon manifest');
+}
+for (const [key, app] of Object.entries(craftManifest.apps)) {
+  const icon = app.icon;
+  if (icon?.type !== 'official-product-app-icon' ||
+      !icon.sha256 || !icon.path.endsWith('/' + key + '.png')) {
+    throw new Error('Missing official Craft icon review: ' + key);
+  }
+  const bytes = readFileSync(join(here, 'ui', 'craft-' + key + '-icon.png'));
+  const hash = createHash('sha256').update(bytes).digest('hex');
+  if (hash !== icon.sha256 || bytes.length !== icon.size) {
+    throw new Error('Craft icon checksum/size mismatch: ' + key);
+  }
+}
+
 const brand = readFileSync(join(here, 'ui', 'orbit-app-128.png'));
 const brandDigest = createHash('sha256').update(brand).digest('hex');
 if (brandDigest !== 'a22b1ff013ed293120921ce77c6e15fc51982adb103c7d7ecdde240a6b597358') {
   throw new Error('Project-owned Orbit icon digest mismatch');
 }
-console.log('NATIVE_MEDIA_PROVENANCE_PASS verifiedProjects=9 approvedIcons=9 approvedScreenshots=3 source=offline-manifest');
+console.log('NATIVE_MEDIA_PROVENANCE_PASS verifiedProjects=22 approvedIcons=22 approvedScreenshots=3 source=offline-manifest');

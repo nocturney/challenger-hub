@@ -11,6 +11,19 @@ fn main() {
         "espocrm-icon.png", "docuseal-icon.svg",
         "meshcentral-icon.png", "openhands-icon.png",
         "real-video-enhancer-icon.svg", "real-video-enhancer.png",
+        "craft-photocraft-icon.png",
+        "craft-lightcraft-icon.png",
+        "craft-filmcraft-icon.png",
+        "craft-designcraft-icon.png",
+        "craft-vectorcraft-icon.png",
+        "craft-pdfcraft-icon.png",
+        "craft-effectcraft-icon.png",
+        "craft-wordcraft-icon.png",
+        "craft-deckcraft-icon.png",
+        "craft-gridcraft-icon.png",
+        "craft-cadcraft-icon.png",
+        "craft-soundcraft-icon.png",
+        "craft-figcraft-icon.png",
     ] {
         println!("cargo:rerun-if-changed=ui/{asset}");
     }

@@ -142,6 +142,24 @@ fn media_id(p: &Project) -> &'static str {
     // Only the exact curated identity + upstream repository from the pinned,
     // checksum-verified media manifest may display authentic product imagery.
     // Research/managed entries and same-name forks always get a neutral fallback.
+    if p.kind == "managed" {
+        return match (p.id.as_str(), p.source.as_str()) {
+            ("managed:photocraft", "https://github.com/storytold/photocraft") => "craft-photocraft",
+            ("managed:lightcraft", "https://github.com/storytold/lightcraft") => "craft-lightcraft",
+            ("managed:filmcraft", "https://github.com/storytold/filmcraft") => "craft-filmcraft",
+            ("managed:designcraft", "https://github.com/storytold/designcraft") => "craft-designcraft",
+            ("managed:vectorcraft", "https://github.com/storytold/vectorcraft") => "craft-vectorcraft",
+            ("managed:pdfcraft", "https://github.com/storytold/pdfcraft") => "craft-pdfcraft",
+            ("managed:effectcraft", "https://github.com/storytold/effectcraft") => "craft-effectcraft",
+            ("managed:wordcraft", "https://github.com/storytold/wordcraft") => "craft-wordcraft",
+            ("managed:deckcraft", "https://github.com/storytold/deckcraft") => "craft-deckcraft",
+            ("managed:gridcraft", "https://github.com/storytold/gridcraft") => "craft-gridcraft",
+            ("managed:cadcraft", "https://github.com/storytold/cadcraft") => "craft-cadcraft",
+            ("managed:soundcraft", "https://github.com/storytold/soundcraft") => "craft-soundcraft",
+            ("managed:figcraft", "https://github.com/storytold/figcraft") => "craft-figcraft",
+            _ => "",
+        };
+    }
     if p.kind != "curated" { return ""; }
     match (p.id.as_str(), p.source.as_str()) {
         ("curated:dune3d", "https://github.com/dune3d/dune3d") => "dune3d",
@@ -1377,7 +1395,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     "pages": ["home","results","detail","library","activity"],
                     "history": "back+forward", "pageSize": 30,
                     "pageSizeVerified": 60, "reviewRouteCount": review_routes,
-                    "reviewFilterVerified": true, "sourceScreenshots": 3, "approvedMediaIdentities": 9, "darkMode": true,
+                    "reviewFilterVerified": true, "sourceScreenshots": 3, "approvedMediaIdentities": 22, "darkMode": true,
                     "managedCoverage": w.get_managed_assessed(),
                     "managedDetected": w.get_managed_detected(),
                     "sessionEvents": w.get_session_event_count(),
@@ -1474,6 +1492,31 @@ mod tests {
             p.kind = "curated".into();
             p.source.push_str("-spoof");
             assert_eq!(media_id(&p), "", "source fork must fail closed: {id}");
+        }
+        for key in [
+            "photocraft",
+            "lightcraft",
+            "filmcraft",
+            "designcraft",
+            "vectorcraft",
+            "pdfcraft",
+            "effectcraft",
+            "wordcraft",
+            "deckcraft",
+            "gridcraft",
+            "cadcraft",
+            "soundcraft",
+            "figcraft",
+        ] {
+            p.id = format!("managed:{key}");
+            p.source = format!("https://github.com/storytold/{key}");
+            p.kind = "managed".into();
+            assert_eq!(media_id(&p), format!("craft-{key}"), "official managed icon: {key}");
+            p.kind = "research".into();
+            assert_eq!(media_id(&p), "");
+            p.kind = "managed".into();
+            p.source.push_str("-fork");
+            assert_eq!(media_id(&p), "");
         }
     }
 
