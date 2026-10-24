@@ -61,9 +61,11 @@ jobs:
           & ./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe --check-backend-only
           & ./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe --check-device-only
           & ./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe --check-identity-only
-      - name: Windows native Slint GUI state smoke (noninteractive)
+      - name: Windows native Slint GUI smoke (GPU-free software renderer)
         if: runner.os == 'Windows'
         shell: pwsh
+        env:
+          SLINT_BACKEND: winit-software
         run: |
           & ./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe --smoke
       - name: Isolated Windows developer QA bundle (24h retention, on request)
