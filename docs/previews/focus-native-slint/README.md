@@ -48,13 +48,32 @@ Add/Remove Programs registry query returned **154 registrations** for the
 session running the check; Windows Rust + native UI parity still requires
 the specific cross-platform CI/interactive tests.
 
+### 08. Reviewed macOS bundle ID ↔ Challenger RustDesk dossier
+
+![RustDesk reviewed native identity cross-reference](08-reviewed-id-rustdesk-macos.png)
+
+The MacMiniOffice2 on-demand OS reader observed exactly one registration
+claiming `com.carriez.rustdesk` (version `1.5.0`). The source-backed
+catalog includes exactly `curated:rustdesk` pointing to
+`https://github.com/rustdesk/rustdesk`; the bundle identifier was independently
+reviewed in the upstream `Cargo.toml` at a pinned commit. The native view
+labels it **SOURCE-REVIEWED ID → RustDesk** and shows one matching result
+when filtered by RustDesk. It can open the source-backed dossier using an
+exact revalidation; a forged project callback is rejected.
+
+The verified ID cross-reference is **not** a signed-binary attestation,
+installed/working guarantee, or authorization to install or update.
+Second reviewed rule OBS Studio is not observed on this Mac. Full provenance
+and both immutable source blobs are documented in
+[`IDENTITY_PROVENANCE.md`](../../../tools/ui-bench/slint-rust-host/IDENTITY_PROVENANCE.md).
+
 The inner Dune 3D screenshot is independently verified source media, originally from the upstream repository, not generated artwork. Its SHA256, source commit and GPL-3.0 attribution are recorded in [native media provenance](../../../tools/ui-bench/slint-rust-host/ui/MEDIA_PROVENANCE.md). The native QA screenshot was captured from the application's own window using macOS `screencapture -l`; no full-desktop screenshot or unrelated user content was included.
 
 ## QA summary
 
-- Rust unit/security tests: **15/15 passed** locally, including native OS registration bounds/identity/sanitization and source scope, managed inventory provenance, stale snapshot rejection, research installation spoof prevention, bounded session events, source identities, history and 17-domain coverage.
-- Mac GUI regression: **PASS**, 181 real entries; 17 domains, search, results, dossier, history, Light/Dark, Show More, no-result recovery, both source-pinned media examples, 14 scoped managed-app signals and the native session events. Real manual Refresh was captured after completing a second local backend read. Explicit native OS registration read on macOS: **88 entries**, searchable in the separate My software device view; ordinary app smoke confirms no automatic OS read on navigation.
-- Final layout Mac package: **139 MiB**, ad-hoc signed and verified; packaged engine/backend and GUI smoke passed after the screenshot-above-the-fold and empty-search changes.
+- Rust unit/security tests: **21/21 passed** locally, including upstream-reviewed source identity ties, wrong platform/repository rejection, ambiguous duplicate bundle IDs, native OS evidence limits, managed inventory provenance, stale snapshot rejection, research installation spoof prevention, bounded session events, navigation history and 17-domain coverage.
+- Mac GUI regression: **PASS**, 181 real entries; 17 domains, search, results, dossier, history, Light/Dark, Show More, no-result recovery, source-pinned media examples, 14 scoped managed-app signals and native session events. Real manual Refresh captured a second local backend read. Explicit macOS native registration read: **88 entries**, and exactly **one** source-reviewed catalog ID match, RustDesk. The interactive QA also passed opening the linked RustDesk dossier, rejecting an unauthorized Dune 3D callback, and Back navigation. Normal app smoke still proves no automatic OS read on navigation.
+- Prior Mac developer package: **140 MiB**, ad-hoc signed and verified; packaged engine/OS registration/GUI smoke passed. A rebuilt optimized package with the P4 identity mapping and packaged `--check-identity-only` acceptance is being verified separately; do not claim complete until results are recorded.
 - Windows/macOS/Linux PR CI tests must be checked against the **latest** commit, not a previous green run. Windows interactive desktop packaging/install QA remains separate from CI's headless acceptance.
 
-Open gaps: exhaustive and authoritative OS package inventory (current OS registration evidence is deliberately bounded and incomplete); matching known software to verified repo IDs; actual persistent worker queue/history (beyond ephemeral session log), all-source image coverage, keyboard/IME/accessibility/mobile-sized native layout, Windows desktop GUI, full Linux native installer tests, proper Slint attribution/signing/notarization and authorized installation workflows.
+Open gaps: exhaustive and authoritative OS package inventory (OS registration evidence is deliberately bounded and incomplete), verified identities beyond the two locked macOS mappings, cryptographic signer verification, actual persistent worker queue/history (beyond ephemeral session log), all-source image coverage, keyboard/IME/accessibility/mobile-sized native layout, Windows desktop GUI, Linux installer tests, Slint attribution/signing/notarization and permission-gated installation workflows.

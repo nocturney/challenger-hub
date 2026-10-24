@@ -142,9 +142,10 @@ registration evidence directly from the native Rust host, independent of the
   separate thread, and is neither scheduled nor coupled to catalog Refresh.
   Failure is reported and preserves the last valid read.
 - Platform-specific registration **does not prove installation correctness or
-  absence**. Missing a record is not evidence of "not installed"; records are
-  not automatically matched to Challenger projects or granted install gates.
-  Nothing persists on disk or is sent to an external service.
+  absence**. Missing a record is not evidence of "not installed". Only
+  explicitly reviewed upstream native IDs receive a **catalog cross-reference**
+  (P4 below), never an installed-state claim or permission to install. No
+  application state persists on disk or is sent to an external service.
 
 Local observations (24 Oct 2026): MacMiniOffice2 yielded **88 visible .app
 bundle records** in its known application roots (bounded complete in that
@@ -159,9 +160,39 @@ read with validation, emitting only its count/scope, never application names
 or paths. This is suitable for cross-platform CI checks. The ordinary
 `--smoke` asserts no implicit OS scan occurred on navigation.
 
+## P4: reviewed exact ID → source project link
+
+A new `src/identity.rs` mapping (see [upstream verification and Worker
+source audit](IDENTITY_PROVENANCE.md)) contains **two immutable upstream-reviewed
+macOS bundle IDs**, RustDesk and OBS Studio. The exact bundle identifier must
+match *one* observed OS record, an exact **curated** project ID and its exact
+verified repository URL. Duplicated bundle claims, wrong repository/kind,
+prefixes, name similarity, unreviewed packages and mismatched OS never link.
+
+The on-demand OS registrations table now shows reviewed catalog ID links and
+opens the **existing standalone project dossier** only after a second native
+cross-check at click time. This is strictly a **source identity cross-reference**:
+an app may self-declare its bundle ID. It is *not* binary signer verification,
+software health, an installed-state entitlement or update authorization.
+
+On MacMiniOffice2, `--check-identity-only` read **88 macOS .app registrations**
+and correctly linked **one** reviewed source record, `curated:rustdesk`
+(macOS `com.carriez.rustdesk`, locally reported version `1.5.0`).
+OBS Studio is reviewed but absent from this known-root observation. On Windows
+and Linux, no OS ID mappings have yet been authoritatively reviewed; their
+link counts therefore remain zero rather than guessing by name. Identity
+unit/security regressions verify ambiguity, spoofed repos, source kind and
+wrong-platform rejections.
+
+Developer-only `--qa-verify-identity` exercises a real native OS read,
+rejects a forged project-open callback, opens the linked RustDesk dossier and
+returns to the OS registration view on an explicitly provisioned Mac. It is
+not run on unrelated CI machines without a RustDesk registration.
+
 ## Next gates — not yet implemented
 
-A truly exhaustive OS-wide package/application inventory, authoritative package/application IDs and genuine
+A truly exhaustive OS-wide package/application inventory, cryptographic
+binary publisher identity and platform-authoritative package IDs, and genuine
 persistent-worker queue/history (distinct from these P2 managed-only signals
 and preview session diagnostics), user-controlled sorting, deeper metadata,
 and additional source-pinned screenshots; accessibility, keyboard shortcuts,

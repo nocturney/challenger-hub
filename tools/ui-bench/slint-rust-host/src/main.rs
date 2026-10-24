@@ -1,5 +1,6 @@
 mod catalog;
 mod device;
+mod identity;
 mod sidecar;
 
 use catalog::{domain_counts, domain_label, domain_of, filtered_domain, Catalog, Inventory, Project, DOMAINS};
@@ -234,16 +235,31 @@ fn update_os_device_panel(ui: &AppWindow, state: &State) {
     ui.set_device_query(state.device_query.clone().into());
     ui.set_device_error(state.device_error.as_deref().unwrap_or("").into());
     if let Some(snapshot) = &state.device_snapshot {
+        let linked = match identity::catalog_links(snapshot, &state.all) {
+            Ok(linked) => linked,
+            Err(e) => {
+                eprintln!("NATIVE_IDENTITY_REVIEW_REFUSED {e}");
+                Vec::new()
+            }
+        };
+        ui.set_device_linked(linked.len() as i32);
         ui.set_device_status("observed".into());
         ui.set_device_scope(snapshot.scope.into());
         ui.set_device_total(snapshot.entries.len() as i32);
         ui.set_device_truncated(snapshot.truncated);
         let visible = device::search(snapshot, &state.device_query)
-            .iter().map(|a| DeviceEntry {
-                name: a.name.clone().into(),
-                version: a.version.clone().into(),
-                identifier: a.identifier.clone().into(),
-                provenance: a.provenance.clone().into(),
+            .iter().map(|a| {
+                let index = snapshot.entries.iter().position(|x|
+                    std::ptr::eq(x, *a)).unwrap_or(usize::MAX);
+                let reviewed = linked.iter().find(|l| l.device_index == index);
+                DeviceEntry {
+                    name: a.name.clone().into(),
+                    version: a.version.clone().into(),
+                    identifier: a.identifier.clone().into(),
+                    provenance: a.provenance.clone().into(),
+                    linked_project: reviewed.map_or("", |l| l.project_name.as_str()).into(),
+                    linked_id: reviewed.map_or("", |l| l.project_id.as_str()).into(),
+                }
             }).collect::<Vec<_>>();
         ui.set_device_showing(visible.len() as i32);
         ui.set_device_entries(ModelRc::new(VecModel::from(visible)));
@@ -252,6 +268,7 @@ fn update_os_device_panel(ui: &AppWindow, state: &State) {
         ui.set_device_scope("Not inspected".into());
         ui.set_device_total(0);
         ui.set_device_showing(0);
+        ui.set_device_linked(0);
         ui.set_device_truncated(false);
         ui.set_device_entries(ModelRc::new(VecModel::from(Vec::<DeviceEntry>::new())));
     }
@@ -297,6 +314,26 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = std::env::args().collect();
     let check_backend = args.iter().any(|a| a == "--check-backend-only");
     let smoke = args.iter().any(|a| a == "--smoke");
+    if args.iter().any(|a| a == "--check-identity-only") {
+        let snapshot = device::collect()
+            .map_err(|e| format!("Native identity observation refused: {e}"))?;
+        device::validate(&snapshot)?;
+        let catalog = sidecar::read_catalog()
+            .map_err(|e| format!("Native identity source catalog refused: {e}"))?;
+        let links = identity::catalog_links(&snapshot, &catalog.items)?;
+        println!("NATIVE_IDENTITY_LINK_PASS {}", serde_json::json!({
+            "platform": snapshot.platform,
+            "osObserved": snapshot.entries.len(),
+            "reviewedUpstreamIdentities": identity::REVIEWED.len(),
+            "linkedRecords": links.len(),
+            "linkedProjectIds": links.iter().map(|l| l.project_id.as_str()).collect::<Vec<_>>(),
+            "requiresExactIdAndRepo": true,
+            "codeSignatureVerified": false,
+            "installationAuthorized": false,
+            "noNameHeuristics": true,
+        }));
+        return Ok(());
+    }
     if args.iter().any(|a| a == "--check-device-only") {
         let snapshot = device::collect().map_err(|e| format!("Local OS discovery refused: {e}"))?;
         device::validate(&snapshot).map_err(|e| format!("Untrusted native device evidence: {e}"))?;
@@ -453,6 +490,24 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             update_os_device_panel(&w, &s);
         }
     });
+    ui.on_open_device_project({
+        let state = Rc::clone(&state); let weak = ui.as_weak();
+        move |id| if let Some(w) = weak.upgrade() {
+            let mut s = state.borrow_mut();
+            if s.route().page != "device" { return; }
+            let Some(snapshot) = &s.device_snapshot else { return; };
+            // The callback value is not trusted: recompute the pinned identity
+            // linkage from the current OS observation and source catalog.
+            let matches = identity::catalog_links(snapshot, &s.all).unwrap_or_default();
+            if matches.iter().any(|m| m.project_id == id.as_str()) {
+                let mut target = s.route().clone();
+                target.page = "detail".into();
+                target.selected = Some(id.to_string());
+                s.push(target);
+                redraw(&w, &mut s);
+            }
+        }
+    });
 
     let (tx, rx) = mpsc::channel::<Result<Catalog, String>>();
     let busy = Rc::new(Cell::new(false));
@@ -571,8 +626,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if args.iter().any(|a| a == "--qa-preview-library") {
         ui.invoke_navigate("library".into());
     }
-    if args.iter().any(|a| a == "--qa-preview-device") {
+    if args.iter().any(|a| a == "--qa-preview-device" ||
+        a == "--qa-preview-identity") {
         ui.invoke_navigate("device".into());
+        if args.iter().any(|a| a == "--qa-preview-identity") {
+            let mut s = state.borrow_mut();
+            s.device_query = "RustDesk".into();
+            update_os_device_panel(&ui, &s);
+        }
         ui.invoke_device_read_requested();
     }
     if args.iter().any(|a| a == "--qa-preview-activity" || a == "--qa-preview-activity-refresh") {
@@ -591,10 +652,41 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     if args.iter().any(|a| ["--qa-preview-results", "--qa-preview-dune",
         "--qa-preview-library", "--qa-preview-activity",
-        "--qa-preview-activity-refresh", "--qa-preview-device"].contains(&a.as_str())) {
+        "--qa-preview-activity-refresh", "--qa-preview-device",
+        "--qa-preview-identity"].contains(&a.as_str())) {
         let weak = ui.as_weak();
         Timer::single_shot(Duration::from_secs(22), move || {
             if let Some(w) = weak.upgrade() { let _ = w.hide(); }
+        });
+    }
+
+    if args.iter().any(|a| a == "--qa-verify-identity") {
+        // Explicit developer-only interactive regression. This scenario is
+        // only meaningful on a machine with the reviewed RustDesk bundle.
+        ui.invoke_navigate("device".into());
+        ui.invoke_device_read_requested();
+        let weak = ui.as_weak();
+        Timer::single_shot(Duration::from_secs(4), move || {
+            if let Some(w) = weak.upgrade() {
+                let fail = |error: &str| {
+                    eprintln!("NATIVE_IDENTITY_GUI_FAIL {error}");
+                    std::process::exit(3);
+                };
+                if w.get_page() != "device" || w.get_device_status() != "observed"
+                    || w.get_device_linked() < 1 {
+                    fail("No reviewed device registration available");
+                }
+                w.invoke_open_device_project("curated:dune3d".into());
+                if w.get_page() != "device" { fail("Forged device project callback accepted"); }
+                w.invoke_open_device_project("curated:rustdesk".into());
+                if w.get_page() != "detail" || w.get_detail_name() != "RustDesk" {
+                    fail("Pinned RustDesk native ID did not open proper project dossier");
+                }
+                w.invoke_go_back();
+                if w.get_page() != "device" { fail("Native device-to-dossier back navigation"); }
+                eprintln!("NATIVE_IDENTITY_GUI_PASS RustDesk · exact upstream/macOS ID only");
+                let _ = w.hide();
+            }
         });
     }
 
@@ -634,7 +726,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
                 w.invoke_navigate("device".into());
                 if w.get_page() != "device" || w.get_device_status() != "not-read"
-                    || w.get_device_total() != 0 {
+                    || w.get_device_total() != 0 || w.get_device_linked() != 0 {
                     fail("native OS probe must NOT execute without explicit request");
                 }
                 w.invoke_navigate("activity".into());

@@ -30,6 +30,8 @@ export struct DeviceEntry {
     identifier: string,
     version: string,
     provenance: string,
+    linked-project: string,
+    linked-id: string,
 }
 export struct SessionEvent {
     name: string,
@@ -69,6 +71,7 @@ export component AppWindow inherits Window {
     in-out property <[DeviceEntry]> device-entries;
     in-out property <int> device-total: 0;
     in-out property <int> device-showing: 0;
+    in-out property <int> device-linked: 0;
     in-out property <string> device-scope: "Not inspected";
     in-out property <string> device-status: "not-read";
     in-out property <string> device-query: "";
@@ -104,6 +107,7 @@ export component AppWindow inherits Window {
     callback refresh-requested();
     callback device-read-requested();
     callback device-search-edited(string);
+    callback open-device-project(string);
     callback toggle-theme();
 
     property <color> canvas: root.dark-mode ? #131b19 : #fafaf6;
@@ -633,7 +637,7 @@ export component AppWindow inherits Window {
                     font-weight: 800; vertical-alignment: center; }
             }
             Text { text: "OS app registrations."; font-size: 33px; font-weight: 800; color: root.strong; }
-            Text { text: "A separate native OS evidence view, not the 181-project source catalog or the 14 managed-app status signals.";
+            Text { text: "Native OS registration evidence, separate from 181 source projects and 14 managed app signals. Only source-reviewed exact IDs link to a catalog dossier.";
                 font-size: 12px; color: root.muted; wrap: word-wrap; }
             Rectangle {
                 height: 112px; background: root.accent-bg; border-radius: 12px;
@@ -644,7 +648,8 @@ export component AppWindow inherits Window {
                         Text { text: "OBSERVED REGISTRATION RECORDS"; font-size: 10px; font-weight: 800; color: root.accent; }
                         Text { text: root.device-status == "observed" ? root.device-total : "Not read";
                             font-size: 25px; font-weight: 800; color: root.strong; }
-                        Text { text: root.device-scope; font-size: 10px; color: root.muted; wrap: word-wrap; }
+                        Text { text: root.device-scope + " · " + root.device-linked + " reviewed catalog ID links";
+                            font-size: 10px; color: root.muted; wrap: word-wrap; }
                     }
                     Rectangle {
                         width: 174px; height: 42px; background: root.strong; border-radius: 8px;
@@ -730,8 +735,14 @@ export component AppWindow inherits Window {
                     height: 49px; background: root.sheet; border-color: root.line; border-width: 1px;
                     HorizontalLayout {
                         padding-left: 13px; padding-right: 13px; spacing: 10px;
-                        Text { text: app.name; font-size: 12px; font-weight: 700; color: root.strong;
-                            horizontal-stretch: 3; vertical-alignment: center; overflow: elide; }
+                        VerticalLayout {
+                            horizontal-stretch: 3; spacing: 2px;
+                            Text { text: app.name; font-size: 12px; font-weight: 700; color: root.strong;
+                                overflow: elide; }
+                            if app.linked-id != "": Text {
+                                text: "SOURCE-REVIEWED ID → " + app.linked-project;
+                                font-size: 9px; color: root.accent; overflow: elide; }
+                        }
                         Text { text: app.version == "" ? "Not reported" : app.version; font-size: 11px; color: root.muted;
                             horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
                         Text { text: app.identifier == "" ? "Not reported" : app.identifier;
@@ -740,6 +751,10 @@ export component AppWindow inherits Window {
                         if root.width > 950px: Text { text: app.provenance; font-size: 10px; color: root.subtle;
                             horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
                     }
+                    TouchArea {
+                        enabled: app.linked-id != "";
+                        clicked => { root.open-device-project(app.linked-id); }
+                    }
                 }
             }
             if root.device-status == "observed" && root.device-showing == 0: Text {
@@ -747,7 +762,7 @@ export component AppWindow inherits Window {
                 color: root.subtle; font-size: 12px;
             }
             Rectangle { vertical-stretch: root.device-status == "observed" ? 0 : 1; background: transparent; }
-            Text { text: "No installs, launches, network requests, source-catalog promotion or file writes. The OS read runs only on request; missing records never imply uninstalled.";
+            Text { text: "Upstream-reviewed ID cross-references are NOT code-signature or installation verification. No installs, launches, network requests, automatic catalog promotion or file writes.";
                 font-size: 10px; color: root.subtle; wrap: word-wrap; }
         }
 
