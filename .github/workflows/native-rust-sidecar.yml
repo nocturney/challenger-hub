@@ -51,12 +51,25 @@ jobs:
           app="tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview.app"
           codesign --verify --deep --strict "$app"
           "$app/Contents/MacOS/challenger-slint-rust-host" --check-backend-only
+          "$app/Contents/MacOS/challenger-slint-rust-host" --check-device-only
+          "$app/Contents/MacOS/challenger-slint-rust-host" --check-identity-only
       - name: Windows developer package and bundled-engine smoke
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
           ./tools/ui-bench/slint-rust-host/package-windows.ps1 -DebugBuild
           & ./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe --check-backend-only
+          & ./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe --check-device-only
+          & ./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe --check-identity-only
+      - name: Isolated Windows developer QA bundle (24h retention)
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: challenger-native-windows-qa-${{ github.run_id }}
+          path: tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/
+          retention-days: 1
+          if-no-files-found: error
+          compression-level: 3
       - name: Linux native Slint GUI smoke in Xvfb
         if: runner.os == 'Linux'
         run: xvfb-run -a cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --smoke
