@@ -1,4 +1,4 @@
-import { LineEdit, ListView, ScrollView } from "std-widgets.slint";
+import { CheckBox, LineEdit, ListView, ScrollView } from "std-widgets.slint";
 
 // This is the approved Focus/Orbit information architecture implemented in genuine
 // native Slint. The old Slint/Node experiment has a separate, unchanged UI.
@@ -16,6 +16,7 @@ export struct ProjectEntry {
     platforms: string,
     status: string,
     kind: string,
+    review-route: bool,
     media: string,
     initial: string,
 }
@@ -60,6 +61,8 @@ export component AppWindow inherits Window {
     in-out property <int> matching: 0;
     in-out property <int> showing: 0;
     in-out property <bool> has-more: false;
+    in-out property <bool> review-only: false;
+    in-out property <int> review-route-count: 0;
     in-out property <[ManagedEntry]> managed-entries;
     in-out property <int> managed-assessed: 0;
     in-out property <int> managed-detected: 0;
@@ -100,7 +103,7 @@ export component AppWindow inherits Window {
     in-out property <string> detail-media-caption: "";
     in-out property <string> detail-evidence: "";
     in-out property <string> install-project-id: "";
-    in-out property <bool> pdfcraft-install-supported: false;
+    in-out property <bool> detail-reviewable: false;
     in-out property <string> install-message: "Review the official release before approving an install.";
     in-out property <string> install-stage: "";
     // Percentage applies to the download bytes only, never the overall install.
@@ -123,6 +126,7 @@ export component AppWindow inherits Window {
     callback search-submitted(string);
     callback open-project(int);
     callback load-more();
+    callback toggle-review-only();
     callback open-source();
     callback refresh-requested();
     callback device-read-requested();
@@ -346,22 +350,40 @@ export component AppWindow inherits Window {
                         vertical-alignment: center; horizontal-alignment: center; }
                 }
             }
+            HorizontalLayout {
+                height: 34px; spacing: 12px;
+                CheckBox {
+                    text: "Only show release-review routes (" + root.review-route-count + ")";
+                    checked: root.review-only;
+                    font-size: 12px; font-weight: 650;
+                    toggled => { root.toggle-review-only(); }
+                }
+                Rectangle { horizontal-stretch: 1; background: transparent; }
+                if root.width > 1050px: Text {
+                    text: "Review checks the official release. Installation requires separate approval.";
+                    color: root.subtle; font-size: 10px;
+                    vertical-alignment: center;
+                }
+            }
             Rectangle {
                 height: 35px; background: root.muted-sheet; border-radius: 5px;
                 HorizontalLayout {
                     padding-left: 15px; padding-right: 15px; spacing: 13px;
-                    Text { text: "PROJECT / SOURCE"; font-size: 9px; font-weight: 800; color: root.subtle; horizontal-stretch: 3; vertical-alignment: center; }
-                    Text { text: "DISCIPLINE"; font-size: 9px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
-                    Text { text: "REVIEW STATE"; font-size: 9px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
-                    if root.width > 980px: Text { text: "PLATFORMS (REPORTED)"; font-size: 9px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
+                    Text { text: "PROJECT / SOURCE"; font-size: 10px; font-weight: 800; color: root.subtle; horizontal-stretch: 3; vertical-alignment: center; }
+                    Text { text: "DISCIPLINE"; font-size: 10px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
+                    Text { text: "AVAILABLE NEXT STEP"; font-size: 10px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
+                    if root.width > 980px: Text { text: "PLATFORMS (REPORTED)"; font-size: 10px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
                 }
             }
             if root.matching == 0: Rectangle {
                 height: 98px; background: root.muted-sheet; border-radius: 9px;
                 VerticalLayout {
                     padding: 19px; spacing: 9px;
-                    Text { text: "No matching projects"; color: root.strong; font-size: 14px; font-weight: 700; }
-                    Text { text: "Try a different term. Research entries remain searchable in the full index.";
+                    Text { text: root.review-only ? "No release-review routes match" : "No matching projects";
+                        color: root.strong; font-size: 14px; font-weight: 700; }
+                    Text { text: root.review-only ?
+                        "Turn off the review filter to browse all projects, including research candidates." :
+                        "Try a different term. Research entries remain searchable in the full index.";
                         color: root.muted; font-size: 11px; wrap: word-wrap; }
                 }
             }
@@ -369,7 +391,12 @@ export component AppWindow inherits Window {
                 vertical-stretch: 1;
                 for project[i] in root.entries : Rectangle {
                     height: 66px; background: Math.mod(i, 2) == 0 ? root.sheet : root.canvas;
-                    border-color: root.line; border-width: 1px;
+                    border-color: row-focus.has-focus ? root.accent : root.line;
+                    border-width: row-focus.has-focus ? 2px : 1px;
+                    accessible-role: button;
+                    accessible-label: "Open " + project.name + " project details";
+                    accessible-action-default => { root.open-project(i); }
+                    forward-focus: row-focus;
                     HorizontalLayout {
                         padding-left: 15px; padding-right: 15px; spacing: 13px;
                         HorizontalLayout {
@@ -390,17 +417,36 @@ export component AppWindow inherits Window {
                             VerticalLayout {
                                 spacing: 2px;
                                 Text { text: project.name; font-size: 14px; font-weight: 700; color: root.strong; overflow: elide; }
-                                Text { text: project.maker; font-size: 10px; color: root.subtle; overflow: elide; }
+                                Text { text: project.maker; font-size: 11px; color: root.subtle; overflow: elide; }
                             }
                         }
                         Text { text: project.domain; font-size: 11px; color: root.muted;
                             horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
-                        Text { text: project.status; font-size: 10px; font-weight: 700; color: project.kind == "research" ? #ba8739 : root.accent;
-                            horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
+                        VerticalLayout {
+                            horizontal-stretch: 2; spacing: 4px;
+                            Text { text: project.review-route ? "Check official release" : "Browse catalog only";
+                                font-size: 11px; font-weight: 700;
+                                color: project.review-route ? root.accent : root.muted;
+                                overflow: elide; }
+                            Text { text: project.status; font-size: 10px; color: root.subtle;
+                                overflow: elide; }
+                        }
                         if root.width > 980px: Text { text: project.platforms; font-size: 10px; color: root.muted;
                             horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
                     }
                     TouchArea { clicked => { root.open-project(i); } }
+                    // This row is reachable with Tab, activated by Enter/Space,
+                    // and keeps the whole row clickable for pointer users.
+                    row-focus := FocusScope {
+                        width: 0px; height: 0px;
+                        key-pressed(event) => {
+                            if (event.text == Key.Return || event.text == Key.Space) {
+                                root.open-project(i);
+                                return accept;
+                            }
+                            return reject;
+                        }
+                    }
                 }
             }
             HorizontalLayout {
@@ -454,7 +500,7 @@ export component AppWindow inherits Window {
                 }
                 Text { text: root.detail-summary; font-size: 14px; color: root.muted; wrap: word-wrap; }
                 Rectangle { height: 1px; background: root.line; }
-                if root.detail-kind == "curated" || (root.install-project-id == "managed:pdfcraft" && root.pdfcraft-install-supported): Rectangle {
+                if root.detail-reviewable: Rectangle {
                     height: root.install-ready ? 336px :
                         (root.install-busy && (root.install-cancel-allowed || root.install-cancel-requested) ? 245px : 194px);
                     background: root.accent-bg; border-radius: 11px;
@@ -469,11 +515,30 @@ export component AppWindow inherits Window {
                             Rectangle {
                                 width: 175px; height: 36px; border-radius: 8px;
                                 background: root.install-busy ? root.muted-sheet : root.strong;
+                                border-width: review-focus.has-focus ? 2px : 0px;
+                                border-color: review-focus.has-focus ? #e8a64f : transparent;
+                                accessible-role: button;
+                                accessible-label: "Review official installer release";
+                                accessible-enabled: !root.install-busy;
+                                accessible-action-default => {
+                                    if (!root.install-busy) { root.review-install(); }
+                                }
+                                forward-focus: review-focus;
                                 Text { text: root.install-busy ? "Working…" : "Review installer";
                                     color: root.install-busy ? root.muted : root.sheet;
                                     font-size: 11px; font-weight: 700;
                                     horizontal-alignment: center; vertical-alignment: center; }
                                 TouchArea { enabled: !root.install-busy; clicked => { root.review-install(); } }
+                                review-focus := FocusScope {
+                                    width: 0px; height: 0px; enabled: !root.install-busy;
+                                    key-pressed(event) => {
+                                        if (event.text == Key.Return || event.text == Key.Space) {
+                                            root.review-install();
+                                            return accept;
+                                        }
+                                        return reject;
+                                    }
+                                }
                             }
                             Text { text: root.install-ready ? "Reviewed official release — not yet downloaded" :
                                 "Review is read-only: checks upstream release, adapter, asset and digest.";
@@ -487,12 +552,33 @@ export component AppWindow inherits Window {
                         if root.install-busy && (root.install-cancel-allowed || root.install-cancel-requested): Rectangle {
                             width: 245px; height: 34px; border-radius: 7px;
                             background: root.install-cancel-requested ? root.muted-sheet : root.sheet;
-                            border-color: root.line; border-width: 1px;
+                            border-color: cancel-focus.has-focus ? root.accent : root.line;
+                            border-width: cancel-focus.has-focus ? 2px : 1px;
+                            accessible-role: button;
+                            accessible-label: "Request cancellation before application replacement";
+                            accessible-enabled: root.install-cancel-allowed && !root.install-cancel-requested;
+                            accessible-action-default => {
+                                if (root.install-cancel-allowed && !root.install-cancel-requested) {
+                                    root.cancel-install();
+                                }
+                            }
+                            forward-focus: cancel-focus;
                             Text { text: root.install-cancel-requested ? "Cancellation requested" : "Request safe cancellation";
                                 font-size: 11px; font-weight: 700; color: root.strong;
                                 horizontal-alignment: center; vertical-alignment: center; }
                             TouchArea { enabled: root.install-cancel-allowed && !root.install-cancel-requested;
                                 clicked => { root.cancel-install(); } }
+                            cancel-focus := FocusScope {
+                                width: 0px; height: 0px;
+                                enabled: root.install-cancel-allowed && !root.install-cancel-requested;
+                                key-pressed(event) => {
+                                    if (event.text == Key.Return || event.text == Key.Space) {
+                                        root.cancel-install();
+                                        return accept;
+                                    }
+                                    return reject;
+                                }
+                            }
                         }
                         Text { text: root.install-message; font-size: 11px; color: root.strong; wrap: word-wrap; }
                         if root.install-ready: VerticalLayout {
@@ -508,6 +594,19 @@ export component AppWindow inherits Window {
                                 Rectangle {
                                     height: 36px; width: 330px; border-radius: 7px;
                                     background: root.install-approved ? root.sheet : root.muted-sheet;
+                                    border-width: approve-focus.has-focus ? 2px : 0px;
+                                    border-color: approve-focus.has-focus ? root.accent : transparent;
+                                    accessible-role: checkbox;
+                                    accessible-label: "I approve this exact release";
+                                    accessible-checkable: true;
+                                    accessible-checked: root.install-approved;
+                                    accessible-enabled: !root.install-busy;
+                                    accessible-action-default => {
+                                        if (!root.install-busy) {
+                                            root.install-approved = !root.install-approved;
+                                        }
+                                    }
+                                    forward-focus: approve-focus;
                                     Text { text: root.install-approved ? "☑ I approve this exact release" :
                                         "☐ I approve this exact release";
                                         font-size: 11px; font-weight: 700; color: root.strong;
@@ -516,11 +615,32 @@ export component AppWindow inherits Window {
                                         enabled: !root.install-busy;
                                         clicked => { root.install-approved = !root.install-approved; }
                                     }
+                                    approve-focus := FocusScope {
+                                        width: 0px; height: 0px; enabled: !root.install-busy;
+                                        key-pressed(event) => {
+                                            if (event.text == Key.Space || event.text == Key.Return) {
+                                                root.install-approved = !root.install-approved;
+                                                return accept;
+                                            }
+                                            return reject;
+                                        }
+                                    }
                                 }
                                 Rectangle {
                                     width: 190px; height: 36px; border-radius: 8px;
                                     background: root.install-approved && !root.install-busy ?
                                         root.strong : root.muted-sheet;
+                                    border-width: install-focus.has-focus ? 2px : 0px;
+                                    border-color: install-focus.has-focus ? #e8a64f : transparent;
+                                    accessible-role: button;
+                                    accessible-label: "Install approved verified release";
+                                    accessible-enabled: root.install-approved && !root.install-busy;
+                                    accessible-action-default => {
+                                        if (root.install-approved && !root.install-busy) {
+                                            root.confirm-install();
+                                        }
+                                    }
+                                    forward-focus: install-focus;
                                     Text { text: root.install-busy ? "Installing…" : "Install verified release";
                                         font-size: 11px; font-weight: 700;
                                         color: root.install-approved && !root.install-busy ?
@@ -529,6 +649,17 @@ export component AppWindow inherits Window {
                                     TouchArea {
                                         enabled: root.install-approved && !root.install-busy;
                                         clicked => { root.confirm-install(); }
+                                    }
+                                    install-focus := FocusScope {
+                                        width: 0px; height: 0px;
+                                        enabled: root.install-approved && !root.install-busy;
+                                        key-pressed(event) => {
+                                            if (event.text == Key.Return || event.text == Key.Space) {
+                                                root.confirm-install();
+                                                return accept;
+                                            }
+                                            return reject;
+                                        }
                                     }
                                 }
                             }

@@ -66,6 +66,30 @@ export function reviewedSource(projectId,{registry,adapters,managed,portable,
     name:String(project.name||id).slice(0,100),spec,platform,arch};
 }
 
+// A read-only capability snapshot for UI affordances. This invokes the
+// exact same source+platform+adapter checks as Review itself, without any
+// GitHub request, download, user-profile write, or install permission.
+export function reviewedRoutes({registry,adapters,managed,portable,
+    platform=process.platform,arch=process.arch}){
+  assert(registry&&Array.isArray(registry.projects)&&
+    adapters?.schema==='challenger-adapters.v1',
+    'Missing approved installer policy for route discovery');
+  const ids=[];
+  for(const project of registry.projects){
+    if(!idOk(project?.id))continue;
+    try{
+      reviewedSource('curated:'+project.id,{registry,adapters,platform,arch});
+      ids.push('curated:'+project.id);
+    }catch{}
+  }
+  try{
+    reviewedSource('managed:pdfcraft',{registry,adapters,managed,portable,platform,arch});
+    ids.push('managed:pdfcraft');
+  }catch{}
+  return {schema:'challenger.native.review-routes.v1',platform,arch,
+    ids:[...new Set(ids)].sort()};
+}
+
 export function reviewOfficialRelease(source,release){
   assert(release&&typeof release==='object'&&!release.draft&&!release.prerelease,
     'Draft or prerelease is not an installable approved release');
@@ -387,6 +411,15 @@ async function install(projectId,token){
 async function cli(){
   const [mode,projectId,token,...extra]=process.argv.slice(2);
   assert(!extra.length,'Unexpected install arguments');
+  if(mode==='routes'&&!projectId&&!token){
+    console.log(JSON.stringify(reviewedRoutes({
+      registry:read(path.join(runtime,'challengers.json')),
+      adapters:read(path.join(runtime,'adapters.json')),
+      managed:read(path.join(runtime,'catalog-cache.json')),
+      portable:read(path.join(runtime,'portable-assets.json'))
+    })));
+    return;
+  }
   if(mode==='history'&&!projectId&&!token){
     console.log(JSON.stringify(readInstallHistory(userState())));return;
   }

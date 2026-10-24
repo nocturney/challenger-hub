@@ -21,6 +21,18 @@ try {
     New-Item -ItemType Directory -Path $env:LOCALAPPDATA | Out-Null
     New-Item -ItemType Directory -Path 'D:\Velvet' | Out-Null
     $createdDriveRoot = $true
+    $routes = (& node $bridge routes | Out-String) | ConvertFrom-Json
+    if ($LASTEXITCODE -ne 0 -or
+        $routes.schema -ne 'challenger.native.review-routes.v1' -or
+        $routes.platform -ne 'win32' -or $routes.arch -ne 'x64' -or
+        @($routes.ids).Count -gt 15 -or
+        $routes.ids -notcontains 'curated:solvespace' -or
+        $routes.ids -notcontains 'managed:pdfcraft' -or
+        $routes.ids -contains 'research:pdfcraft' -or
+        $routes.ids -contains 'managed:compositor') {
+        throw 'Native review filter does not match real Windows reviewed adapters'
+    }
+    Write-Output 'NATIVE_WINDOWS_REVIEW_ROUTES_PASS'
     $planText = & node $bridge plan 'curated:solvespace' | Out-String
     if ($LASTEXITCODE -ne 0) { throw 'Official SolveSpace install plan refused' }
     $plan = $planText | ConvertFrom-Json

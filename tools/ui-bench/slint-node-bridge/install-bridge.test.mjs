@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {reviewedSource,reviewOfficialRelease,appendInstallHistory,readInstallHistory} from './install-bridge.mjs';
+import {reviewedSource,reviewedRoutes,reviewOfficialRelease,appendInstallHistory,readInstallHistory} from './install-bridge.mjs';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -116,6 +116,25 @@ test('managed PDF adapter fails closed on impersonation, other apps and platform
   assert.throws(()=>reviewOfficialRelease(pdfSource(),bad));
 });
 
+
+test('UI review routes come only from real platform-specific vetted adapters',()=>{
+  const shared={registry,adapters,managed:pdfManaged,portable:pdfPortable};
+  const mac=reviewedRoutes({...shared,platform:'darwin',arch:'arm64'});
+  const win=reviewedRoutes({...shared,platform:'win32',arch:'x64'});
+  const linux=reviewedRoutes({...shared,platform:'linux',arch:'x64'});
+  assert.equal(mac.schema,'challenger.native.review-routes.v1');
+  assert.deepEqual(mac.ids,['curated:compositor']);
+  assert.deepEqual(win.ids,['managed:pdfcraft']);
+  assert.deepEqual(linux.ids,[]);
+  assert.deepEqual(reviewedRoutes({...shared,platform:'darwin',arch:'x64'}).ids,[]);
+  assert.deepEqual(reviewedRoutes({...shared,platform:'win32',arch:'arm64'}).ids,[]);
+  assert(!mac.ids.includes('curated:research-risk'));
+  const duplicates={...shared,registry:{projects:[...registry.projects,registry.projects[0]]}};
+  assert.deepEqual(reviewedRoutes({...duplicates,platform:'darwin',arch:'arm64'}).ids,[]);
+  const spoofed={...shared,managed:{apps:[{...pdfManaged.apps[0],
+    repoUrl:'https://github.com/forged/pdfcraft'}]}};
+  assert.deepEqual(reviewedRoutes({...spoofed,platform:'win32',arch:'x64'}).ids,[]);
+});
 
 test('approved installation history is durable, bounded and token-free',()=>{
   const folder=fs.mkdtempSync(path.join(os.tmpdir(),'challenger-history-'));

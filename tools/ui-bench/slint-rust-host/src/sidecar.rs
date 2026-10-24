@@ -289,6 +289,54 @@ pub fn installer_bridge_with_cancel(
     }
 }
 
+// A read-only snapshot of the *actual* reviewed adapters for this OS.
+// It delegates selection to the same Node source/adapter policy as Review,
+// rather than guessing from generic curated catalog membership.
+pub fn read_review_routes() -> Result<std::collections::HashSet<String>, String> {
+    #[derive(serde::Deserialize)]
+    struct Routes { schema:String, platform:String, arch:String, ids:Vec<String> }
+    let (dir,packaged)=resources()?;
+    let script=dir.join("install-bridge.mjs");
+    if !script.is_file(){return Err("Missing vetted review route policy".into());}
+    let node=node_executable(&dir,packaged)?;
+    let mut cmd=Command::new(node);
+    cmd.arg(script).arg("routes");
+    cmd.current_dir(&dir).stdin(Stdio::null())
+        .stdout(Stdio::piped()).stderr(Stdio::piped());
+    cmd.env_remove("NODE_OPTIONS").env_remove("NODE_PATH");
+    if packaged {
+        let path=dir.join("runtime-preview12");
+        for file in ["challengers.json","adapters.json","catalog-cache.json",
+                     "portable-assets.json"] {
+            if !path.join(file).is_file(){
+                return Err("Packaged reviewed adapter policy is incomplete".into());
+            }
+        }
+        cmd.env("CHALLENGER_PREVIEW_RUNTIME",path);
+    }
+    let result=run_bounded(cmd,Duration::from_secs(8))?;
+    let routes:Routes=serde_json::from_str(result.trim())
+        .map_err(|_|"Invalid reviewed route capability JSON")?;
+    let platform=if cfg!(target_os="macos"){"darwin"}
+        else if cfg!(windows){"win32"}else{"linux"};
+    let arch=if cfg!(target_arch="aarch64"){"arm64"}else if cfg!(target_arch="x86_64")
+        {"x64"}else{"unsupported"};
+    if routes.schema!="challenger.native.review-routes.v1"||
+       routes.platform!=platform||routes.arch!=arch||routes.ids.len()>15 {
+        return Err("Review route platform/schema/count mismatch".into());
+    }
+    let mut ids=std::collections::HashSet::new();
+    for id in routes.ids {
+        if id.len()>95 || !id.bytes().all(|x|
+            x.is_ascii_lowercase()||x.is_ascii_digit()||x==b':'||x==b'-')||
+            !(id.starts_with("curated:")||id=="managed:pdfcraft")||
+            !ids.insert(id) {
+            return Err("Untrusted or duplicate reviewed route identity".into());
+        }
+    }
+    Ok(ids)
+}
+
 // Activity history is explicitly read from the logged-in user's local file.
 // It does not start a persistent engine, inspect the OS or install software.
 pub fn read_install_history() -> Result<String, String> {

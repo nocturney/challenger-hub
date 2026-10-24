@@ -7,6 +7,7 @@ mod sidecar;
 use catalog::{domain_counts, domain_label, domain_of, filtered_domain, Catalog, Inventory, Project, DOMAINS};
 use slint::{ComponentHandle, Model, ModelRc, SharedString, Timer, TimerMode, VecModel};
 use std::{
+    collections::HashSet,
     cell::{Cell, RefCell},
     rc::Rc,
     sync::{atomic::{AtomicBool,Ordering},mpsc,Arc},
@@ -25,16 +26,17 @@ struct Route {
     domain: String,
     selected: Option<String>,
     limit: usize,
+    review_only: bool,
 }
 
 impl Route {
     fn home() -> Self {
         Self { page: "home".into(), query: String::new(), domain: "all".into(),
-            selected: None, limit: PAGE_SIZE }
+            selected: None, limit: PAGE_SIZE, review_only: false }
     }
     fn results(domain: &str, query: &str) -> Self {
         Self { page: "results".into(), query: query.into(), domain: domain.into(),
-            selected: None, limit: PAGE_SIZE }
+            selected: None, limit: PAGE_SIZE, review_only: false }
     }
     fn simple(page: &str) -> Self {
         Self { page: page.into(), ..Self::home() }
@@ -44,6 +46,7 @@ impl Route {
 struct State {
     all: Vec<Project>,
     visible: Vec<Project>,
+    review_routes: HashSet<String>,
     history: Vec<Route>,
     cursor: usize,
     inventory: Option<Inventory>,
@@ -62,7 +65,8 @@ enum InstallerEvent {
 impl Default for State {
     fn default() -> Self {
         Self {
-            all: Vec::new(), visible: Vec::new(), history: vec![Route::home()], cursor: 0,
+            all: Vec::new(), visible: Vec::new(), review_routes: HashSet::new(),
+            history: vec![Route::home()], cursor: 0,
             inventory: None, events: Vec::new(),
             device_snapshot: None, device_query: String::new(), device_error: None,
         }
@@ -102,14 +106,15 @@ fn source_status(p: &Project) -> &'static str {
     }
 }
 
-fn detailed_status(p: &Project) -> &'static str {
+fn detailed_status(p: &Project, reviewable:bool) -> &'static str {
     match p.kind.as_str() {
         "research" => "Research candidate — not verified for installation",
-        "managed" if p.id=="managed:pdfcraft" && cfg!(all(target_os="windows",target_arch="x86_64"))
-            => "Managed PdfCraft — verified portable installation requires your approval",
+        "managed" if p.id=="managed:pdfcraft" && reviewable
+            => "Managed PdfCraft — official portable release review available; install requires approval",
         "managed" if p.id=="managed:pdfcraft" => "Managed PdfCraft — native portable installer is Windows x64 only",
-        "managed" => "Managed listing — installation not enabled in Native Preview",
-        _ => "Curated source — installation only after verified release review and approval",
+        "managed" => "Managed listing — no reviewed native installer adapter on this device",
+        "curated" if reviewable => "Curated source — official release review available; install requires explicit approval",
+        _ => "Curated source — no reviewed native installer adapter on this device",
     }
 }
 
@@ -155,7 +160,7 @@ fn media_caption(id: &str) -> &'static str {
     }
 }
 
-fn entry(p: &Project) -> ProjectEntry {
+fn entry(p: &Project, reviewable:bool) -> ProjectEntry {
     ProjectEntry {
         id: p.id.clone().into(),
         name: p.name.clone().into(),
@@ -165,6 +170,7 @@ fn entry(p: &Project) -> ProjectEntry {
         platforms: p.platforms.clone().into(),
         status: source_status(p).into(),
         kind: p.kind.clone().into(),
+        review_route: reviewable,
         media: media_id(p).into(),
         initial: p.name.chars().next().unwrap_or('?').to_string().into(),
     }
@@ -174,8 +180,10 @@ fn fact(value: &str) -> SharedString {
     if value.trim().is_empty() { "Not reported".into() } else { value.into() }
 }
 
-fn set_detail(ui: &AppWindow, project: Option<&Project>) {
+fn set_detail(ui: &AppWindow, project: Option<&Project>,review_routes:&HashSet<String>) {
     if let Some(p) = project {
+        let reviewable=review_routes.contains(&p.id) && install::eligible_source(p);
+        ui.set_detail_reviewable(reviewable);
         if ui.get_install_project_id().as_str() != p.id {
             ui.set_install_project_id(p.id.clone().into());
             ui.set_install_ready(false);
@@ -197,7 +205,7 @@ fn set_detail(ui: &AppWindow, project: Option<&Project>) {
         ui.set_detail_category(p.category.clone().into());
         ui.set_detail_platforms(fact(&p.platforms));
         ui.set_detail_kind(p.kind.clone().into());
-        ui.set_detail_status(detailed_status(p).into());
+        ui.set_detail_status(detailed_status(p,reviewable).into());
         ui.set_detail_source(safe_source(&p.source).unwrap_or_default().into());
         ui.set_detail_license(fact(&p.license));
         ui.set_detail_challenges(
@@ -209,6 +217,7 @@ fn set_detail(ui: &AppWindow, project: Option<&Project>) {
         ui.set_detail_media(media_id(p).into());
         ui.set_detail_media_caption(media_caption(media_id(p)).into());
     } else {
+        ui.set_detail_reviewable(false);
         ui.set_install_project_id("".into());
         ui.set_install_ready(false);
         ui.set_install_approved(false);
@@ -320,11 +329,21 @@ fn redraw(ui: &AppWindow, state: &mut State) {
     ui.set_disciplines_left(ModelRc::new(VecModel::from(groups[..half].to_vec())));
     ui.set_disciplines_right(ModelRc::new(VecModel::from(groups[half..].to_vec())));
 
-    state.visible = filtered_domain(&state.all, &route.query, &route.domain)
-        .into_iter().cloned().collect();
+    let candidates = filtered_domain(&state.all, &route.query, &route.domain);
+    // This only describes availability of the *review route*, not a verified
+    // download, compatible release asset or approval to install.
+    let review_route_count = candidates.iter()
+        .filter(|p| state.review_routes.contains(&p.id)).count();
+    state.visible = candidates.into_iter()
+        .filter(|p| !route.review_only || state.review_routes.contains(&p.id))
+        .cloned().collect();
+    ui.set_review_route_count(review_route_count as i32);
+    ui.set_review_only(route.review_only);
     let showing = state.visible.len().min(route.limit);
     ui.set_entries(ModelRc::new(VecModel::from(
-        state.visible.iter().take(showing).map(entry).collect::<Vec<_>>()
+        state.visible.iter().take(showing)
+            .map(|p| entry(p,state.review_routes.contains(&p.id)))
+            .collect::<Vec<_>>()
     )));
     ui.set_total(state.all.len() as i32);
     ui.set_matching(state.visible.len() as i32);
@@ -338,7 +357,7 @@ fn redraw(ui: &AppWindow, state: &mut State) {
     ui.set_can_forward(state.cursor + 1 < state.history.len());
 
     let detail = route.selected.as_ref().and_then(|id| state.all.iter().find(|p| &p.id == id));
-    set_detail(ui, detail);
+    set_detail(ui, detail, &state.review_routes);
     update_device_panels(ui, state);
     update_os_device_panel(ui, state);
 }
@@ -428,8 +447,21 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         return Ok(());
     }
 
+    // A failure reading the bundled policy leaves discovery functional but
+    // offers zero in-app installer review routes (fail closed, never guess).
+    let review_routes=match sidecar::read_review_routes(){
+        Ok(routes) if routes.iter().all(|id|initial.items.iter().any(|p|
+            &p.id==id && install::eligible_source(p)))=>routes,
+        Ok(_) => {
+            eprintln!("NATIVE_REVIEW_ROUTES_REFUSED: catalog/policy mismatch");
+            HashSet::new()
+        }
+        Err(e) => {
+            eprintln!("NATIVE_REVIEW_ROUTES_UNAVAILABLE: {e}");
+            HashSet::new()
+        }
+    };
     let ui = AppWindow::new()?;
-    ui.set_pdfcraft_install_supported(cfg!(all(target_os="windows",target_arch="x86_64")));
     let state = Rc::new(RefCell::new(State::default()));
     {
         let mut s = state.borrow_mut();
@@ -439,6 +471,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         ), "OK");
         s.inventory = Some(initial.inventory);
         s.all = initial.items;
+        s.review_routes=review_routes;
         redraw(&ui, &mut s);
     }
 
@@ -500,6 +533,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     redraw(&w, &mut state);
                 }
             }
+        }
+    });
+    ui.on_toggle_review_only({
+        let state = Rc::clone(&state); let weak = ui.as_weak();
+        move || if let Some(w) = weak.upgrade() {
+            let mut state = state.borrow_mut();
+            if state.route().page != "results" { return; }
+            let route = state.route_mut();
+            route.review_only = !route.review_only;
+            route.limit = PAGE_SIZE;
+            redraw(&w, &mut state);
         }
     });
     ui.on_load_more({
@@ -590,7 +634,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let s = state.borrow();
                 s.route().selected.as_ref().and_then(|id|
                     s.all.iter().find(|p| &p.id == id)
-                ).filter(|p| install::eligible_source(p)).cloned()
+                ).filter(|p| s.review_routes.contains(&p.id) &&
+                    install::eligible_source(p)).cloned()
             };
             let Some(project) = source else {return;};
             busy.set(true);
@@ -1214,8 +1259,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 if !w.get_dark_mode() { fail("dark appearance"); }
                 w.invoke_navigate("home".into());
                 w.invoke_search_submitted("".into());
-                if w.get_matching() != 181 || w.get_showing() != 30 || !w.get_has_more() {
+                if w.get_matching() != 181 || w.get_showing() != 30 || !w.get_has_more()
+                    || w.get_review_only() {
                     fail("default 30 and complete catalog");
+                }
+                let review_routes=w.get_review_route_count();
+                if (cfg!(target_os="linux") && review_routes!=0) ||
+                   (!cfg!(target_os="linux") && (review_routes<=0 || review_routes>15)) {
+                    fail("review filter must come from the exact reviewed platform adapters");
+                }
+                w.invoke_toggle_review_only();
+                if !w.get_review_only() || w.get_matching()!=review_routes ||
+                   w.get_showing()!=review_routes.min(30) {
+                    fail("review route filter uses source-reviewed local policy");
+                }
+                w.invoke_toggle_review_only();
+                if w.get_review_only() || w.get_matching()!=181 {
+                    fail("clearing release-review route filter restores full catalog");
                 }
                 w.invoke_load_more();
                 if w.get_showing() != 60 { fail("real show more"); }
@@ -1239,7 +1299,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     "count": w.get_total(), "disciplines": 17,
                     "pages": ["home","results","detail","library","activity"],
                     "history": "back+forward", "pageSize": 30,
-                    "pageSizeVerified": 60, "sourceScreenshots": 2, "darkMode": true,
+                    "pageSizeVerified": 60, "reviewRouteCount": review_routes,
+                    "reviewFilterVerified": true, "sourceScreenshots": 2, "darkMode": true,
                     "managedCoverage": w.get_managed_assessed(),
                     "managedDetected": w.get_managed_detected(),
                     "sessionEvents": w.get_session_event_count(),
@@ -1310,7 +1371,9 @@ mod tests {
             latest_version:"".into(), update_hint:false
         };
         assert_eq!(media_id(&p), "dune3d");
+        assert!(entry(&p,true).review_route);
         p.kind = "research".into();
+        assert!(!entry(&p,false).review_route);
         assert_eq!(media_id(&p), "");
         p.kind = "curated".into();
         p.source = "https://github.com/dune3d-fake/dune3d".into();
