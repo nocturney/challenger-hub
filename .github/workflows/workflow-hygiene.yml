@@ -1,8 +1,5 @@
 name: Workflow hygiene
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/**'
   workflow_dispatch:
 permissions:
   contents: read
