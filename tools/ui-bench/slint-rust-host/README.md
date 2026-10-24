@@ -198,8 +198,13 @@ codes, source-kind confusion and platform mismatch.
 
 Developer-only `--qa-verify-identity` exercises a real native OS read,
 rejects a forged project-open callback, opens the linked RustDesk dossier and
-returns to the OS registration view on an explicitly provisioned Mac. It is
-not run on unrelated CI machines without a RustDesk registration.
+returns to the OS registration view **only where a reviewed RustDesk source
+registration exists**. It passed on MacMiniOffice2 (macOS exact Bundle ID)
+and on Chris Windows (MSI exact Installer UpgradeCode). Chris's remote agent
+runs in non-interactive **SYSTEM Session 0**: native Slint GUI/state smoke and
+the dossier/back assertions passed with code 0, but this is **not** visual
+user-desktop QA. Windows application packaging was transferred from the
+CI head SHA as an isolated portable bundle, not installed or merged.
 
 ## Next gates — not yet implemented
 

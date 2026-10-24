@@ -684,7 +684,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
                 w.invoke_go_back();
                 if w.get_page() != "device" { fail("Native device-to-dossier back navigation"); }
-                eprintln!("NATIVE_IDENTITY_GUI_PASS RustDesk · exact upstream/macOS ID only");
+                eprintln!("NATIVE_IDENTITY_GUI_PASS RustDesk · exact reviewed upstream/native ID only");
                 let _ = w.hide();
             }
         });
