@@ -76,8 +76,12 @@ component KeyboardAction inherits Rectangle {
 
 export component AppWindow inherits Window {
     title: "Challenger · Focus Native Preview";
-    width: 1210px;
-    height: 805px;
+    // Preferred size, not fixed width/height: the OS can now resize/maximize the window.
+    // Leave sufficient room for the safety/consent controls in the dossier.
+    preferred-width: 1210px;
+    preferred-height: 805px;
+    min-width: 760px;
+    min-height: 560px;
     background: root.canvas;
     default-font-family: "Arial";
 
@@ -185,67 +189,89 @@ export component AppWindow inherits Window {
     property <color> accent: root.dark-mode ? #b7d6b9 : #47765a;
     property <color> accent-bg: root.dark-mode ? #2d4534 : #eaf2e8;
 
-    VerticalLayout {
-        spacing: 0px;
+    // The breakpoint values are updated by the window resize event rather than
+    // binding layout constraints to Window.width. This avoids Slint layout-info
+    // dependency cycles while preserving responsive sizing.
+    property <bool> compact-layout: false;
+    property <bool> compact-navigation: false;
+    property <bool> show-extended-columns: true;
+    property <bool> spacious-layout: true;
+    property <bool> over-950: true;
+    changed width => {
+        root.compact-layout = root.width < 950px;
+        root.compact-navigation = root.width < 980px;
+        root.show-extended-columns = root.width > 980px;
+        root.spacious-layout = root.width > 1050px;
+        root.over-950 = root.width > 950px;
+    }
+
+    // A fill container keeps the window's intrinsic size independent of responsive
+    // padding in the child layout (no root-width/layout-info binding cycle).
+    Rectangle {
+        VerticalLayout {
+            spacing: 0px;
         Rectangle {
-            height: 72px;
+            height: root.compact-layout ? 64px : 72px;
             background: root.sheet;
+            drop-shadow-blur: 8px; drop-shadow-offset-y: 2px;
+            drop-shadow-color: root.dark-mode ? #00000033 : #21372712;
             border-color: root.line;
             border-width: 1px;
             HorizontalLayout {
-                padding-left: root.width < 950px ? 20px : 38px;
-                padding-right: root.width < 950px ? 20px : 38px;
-                spacing: 16px;
+                padding-left: root.compact-layout ? 12px : 38px;
+                padding-right: root.compact-layout ? 12px : 38px;
+                spacing: root.compact-layout ? 7px : 16px;
                 Image {
                     source: @image-url("orbit-app-128.png");
-                    width: 38px;
-                    height: 38px;
+                    width: root.compact-layout ? 29px : 38px;
+                    height: root.compact-layout ? 29px : 38px;
                     image-fit: contain;
                     vertical-alignment: center;
                 }
                 VerticalLayout {
                     spacing: 0px;
-                    Text { text: "C H A L L E N G E R"; color: root.strong; font-size: 13px; font-weight: 800; }
-                    Text { text: "Independent tools, discovered."; color: root.subtle; font-size: 10px; }
+                    Text { text: root.compact-layout ? "CHALLENGER" : "C H A L L E N G E R";
+                        color: root.strong; font-size: root.compact-layout ? 11px : 13px; font-weight: 800; }
+                    if !root.compact-layout: Text { text: "Independent tools, discovered."; color: root.subtle; font-size: 10px; }
                 }
                 Rectangle { horizontal-stretch: 1; background: transparent; }
                 Rectangle {
-                    width: 90px; background: root.page == "home" || root.page == "results" || root.page == "detail" ? root.accent-bg : transparent;
+                    width: root.compact-layout ? 70px : 90px; background: root.page == "home" || root.page == "results" || root.page == "detail" ? root.accent-bg : transparent;
                     border-radius: 8px;
                     Text { text: "Explore"; color: root.page == "home" || root.page == "results" || root.page == "detail" ? root.accent : root.muted;
                            font-size: 12px; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
                     KeyboardAction { action-dark: root.dark-mode; action-label: "Explore software"; activated => { root.navigate("home"); } }
                 }
                 Rectangle {
-                    width: root.width < 980px ? 94px : 114px;
+                    width: root.compact-layout ? 74px : (root.compact-navigation ? 94px : 114px);
                     background: root.page == "library" || root.page == "device" ? root.accent-bg : transparent;
                     border-radius: 8px;
-                    Text { text: "My software"; color: root.page == "library" || root.page == "device" ? root.accent : root.muted;
+                    Text { text: root.compact-layout ? "My apps" : "My software"; color: root.page == "library" || root.page == "device" ? root.accent : root.muted;
                            font-size: 12px; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
                     KeyboardAction { action-dark: root.dark-mode; action-label: "My software"; activated => { root.navigate("library"); } }
                 }
                 Rectangle {
-                    width: 78px; background: root.page == "activity" ? root.accent-bg : transparent;
+                    width: root.compact-layout ? 68px : 78px; background: root.page == "activity" ? root.accent-bg : transparent;
                     border-radius: 8px;
                     Text { text: "Activity"; color: root.page == "activity" ? root.accent : root.muted;
                            font-size: 12px; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
                     KeyboardAction { action-dark: root.dark-mode; action-label: "Activity"; activated => { root.navigate("activity"); } }
                 }
                 Rectangle {
-                    width: 68px; background: root.page == "about" ? root.accent-bg : transparent;
+                    width: root.compact-layout ? 52px : 68px; background: root.page == "about" ? root.accent-bg : transparent;
                     border-radius: 8px;
                     Text { text: "About"; color: root.page == "about" ? root.accent : root.muted;
                            font-size: 12px; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
                     KeyboardAction { action-dark: root.dark-mode; action-label: "About Challenger and Slint"; activated => { root.navigate("about"); } }
                 }
                 Rectangle {
-                    width: 60px;
+                    width: root.compact-layout ? 44px : 60px;
                     Text { text: root.dark-mode ? "Light" : "Dark"; color: root.subtle; font-size: 11px;
                         horizontal-alignment: center; vertical-alignment: center; }
                     KeyboardAction { action-dark: root.dark-mode; action-label: root.dark-mode ? "Switch to light theme" : "Switch to dark theme"; activated => { root.toggle-theme(); } }
                 }
                 Rectangle {
-                    width: 79px; border-radius: 8px; background: root.accent-bg;
+                    width: root.compact-layout ? 66px : 79px; border-radius: 8px; background: root.accent-bg;
                     Text { text: root.refreshing ? "Reading..." : "Refresh";
                         font-size: 11px; font-weight: 700; color: root.accent;
                         horizontal-alignment: center; vertical-alignment: center; }
@@ -258,13 +284,13 @@ export component AppWindow inherits Window {
         if root.page == "home": ScrollView {
             vertical-stretch: 1;
             VerticalLayout {
-                padding-left: root.width < 950px ? 34px : 80px;
-                padding-right: root.width < 950px ? 34px : 80px;
+                padding-left: root.compact-layout ? 34px : 80px;
+                padding-right: root.compact-layout ? 34px : 80px;
                 padding-top: 40px;
                 padding-bottom: 34px;
                 spacing: 17px;
                 Text { text: "EXPLORE  /  THE INDEPENDENT SOFTWARE INDEX"; font-size: 10px; color: root.accent; font-weight: 800; }
-                Text { text: "Find the tool that fits."; font-size: root.width < 950px ? 33px : 43px;
+                Text { text: "Find the tool that fits."; font-size: root.compact-layout ? 33px : 43px;
                     font-weight: 800; color: root.strong; }
                 Text { text: "Start with the software you know, or explore a discipline. No noise, no sponsored rankings.";
                     font-size: 13px; color: root.muted; wrap: word-wrap; }
@@ -272,6 +298,8 @@ export component AppWindow inherits Window {
                 Rectangle {
                     height: 65px; background: root.sheet;
                     border-radius: 11px; border-color: root.line; border-width: 1px;
+                    drop-shadow-blur: 16px; drop-shadow-offset-y: 5px;
+                    drop-shadow-color: root.dark-mode ? #00000038 : #203d241c;
                     HorizontalLayout {
                         padding-left: 15px; padding-right: 10px; spacing: 10px;
                         Text { text: "SEARCH"; font-size: 10px; font-weight: 800; color: root.accent; vertical-alignment: center; }
@@ -289,6 +317,49 @@ export component AppWindow inherits Window {
                                 horizontal-alignment: center; vertical-alignment: center; }
                             KeyboardAction { action-dark: root.dark-mode; action-label: "Find tools"; activated => { root.search-submitted(root.query); } }
                         }
+                    }
+                }
+                Text { text: "SOURCE-VERIFIED INTERFACES  /  REAL PROJECT SCREENSHOTS";
+                    color: root.accent; font-size: 10px; font-weight: 800; }
+                HorizontalLayout {
+                    spacing: 14px;
+                    Rectangle {
+                        height: root.compact-layout ? 150px : 180px;
+                        horizontal-stretch: 1;
+                        background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 13px;
+                        drop-shadow-blur: 13px; drop-shadow-offset-y: 4px;
+                        drop-shadow-color: root.dark-mode ? #00000033 : #203d2418;
+                        VerticalLayout {
+                            padding: 12px; spacing: 7px;
+                            HorizontalLayout {
+                                spacing: 8px;
+                                Image { source: @image-url("dune3d.svg"); width: 23px; height: 23px; image-fit: contain; }
+                                Text { text: "Dune 3D"; font-size: 13px; font-weight: 700; color: root.strong; }
+                                Rectangle { horizontal-stretch: 1; background: transparent; }
+                                Text { text: "SOURCE VERIFIED"; font-size: 9px; font-weight: 700; color: root.accent; }
+                            }
+                            Image { source: @image-url("dune3d.png"); vertical-stretch: 1; image-fit: contain; }
+                        }
+                        KeyboardAction { action-dark: root.dark-mode; action-label: "Explore Dune 3D, verified source"; activated => { root.search-submitted("Dune 3D"); } }
+                    }
+                    Rectangle {
+                        height: root.compact-layout ? 150px : 180px;
+                        horizontal-stretch: 1;
+                        background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 13px;
+                        drop-shadow-blur: 13px; drop-shadow-offset-y: 4px;
+                        drop-shadow-color: root.dark-mode ? #00000033 : #203d2418;
+                        VerticalLayout {
+                            padding: 12px; spacing: 7px;
+                            HorizontalLayout {
+                                spacing: 8px;
+                                Image { source: @image-url("material-maker-icon.png"); width: 23px; height: 23px; image-fit: contain; }
+                                Text { text: "Material Maker"; font-size: 13px; font-weight: 700; color: root.strong; }
+                                Rectangle { horizontal-stretch: 1; background: transparent; }
+                                Text { text: "SOURCE VERIFIED"; font-size: 9px; font-weight: 700; color: root.accent; }
+                            }
+                            Image { source: @image-url("material-maker.png"); vertical-stretch: 1; image-fit: contain; }
+                        }
+                        KeyboardAction { action-dark: root.dark-mode; action-label: "Explore Material Maker, verified source"; activated => { root.search-submitted("Material Maker"); } }
                     }
                 }
                 Rectangle { height: 9px; background: transparent; }
@@ -342,8 +413,8 @@ export component AppWindow inherits Window {
 
         // RESULTS: compact index, not another set of project cards.
         if root.page == "results": VerticalLayout {
-            padding-left: root.width < 950px ? 26px : 48px;
-            padding-right: root.width < 950px ? 26px : 48px;
+            padding-left: root.compact-layout ? 26px : 48px;
+            padding-right: root.compact-layout ? 26px : 48px;
             padding-top: 22px;
             padding-bottom: 20px;
             spacing: 15px;
@@ -403,7 +474,7 @@ export component AppWindow inherits Window {
                     toggled => { root.toggle-review-only(); }
                 }
                 Rectangle { horizontal-stretch: 1; background: transparent; }
-                if root.width > 1050px: Text {
+                if root.spacious-layout: Text {
                     text: "Review checks the official release. Installation requires separate approval.";
                     color: root.subtle; font-size: 10px;
                     vertical-alignment: center;
@@ -416,7 +487,7 @@ export component AppWindow inherits Window {
                     Text { text: "PROJECT / SOURCE"; font-size: 10px; font-weight: 800; color: root.subtle; horizontal-stretch: 3; vertical-alignment: center; }
                     Text { text: "DISCIPLINE"; font-size: 10px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
                     Text { text: "AVAILABLE NEXT STEP"; font-size: 10px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
-                    if root.width > 980px: Text { text: "PLATFORMS (REPORTED)"; font-size: 10px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
+                    if root.show-extended-columns: Text { text: "PLATFORMS (REPORTED)"; font-size: 10px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
                 }
             }
             if root.matching == 0: Rectangle {
@@ -453,6 +524,34 @@ export component AppWindow inherits Window {
                                 source: @image-url("material-maker-icon.png"); width: 32px; height: 32px;
                                 image-fit: contain; vertical-alignment: center;
                             }
+                            if project.media == "compositor": Image {
+                                source: @image-url("compositor-icon.png"); width: 32px; height: 32px;
+                                image-fit: contain; vertical-alignment: center;
+                            }
+                            if project.media == "kiri-moto": Image {
+                                source: @image-url("kiri-moto-icon.png"); width: 32px; height: 32px;
+                                image-fit: contain; vertical-alignment: center;
+                            }
+                            if project.media == "espocrm": Image {
+                                source: @image-url("espocrm-icon.png"); width: 32px; height: 32px;
+                                image-fit: contain; vertical-alignment: center;
+                            }
+                            if project.media == "docuseal": Image {
+                                source: @image-url("docuseal-icon.svg"); width: 32px; height: 32px;
+                                image-fit: contain; vertical-alignment: center;
+                            }
+                            if project.media == "meshcentral": Image {
+                                source: @image-url("meshcentral-icon.png"); width: 32px; height: 32px;
+                                image-fit: contain; vertical-alignment: center;
+                            }
+                            if project.media == "openhands": Image {
+                                source: @image-url("openhands-icon.png"); width: 32px; height: 32px;
+                                image-fit: contain; vertical-alignment: center;
+                            }
+                            if project.media == "real-video-enhancer": Image {
+                                source: @image-url("real-video-enhancer-icon.svg"); width: 32px; height: 32px;
+                                image-fit: contain; vertical-alignment: center;
+                            }
                             if project.media == "": Rectangle {
                                 width: 32px; height: 32px; border-radius: 7px; background: root.accent-bg;
                                 Text { text: project.initial; color: root.accent; font-size: 14px; font-weight: 800;
@@ -475,7 +574,7 @@ export component AppWindow inherits Window {
                             Text { text: project.status; font-size: 10px; color: root.subtle;
                                 overflow: elide; }
                         }
-                        if root.width > 980px: Text { text: project.platforms; font-size: 10px; color: root.muted;
+                        if root.show-extended-columns: Text { text: project.platforms; font-size: 10px; color: root.muted;
                             horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
                     }
                     TouchArea { clicked => { root.open-project(i); } }
@@ -511,8 +610,8 @@ export component AppWindow inherits Window {
         if root.page == "detail": ScrollView {
             vertical-stretch: 1;
             VerticalLayout {
-                padding-left: root.width < 950px ? 32px : 76px;
-                padding-right: root.width < 950px ? 32px : 76px;
+                padding-left: root.compact-layout ? 32px : 76px;
+                padding-right: root.compact-layout ? 32px : 76px;
                 padding-top: 22px; padding-bottom: 42px; spacing: 19px;
                 HorizontalLayout {
                     spacing: 12px;
@@ -539,7 +638,28 @@ export component AppWindow inherits Window {
                     if root.detail-media == "material-maker": Image {
                         source: @image-url("material-maker-icon.png"); width: 58px; height: 58px; image-fit: contain;
                     }
-                    Text { text: root.detail-name; font-size: root.width < 950px ? 31px : 43px;
+                    if root.detail-media == "compositor": Image {
+                        source: @image-url("compositor-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "kiri-moto": Image {
+                        source: @image-url("kiri-moto-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "espocrm": Image {
+                        source: @image-url("espocrm-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "docuseal": Image {
+                        source: @image-url("docuseal-icon.svg"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "meshcentral": Image {
+                        source: @image-url("meshcentral-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "openhands": Image {
+                        source: @image-url("openhands-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "real-video-enhancer": Image {
+                        source: @image-url("real-video-enhancer-icon.svg"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    Text { text: root.detail-name; font-size: root.compact-layout ? 31px : 43px;
                         color: root.strong; font-weight: 800; }
                 }
                 Text { text: root.detail-summary; font-size: 14px; color: root.muted; wrap: word-wrap; }
@@ -732,6 +852,15 @@ export component AppWindow inherits Window {
                                 Text { text: root.detail-media-caption; font-size: 10px; color: root.subtle; wrap: word-wrap; }
                             }
                         }
+                        if root.detail-media == "real-video-enhancer": Rectangle {
+                            height: 400px; background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 11px;
+                            VerticalLayout {
+                                padding: 13px; spacing: 8px;
+                                Text { text: "OFFICIAL INTERFACE SCREENSHOT"; font-size: 10px; font-weight: 800; color: root.accent; }
+                                Image { source: @image-url("real-video-enhancer.png"); height: 326px; image-fit: contain; }
+                                Text { text: root.detail-media-caption; font-size: 10px; color: root.subtle; wrap: word-wrap; }
+                            }
+                        }
                         Rectangle {
                             height: 152px; background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 11px;
                             VerticalLayout {
@@ -748,14 +877,14 @@ export component AppWindow inherits Window {
                                 Text { text: root.detail-challenges; font-size: 13px; color: root.strong; wrap: word-wrap; }
                             }
                         }
-                        if root.detail-media == "": Rectangle {
+                        if root.detail-media != "dune3d" && root.detail-media != "material-maker" && root.detail-media != "real-video-enhancer": Rectangle {
                             height: 138px; background: root.muted-sheet; border-radius: 11px;
                             VerticalLayout {
                                 padding: 18px; spacing: 10px;
                                 Text { text: "OFFICIAL INTERFACE PREVIEW"; font-size: 10px; font-weight: 800; color: root.subtle; }
-                                Text { text: "No source-verified, redistribution-approved screenshot is attached to this native project view yet.";
+                                Text { text: "A source-verified screenshot is not available for this project. Its catalog data remains available.";
                                     font-size: 12px; color: root.muted; wrap: word-wrap; }
-                                Text { text: "Placeholder only — no fabricated product imagery."; font-size: 10px; color: root.subtle; }
+                                Text { text: "Only independently reviewed project imagery is displayed."; font-size: 10px; color: root.subtle; }
                             }
                         }
                     }
@@ -812,8 +941,8 @@ export component AppWindow inherits Window {
         // Truthful managed-app detection from Preview12's existing local
         // name/path/version heuristic. This is NOT a device-wide inventory.
         if root.page == "library": VerticalLayout {
-            padding-left: root.width < 950px ? 25px : 52px;
-            padding-right: root.width < 950px ? 25px : 52px;
+            padding-left: root.compact-layout ? 25px : 52px;
+            padding-right: root.compact-layout ? 25px : 52px;
             padding-top: 29px; padding-bottom: 20px; spacing: 15px;
             Text { text: "MY SOFTWARE  /  MANAGED APP SIGNALS"; font-size: 10px; font-weight: 800; color: root.accent; }
             Text { text: "What this device reports."; font-size: 31px; font-weight: 800; color: root.strong; }
@@ -903,8 +1032,8 @@ export component AppWindow inherits Window {
         // Explicit user-triggered OS registration evidence; NOT a package
         // install verification, launch capability, catalog auto-match or job.
         if root.page == "device": VerticalLayout {
-            padding-left: root.width < 950px ? 25px : 52px;
-            padding-right: root.width < 950px ? 25px : 52px;
+            padding-left: root.compact-layout ? 25px : 52px;
+            padding-right: root.compact-layout ? 25px : 52px;
             padding-top: 25px; padding-bottom: 20px; spacing: 14px;
             HorizontalLayout {
                 spacing: 12px;
@@ -1027,7 +1156,7 @@ export component AppWindow inherits Window {
                             horizontal-stretch: 2; vertical-alignment: center; }
                         Text { text: "ID"; font-size: 9px; font-weight: 800; color: root.subtle;
                             horizontal-stretch: 3; vertical-alignment: center; }
-                        if root.width > 950px: Text { text: "REGISTRY SOURCE"; font-size: 9px; font-weight: 800;
+                        if root.over-950: Text { text: "REGISTRY SOURCE"; font-size: 9px; font-weight: 800;
                             color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
                     }
                 }
@@ -1051,7 +1180,7 @@ export component AppWindow inherits Window {
                         Text { text: app.identifier == "" ? "Not reported" : app.identifier;
                             font-size: 10px; color: root.muted; horizontal-stretch: 3;
                             vertical-alignment: center; overflow: elide; }
-                        if root.width > 950px: Text { text: app.provenance; font-size: 10px; color: root.subtle;
+                        if root.over-950: Text { text: app.provenance; font-size: 10px; color: root.subtle;
                             horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
                     }
                     if app.linked-id != "": KeyboardAction { action-dark: root.dark-mode; action-label: "Open reviewed project " + app.linked-project; activated => { root.open-device-project(app.linked-id); } }
@@ -1071,8 +1200,8 @@ export component AppWindow inherits Window {
         if root.page == "about": ScrollView {
             vertical-stretch: 1;
             VerticalLayout {
-                padding-left: root.width < 950px ? 24px : 52px;
-                padding-right: root.width < 950px ? 24px : 52px;
+                padding-left: root.compact-layout ? 24px : 52px;
+                padding-right: root.compact-layout ? 24px : 52px;
                 padding-top: 40px; padding-bottom: 32px; spacing: 18px;
                 Text { text: "ABOUT  /  CHALLENGER HUB"; color: root.accent;
                     font-size: 10px; font-weight: 800; }
@@ -1098,8 +1227,8 @@ export component AppWindow inherits Window {
         // Only events generated by THIS native preview session; never present
         // its temporary Node child's queue/history as persistent worker data.
         if root.page == "activity": VerticalLayout {
-            padding-left: root.width < 950px ? 25px : 52px;
-            padding-right: root.width < 950px ? 25px : 52px;
+            padding-left: root.compact-layout ? 25px : 52px;
+            padding-right: root.compact-layout ? 25px : 52px;
             padding-top: 35px; padding-bottom: 20px; spacing: 17px;
             Text { text: "ACTIVITY  /  THIS NATIVE SESSION"; font-size: 10px; font-weight: 800; color: root.accent; }
             Text { text: "Local read diagnostics."; font-size: 33px; font-weight: 800; color: root.strong; }
@@ -1182,14 +1311,15 @@ export component AppWindow inherits Window {
         Rectangle {
             height: 40px; background: root.sheet; border-color: root.line; border-width: 1px;
             HorizontalLayout {
-                padding-left: root.width < 950px ? 22px : 38px;
-                padding-right: root.width < 950px ? 22px : 38px;
-                Text { text: "READ-ONLY CATALOG  /  EXPLICIT-APPROVAL INSTALLS"; font-size: 9px; font-weight: 800; color: root.accent;
+                padding-left: root.compact-layout ? 22px : 38px;
+                padding-right: root.compact-layout ? 22px : 38px;
+                Text { text: root.compact-layout ? "READ-ONLY  ·  CONSENT REQUIRED" : "READ-ONLY CATALOG  /  EXPLICIT-APPROVAL INSTALLS"; font-size: 9px; font-weight: 800; color: root.accent;
                     vertical-alignment: center; }
                 Rectangle { horizontal-stretch: 1; background: transparent; }
-                Text { text: root.total + " projects  ·  verified release adapters only  ·  explicit install consent";
+                Text { text: root.compact-layout ? root.total + " source projects" : root.total + " projects  ·  verified release adapters only  ·  explicit install consent";
                     color: root.subtle; font-size: 10px; vertical-alignment: center; }
             }
+        }
         }
     }
 }

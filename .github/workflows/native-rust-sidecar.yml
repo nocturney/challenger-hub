@@ -59,6 +59,8 @@ jobs:
         run: node tools/desktop-build/build-runtime.cjs 12
       - name: Validate portable artifact manifest script syntax
         run: node --check tools/ui-bench/slint-rust-host/portable-artifact.mjs
+      - name: Verify exact upstream media checksums and source approvals
+        run: node tools/ui-bench/slint-rust-host/verify-native-media.mjs
       - name: Rust read-only protocol regression tests
         run: cargo test --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked
       - name: Native bridge plus explicit install-policy security regressions
@@ -111,6 +113,14 @@ jobs:
           SLINT_BACKEND: winit-software
         run: |
           & ./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe --smoke
+      - name: Windows native resize and compact/expanded navigation QA
+        if: runner.os == 'Windows'
+        shell: pwsh
+        env:
+          SLINT_BACKEND: winit-software
+        run: |
+          & ./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe --qa-resize
+          if ($LASTEXITCODE -ne 0) { throw "Windows native resize test failed" }
       - name: Real Windows install QA in disposable GitHub runner only
         if: runner.os == 'Windows' && github.event_name == 'workflow_dispatch'
         shell: pwsh
@@ -130,6 +140,9 @@ jobs:
 
       # Downloadable developer previews are created only after all native QA gates.
       # These are temporary Actions artifacts; no GitHub Release or user install.
+      - name: Linux native resize and compact/expanded navigation QA
+        if: runner.os == 'Linux'
+        run: xvfb-run -a cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --qa-resize
       - name: Build and verify macOS portable ZIP
         if: runner.os == 'macOS' && (github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository)
         shell: bash
@@ -180,6 +193,8 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Extracted Windows bundled backend failed' }
           & $exe --smoke
           if ($LASTEXITCODE -ne 0) { throw 'Extracted Windows release GUI smoke failed' }
+          & $exe --qa-resize
+          if ($LASTEXITCODE -ne 0) { throw 'Extracted Windows release resize QA failed' }
           & node "$hostDir/portable-artifact.mjs" write $platform $archive
           if ($LASTEXITCODE -ne 0) { throw 'Windows portable metadata failed' }
       - name: Attest portable ZIP source and build provenance (no publisher signing)

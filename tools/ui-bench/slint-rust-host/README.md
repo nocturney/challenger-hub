@@ -96,6 +96,40 @@ Windows SmartScreen and macOS Gatekeeper may warn about development builds;
 do not bypass security features by automation. Public distribution still needs
 an independent authorization/licensing review and approved signing.
 
+## Window resizing, authentic imagery and visual hierarchy (UI QA)
+
+The previous 1210x805 fixed `Window.width/height` prevented resizing. The
+native app now uses `preferred-width/height` with a 760x560 minimum and adapts
+its header/navigation, margins and list columns to width changes. A Slint
+`changed width` handler updates breakpoint state without binding layout
+constraints back into the window width (which otherwise causes layout-info
+binding loops). Verify the actual OS-managed window at **820x620** and
+**1180x780** with:
+
+    cargo run --locked -- --qa-resize
+
+The read-only GUI smoke must still pass; resize QA does not invoke an installer
+or alter the host. UI elements keep named keyboard-accessible actions and
+explicit installer consent gates. Dossier content remains scrollable.
+
+For visual depth, the header and primary search have restrained elevation;
+Explore features two **non-sponsored, source-verified** screenshot previews from
+Dune 3D and Material Maker. Results/dossiers now have authentic icons for
+**nine exact source-matched projects**, plus three genuine interface screenshots
+(Dune 3D, Material Maker, REAL Video Enhancer). The other catalog entries
+retain honest neutral initial badges; no synthetic manufacturer icons or
+unreviewed image links. All included bytes are copied from the repository's
+existing approved media manifest and checked with:
+
+    node tools/ui-bench/slint-rust-host/verify-native-media.mjs
+
+The native Rust identity gate matches exact curated ID **and** exact official
+source repository before attaching media. All other cases fail closed. Media
+source, SHA-256 and licensing are recorded in `ui/MEDIA_PROVENANCE.md`.
+The bundled Preview12 runtime already carries upstream media notices and
+licenses. This is a developer preview; no Apple notarization, Windows publisher
+signature or Production replacement is implied.
+
 ## QA and limitations
 
 Only claim each platform as validated after running its native GUI and package

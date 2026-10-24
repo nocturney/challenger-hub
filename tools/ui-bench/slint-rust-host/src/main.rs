@@ -139,16 +139,21 @@ fn safe_source(raw: &str) -> Option<String> {
 }
 
 fn media_id(p: &Project) -> &'static str {
-    // Exact curated ID + exact upstream repository. Never attach imagery to a
-    // similarly named research candidate or to an unverified source.
-    if p.kind == "curated" && p.id == "curated:dune3d"
-        && p.source == "https://github.com/dune3d/dune3d" {
-        "dune3d"
-    } else if p.kind == "curated" && p.id == "curated:material-maker"
-        && p.source == "https://github.com/RodZill4/material-maker" {
-        "material-maker"
-    } else {
-        ""
+    // Only the exact curated identity + upstream repository from the pinned,
+    // checksum-verified media manifest may display authentic product imagery.
+    // Research/managed entries and same-name forks always get a neutral fallback.
+    if p.kind != "curated" { return ""; }
+    match (p.id.as_str(), p.source.as_str()) {
+        ("curated:dune3d", "https://github.com/dune3d/dune3d") => "dune3d",
+        ("curated:material-maker", "https://github.com/RodZill4/material-maker") => "material-maker",
+        ("curated:compositor", "https://github.com/robbietilton/Compositor") => "compositor",
+        ("curated:kiri-moto", "https://github.com/GridSpace/grid-apps") => "kiri-moto",
+        ("curated:espocrm", "https://github.com/espocrm/espocrm") => "espocrm",
+        ("curated:docuseal", "https://github.com/docusealco/docuseal") => "docuseal",
+        ("curated:meshcentral", "https://github.com/Ylianst/MeshCentral") => "meshcentral",
+        ("curated:openhands", "https://github.com/OpenHands/OpenHands") => "openhands",
+        ("curated:real-video-enhancer", "https://github.com/TNTwise/REAL-Video-Enhancer") => "real-video-enhancer",
+        _ => "",
     }
 }
 
@@ -156,6 +161,7 @@ fn media_caption(id: &str) -> &'static str {
     match id {
         "dune3d" => "Dune 3D main window · official GitHub screenshot · GPL-3.0 · checksum verified",
         "material-maker" => "Material Maker node editor · official GitHub screenshot · MIT · checksum verified",
+        "real-video-enhancer" => "REAL Video Enhancer settings · official GitHub screenshot · AGPL-3.0 · checksum verified",
         _ => ""
     }
 }
@@ -367,6 +373,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = std::env::args().collect();
     let check_backend = args.iter().any(|a| a == "--check-backend-only");
     let smoke = args.iter().any(|a| a == "--smoke");
+    let qa_resize = args.iter().any(|a| a == "--qa-resize");
     if args.iter().any(|a| a == "--qa-e2e-install-sandbox") {
         // Executable installer integration QA. Refuse to write anything unless
         // run under a throwaway /tmp HOME with a deliberate test-only marker.
@@ -1203,6 +1210,60 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         });
     }
 
+    if qa_resize {
+        // Explicit window-manager integration QA: actual OS resizing, not merely
+        // testing a responsive boolean. No installer or external write path.
+        let weak = ui.as_weak();
+        Timer::single_shot(Duration::from_millis(450), move || {
+            if let Some(w) = weak.upgrade() {
+                w.window().set_size(slint::LogicalSize::new(820.0, 620.0));
+                let weak = w.as_weak();
+                Timer::single_shot(Duration::from_millis(500), move || {
+                    if let Some(w) = weak.upgrade() {
+                        let scale = w.window().scale_factor();
+                        let compact = w.window().size();
+                        let expect_width = (820.0 * scale).round();
+                        if ((compact.width as f32) - expect_width).abs() > 35.0 {
+                            eprintln!("NATIVE_RESIZE_QA_FAIL compact_width={} requested={expect_width}", compact.width);
+                            std::process::exit(3);
+                        }
+                        w.invoke_search_submitted("Dune 3D".into());
+                        if w.get_matching() == 0 || w.get_page() != "results" {
+                            eprintln!("NATIVE_RESIZE_QA_FAIL compact navigation");
+                            std::process::exit(3);
+                        }
+                        w.window().set_size(slint::LogicalSize::new(1180.0, 780.0));
+                        let weak = w.as_weak();
+                        Timer::single_shot(Duration::from_millis(500), move || {
+                            if let Some(w) = weak.upgrade() {
+                                let scale = w.window().scale_factor();
+                                let expanded = w.window().size();
+                                let expect_width = (1180.0 * scale).round();
+                                if ((expanded.width as f32) - expect_width).abs() > 35.0 {
+                                    eprintln!("NATIVE_RESIZE_QA_FAIL expanded_width={} requested={expect_width}", expanded.width);
+                                    std::process::exit(3);
+                                }
+                                w.invoke_open_project(0);
+                                if w.get_page() != "detail" || w.get_detail_name().is_empty() {
+                                    eprintln!("NATIVE_RESIZE_QA_FAIL expanded dossier");
+                                    std::process::exit(3);
+                                }
+                                eprintln!("NATIVE_RESIZE_QA_PASS {}", serde_json::json!({
+                                    "compactLogicalWidth":820, "expandedLogicalWidth":1180,
+                                    "compactPhysicalWidth":compact.width,
+                                    "expandedPhysicalWidth":expanded.width,
+                                    "scaleFactor":scale,"navigationRetained":true,
+                                    "installerInvoked":false
+                                }));
+                                let _ = w.hide();
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
     if smoke {
         let weak = ui.as_weak();
         Timer::single_shot(Duration::from_millis(600), move || {
@@ -1299,12 +1360,24 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 if w.get_page() != "detail" || w.get_detail_media() != "material-maker" {
                     fail("source-verified Material Maker screenshot");
                 }
+                w.invoke_navigate("home".into());
+                w.invoke_search_submitted("REAL Video Enhancer".into());
+                w.invoke_open_project(0);
+                if w.get_page() != "detail" || w.get_detail_media() != "real-video-enhancer" {
+                    fail("source-verified REAL Video Enhancer screenshot");
+                }
+                w.invoke_navigate("home".into());
+                w.invoke_search_submitted("OpenHands".into());
+                w.invoke_open_project(0);
+                if w.get_page() != "detail" || w.get_detail_media() != "openhands" {
+                    fail("source-verified OpenHands icon");
+                }
                 eprintln!("FOCUS_NATIVE_GUI_PASS {}", serde_json::json!({
                     "count": w.get_total(), "disciplines": 17,
                     "pages": ["home","results","detail","library","activity"],
                     "history": "back+forward", "pageSize": 30,
                     "pageSizeVerified": 60, "reviewRouteCount": review_routes,
-                    "reviewFilterVerified": true, "sourceScreenshots": 2, "darkMode": true,
+                    "reviewFilterVerified": true, "sourceScreenshots": 3, "approvedMediaIdentities": 9, "darkMode": true,
                     "managedCoverage": w.get_managed_assessed(),
                     "managedDetected": w.get_managed_detected(),
                     "sessionEvents": w.get_session_event_count(),
@@ -1382,6 +1455,26 @@ mod tests {
         p.kind = "curated".into();
         p.source = "https://github.com/dune3d-fake/dune3d".into();
         assert_eq!(media_id(&p), "");
+
+        for (id, upstream, media) in [
+            ("curated:compositor", "robbietilton/Compositor", "compositor"),
+            ("curated:kiri-moto", "GridSpace/grid-apps", "kiri-moto"),
+            ("curated:espocrm", "espocrm/espocrm", "espocrm"),
+            ("curated:docuseal", "docusealco/docuseal", "docuseal"),
+            ("curated:meshcentral", "Ylianst/MeshCentral", "meshcentral"),
+            ("curated:openhands", "OpenHands/OpenHands", "openhands"),
+            ("curated:real-video-enhancer", "TNTwise/REAL-Video-Enhancer", "real-video-enhancer"),
+        ] {
+            p.id = id.into();
+            p.source = format!("https://github.com/{upstream}");
+            p.kind = "curated".into();
+            assert_eq!(media_id(&p), media, "approved media: {id}");
+            p.kind = "research".into();
+            assert_eq!(media_id(&p), "", "research is never promoted: {id}");
+            p.kind = "curated".into();
+            p.source.push_str("-spoof");
+            assert_eq!(media_id(&p), "", "source fork must fail closed: {id}");
+        }
     }
 
     #[test]
