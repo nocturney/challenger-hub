@@ -27,6 +27,7 @@ fi
 chmod 755 "$app/Contents/MacOS/challenger-slint-rust-host" "$app/Contents/Resources/node"
 cp "$here/../slint-node-bridge/sidecar.mjs" "$app/Contents/Resources/"
 cp "$here/../slint-node-bridge/live-catalog.mjs" "$app/Contents/Resources/"
+cp "$here/../slint-node-bridge/install-bridge.mjs" "$app/Contents/Resources/"
 cp "$seed" "$app/Contents/Resources/catalog-candidates.preview10.json"
 cp -R "$runtime" "$app/Contents/Resources/runtime-preview12"
 cat > "$app/Contents/Info.plist" <<'PLIST'

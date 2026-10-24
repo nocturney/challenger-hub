@@ -22,6 +22,7 @@ Copy-Item (Join-Path (Join-Path $target $profile) 'challenger-slint-rust-host.ex
 Copy-Item $node (Join-Path $out 'resources\node.exe')
 Copy-Item (Join-Path $here '..\slint-node-bridge\sidecar.mjs') (Join-Path $out 'resources')
 Copy-Item (Join-Path $here '..\slint-node-bridge\live-catalog.mjs') (Join-Path $out 'resources')
+Copy-Item (Join-Path $here '..\slint-node-bridge\install-bridge.mjs') (Join-Path $out 'resources')
 Copy-Item $seed (Join-Path $out 'resources\catalog-candidates.preview10.json')
 Copy-Item $runtime (Join-Path $out 'resources\runtime-preview12') -Recurse
 Write-Host "WINDOWS_NATIVE_PACKAGE_CREATED $out"

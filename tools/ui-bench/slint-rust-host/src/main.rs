@@ -1,6 +1,7 @@
 mod catalog;
 mod device;
 mod identity;
+mod install;
 mod sidecar;
 
 use catalog::{domain_counts, domain_label, domain_of, filtered_domain, Catalog, Inventory, Project, DOMAINS};
@@ -52,6 +53,11 @@ struct State {
     events: Vec<SessionEvent>,
 }
 
+enum InstallerEvent {
+    Reviewed { project_id:String, result:Result<install::InstallPlan,String> },
+    Finished { project_id:String, result:Result<String,String> },
+}
+
 impl Default for State {
     fn default() -> Self {
         Self {
@@ -99,7 +105,7 @@ fn detailed_status(p: &Project) -> &'static str {
     match p.kind.as_str() {
         "research" => "Research candidate — not verified for installation",
         "managed" => "Managed listing — installation not enabled in Native Preview",
-        _ => "Independent source listing — installation not verified",
+        _ => "Curated source — installation only after verified release review and approval",
     }
 }
 
@@ -166,6 +172,16 @@ fn fact(value: &str) -> SharedString {
 
 fn set_detail(ui: &AppWindow, project: Option<&Project>) {
     if let Some(p) = project {
+        if ui.get_install_project_id().as_str() != p.id {
+            ui.set_install_project_id(p.id.clone().into());
+            ui.set_install_ready(false);
+            ui.set_install_approved(false);
+            ui.set_install_version("".into());
+            ui.set_install_asset("".into());
+            ui.set_install_hash("".into());
+            ui.set_install_destination("".into());
+            ui.set_install_message("Review the official release before approving an install.".into());
+        }
         ui.set_detail_name(p.name.clone().into());
         ui.set_detail_maker(fact(&p.maker));
         ui.set_detail_summary(fact(&p.summary));
@@ -185,6 +201,9 @@ fn set_detail(ui: &AppWindow, project: Option<&Project>) {
         ui.set_detail_media(media_id(p).into());
         ui.set_detail_media_caption(media_caption(media_id(p)).into());
     } else {
+        ui.set_install_project_id("".into());
+        ui.set_install_ready(false);
+        ui.set_install_approved(false);
         ui.set_detail_name("".into());
         ui.set_detail_source("".into());
         ui.set_detail_media("".into());
@@ -319,6 +338,31 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = std::env::args().collect();
     let check_backend = args.iter().any(|a| a == "--check-backend-only");
     let smoke = args.iter().any(|a| a == "--smoke");
+    if args.iter().any(|a| a == "--qa-e2e-install-sandbox") {
+        // Executable installer integration QA. Refuse to write anything unless
+        // run under a throwaway /tmp HOME with a deliberate test-only marker.
+        let home = std::env::var("HOME").unwrap_or_default();
+        if !cfg!(target_os="macos") ||
+            !home.starts_with("/tmp/challenger-native-install-e2e.") ||
+            !home.ends_with("/user") ||
+            std::env::var("CHALLENGER_NATIVE_SANDBOX_TEST").as_deref()
+                != Ok("isolated-install-v1") ||
+            !std::fs::symlink_metadata(&home).map(|m|m.file_type().is_dir()).unwrap_or(false) {
+            return Err("Refusing installer sandbox QA outside a known temporary HOME".into());
+        }
+        let catalog = sidecar::read_catalog()?;
+        let p = catalog.items.iter().find(|p|p.id=="curated:compositor")
+            .ok_or("Curated Compositor is missing from the real source catalog")?;
+        let plan = install::review(p)?;
+        let completed = install::run_approved(&plan)?;
+        println!("NATIVE_INSTALL_SANDBOX_E2E_PASS {}",serde_json::json!({
+            "projectId": plan.project_id,"tag":plan.tag,
+            "sha256":plan.sha256,"installedUnderTemporaryHome":true,
+            "sourceDigestVerified":true,
+            "approval": "test-only isolated sandbox", "record":completed
+        }));
+        return Ok(());
+    }
     if args.iter().any(|a| a == "--check-identity-only") {
         let snapshot = device::collect()
             .map_err(|e| format!("Native identity observation refused: {e}"))?;
@@ -514,6 +558,150 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     });
 
+    // Source-approved installer review, isolated from the read-only catalog
+    // and OS inventory probes. Nothing is downloaded during review.
+    let (installer_tx, installer_rx) = mpsc::channel::<InstallerEvent>();
+    let installer_plan = Rc::new(RefCell::new(None::<install::InstallPlan>));
+    let installer_busy = Rc::new(Cell::new(false));
+    let installer_jobs = Rc::new(RefCell::new(Vec::<thread::JoinHandle<()>>::new()));
+
+    ui.on_review_install({
+        let state = Rc::clone(&state);
+        let tx = installer_tx.clone();
+        let plan = Rc::clone(&installer_plan);
+        let busy = Rc::clone(&installer_busy);
+        let jobs = Rc::clone(&installer_jobs);
+        let weak = ui.as_weak();
+        move || if let Some(w) = weak.upgrade() {
+            if w.get_page() != "detail" || busy.get() {return;}
+            let source = {
+                let s = state.borrow();
+                s.route().selected.as_ref().and_then(|id|
+                    s.all.iter().find(|p| &p.id == id)
+                ).filter(|p| install::eligible_source(p)).cloned()
+            };
+            let Some(project) = source else {return;};
+            busy.set(true);
+            *plan.borrow_mut() = None;
+            w.set_install_busy(true);
+            w.set_install_ready(false);
+            w.set_install_approved(false);
+            w.set_install_message("Checking GitHub's official release digest and reviewed installer policy…".into());
+            let tx = tx.clone();
+            jobs.borrow_mut().push(thread::spawn(move || {
+                let id = project.id.clone();
+                let result = install::review(&project);
+                let _ = tx.send(InstallerEvent::Reviewed{project_id:id,result});
+            }));
+        }
+    });
+
+    ui.on_confirm_install({
+        let state = Rc::clone(&state);
+        let tx = installer_tx.clone();
+        let plan = Rc::clone(&installer_plan);
+        let busy = Rc::clone(&installer_busy);
+        let jobs = Rc::clone(&installer_jobs);
+        let weak = ui.as_weak();
+        move || if let Some(w) = weak.upgrade() {
+            if w.get_page() != "detail" || !w.get_install_approved() ||
+               !w.get_install_ready() || busy.get() {return;}
+            let approved = plan.borrow().clone();
+            let Some(approved) = approved else {return;};
+            let eligible = {
+                let s=state.borrow();
+                s.route().selected.as_deref() == Some(approved.project_id.as_str()) &&
+                s.all.iter().find(|p|p.id==approved.project_id)
+                    .is_some_and(|p|install::validate_plan(&approved,p).is_ok())
+            };
+            if !eligible {
+                w.set_install_message("The selected project changed; review this installer again.".into());
+                w.set_install_ready(false);
+                w.set_install_approved(false);
+                *plan.borrow_mut() = None;
+                return;
+            }
+            busy.set(true);
+            w.set_install_busy(true);
+            w.set_install_message("Installing the approved release. Download, SHA-256 check and package verification may take several minutes. Keep this window open.".into());
+            state.borrow_mut().event("Explicitly approved native install",
+                &format!("{} · {} · {}",approved.project_id,approved.tag,approved.asset_name),"RUNNING");
+            let tx=tx.clone();
+            jobs.borrow_mut().push(thread::spawn(move || {
+                let id=approved.project_id.clone();
+                let result=install::run_approved(&approved);
+                let _=tx.send(InstallerEvent::Finished{project_id:id,result});
+            }));
+        }
+    });
+
+    let installer_timer = Timer::default();
+    installer_timer.start(TimerMode::Repeated, Duration::from_millis(85), {
+        let state=Rc::clone(&state);
+        let weak=ui.as_weak();
+        let plan=Rc::clone(&installer_plan);
+        let busy=Rc::clone(&installer_busy);
+        move || while let Ok(message)=installer_rx.try_recv() {
+            busy.set(false);
+            if let Some(w)=weak.upgrade() {
+                w.set_install_busy(false);
+                let mut s=state.borrow_mut();
+                match message {
+                    InstallerEvent::Reviewed{project_id,result} => match result {
+                        Ok(found) => {
+                            let same=s.route().page=="detail" &&
+                                s.route().selected.as_deref()==Some(project_id.as_str());
+                            s.event("Verified installer plan available",
+                                &format!("{} · {} · {} · SHA-256 listed",project_id,found.tag,found.asset_name),"READY");
+                            if same {
+                                w.set_install_ready(true);
+                                w.set_install_approved(false);
+                                w.set_install_version(found.tag.clone().into());
+                                w.set_install_asset(found.asset_name.clone().into());
+                                w.set_install_hash(found.sha256.clone().into());
+                                w.set_install_destination(found.destination.clone().into());
+                                w.set_install_message(format!(
+                                    "Official asset size {:.1} MiB. Hash is published upstream and will be verified after download. Review it before approving.",
+                                    found.asset_size as f64/1048576.0
+                                ).into());
+                                *plan.borrow_mut()=Some(found);
+                            }
+                        }
+                        Err(err) => {
+                            s.event("Installation unavailable",
+                                &format!("{} · {}",project_id,err),"BLOCKED");
+                            if s.route().selected.as_deref()==Some(project_id.as_str()) {
+                                w.set_install_ready(false);
+                                w.set_install_approved(false);
+                                w.set_install_message(format!("Not installable here: {err}").into());
+                            }
+                            *plan.borrow_mut()=None;
+                        }
+                    },
+                    InstallerEvent::Finished{project_id,result} => {
+                        let same=s.route().page=="detail" &&
+                            s.route().selected.as_deref()==Some(project_id.as_str());
+                        *plan.borrow_mut()=None;
+                        if same { w.set_install_ready(false);w.set_install_approved(false); }
+                        match result {
+                            Ok(info) => {
+                                s.event("Verified installation completed",&info,"OK");
+                                if same {w.set_install_message(info.into());}
+                            }
+                            Err(err) => {
+                                s.event("Approved installation failed",
+                                    &format!("{} · {}",project_id,err),"ERROR");
+                                if same {w.set_install_message(
+                                    format!("Installation stopped/failed: {err}").into());}
+                            }
+                        }
+                    }
+                }
+                update_device_panels(&w,&s);
+            }
+        }
+    });
+
     let (tx, rx) = mpsc::channel::<Result<Catalog, String>>();
     let busy = Rc::new(Cell::new(false));
     let jobs = Rc::new(RefCell::new(Vec::<thread::JoinHandle<()>>::new()));
@@ -677,6 +865,38 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         return Ok(());
     }
 
+    if args.iter().any(|a| a == "--qa-review-install" || a == "--qa-preview-install") {
+        // Explicit QA on real official metadata. No download/installation.
+        ui.invoke_search_submitted("Compositor".into());
+        ui.invoke_open_project(0);
+        if ui.get_page() != "detail" || ui.get_detail_name() != "Compositor" {
+            return Err("Official Compositor project not present in source catalog".into());
+        }
+        ui.invoke_review_install();
+        if args.iter().any(|a| a == "--qa-review-install") {
+            let weak = ui.as_weak();
+            Timer::single_shot(Duration::from_secs(10), move || {
+                if let Some(w) = weak.upgrade() {
+                    if !w.get_install_ready() || w.get_install_busy() ||
+                        w.get_install_hash().len()!=64 ||
+                        w.get_install_version().is_empty() ||
+                        w.get_install_approved() {
+                        eprintln!("NATIVE_INSTALL_REVIEW_FAIL source review incomplete/implicitly approved");
+                        std::process::exit(3);
+                    }
+                    // Forged confirmation without a user's approval MUST do nothing.
+                    w.invoke_confirm_install();
+                    if w.get_install_busy() || w.get_install_approved() {
+                        eprintln!("NATIVE_INSTALL_REVIEW_FAIL install without explicit approval");
+                        std::process::exit(3);
+                    }
+                    eprintln!("NATIVE_INSTALL_REVIEW_PASS official release shown, no downloads or installs");
+                    let _ = w.hide();
+                }
+            });
+        }
+    }
+
     // Deterministic visual QA routes. Developer-preview only; self-closing
     // windows, no machine scans, downloads, installers or background tasks.
     if args.iter().any(|a| a == "--qa-preview-library") {
@@ -709,7 +929,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if args.iter().any(|a| ["--qa-preview-results", "--qa-preview-dune",
         "--qa-preview-library", "--qa-preview-activity",
         "--qa-preview-activity-refresh", "--qa-preview-device",
-        "--qa-preview-identity"].contains(&a.as_str())) {
+        "--qa-preview-identity", "--qa-preview-install"].contains(&a.as_str())) {
         let weak = ui.as_weak();
         Timer::single_shot(Duration::from_secs(22), move || {
             if let Some(w) = weak.upgrade() { let _ = w.hide(); }
@@ -825,7 +1045,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     "sessionEvents": w.get_session_event_count(),
                     "engine": "real Preview12", "renderer": "Rust/Slint",
                     "startToReadyMs": started.elapsed().as_millis(),
-                    "noWebView": true, "writeActionsExposed": false
+                    "noWebView": true, "catalogIPCReadOnly": true,
+                    "nativeInstallerRequiresApproval": true,
+                    "automaticInstalls": false
                 }));
                 let _ = w.hide();
             }
@@ -836,6 +1058,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // In-flight Refresh can never outlive the host or leave a Node engine orphaned.
     for job in jobs.borrow_mut().drain(..) { let _ = job.join(); }
     for job in device_jobs.borrow_mut().drain(..) { let _ = job.join(); }
+    // An approved install belongs to the session; do not abandon its verified
+    // worker as an uncontrolled background process if the window is closed.
+    for job in installer_jobs.borrow_mut().drain(..) { let _ = job.join(); }
     Ok(())
 }
 

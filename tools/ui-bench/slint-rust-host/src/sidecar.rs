@@ -118,6 +118,49 @@ fn run_bounded(mut cmd: Command, timeout: Duration) -> Result<String, String> {
     String::from_utf8(out).map_err(|_| "Sidecar sent non-UTF-8 JSON".into())
 }
 
+/// The native installer bridge is separate from the read-only catalog IPC.
+//// Only explicit project-review / approved-install callbacks may invoke it.
+/// It reuses the original vetted worker and never executes arbitrary commands.
+pub fn installer_bridge(mode: &str, project_id: &str, approval_token: Option<&str>)
+    -> Result<String, String>
+{
+    if !matches!(mode, "plan" | "install") ||
+       !project_id.starts_with("curated:") ||
+       project_id.len() > 95 ||
+       !project_id[8..].bytes().all(|b| b.is_ascii_lowercase() ||
+           b.is_ascii_digit() || b == b'-') {
+        return Err("Native installer request has invalid mode or source ID".into());
+    }
+    if mode == "plan" && approval_token.is_some() ||
+       mode == "install" && !approval_token.is_some_and(|t|
+           t.len() == 64 && t.bytes().all(|b| b.is_ascii_hexdigit()))
+    {
+        return Err("Missing exact user-approved plan token".into());
+    }
+    let (dir, packaged) = resources()?;
+    let script = dir.join("install-bridge.mjs");
+    if !script.is_file() { return Err("Native install bridge missing from app resources".into()); }
+    let node = node_executable(&dir, packaged)?;
+    let mut cmd = Command::new(node);
+    cmd.arg(script).args([mode, project_id]);
+    if let Some(token) = approval_token { cmd.arg(token); }
+    cmd.current_dir(&dir).stdin(Stdio::null())
+        .stdout(Stdio::piped()).stderr(Stdio::piped());
+    cmd.env_remove("NODE_OPTIONS").env_remove("NODE_PATH");
+    if packaged {
+        let path = dir.join("runtime-preview12");
+        if !path.join("Install-Challenger.js").is_file() ||
+           !path.join("adapters.json").is_file() ||
+           !path.join("challengers.json").is_file() {
+            return Err("Missing original vetted installer or policy in bundled runtime".into());
+        }
+        cmd.env("CHALLENGER_PREVIEW_RUNTIME", path);
+    }
+    run_bounded(cmd, if mode == "install" {
+        Duration::from_secs(12 * 60)
+    } else { Duration::from_secs(22) })
+}
+
 pub fn read_catalog() -> Result<Catalog, String> {
     let (dir, packaged) = resources()?;
     let node = node_executable(&dir, packaged)?;

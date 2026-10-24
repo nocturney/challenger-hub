@@ -95,6 +95,15 @@ export component AppWindow inherits Window {
     in-out property <string> detail-media: "";
     in-out property <string> detail-media-caption: "";
     in-out property <string> detail-evidence: "";
+    in-out property <string> install-project-id: "";
+    in-out property <string> install-message: "Review the official release before approving an install.";
+    in-out property <string> install-version: "";
+    in-out property <string> install-asset: "";
+    in-out property <string> install-hash: "";
+    in-out property <string> install-destination: "";
+    in-out property <bool> install-ready: false;
+    in-out property <bool> install-busy: false;
+    in-out property <bool> install-approved: false;
 
     callback navigate(string);
     callback go-back();
@@ -109,6 +118,8 @@ export component AppWindow inherits Window {
     callback device-read-requested();
     callback device-search-edited(string);
     callback open-device-project(string);
+    callback review-install();
+    callback confirm-install();
     callback toggle-theme();
 
     property <color> canvas: root.dark-mode ? #131b19 : #fafaf6;
@@ -429,6 +440,71 @@ export component AppWindow inherits Window {
                 }
                 Text { text: root.detail-summary; font-size: 14px; color: root.muted; wrap: word-wrap; }
                 Rectangle { height: 1px; background: root.line; }
+                if root.detail-kind == "curated": Rectangle {
+                    height: root.install-ready ? 305px : 172px;
+                    background: root.accent-bg; border-radius: 11px;
+                    VerticalLayout {
+                        padding: 18px; spacing: 9px;
+                        Text { text: "INSTALL VERIFIED RELEASE  /  EXPLICIT APPROVAL";
+                            color: root.accent; font-size: 10px; font-weight: 800; }
+                        Text { text: "Only approved GitHub assets with published SHA-256. No name-based matching, no unattended installs.";
+                            color: root.muted; font-size: 11px; wrap: word-wrap; }
+                        HorizontalLayout {
+                            spacing: 10px;
+                            Rectangle {
+                                width: 175px; height: 36px; border-radius: 8px;
+                                background: root.install-busy ? root.muted-sheet : root.strong;
+                                Text { text: root.install-busy ? "Working…" : "Review installer";
+                                    color: root.install-busy ? root.muted : root.sheet;
+                                    font-size: 11px; font-weight: 700;
+                                    horizontal-alignment: center; vertical-alignment: center; }
+                                TouchArea { enabled: !root.install-busy; clicked => { root.review-install(); } }
+                            }
+                            Text { text: root.install-ready ? "Reviewed official release — not yet downloaded" :
+                                "Review is read-only: checks upstream release, adapter, asset and digest.";
+                                font-size: 11px; color: root.muted; wrap: word-wrap; vertical-alignment: center; }
+                        }
+                        Text { text: root.install-message; font-size: 11px; color: root.strong; wrap: word-wrap; }
+                        if root.install-ready: VerticalLayout {
+                            spacing: 5px;
+                            Text { text: root.install-version + "  ·  " + root.install-asset;
+                                font-size: 12px; font-weight: 700; color: root.strong; }
+                            Text { text: "GitHub SHA-256: " + root.install-hash;
+                                font-size: 10px; color: root.muted; overflow: elide; }
+                            Text { text: "Install destination: " + root.install-destination;
+                                font-size: 10px; color: root.muted; overflow: elide; }
+                            HorizontalLayout {
+                                spacing: 12px;
+                                Rectangle {
+                                    height: 36px; width: 330px; border-radius: 7px;
+                                    background: root.install-approved ? root.sheet : root.muted-sheet;
+                                    Text { text: root.install-approved ? "☑ I approve this exact release" :
+                                        "☐ I approve this exact release";
+                                        font-size: 11px; font-weight: 700; color: root.strong;
+                                        horizontal-alignment: center; vertical-alignment: center; }
+                                    TouchArea {
+                                        enabled: !root.install-busy;
+                                        clicked => { root.install-approved = !root.install-approved; }
+                                    }
+                                }
+                                Rectangle {
+                                    width: 190px; height: 36px; border-radius: 8px;
+                                    background: root.install-approved && !root.install-busy ?
+                                        root.strong : root.muted-sheet;
+                                    Text { text: root.install-busy ? "Installing…" : "Install verified release";
+                                        font-size: 11px; font-weight: 700;
+                                        color: root.install-approved && !root.install-busy ?
+                                            root.sheet : root.subtle;
+                                        horizontal-alignment: center; vertical-alignment: center; }
+                                    TouchArea {
+                                        enabled: root.install-approved && !root.install-busy;
+                                        clicked => { root.confirm-install(); }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 HorizontalLayout {
                     spacing: 20px;
                     VerticalLayout {
@@ -842,10 +918,10 @@ export component AppWindow inherits Window {
             HorizontalLayout {
                 padding-left: root.width < 950px ? 22px : 38px;
                 padding-right: root.width < 950px ? 22px : 38px;
-                Text { text: "LOCAL SOURCE CATALOG  /  READ ONLY"; font-size: 9px; font-weight: 800; color: root.accent;
+                Text { text: "READ-ONLY CATALOG  /  EXPLICIT-APPROVAL INSTALLS"; font-size: 9px; font-weight: 800; color: root.accent;
                     vertical-alignment: center; }
                 Rectangle { horizontal-stretch: 1; background: transparent; }
-                Text { text: root.total + " projects  ·  no install/update permissions  ·  native preview";
+                Text { text: root.total + " projects  ·  verified release adapters only  ·  explicit install consent";
                     color: root.subtle; font-size: 10px; vertical-alignment: center; }
             }
         }

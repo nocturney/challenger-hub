@@ -254,6 +254,68 @@ not silently imported into the native Preview12 Activity route. There was no
 running, authenticated, version-pinned persistent Preview12 Worker on any of
 the six checked devices. See [identity + worker provenance](IDENTITY_PROVENANCE.md).
 
+## P7: first explicitly approved native install pathway
+
+The prior read-only Slint/Rust GUI could not install anything despite the
+original Challenger engine already having vetted GitHub-release adapters.
+**Native Preview now has a limited, real install pathway**, separate from
+its still read-only catalog and device inventory channels.
+
+**User workflow:** Explore → curated app dossier → **Review installer**
+(reads the official GitHub latest release; no download or file writes) →
+inspect exact release version, asset name, GitHub-published SHA-256, size
+and local managed-app destination → check **I approve this exact release**
+→ **Install verified release**. The native callback *rechecks* the selected
+catalog record, reviewed plan and checkbox. The Node installer bridge re-reads
+the official upstream release and compares the entire approved fingerprint
+(including asset URL, SHA-256, version, platform, size, target directory).
+A changed/ambiguous/unavailable release refuses installation.
+
+**Original worker reused:** `install-bridge.mjs` does not reimplement
+archive handling. It copies the **original `Install-Challenger.js`** and
+original reviewed adapter and curated registry manifests into a separate,
+user-owned working directory. It passes exactly one selected GitHub
+release asset whose upstream digest was present and confirms the original
+worker's own downloaded-byte SHA-256 check, macOS bundle verification
+or safe Windows archive extraction, and persisted managed install record.
+The work area and `managed-installs.json` are isolated under
+`ChallengerNativePreview/install-state`, not the original Preview11 or
+Production runtime. The application payload goes to the *existing original
+worker's reviewed app destination*: macOS
+`~/Applications/ChallengerHub Apps`; Windows
+`D:\Velvet\Installers\ChallengerHub\Managed` (requires D: to exist).
+No install adapter is enabled on Linux; no automatic scheduler or scan.
+Never run as Unix root or Windows SYSTEM Session 0. No local filesystem writes
+are performed when browsing/reviewing an installer.
+
+**Candidate policy:** only an exact curated catalog ID tied to the reviewed
+`challengers.json` repo and `adapters.json` platform rule, exactly one
+matching *stable* GitHub Release asset with a published SHA-256, safe official
+URL and explicit consent. Research, managed-only catalog listings, unsigned
+or ambiguous assets, missing digests and unsupported OS/arch fail closed.
+A GitHub release digest and code-sign verification are **not proof of a
+trusted publisher's real-world identity**.
+
+**Verified local 24 Oct:** Compositor `v1.5.8`, official
+`Compositor.dmg` (~8.1 MiB), published SHA-256
+`dda5ff4937689e260b0515e1b1c08e2f273836700d9907d411a4e47d42e8c409`.
+The unmodified worker passed a real **download → digest verify → DMG
+bundle/code-sign inspection** without installation. The new native bridge
+then passed a **complete download, bundle installation and persisted managed
+state** inside a *throwaway /tmp HOME*, whose files were deleted on exit.
+No ordinary user application was installed or replaced. The Slint Mac
+interactive QA passed official release Review and rejected an attempted
+installation with an unchecked approval checkbox. See
+[`09-reviewed-install-compositor-macos.png`](../../../docs/previews/focus-native-slint/09-reviewed-install-compositor-macos.png).
+
+**Current limitations:** no officially distributed/signed installer app,
+no Windows desktop-user visual QA, no installed-app inventory reconciliation,
+no cancellation/progress widget for long downloads yet (keep window open;
+the worker is bounded and joined on shutdown), and no install success on a
+real user's ordinary home/profile has been attempted without an explicit
+software choice. Native release QA must be distinguished from the
+one-shot sandbox install acceptance.
+
 ## Next gates — not yet implemented
 
 A truly exhaustive OS-wide package/application inventory, cryptographic

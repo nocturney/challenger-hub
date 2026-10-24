@@ -2,7 +2,7 @@
 
 **Real application captures, 24 Oct 2026 · MacMiniOffice2.local · Apple Silicon.** These are screenshots of the running **Slint 1.18.1 / Rust host** over the genuine local Preview12 Node backend. They are not AI mockups, browser pages, or screenshots borrowed from a design file.
 
-The app remains a standalone, read-only developer preview. Nothing was merged or installed into Production. No third-party software was installed or updated.
+The app remains a standalone developer preview. Catalog and OS inventory readings remain read-only; a new explicitly approved install pathway is present for source-reviewed GitHub Release assets only. Nothing was merged or installed into Production. The complete first-install QA used a temporary HOME sandbox, not the ordinary user profile.
 
 ## Screenshots
 
@@ -41,8 +41,8 @@ It shows **88 application bundle records** from fixed macOS application roots
 on MacMiniOffice2, together with source directory, Info.plist bundle ID and
 reported version where available. This is not a certification that 88 apps
 are installed/usable; app bundles outside the selected roots are not seen.
-The reader is separate from the 14 managed-app signal check. The UI does
-not install, launch, remove, auto-match, promote or download any project.
+The reader is separate from the 14 managed-app signal check. **The registration reader** does
+not install, launch, remove, auto-match, promote or download any project; the independently approved dossier install pathway is documented in screenshot 09.
 In a separate source-only check on Chris Windows, the fixed read-only
 Add/Remove Programs registry query returned **154 registrations** for the
 session running the check; Windows Rust + native UI parity still requires
@@ -67,13 +67,21 @@ Second reviewed rule OBS Studio is not observed on this Mac. Full provenance
 and all five immutable source rules are documented in
 [`IDENTITY_PROVENANCE.md`](../../../tools/ui-bench/slint-rust-host/IDENTITY_PROVENANCE.md).
 
+### 09. First native install review: exact official release and explicit approval
+
+![Native Compositor GitHub release review](09-reviewed-install-compositor-macos.png)
+
+This is an actual Slint window on MacMiniOffice2: `curated:compositor`, the official published release `v1.5.8`, one adapter-matched `Compositor.dmg` and the full upstream GitHub SHA-256 digest are shown before download. The approval box is **unchecked**, so the `Install verified release` button is disabled; forged confirmation without a checked approval box was rejected by the native GUI QA. The review stage does not download software or modify local install state.
+
+The existing verified Challenger worker completed a real SHA-256-checked DMG and code-sign inspection. The separate P7 bridge also completed **download → hash verification → .app installation → managed install-state persistence** under a disposable `/tmp/challenger-native-install-e2e.*` HOME and deleted all test application files afterward. **No application was installed into the user's normal Applications folder.** The published GitHub digest is not cryptographic proof of the publisher's real-world identity. Native Windows and macOS real-user installation approvals are separate acceptance gates.
+
 The inner Dune 3D screenshot is independently verified source media, originally from the upstream repository, not generated artwork. Its SHA256, source commit and GPL-3.0 attribution are recorded in [native media provenance](../../../tools/ui-bench/slint-rust-host/ui/MEDIA_PROVENANCE.md). The native QA screenshot was captured from the application's own window using macOS `screencapture -l`; no full-desktop screenshot or unrelated user content was included.
 
 ## QA summary
 
-- Rust unit/security tests: **25/25 passed** locally, including three new source-reviewed native identity rules (RustDesk Linux launcher, OBS Studio Linux launcher, RustDesk Windows MSI UpgradeCode), precise MSI packed GUID conversion, wrong platform/repository rejection, ambiguous duplicate IDs, native OS evidence limits, managed inventory provenance, stale snapshot rejection, research installation spoof prevention, bounded session events, navigation and 17-domain coverage.
+- Rust unit/security tests: **28/28 passed** locally, including three new source-reviewed native identity rules (RustDesk Linux launcher, OBS Studio Linux launcher, RustDesk Windows MSI UpgradeCode), precise MSI packed GUID conversion, wrong platform/repository rejection, ambiguous duplicate IDs, native OS evidence limits, managed inventory provenance, stale snapshot rejection, research installation spoof prevention, bounded session events, navigation and 17-domain coverage.
 - Mac GUI regression: **PASS**, 181 real entries; 17 domains, search, results, dossier, history, Light/Dark, Show More, no-result recovery, source-pinned media examples, 14 scoped managed-app signals and native session events. Real manual Refresh captured a second local backend read. Explicit macOS native registration read: **88 entries**, and exactly **one** source-reviewed catalog ID match, RustDesk. The interactive QA also passed opening the linked RustDesk dossier, rejecting an unauthorized Dune 3D callback, and Back navigation. Normal app smoke still proves no automatic OS read on navigation.
 - Mac P4 developer package: **140 MiB**, ad-hoc signed and verified; packaged genuine Preview12 backend, 88 OS registrations, exactly one catalog ID link (RustDesk) and native GUI smoke passed. New P5 five-rule package regression and Windows portable GUI QA remain separately gated.
 - Windows/macOS/Linux PR CI tests must be checked against the **latest** commit, not a previous green run. Windows interactive desktop packaging/install QA remains separate from CI's headless acceptance.
 
-Open gaps: exhaustive/authoritative OS package inventory (current OS registrations are bounded and incomplete), native identity evidence beyond five pinned platform-specific rules, cryptographic signer verification, actual persistent worker queue/history, all-source image coverage, keyboard/IME/accessibility/mobile-sized UI, interactive Windows desktop GUI, Linux installer tests, Slint attribution/signing/notarization and permission-gated installation workflows.
+Open gaps: exhaustive/authoritative OS package inventory (current OS registrations are bounded and incomplete), native identity evidence beyond five pinned platform-specific rules, cryptographic signer verification, actual persistent worker queue/history, all-source image coverage, keyboard/IME/accessibility/mobile-sized UI, interactive Windows desktop GUI and normal-user installation QA, Linux installer adapters, install progress/cancel controls, Slint attribution/signing/notarization and permission-gated general distribution.
