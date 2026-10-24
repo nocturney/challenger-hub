@@ -52,7 +52,11 @@ jobs:
           & $exe --smoke
           if ($LASTEXITCODE -ne 0) { throw "Packaged native GUI smoke failed" }
       - name: Real portable install test in disposable runner only
+        if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
         shell: pwsh
+        env:
+          # Read-only ephemeral token. The installer bridge strips it from workers.
+          GITHUB_TOKEN: ${{ github.token }}
         run: ./tools/ui-bench/slint-node-bridge/windows-install-sandbox.ps1
       - name: Upload temporary Windows preview for approved Chris Session 1 QA
         uses: actions/upload-artifact@v4

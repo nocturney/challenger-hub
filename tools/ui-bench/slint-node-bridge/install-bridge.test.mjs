@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {reviewedSource,reviewedRoutes,reviewOfficialRelease,appendInstallHistory,readInstallHistory} from './install-bridge.mjs';
+import {reviewedSource,reviewedRoutes,reviewOfficialRelease,appendInstallHistory,readInstallHistory,officialReleaseHeaders,installerWorkerEnvironment} from './install-bridge.mjs';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -56,6 +56,24 @@ test('no installer without official digest, exact URL or unique asset',()=>{
   for(const change of mutate){const x=release();change(x);
     assert.throws(()=>reviewOfficialRelease(source(),x));}
 });
+test('GitHub Actions release token stays on metadata fetch and never reaches installer worker',()=>{
+  const token='ghs_'+'A'.repeat(32);
+  const env={GITHUB_ACTIONS:'true',GITHUB_TOKEN:token,GH_TOKEN:'should-not-leak',
+    PATH:'safe-ci-path',NODE_OPTIONS:'--inspect',NODE_PATH:'injected-path'};
+  const headers=officialReleaseHeaders(env);
+  assert.equal(headers.Authorization,'Bearer '+token);
+  assert.equal(headers['Accept'],'application/vnd.github+json');
+  assert.equal(officialReleaseHeaders({...env,GITHUB_ACTIONS:'false'}).Authorization,undefined);
+  assert.equal(officialReleaseHeaders({...env,GITHUB_TOKEN:'bad'+String.fromCharCode(10)+'value'}).Authorization,undefined);
+  const worker=installerWorkerEnvironment(env);
+  assert.equal('GITHUB_TOKEN' in worker,false);
+  assert.equal('GH_TOKEN' in worker,false);
+  assert.equal(worker.NODE_OPTIONS,'');
+  assert.equal(worker.NODE_PATH,'');
+  assert.equal(worker.PATH,'safe-ci-path');
+  assert.equal(worker.GITHUB_ACTIONS,'true');
+});
+
 test('installation CLI has no implicit default action',()=>{
   assert.equal(reviewOfficialRelease(source(),release()).schema,
     'challenger.native.install-plan.v1');

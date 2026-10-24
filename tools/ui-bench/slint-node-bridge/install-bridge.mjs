@@ -126,6 +126,30 @@ export function reviewOfficialRelease(source,release){
   return {...plan,approvalToken};
 }
 
+export function officialReleaseHeaders(env=process.env){
+  const headers={
+    'User-Agent':'ChallengerNativePreview/0.1',
+    'Accept':'application/vnd.github+json',
+    'X-GitHub-Api-Version':'2022-11-28'
+  };
+  // Never use ambient user tokens outside an explicitly authorized Actions
+  // job. The request always targets the hardcoded api.github.com host.
+  if(env.GITHUB_ACTIONS==='true' && typeof env.GITHUB_TOKEN==='string'
+     && env.GITHUB_TOKEN.length>20 &&
+     !env.GITHUB_TOKEN.includes(String.fromCharCode(10)) &&
+     !env.GITHUB_TOKEN.includes(String.fromCharCode(13))){
+    headers.Authorization='Bearer '+env.GITHUB_TOKEN;
+  }
+  return headers;
+}
+
+export function installerWorkerEnvironment(env=process.env){
+  const sanitized={...env,NODE_OPTIONS:'',NODE_PATH:''};
+  delete sanitized.GITHUB_TOKEN;
+  delete sanitized.GH_TOKEN;
+  return sanitized;
+}
+
 export async function fetchPlan(projectId,{runtimeRoot=runtime,releaseOverride=null,
     platform=process.platform,arch=process.arch}={}){
   const managedPdf=projectId==='managed:pdfcraft';
@@ -140,11 +164,11 @@ export async function fetchPlan(projectId,{runtimeRoot=runtime,releaseOverride=n
   let release=releaseOverride;
   if(!release){
     const uri='https://api.github.com/repos/'+source.repository+'/releases/latest';
-    const response=await fetch(uri,{redirect:'error',headers:{
-      'User-Agent':'ChallengerNativePreview/0.1',
-      'Accept':'application/vnd.github+json',
-      'X-GitHub-Api-Version':'2022-11-28'
-    },signal:AbortSignal.timeout(15000)});
+    // GitHub-hosted CI uses its read-only ephemeral GitHub Actions token for
+    // public release metadata, avoiding anonymous rate-limit HTTP 403.
+    // Never send a token to other hosts or to the external install worker.
+    const response=await fetch(uri,{redirect:'error',headers:officialReleaseHeaders(),
+      signal:AbortSignal.timeout(15000)});
     assert(response.ok,'Official GitHub release lookup failed (HTTP '+response.status+')');
     const raw=await response.text();assert(raw.length<2_000_000,'Oversized metadata');
     release=JSON.parse(raw);
@@ -313,7 +337,7 @@ async function install(projectId,token){
     if(plan.projectId==='managed:pdfcraft')args.push('--native-pdfcraft-install');
     const child=spawn(process.execPath,args,{
       cwd:sandbox,windowsHide:true,stdio:['pipe','pipe','pipe'],
-      env:{...process.env,NODE_OPTIONS:'',NODE_PATH:''}
+      env:installerWorkerEnvironment()
     });
     activeWorker=child;
     // An EPIPE after the worker has already committed must not crash the

@@ -125,6 +125,8 @@ jobs:
       - name: Real Windows install QA in disposable GitHub runner only
         if: runner.os == 'Windows' && github.event_name == 'workflow_dispatch'
         shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: ./tools/ui-bench/slint-node-bridge/windows-install-sandbox.ps1
       - name: Isolated Windows developer QA bundle (24h retention, on request)
         if: runner.os == 'Windows' && github.event_name == 'workflow_dispatch'
