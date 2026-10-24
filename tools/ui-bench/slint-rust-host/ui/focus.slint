@@ -72,6 +72,7 @@ export component AppWindow inherits Window {
     in-out property <int> device-total: 0;
     in-out property <int> device-showing: 0;
     in-out property <int> device-linked: 0;
+    in-out property <string> device-age: "";
     in-out property <string> device-scope: "Not inspected";
     in-out property <string> device-status: "not-read";
     in-out property <string> device-query: "";
@@ -646,9 +647,11 @@ export component AppWindow inherits Window {
                     VerticalLayout {
                         spacing: 8px; horizontal-stretch: 1;
                         Text { text: "OBSERVED REGISTRATION RECORDS"; font-size: 10px; font-weight: 800; color: root.accent; }
-                        Text { text: root.device-status == "observed" ? root.device-total : "Not read";
+                        Text { text: root.device-status == "observed" || root.device-status == "stale" ?
+                            root.device-total : "Not read";
                             font-size: 25px; font-weight: 800; color: root.strong; }
-                        Text { text: root.device-scope + " · " + root.device-linked + " reviewed catalog ID links";
+                        Text { text: root.device-scope + " · " + root.device-linked +
+                            " active reviewed ID links · " + root.device-age;
                             font-size: 10px; color: root.muted; wrap: word-wrap; }
                     }
                     Rectangle {
@@ -677,7 +680,25 @@ export component AppWindow inherits Window {
                     Text { text: root.device-error; font-size: 11px; color: root.muted; wrap: word-wrap; }
                 }
             }
-            if root.device-status == "observed": VerticalLayout {
+            if root.device-status == "stale": Rectangle {
+                height: 78px; background: root.muted-sheet; border-radius: 9px;
+                VerticalLayout {
+                    padding: 12px; spacing: 5px;
+                    Text { text: "Observation expired — inspect again to enable source links";
+                        font-size: 12px; font-weight: 700; color: #b18140; }
+                    Text { text: "The previous registration names are retained for reference, but source ID links are disabled after two minutes. Nothing was rescanned automatically.";
+                        font-size: 11px; color: root.muted; wrap: word-wrap; }
+                }
+            }
+            if root.device-error != "" && root.device-status != "error": Rectangle {
+                height: 76px; background: root.muted-sheet; border-radius: 9px;
+                VerticalLayout {
+                    padding: 12px; spacing: 5px;
+                    Text { text: "Latest re-inspection failed — previous observation retained"; font-size: 11px; font-weight: 700; color: #b18140; }
+                    Text { text: root.device-error; font-size: 10px; color: root.muted; wrap: word-wrap; }
+                }
+            }
+            if root.device-status == "observed" || root.device-status == "stale": VerticalLayout {
                 spacing: 12px;
                 Text {
                     text: root.device-scope == "known-application-bundle-roots" ?
@@ -729,7 +750,7 @@ export component AppWindow inherits Window {
                     }
                 }
             }
-            if root.device-status == "observed": ListView {
+            if root.device-status == "observed" || root.device-status == "stale": ListView {
                 vertical-stretch: 1;
                 for app in root.device-entries: Rectangle {
                     height: 49px; background: root.sheet; border-color: root.line; border-width: 1px;
@@ -757,11 +778,11 @@ export component AppWindow inherits Window {
                     }
                 }
             }
-            if root.device-status == "observed" && root.device-showing == 0: Text {
+            if (root.device-status == "observed" || root.device-status == "stale") && root.device-showing == 0: Text {
                 text: "No registration records match the current filter. This does not prove any app is absent.";
                 color: root.subtle; font-size: 12px;
             }
-            Rectangle { vertical-stretch: root.device-status == "observed" ? 0 : 1; background: transparent; }
+            Rectangle { vertical-stretch: root.device-status == "observed" || root.device-status == "stale" ? 0 : 1; background: transparent; }
             Text { text: "Upstream-reviewed ID cross-references are NOT code-signature or installation verification. No installs, launches, network requests, automatic catalog promotion or file writes.";
                 font-size: 10px; color: root.subtle; wrap: word-wrap; }
         }

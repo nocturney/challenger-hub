@@ -235,15 +235,19 @@ fn update_os_device_panel(ui: &AppWindow, state: &State) {
     ui.set_device_query(state.device_query.clone().into());
     ui.set_device_error(state.device_error.as_deref().unwrap_or("").into());
     if let Some(snapshot) = &state.device_snapshot {
-        let linked = match identity::catalog_links(snapshot, &state.all) {
+        let fresh = device::is_current(snapshot);
+        let linked = if fresh { match identity::catalog_links(snapshot, &state.all) {
             Ok(linked) => linked,
             Err(e) => {
                 eprintln!("NATIVE_IDENTITY_REVIEW_REFUSED {e}");
                 Vec::new()
             }
-        };
+        } } else { Vec::new() };
         ui.set_device_linked(linked.len() as i32);
-        ui.set_device_status("observed".into());
+        ui.set_device_status(if fresh { "observed" } else { "stale" }.into());
+        ui.set_device_age(device::age_ms(snapshot)
+            .map_or_else(|| "invalid observation time".to_string(),
+                |ms| format!("last read {}s ago", ms / 1000)).into());
         ui.set_device_scope(snapshot.scope.into());
         ui.set_device_total(snapshot.entries.len() as i32);
         ui.set_device_truncated(snapshot.truncated);
@@ -269,6 +273,7 @@ fn update_os_device_panel(ui: &AppWindow, state: &State) {
         ui.set_device_total(0);
         ui.set_device_showing(0);
         ui.set_device_linked(0);
+        ui.set_device_age("".into());
         ui.set_device_truncated(false);
         ui.set_device_entries(ModelRc::new(VecModel::from(Vec::<DeviceEntry>::new())));
     }
@@ -620,6 +625,57 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
         }
     });
+
+    // Pure UI freshness indicator; never rescans the machine or launches a
+    // worker. When the last explicit observation expires, hide all reviewed
+    // source links until the user explicitly inspects the local OS again.
+    let device_age_timer = Timer::default();
+    device_age_timer.start(TimerMode::Repeated, Duration::from_secs(10), {
+        let weak = ui.as_weak();
+        let state = Rc::clone(&state);
+        move || if let Some(w) = weak.upgrade() {
+            if w.get_page() != "device" { return; }
+            let s = state.borrow();
+            if let Some(snapshot) = &s.device_snapshot {
+                if w.get_device_status() == "observed" && !device::is_current(snapshot) {
+                    update_os_device_panel(&w, &s);
+                } else {
+                    w.set_device_age(device::age_ms(snapshot)
+                        .map_or_else(|| "invalid observation time".to_string(),
+                            |ms| format!("last read {}s ago", ms / 1000)).into());
+                }
+            }
+        }
+    });
+
+    if args.iter().any(|a| a == "--qa-verify-stale") {
+        // An explicit, deterministic QA case: use a genuine bounded local
+        // observation with a simulated 121-second age. Never wait two minutes
+        // or pretend this is a newly measured stale device status.
+        let mut sample = device::collect()?;
+        let expected = sample.entries.len();
+        sample.timestamp_ms = sample.timestamp_ms.saturating_sub(121_000);
+        {
+            let mut s = state.borrow_mut();
+            s.device_snapshot = Some(sample);
+            s.push(Route::simple("device"));
+            redraw(&ui, &mut s);
+        }
+        if ui.get_device_status() != "stale"
+            || ui.get_device_linked() != 0
+            || ui.get_device_entries().row_count() != expected
+            || ui.get_device_age().is_empty()
+        {
+            return Err("Stale device snapshot UI falsely retained trusted links".into());
+        }
+        println!("NATIVE_DEVICE_STALE_UI_PASS {}", serde_json::json!({
+            "scope": "previous local observation",
+            "visibleRecords": expected, "linkedRecords": 0,
+            "ageSimulationSeconds": 121, "autoRescan": false,
+            "reinspectionRequired": true, "readOnly": true
+        }));
+        return Ok(());
+    }
 
     // Deterministic visual QA routes. Developer-preview only; self-closing
     // windows, no machine scans, downloads, installers or background tasks.

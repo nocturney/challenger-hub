@@ -90,6 +90,18 @@ pub fn collect() -> Result<DeviceSnapshot, String> {
     })
 }
 
+/// Age of the last explicit observation, not a live device status.
+/// Returns None for an implausibly future-dated observation.
+pub fn age_ms(snapshot: &DeviceSnapshot) -> Option<u64> {
+    let now = SystemTime::now().duration_since(UNIX_EPOCH).ok()?.as_millis() as u64;
+    if snapshot.timestamp_ms > now.saturating_add(15_000) { return None; }
+    Some(now.saturating_sub(snapshot.timestamp_ms))
+}
+
+pub fn is_current(snapshot: &DeviceSnapshot) -> bool {
+    age_ms(snapshot).is_some_and(|age| age <= 120_000)
+}
+
 pub fn validate(snapshot: &DeviceSnapshot) -> Result<(), String> {
     if snapshot.platform != std::env::consts::OS || snapshot.status != "observed" {
         return Err("Untrusted native snapshot platform or status".into());
@@ -103,11 +115,7 @@ pub fn validate(snapshot: &DeviceSnapshot) -> Result<(), String> {
     if snapshot.scope != expected_scope || snapshot.entries.len() > MAX_ENTRIES {
         return Err("Untrusted native snapshot scope or entry limit".into());
     }
-    let now = SystemTime::now().duration_since(UNIX_EPOCH)
-        .map_err(|_| "Invalid system clock")?.as_millis() as u64;
-    if snapshot.timestamp_ms > now.saturating_add(15_000)
-        || now.saturating_sub(snapshot.timestamp_ms) > 120_000
-    {
+    if !is_current(snapshot) {
         return Err("Native device snapshot is stale or future dated".into());
     }
     let mut ids = std::collections::HashSet::new();
@@ -495,6 +503,31 @@ mod tests {
         }
         snapshot.entries[0].stable_identifier = "00000000-0000-0000-0000-000000000000".into();
         assert!(validate(&snapshot).is_err()); // Never accept an unreviewed code.
+    }
+
+    #[test]
+    fn expired_observation_retains_rows_but_cannot_be_used_for_links() {
+        let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis() as u64;
+        let mut s = DeviceSnapshot {
+            platform: std::env::consts::OS,
+            scope: match std::env::consts::OS {
+                "macos" => "known-application-bundle-roots",
+                "windows" => "windows-uninstall-registry",
+                "linux" => "registered-desktop-launchers",
+                _ => "unsupported",
+            },
+            status: "observed", timestamp_ms: now.saturating_sub(119_000),
+            entries: vec![app("RustDesk", "com.carriez.rustdesk", "Applications")],
+            truncated: false,
+        };
+        assert!(is_current(&s));
+        assert!(validate(&s).is_ok()); // The declared scope is still only evidence.
+        s.timestamp_ms = now.saturating_sub(121_000);
+        assert!(!is_current(&s));
+        assert!(validate(&s).is_err());
+        assert_eq!(s.entries.len(), 1); // History remains visible, but links expire.
+        s.timestamp_ms = now.saturating_add(16_000);
+        assert!(!is_current(&s)); // Implausible future timestamp fails closed.
     }
 
     #[test]

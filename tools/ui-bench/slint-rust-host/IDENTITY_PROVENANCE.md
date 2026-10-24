@@ -79,6 +79,16 @@ do not change any launch/installation entitlement.
 - Chris Windows: Preview9 and Preview10 servers, neither with
   `job-history.json` at their documented roots; they are not Preview12.
 - MacMiniOffice: older Preview4 / Orbit servers, not pinned Preview12.
+  A read-only check of the existing
+  `~/Library/Application Support/OfficeOps/CraftSuite/install-progress.tsv`
+  found **42 historical events** (timestamp range
+  `2026-10-09T11:58:46Z` to `2026-10-09T12:02:48Z`, file last modified
+  on 2026-10-09). Event kinds: 14 `downloading`, 14 `verified`,
+  12 `installed`, 1 `already_current`, 1 `error`. This is a
+  **legacy historical activity source**, not a currently running
+  authenticated Preview12 Worker. The file was not modified, copied or
+  wired into the current Activity page; no names/paths/credentials were
+  extracted for this audit.
 - MacMiniOffice2: a temporary Preview12 engine spawned only for the bounded
   read, no verified persistent Preview12 worker/history file.
 - Chris-3DPC, Chris-Mini-PC, Mac-Bedroom: no running Challenger worker

@@ -223,6 +223,37 @@ CI on the latest HEAD must still pass before the headless Windows gate is
 considered green. User-desktop Session 1 visual and accessibility QA remain
 separate uncompleted gates.
 
+## P6: honest observation age and no silent stale links
+
+The OS registrations view previously displayed an observation as "current"
+after its two-minute native evidence validity window expired. The underlying
+Rust identity validation already refused stale links, but a stale UI could
+still show a formerly clickable source match until a user interaction.
+
+The native UI now shows the real **last explicit read age**, refreshes only
+that label through a lightweight UI timer (no OS read), and changes its state
+to **expired** when the two-minute evidence window lapses. It keeps the
+previous read-only registration rows visible for historical reference, but
+removes every source ID link and disables dossier navigation until the user
+explicitly presses **Inspect local apps** again. A failed re-inspection
+displays an error while retaining the prior observation, without falsely
+restoring its trust. It never starts any background scan or worker.
+
+Test gates: unit regression checks the 119s/121s/future evidence boundaries;
+`--qa-verify-stale` performs an explicitly requested real OS read,
+simulates an observation aged 121 seconds (not a second live measurement),
+and asserts preserved rows, zero links, an explicit expired state and no
+automatic re-scan. Normal `--smoke` still verifies startup doesn't inspect
+OS registrations on navigation.
+
+A separate read-only source audit found **42 past CraftSuite installation
+events** in MacMiniOffice's existing `install-progress.tsv` dated **9 Oct
+2026**, including 12 `installed` and 14 `verified` events. These are
+**historical legacy evidence**, not a current worker or job queue, and are
+not silently imported into the native Preview12 Activity route. There was no
+running, authenticated, version-pinned persistent Preview12 Worker on any of
+the six checked devices. See [identity + worker provenance](IDENTITY_PROVENANCE.md).
+
 ## Next gates — not yet implemented
 
 A truly exhaustive OS-wide package/application inventory, cryptographic
