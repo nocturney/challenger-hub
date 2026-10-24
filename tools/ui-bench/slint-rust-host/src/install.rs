@@ -136,6 +136,11 @@ pub fn parse_install_progress(line: &str) -> Option<InstallProgress> {
             message: "Application files placed; validating the managed install record".into(),
             percent: None,
         }),
+        "rolled-back" => Some(InstallProgress {
+            stage: "RESTORED",
+            message: "Previous managed application restored after a failed install".into(),
+            percent: None,
+        }),
         "success" => Some(InstallProgress {
             stage: "FINALIZING",
             message: "Worker completed; independently checking the final install record".into(),
@@ -197,6 +202,8 @@ mod tests {
             .unwrap().stage,"VERIFIED");
         assert_eq!(parse_install_progress(&line("installed","some executable path"))
             .unwrap().stage,"RECORDING");
+        assert_eq!(parse_install_progress(&line("rolled-back","managed backup restored"))
+            .unwrap().stage,"RESTORED");
         assert_eq!(parse_install_progress(&line("success","worker may say success"))
             .unwrap().stage,"FINALIZING");
         for bad in [

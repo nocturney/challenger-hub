@@ -112,6 +112,43 @@ function unzipWindows(source,target){
  const fifth="[IO.Compression.ZipFile]::ExtractToDirectory('"+q(source)+"','"+q(target)+"')";
  exec('powershell.exe',['-NoProfile','-NonInteractive','-Command',first+second+third+fourth+fifth],240000);
 }
+// A failure after the approved files are swapped must not leave the prior
+// managed installation displaced when its metadata cannot be committed.
+// This handles synchronous errors; hard power loss remains a separate gap.
+function rollbackSwap({appRoot,backupPath}){
+ const safeParent=path.resolve(APP_ROOT)+path.sep;
+ const target=path.resolve(appRoot);
+ const safeBackup=path.resolve(BACKUP_ROOT)+path.sep;
+ if(!target.startsWith(safeParent)||
+    (backupPath&&!path.resolve(backupPath).startsWith(safeBackup)))
+  fail('Refusing rollback outside the managed app roots');
+ if(!fs.existsSync(target))fail('Cannot roll back: installed app folder is missing');
+ const quarantined=path.join(WORK_ROOT,ID+'-failed-'+crypto.randomBytes(8).toString('hex'));
+ fs.renameSync(target,quarantined);
+ try{
+  if(backupPath){
+   if(!fs.existsSync(backupPath))fail('Cannot roll back: managed backup is missing');
+   fs.renameSync(backupPath,target);
+  }
+ }catch(e){
+  try{fs.renameSync(quarantined,target)}
+  catch(restoreError){throw Error('Rollback and failed-app recovery both failed: '+restoreError.message)}
+  throw e;
+ }
+ try{fs.rmSync(quarantined,{recursive:true,force:true})}
+ catch(e){out('warning','Failed install quarantined for later cleanup: '+e.message)}
+ out('rolled-back',backupPath?'Restored previous managed application':'Removed failed new application');
+}
+function ciOnlyStateFailure(){
+ if(process.env.CHALLENGER_CI_FAIL_STATE_WRITE!=='1')return false;
+ const runner=process.env.RUNNER_TEMP||'';
+ const local=process.env.LOCALAPPDATA||'';
+ if(process.env.GITHUB_ACTIONS!=='true'||process.env.RUNNER_OS!=='Windows'||
+   !runner||!local||!path.resolve(local).toLowerCase()
+     .startsWith(path.resolve(runner).toLowerCase()+path.sep.toLowerCase()))
+  fail('CI state-write fault injection refused outside disposable Windows runner');
+ return true;
+}
 function installWindows({p,spec},src,stage){
  const build=path.join(stage,'payload');fs.mkdirSync(build,{recursive:true});
  let exe=null;
@@ -209,12 +246,22 @@ function installMac({p,spec},src,stage){
   }
   out('extract','Validating the downloaded application');
   const installed=PLATFORM==='win32'?installWindows(entry,asset,stage):installMac(entry,asset,stage);
-  const data=safeReadState();if(!data.installed||typeof data.installed!=='object')data.installed={};
-  data.installed[ID]={id:ID,repository:entry.p.repository,version:entry.rel.tag,installedAt:new Date().toISOString(),
-    installedPath:installed.installedPath,appRoot:installed.appRoot,assetName:entry.asset.name,
-    sha256:entry.asset.sha256,kind:entry.spec.kind,managed:true,
-    integrity:'SHA-256 from GitHub release metadata'};
-  saveState(data);
+  try{
+   const data=safeReadState();if(!data.installed||typeof data.installed!=='object')data.installed={};
+   data.installed[ID]={id:ID,repository:entry.p.repository,version:entry.rel.tag,installedAt:new Date().toISOString(),
+     installedPath:installed.installedPath,appRoot:installed.appRoot,assetName:entry.asset.name,
+     sha256:entry.asset.sha256,kind:entry.spec.kind,managed:true,
+     integrity:'SHA-256 from GitHub release metadata'};
+   if(ciOnlyStateFailure())fail('CI-only injected managed install state-write failure');
+   saveState(data);
+  }catch(e){
+   // The backup remains owned by this worker until metadata commits.
+   // Restore it on a synchronous failure; never emit a false success.
+   try{rollbackSwap(installed)}
+   catch(rollback){throw Error('Install record failed ('+e.message+
+     '); failed to restore previous application ('+rollback.message+')')}
+   throw e;
+  }
   out('success',entry.p.name+' '+entry.rel.tag+' installed and tracked');
  }finally{try{fs.rmSync(stage,{recursive:true,force:true})}catch(_){}}
 })().catch(e=>{out('failed',String(e.message));process.exitCode=1});

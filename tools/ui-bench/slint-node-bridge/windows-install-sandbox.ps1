@@ -60,6 +60,27 @@ try {
     # The reviewed exe-portable adapter copies the verified EXE byte-for-byte.
     $bytesHash = (Get-FileHash -LiteralPath $installed.installedPath -Algorithm SHA256).Hash.ToLowerInvariant()
     if ($bytesHash -ne $plan.sha256) { throw 'Installed EXE SHA-256 mismatch' }
+    # Inject a metadata-write failure into a SECOND reviewed SolveSpace install.
+    # This fault is denied outside a disposable GitHub Windows runner. The prior
+    # owned executable and managed-state bytes must be restored byte-for-byte.
+    $priorState = Get-Content -LiteralPath $meta -Raw
+    $env:CHALLENGER_CI_FAIL_STATE_WRITE = '1'
+    try {
+        $failureOutput = & node $bridge install 'curated:solvespace' $plan.approvalToken 2>&1 | Out-String
+        $failureExit = $LASTEXITCODE
+    } finally {
+        Remove-Item Env:CHALLENGER_CI_FAIL_STATE_WRITE -ErrorAction SilentlyContinue
+    }
+    if ($failureExit -eq 0 -or $failureOutput -notmatch 'rolled-back' -or
+        $failureOutput -notmatch 'CI-only injected managed install state-write failure' -or
+        $failureOutput -match 'challenger.native.install-result.v1') {
+        throw 'Injected metadata failure failed to trigger managed application rollback'
+    }
+    $restored = (Get-FileHash -LiteralPath $installed.installedPath -Algorithm SHA256).Hash.ToLowerInvariant()
+    if ($restored -ne $bytesHash -or (Get-Content -LiteralPath $meta -Raw) -ne $priorState) {
+        throw 'Previous verified app or managed record was changed by failed install'
+    }
+    Write-Output 'WINDOWS_NATIVE_INSTALL_ROLLBACK_PASS'
     # Exercise PdfCraft's new managed route on the disposable runner only.
     # It must never silently become a generic installer for all 14 managed apps.
     $pdfPlanText = & node $bridge plan 'managed:pdfcraft' | Out-String
