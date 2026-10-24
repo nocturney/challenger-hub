@@ -4,6 +4,11 @@ const fs=require('node:fs'),path=require('node:path'),os=require('node:os');
 const crypto=require('node:crypto'),{spawnSync}=require('node:child_process');
 const ROOT=__dirname,ID=String(process.argv[2]||''),DRY=process.argv.includes('--verify-only'),PLATFORM=process.platform;
 const PORTABLE=process.argv.includes('--download-only');
+// A separate, explicit native UI approval can install the reviewed PdfCraft portable ZIP.
+// No MSI execution, silent installer, elevated rights or generic managed-app exception.
+const NATIVE_PDFCRAFT_INSTALL=process.argv.includes('--native-pdfcraft-install');
+if(NATIVE_PDFCRAFT_INSTALL&&(PORTABLE||ID!=='pdfcraft'||PLATFORM!=='win32'||process.arch!=='x64'))
+ throw Error('Managed PdfCraft install is only for Windows x64 with explicit native approval');
 const DOWNLOAD_ROOT=PLATFORM==='win32'?'D:\\Downloads\\ChallengerHub\\Portable':path.join(os.homedir(),'Downloads','ChallengerHub','Portable');
 const APP_ROOT=PLATFORM==='win32'?'D:\\Velvet\\Installers\\ChallengerHub\\Managed':path.join(os.homedir(),'Applications','ChallengerHub Apps');
 const BACKUP_ROOT=path.join(APP_ROOT,'.backups'),WORK_ROOT=path.join(APP_ROOT,'.stage');
@@ -17,9 +22,9 @@ function approved(){
  if(!['darwin','win32'].includes(PLATFORM))fail('Unsupported OS');
  const registry=safeJson(path.join(ROOT,'challengers.json'));
  const craftNames=new Set(['photocraft','vectorcraft','lightcraft','filmcraft','effectcraft','designcraft','pdfcraft','wordcraft','gridcraft','deckcraft','cadcraft','soundcraft']);
- const p=registry.projects.find(p=>p.id===ID)||(PORTABLE&&craftNames.has(ID)?{id:ID,name:ID,repository:'storytold/'+ID,installAdapter:null,installable:false}:null);
+ const p=registry.projects.find(p=>p.id===ID)||((PORTABLE||NATIVE_PDFCRAFT_INSTALL)&&craftNames.has(ID)?{id:ID,name:ID,repository:'storytold/'+ID,installAdapter:null,installable:false}:null);
  if(!p||p.installAdapter||p.installable)fail('Unrecognized or unsafe discovery entry');
- const adapters=safeJson(path.join(ROOT,PORTABLE?'portable-assets.json':'adapters.json'));
+ const adapters=safeJson(path.join(ROOT,(PORTABLE||NATIVE_PDFCRAFT_INSTALL)?'portable-assets.json':'adapters.json'));
  const spec=adapters.projects?.[ID]?.[PLATFORM];
  if(PORTABLE&&!['zip','zip-app','exe-portable'].includes(spec?.kind))fail('No allowlisted portable package for this computer');
  if(!spec||!['zip','zip-app','dmg','exe-portable'].includes(spec.kind))fail('No reviewed adapter for this platform');
@@ -110,6 +115,8 @@ function installWindows({p,spec},src,stage){
   unzipWindows(src,build);
   exe=chosen(walk(build,(f,e)=>e.isFile()&&/\.exe$/i.test(f)),spec.exeHint||p.name);
   if(!/\.exe$/i.test(exe))fail('No expected Windows executable');
+  if(NATIVE_PDFCRAFT_INSTALL&&path.basename(exe).toLowerCase()!=='pdfcraft.exe')
+   fail('The reviewed PdfCraft GUI executable is missing from the verified archive');
  }else if(spec.kind==='exe-portable'){
   const stem=String(spec.exeHint||p.id).replace(/[^a-zA-Z0-9_-]/g,'');
   exe=path.join(build,stem+'.exe');fs.copyFileSync(src,exe);

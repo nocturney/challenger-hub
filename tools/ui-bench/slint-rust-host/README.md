@@ -328,3 +328,13 @@ interactive desktop tests, resource/performance sampling, authenticated
 distribution signing/notarization, Slint attribution and permission-gated
 third-party installers. These remain blocked from Production. Do not infer
 resource usage from the old Rust-only fixture benchmark.
+
+## Managed PdfCraft: approved Windows portable install candidate
+
+Unlike curated releases, the 14 managed application entries were previously read-only in Native Preview. There is now exactly **one** explicit managed installation exception: `managed:pdfcraft`, only on Windows x64, with source identity pinned to `storytold/pdfcraft` in the existing managed catalog. Other managed and all research projects remain excluded.
+
+The route reuses the original Challenger `Install-Challenger.js` worker and its SHA-256 checked ZIP extraction/managed-install metadata. It uses the already-reviewed `portable-assets.json` allowlist and requires an exact GitHub Release asset `pdfcraft-<version>-windows-x64-portable.zip` with a published SHA-256. The one-shot `install-bridge.mjs` builds a frozen review plan and checks its token again before any download. Native UI requires a separately checked approval. A special `--native-pdfcraft-install` worker flag applies only to PdfCraft Windows x64; it does not execute MSI packages, change file associations or add a background service. Destination is `D:\Velvet\Installers\ChallengerHub\Managed\pdfcraft` for the regular user.
+
+Windows CI has a disposable-runner-only regression that plans and installs the actual portable ZIP, checks the installed executable and verified managed state, then removes the isolated `D:\Velvet` tree. Do **not** run that sandbox script on Chris or another real workstation. The regular-user Chris Session 1 UI acceptance and first user-approved real installation are separate gates; no normal user software is installed by these changes.
+
+Do not describe PdfCraft as having full editing parity with Acrobat: upstream lists editing *existing* PDF text (especially RTL/CJK) among unfinished or thin areas. Use this as a native installer acceptance candidate first, with an actual editor smoke test later.

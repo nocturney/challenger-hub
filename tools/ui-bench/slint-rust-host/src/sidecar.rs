@@ -124,10 +124,14 @@ fn run_bounded(mut cmd: Command, timeout: Duration) -> Result<String, String> {
 pub fn installer_bridge(mode: &str, project_id: &str, approval_token: Option<&str>)
     -> Result<String, String>
 {
+    // One exact managed exception: PdfCraft's vetted Windows portable archive.
+    // Research and every other managed project remain installation-ineligible.
+    let source_id = project_id.strip_prefix("curated:")
+        .or_else(|| (project_id == "managed:pdfcraft").then_some("pdfcraft"))
+        .unwrap_or("");
     if !matches!(mode, "plan" | "install") ||
-       !project_id.starts_with("curated:") ||
-       project_id.len() > 95 ||
-       !project_id[8..].bytes().all(|b| b.is_ascii_lowercase() ||
+       source_id.len() < 2 || project_id.len() > 95 ||
+       !source_id.bytes().all(|b| b.is_ascii_lowercase() ||
            b.is_ascii_digit() || b == b'-') {
         return Err("Native installer request has invalid mode or source ID".into());
     }
@@ -151,7 +155,10 @@ pub fn installer_bridge(mode: &str, project_id: &str, approval_token: Option<&st
         let path = dir.join("runtime-preview12");
         if !path.join("Install-Challenger.js").is_file() ||
            !path.join("adapters.json").is_file() ||
-           !path.join("challengers.json").is_file() {
+           !path.join("challengers.json").is_file() ||
+           (project_id == "managed:pdfcraft" &&
+             (!path.join("portable-assets.json").is_file() ||
+              !path.join("catalog-cache.json").is_file())) {
             return Err("Missing original vetted installer or policy in bundled runtime".into());
         }
         cmd.env("CHALLENGER_PREVIEW_RUNTIME", path);

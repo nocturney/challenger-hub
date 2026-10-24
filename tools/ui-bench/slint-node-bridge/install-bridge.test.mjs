@@ -59,3 +59,56 @@ test('installation CLI has no implicit default action',()=>{
   // Neither importing the planner nor building a plan launches an installer,
   // downloads a package, creates a worker state, or asks for elevation.
 });
+
+
+// PdfCraft is a managed listing, not a curated project. It has exactly one
+// source-pinned native install path: the Windows x64 GitHub portable ZIP.
+const pdfManaged={apps:[{
+  repo:'pdfcraft',title:'PdfCraft',repoUrl:'https://github.com/storytold/pdfcraft'
+}]};
+const pdfPortable={schema:'challenger-portable.v1',projects:{pdfcraft:{win32:{
+  kind:'zip',asset:String.raw`^pdfcraft-[^/]+-windows-x64-portable\.zip$`,exeHint:'pdfcraft'
+}}}};
+const pdfSource=()=>reviewedSource('managed:pdfcraft',{
+  registry,adapters,managed:pdfManaged,portable:pdfPortable,
+  platform:'win32',arch:'x64'
+});
+const pdfRelease=()=>({
+  tag_name:'v0.13.0',draft:false,prerelease:false,
+  html_url:'https://github.com/storytold/pdfcraft/releases/tag/v0.13.0',
+  assets:[{
+    name:'pdfcraft-0.13.0-windows-x64-portable.zip',
+    size:88133416,
+    digest:'sha256:60c3fcb28548f3ab09e332c0cc5388f17e38d2c3ccbbe9f1a2c7080844387629',
+    browser_download_url:'https://github.com/storytold/pdfcraft/releases/download/v0.13.0/pdfcraft-0.13.0-windows-x64-portable.zip'
+  }]
+});
+test('managed PdfCraft allows only a pinned Windows x64 portable review',()=>{
+  const source=pdfSource(),plan=reviewOfficialRelease(source,pdfRelease());
+  assert.equal(source.projectId,'managed:pdfcraft');
+  assert.equal(source.repository,'storytold/pdfcraft');
+  assert.equal(plan.kind,'zip');
+  assert.equal(plan.assetName,'pdfcraft-0.13.0-windows-x64-portable.zip');
+  assert.equal(plan.sha256,'60c3fcb28548f3ab09e332c0cc5388f17e38d2c3ccbbe9f1a2c7080844387629');
+  assert.equal(plan.requiresUserApproval,true);
+  assert.equal(plan.sourceDigestVerifiedAfterDownload,false);
+  const changed=pdfRelease();
+  changed.assets[0].digest='sha256:'+'0'.repeat(64);
+  assert.notEqual(reviewOfficialRelease(source,changed).approvalToken,plan.approvalToken);
+});
+test('managed PDF adapter fails closed on impersonation, other apps and platforms',()=>{
+  const base={registry,adapters,managed:pdfManaged,portable:pdfPortable,platform:'win32',arch:'x64'};
+  for(const id of ['managed:wordcraft','managed:PdfCraft','research:pdfcraft','curated:pdfcraft'])
+    assert.throws(()=>reviewedSource(id,base));
+  for(const args of [
+    {...base,platform:'darwin'},
+    {...base,platform:'linux'},
+    {...base,arch:'arm64'},
+    {...base,managed:{apps:[...pdfManaged.apps,...pdfManaged.apps]}},
+    {...base,managed:{apps:[{...pdfManaged.apps[0],repoUrl:'https://github.com/evil/pdfcraft'}]}},
+    {...base,portable:{...pdfPortable,projects:{pdfcraft:{win32:{...pdfPortable.projects.pdfcraft.win32,kind:'msi'}}}}},
+    {...base,portable:{...pdfPortable,projects:{pdfcraft:{win32:{...pdfPortable.projects.pdfcraft.win32,asset:'^.*\\.exe$'}}}}}
+  ])assert.throws(()=>reviewedSource('managed:pdfcraft',args));
+  const bad=pdfRelease();bad.assets[0].digest=null;
+  assert.throws(()=>reviewOfficialRelease(pdfSource(),bad));
+});

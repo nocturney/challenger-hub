@@ -104,6 +104,9 @@ fn source_status(p: &Project) -> &'static str {
 fn detailed_status(p: &Project) -> &'static str {
     match p.kind.as_str() {
         "research" => "Research candidate — not verified for installation",
+        "managed" if p.id=="managed:pdfcraft" && cfg!(all(target_os="windows",target_arch="x86_64"))
+            => "Managed PdfCraft — verified portable installation requires your approval",
+        "managed" if p.id=="managed:pdfcraft" => "Managed PdfCraft — native portable installer is Windows x64 only",
         "managed" => "Managed listing — installation not enabled in Native Preview",
         _ => "Curated source — installation only after verified release review and approval",
     }
@@ -419,6 +422,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     let ui = AppWindow::new()?;
+    ui.set_pdfcraft_install_supported(cfg!(all(target_os="windows",target_arch="x86_64")));
     let state = Rc::new(RefCell::new(State::default()));
     {
         let mut s = state.borrow_mut();

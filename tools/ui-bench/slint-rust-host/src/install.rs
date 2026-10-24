@@ -38,15 +38,22 @@ struct InstallResult {
     source_digest_verified:bool,
 }
 pub fn eligible_source(project:&Project)->bool {
-    project.kind=="curated"&&project.id.starts_with("curated:")&&
-    project.source.starts_with("https://github.com/")&&
-    project.id.len()<96
+    let curated=project.kind=="curated"&&project.id.starts_with("curated:")&&
+        project.source.starts_with("https://github.com/");
+    let pdfcraft=cfg!(all(target_os="windows",target_arch="x86_64"))&&
+        project.kind=="managed"&&project.id=="managed:pdfcraft"&&
+        project.name=="PdfCraft"&&
+        project.source=="https://github.com/storytold/pdfcraft";
+    (curated||pdfcraft)&&project.id.len()<96
 }
 pub fn validate_plan(plan:&InstallPlan,project:&Project)->Result<(),String> {
     if !eligible_source(project) ||
         plan.schema!="challenger.native.install-plan.v1" ||
         plan.project_id != project.id ||
-        plan.project_id != format!("curated:{}",plan.id) ||
+        plan.project_id != format!("{}:{}",project.kind,plan.id) ||
+        (project.kind=="managed"&&
+         (plan.repository!="storytold/pdfcraft" || plan.kind!="zip" ||
+          plan.platform!="win32" || plan.arch!="x64")) ||
         plan.name != project.name ||
         plan.repository.is_empty() ||
         project.source != format!("https://github.com/{}",plan.repository) ||
@@ -116,6 +123,22 @@ mod tests {
         assert!(eligible_source(&source("curated")));
         assert!(!eligible_source(&source("research")));
         let mut p=source("curated");p.id="managed:compositor".into();
+        assert!(!eligible_source(&p));
+    }
+    #[test]
+    fn managed_pdfcraft_is_pinned_to_exact_source_and_windows_x64(){
+        let mut p=source("managed");
+        p.id="managed:pdfcraft".into();
+        p.name="PdfCraft".into();
+        p.source="https://github.com/storytold/pdfcraft".into();
+        assert_eq!(eligible_source(&p),cfg!(all(target_os="windows",target_arch="x86_64")));
+        p.source="https://github.com/impostor/pdfcraft".into();
+        assert!(!eligible_source(&p));
+        p.source="https://github.com/storytold/pdfcraft".into();
+        p.id="managed:wordcraft".into();
+        assert!(!eligible_source(&p));
+        p.id="managed:pdfcraft".into();
+        p.kind="research".into();
         assert!(!eligible_source(&p));
     }
     #[test]

@@ -25,10 +25,26 @@ function secureUrl(raw,host,prefix){
   return u;
 }
 
-export function reviewedSource(projectId,{registry,adapters,
+export function reviewedSource(projectId,{registry,adapters,managed,portable,
     platform=process.platform,arch=process.arch}){
+  // Exact source-reviewed exception for the managed PdfCraft Windows x64 portable ZIP.
+  // Never promote generic managed entries or research candidates to installable.
+  if(projectId==='managed:pdfcraft'){
+    assert(platform==='win32'&&arch==='x64','PdfCraft native install requires Windows x64');
+    const entries=managed?.apps?.filter(a=>a.repo==='pdfcraft'&&a.title==='PdfCraft'&&
+      a.repoUrl==='https://github.com/storytold/pdfcraft');
+    assert(entries?.length===1,'Missing or ambiguous pinned managed PdfCraft source');
+    assert(portable?.schema==='challenger-portable.v1',
+      'Missing reviewed portable asset allowlist');
+    const spec=portable.projects?.pdfcraft?.win32;
+    assert(spec?.kind==='zip' &&
+      spec.asset===String.raw`^pdfcraft-[^/]+-windows-x64-portable\.zip$` &&
+      spec.exeHint==='pdfcraft','PdfCraft Windows portable adapter is not reviewed');
+    return {id:'pdfcraft',projectId,repository:'storytold/pdfcraft',
+      name:'PdfCraft',spec,platform,arch};
+  }
   assert(typeof projectId==='string'&&projectId.startsWith('curated:'),
-    'Only curated source projects can be installed');
+    'Only curated sources or vetted managed PdfCraft can be installed');
   const id=projectId.slice(8);
   assert(idOk(id),'Invalid vetted project ID');
   assert(['win32','darwin'].includes(platform),'No vetted installer on this OS');
@@ -88,9 +104,12 @@ export function reviewOfficialRelease(source,release){
 
 export async function fetchPlan(projectId,{runtimeRoot=runtime,releaseOverride=null,
     platform=process.platform,arch=process.arch}={}){
+  const managedPdf=projectId==='managed:pdfcraft';
   const source=reviewedSource(projectId,{
     registry:read(path.join(runtimeRoot,'challengers.json')),
-    adapters:read(path.join(runtimeRoot,'adapters.json')),platform,arch
+    adapters:read(path.join(runtimeRoot,'adapters.json')),platform,arch,
+    managed:managedPdf?read(path.join(runtimeRoot,'catalog-cache.json')):null,
+    portable:managedPdf?read(path.join(runtimeRoot,'portable-assets.json')):null
   });
   if(platform==='win32')assert(fs.existsSync('D:\\'),
     'Approved Windows application destination drive D: is unavailable');
@@ -143,7 +162,9 @@ async function install(projectId,token){
   try{
     // Copy ORIGINAL vetted worker byte-for-byte to a separate user-owned
     // staging folder. No change to Production, Preview11 or packaged resources.
-    for(const filename of ['Install-Challenger.js','challengers.json','adapters.json'])
+    const workerFiles=['Install-Challenger.js','challengers.json','adapters.json'];
+    if(plan.projectId==='managed:pdfcraft')workerFiles.push('portable-assets.json');
+    for(const filename of workerFiles)
       fs.copyFileSync(path.join(runtime,filename),path.join(sandbox,filename));
     const existing=path.join(base,'managed-installs.json');
     if(fs.existsSync(existing))
@@ -154,7 +175,9 @@ async function install(projectId,token){
           sha256:plan.sha256,url:plan.downloadURL}]}}};
     fs.writeFileSync(path.join(sandbox,'release-index.json'),JSON.stringify(snapshot),{mode:0o600});
     console.log(JSON.stringify({state:'approved',detail:'Explicit approved install: '+plan.name+' '+plan.tag}));
-    const child=spawn(process.execPath,[path.join(sandbox,'Install-Challenger.js'),plan.id],{
+    const args=[path.join(sandbox,'Install-Challenger.js'),plan.id];
+    if(plan.projectId==='managed:pdfcraft')args.push('--native-pdfcraft-install');
+    const child=spawn(process.execPath,args,{
       cwd:sandbox,windowsHide:true,stdio:['ignore','pipe','pipe'],
       env:{...process.env,NODE_OPTIONS:'',NODE_PATH:''}
     });

@@ -60,6 +60,48 @@ try {
     # The reviewed exe-portable adapter copies the verified EXE byte-for-byte.
     $bytesHash = (Get-FileHash -LiteralPath $installed.installedPath -Algorithm SHA256).Hash.ToLowerInvariant()
     if ($bytesHash -ne $plan.sha256) { throw 'Installed EXE SHA-256 mismatch' }
+    # Exercise PdfCraft's new managed route on the disposable runner only.
+    # It must never silently become a generic installer for all 14 managed apps.
+    $pdfPlanText = & node $bridge plan 'managed:pdfcraft' | Out-String
+    if ($LASTEXITCODE -ne 0) { throw 'Verified PdfCraft plan refused' }
+    $pdfPlan = $pdfPlanText | ConvertFrom-Json
+    if ($pdfPlan.projectId -ne 'managed:pdfcraft' -or
+        $pdfPlan.repository -ne 'storytold/pdfcraft' -or
+        $pdfPlan.kind -ne 'zip' -or
+        $pdfPlan.assetName -notmatch '^pdfcraft-[0-9.]+-windows-x64-portable\.zip$' -or
+        $pdfPlan.sha256 -notmatch '^[a-f0-9]{64}$' -or
+        $pdfPlan.approvalToken -notmatch '^[a-f0-9]{64}$' -or
+        $pdfPlan.requiresUserApproval -ne $true -or
+        $pdfPlan.sourceDigestVerifiedAfterDownload -ne $false) {
+        throw 'PdfCraft plan is not exact-source and portable-asset verified'
+    }
+    $pdfOutput = & node $bridge install 'managed:pdfcraft' $pdfPlan.approvalToken | Out-String
+    if ($LASTEXITCODE -ne 0) { throw 'PdfCraft verified portable install failed' }
+    $pdfRecords = $pdfOutput.Trim() -split '[\r\n]+' | ForEach-Object {
+        try { $_ | ConvertFrom-Json } catch { $null }
+    }
+    $pdfResult = @($pdfRecords | Where-Object { $_.schema -eq 'challenger.native.install-result.v1' })
+    if ($pdfResult.Count -ne 1 -or $pdfResult[0].state -ne 'success' -or
+        $pdfResult[0].sourceDigestVerified -ne $true -or
+        $pdfResult[0].projectId -ne $pdfPlan.projectId -or
+        $pdfResult[0].sha256 -ne $pdfPlan.sha256) {
+        throw 'PdfCraft installed result does not match user-review-equivalent approval'
+    }
+    $pdfInstalled = (Get-Content -LiteralPath $meta -Raw | ConvertFrom-Json).installed.pdfcraft
+    $pdfExpected = 'D:\Velvet\Installers\ChallengerHub\Managed\pdfcraft\'
+    if ($pdfInstalled.repository -ne 'storytold/pdfcraft' -or
+        $pdfInstalled.sha256 -ne $pdfPlan.sha256 -or
+        $pdfInstalled.version -ne $pdfPlan.tag -or
+        $pdfInstalled.managed -ne $true -or
+        $pdfInstalled.installedPath -notlike ($pdfExpected + '*') -or
+        -not (Test-Path -LiteralPath $pdfInstalled.installedPath)) {
+        throw 'PdfCraft tracked portable EXE missing or outside isolated app root'
+    }
+    Write-Output ('PDFCRAFT_NATIVE_INSTALL_SANDBOX_PASS ' + (@{
+        projectId=$pdfPlan.projectId; tag=$pdfPlan.tag; sha256=$pdfPlan.sha256;
+        verifiedInstalledExecutable=$true; isolatedMetadata=$true;
+        appInstalledOnUsersDevice=$false; ciOnly=$true
+    } | ConvertTo-Json -Compress))
     Write-Output ('WINDOWS_NATIVE_INSTALL_SANDBOX_PASS ' + (@{
         projectId=$plan.projectId; tag=$plan.tag; sha256=$bytesHash;
         verifiedInstalledExecutable=$true; isolatedMetadata=$true;
