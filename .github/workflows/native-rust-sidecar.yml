@@ -8,6 +8,8 @@ on:
       - "tools/ui-bench/slint-node-bridge/sidecar.mjs"
       - "tools/ui-bench/slint-node-bridge/live-catalog.mjs"
       - "tools/ui-bench/slint-node-bridge/bridge.test.mjs"
+      - "tools/ui-bench/slint-node-bridge/install-bridge.mjs"
+      - "tools/ui-bench/slint-node-bridge/install-bridge.test.mjs"
       - "tools/desktop-build/seeds/managed-catalog.preview10.json"
       - "tools/desktop-build/seeds/catalog-candidates.preview10.json"
   workflow_dispatch:
@@ -36,8 +38,8 @@ jobs:
         run: node tools/desktop-build/build-runtime.cjs 12
       - name: Rust read-only protocol regression tests
         run: cargo test --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked
-      - name: Native bridge source encoding regression tests
-        run: node --test tools/ui-bench/slint-node-bridge/bridge.test.mjs
+      - name: Native bridge plus explicit install-policy security regressions
+        run: node --test tools/ui-bench/slint-node-bridge/bridge.test.mjs tools/ui-bench/slint-node-bridge/install-bridge.test.mjs
       - name: Real Node backend / 181-record IPC acceptance
         run: cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --check-backend-only
       - name: Native OS registration evidence (explicit read, no installation)
@@ -56,6 +58,8 @@ jobs:
           bash tools/ui-bench/slint-rust-host/package-macos.sh
           app="tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview.app"
           codesign --verify --deep --strict "$app"
+          test -f "$app/Contents/Resources/install-bridge.mjs"
+          node --check "$app/Contents/Resources/install-bridge.mjs"
           "$app/Contents/MacOS/challenger-slint-rust-host" --check-backend-only
           "$app/Contents/MacOS/challenger-slint-rust-host" --check-device-only
           "$app/Contents/MacOS/challenger-slint-rust-host" --check-identity-only
@@ -64,6 +68,10 @@ jobs:
         shell: pwsh
         run: |
           ./tools/ui-bench/slint-rust-host/package-windows.ps1 -DebugBuild
+          $bridge = "./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/resources/install-bridge.mjs"
+          if (!(Test-Path $bridge)) { throw "Bundled native installer policy bridge missing" }
+          & node --check $bridge
+          if ($LASTEXITCODE -ne 0) { throw "Bundled install bridge syntax invalid" }
           & ./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe --check-backend-only
           & ./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe --check-device-only
           & ./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe --check-identity-only
