@@ -42,6 +42,8 @@ jobs:
         run: cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --check-backend-only
       - name: Native OS registration evidence (explicit read, no installation)
         run: cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --check-device-only
+      - name: Reviewed native ID to source project cross-reference
+        run: cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --check-identity-only
       - name: macOS developer app packaging and bundled-engine smoke
         if: runner.os == 'macOS'
         run: |
