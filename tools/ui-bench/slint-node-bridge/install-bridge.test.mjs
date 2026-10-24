@@ -164,8 +164,12 @@ test('tampered history and unsupported statuses are rejected',()=>{
       projectId:'managed:pdfcraft',tag:'v0.13.0',sha256:'c'.repeat(64),
       state:'STARTED',timestamp:'2026-10-24T10:05:00.000Z'};
     assert.throws(()=>appendInstallHistory(folder,{...event,state:'SUCCESS'}));
-    assert.throws(()=>appendInstallHistory(folder,{...event,projectId:'research:unknown'}));
+    const reviewEvent={...event,state:'NEEDS_REVIEW'};
     appendInstallHistory(folder,event);
+    appendInstallHistory(folder,reviewEvent);
+    assert.equal(readInstallHistory(folder).entries[0].state,'NEEDS_REVIEW');
+    assert.equal(readInstallHistory(folder).entries[0].projectId,'managed:pdfcraft');
+    assert.throws(()=>appendInstallHistory(folder,{...event,projectId:'research:unknown'}));
     assert.throws(()=>appendInstallHistory(folder,{...event,runId:'invalid'}));
     fs.appendFileSync(path.join(folder,'install-history.jsonl'),
       '{"schema":"invalid","state":"COMPLETED"}\n');

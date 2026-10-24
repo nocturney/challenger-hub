@@ -151,7 +151,7 @@ function userState(){
 // background worker queue or proof that a previously installed app still runs.
 const HISTORY_SCHEMA='challenger.native.install-history.v1';
 const HISTORY_LIMIT=512*1024;
-const HISTORY_STATES=new Set(['STARTED','COMPLETED','FAILED','CANCELED']);
+const HISTORY_STATES=new Set(['STARTED','COMPLETED','FAILED','CANCELED','NEEDS_REVIEW']);
 function historyFile(base){return path.join(base,'install-history.jsonl')}
 function validateHistoryEvent(e){
   assert(e&&e.schema===HISTORY_SCHEMA&&
@@ -263,7 +263,7 @@ async function install(projectId,token){
     'Unsafe native install state folder');
   const lock=path.join(base,'.install.lock');
   const fd=fs.openSync(lock,'wx',0o600);
-  let sandbox=null,attemptStarted=false;
+  let sandbox=null,attemptStarted=false,workerCommitted=false;
   const runId=crypto.randomUUID();
   const historyBase={runId,projectId:plan.projectId,tag:plan.tag,sha256:plan.sha256};
   try{
@@ -297,7 +297,7 @@ async function install(projectId,token){
     child.stdin.on('error',()=>{});
     if(cancellationRequested && child.stdin.writable)
       child.stdin.write('cancel\n',()=>{});
-    let confirmedWorkerCancellation=false;
+    let confirmedWorkerCancellation=false,commitStartedInWorker=false,rollbackConfirmed=false;
     const copyLines=(stream,kind)=>new Promise((resolve,reject)=>{
       let partial='',count=0;
       stream.on('data',bytes=>{
@@ -306,9 +306,13 @@ async function install(projectId,token){
         let n;
         while((n=partial.indexOf('\n'))>=0){
           const line=partial.slice(0,n);partial=partial.slice(n+1);
-          if(kind==='worker' && cancellationRequested){
-            try {if(JSON.parse(line).state==='cancelled')confirmedWorkerCancellation=true;}
-            catch {}
+          if(kind==='worker'){
+            try{
+              const phase=JSON.parse(line).state;
+              if(phase==='cancelled'&&cancellationRequested)confirmedWorkerCancellation=true;
+              if(phase==='committing')commitStartedInWorker=true;
+              if(phase==='rolled-back')rollbackConfirmed=true;
+            }catch {}
           }
           if(++count<=160)console.log(JSON.stringify({state:kind,detail:line.slice(0,300)}));
         }
@@ -322,14 +326,27 @@ async function install(projectId,token){
     await Promise.all(outputs);
     if(code!==0 && cancellationRequested && confirmedWorkerCancellation)
       throw Error('INSTALL_CANCELLED_BEFORE_COMMIT');
+    if(code!==0&&commitStartedInWorker&&!rollbackConfirmed)workerCommitted=true;
     assert(code===0,'Vetted installer reported failure (exit '+code+')');
+    workerCommitted=true;
     const state=read(path.join(sandbox,'managed-installs.json'));
     const verified=state?.installed?.[plan.id];
     assert(verified?.repository===plan.repository&&verified?.sha256===plan.sha256&&
       verified?.version===plan.tag&&verified?.managed===true,
       'Worker failed to record this exact verified app');
+    // Exit code 0 signifies the vetted worker completed. The Native bridge
+    // must still verify and publish its own state before success is reported.
     const next=path.join(base,'managed-installs.next');
     fs.writeFileSync(next,JSON.stringify(state,null,2)+'\n',{mode:0o600});
+    if(process.env.CHALLENGER_CI_FAIL_NATIVE_PUBLISH==='1'){
+      const runner=process.env.RUNNER_TEMP||'',local=process.env.LOCALAPPDATA||'';
+      assert(process.platform==='win32'&&process.env.GITHUB_ACTIONS==='true'&&
+        process.env.RUNNER_OS==='Windows'&&runner&&local&&
+        path.resolve(local).toLowerCase().startsWith(
+          path.resolve(runner).toLowerCase()+path.sep.toLowerCase()),
+        'Native publish fault injection is permitted only in disposable Windows CI');
+      throw Error('CI-only injected native state publication failure');
+    }
     fs.renameSync(next,existing);
     let historyPersisted=true;
     try {
@@ -346,10 +363,15 @@ async function install(projectId,token){
       installedPath:verified.installedPath,sourceDigestVerified:true,historyPersisted}));
   }catch(e){
     if(attemptStarted){
-      const state=String(e.message).includes('INSTALL_CANCELLED_BEFORE_COMMIT')
-        ?'CANCELED':'FAILED';
+      const state=workerCommitted?'NEEDS_REVIEW':
+        String(e.message).includes('INSTALL_CANCELLED_BEFORE_COMMIT')
+          ?'CANCELED':'FAILED';
       try {appendInstallHistory(base,{...historyBase,state,timestamp:new Date().toISOString()});}
       catch(historyError){console.error('NATIVE_HISTORY_WRITE_FAILED '+String(historyError.message).slice(0,120));}
+    }
+    if(workerCommitted){
+      throw Error('NATIVE_INSTALL_NEEDS_REVIEW: a package commit may have occurred, but the Native install could not be confirmed ('+
+        String(e.message).slice(0,130)+'). Inspect the app and managed state before retrying.');
     }
     throw e;
   }finally{

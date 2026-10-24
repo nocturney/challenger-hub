@@ -192,6 +192,33 @@ try {
         throw 'Installer approval token leaked into the durable history file'
     }
     Write-Output 'WINDOWS_NATIVE_INSTALL_HISTORY_PASS'
+    # Distinguish a real vetted worker commit from failure to publish the
+    # separate native-user managed record. Never claim this is an ordinary
+    # failed installation, nor emit a false completed result.
+    $nativePrior = Get-Content -LiteralPath $meta -Raw
+    $env:CHALLENGER_CI_FAIL_NATIVE_PUBLISH = '1'
+    try {
+        $publishOutput = & node $bridge install 'curated:solvespace' $plan.approvalToken 2>&1 | Out-String
+        $publishExit = $LASTEXITCODE
+    } finally {
+        Remove-Item Env:CHALLENGER_CI_FAIL_NATIVE_PUBLISH -ErrorAction SilentlyContinue
+    }
+    if ($publishExit -eq 0 -or
+        $publishOutput -notmatch 'NATIVE_INSTALL_NEEDS_REVIEW' -or
+        $publishOutput -match 'challenger.native.install-result.v1') {
+        throw 'Post-commit native state failure was incorrectly classified as success or ordinary failure'
+    }
+    $history = (& node $bridge history | Out-String) | ConvertFrom-Json
+    if ($LASTEXITCODE -ne 0 -or @($history.entries | Where-Object {
+        $_.projectId -eq 'curated:solvespace' -and
+        $_.state -eq 'NEEDS_REVIEW' -and $_.sha256 -eq $plan.sha256
+    }).Count -ne 1 -or
+        (Get-Content -LiteralPath $meta -Raw) -ne $nativePrior -or
+        (Get-FileHash -LiteralPath $installed.installedPath -Algorithm SHA256).Hash.ToLowerInvariant() -ne $bytesHash -or
+        (Test-Path -LiteralPath $lockPath)) {
+        throw 'Post-commit uncertainty changed managed state, lost previous EXE or lock persists'
+    }
+    Write-Output 'WINDOWS_NATIVE_POSTCOMMIT_UNCERTAINTY_PASS'
     Write-Output ('PDFCRAFT_NATIVE_INSTALL_SANDBOX_PASS ' + (@{
         projectId=$pdfPlan.projectId; tag=$pdfPlan.tag; sha256=$pdfPlan.sha256;
         verifiedInstalledExecutable=$true; isolatedMetadata=$true;

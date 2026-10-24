@@ -773,18 +773,26 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                             }
                             Err(err) => {
                                 let canceled=err.contains("INSTALL_CANCELLED_BEFORE_COMMIT");
+                                let review_required=err.contains("NATIVE_INSTALL_NEEDS_REVIEW");
                                 if canceled {
                                     s.event("Installer safely canceled before commit",
                                         &project_id,"CANCELED");
+                                }else if review_required{
+                                    s.event("Install outcome needs manual verification",
+                                        &format!("{} · {}",project_id,err),"NEEDS_REVIEW");
                                 }else{
                                     s.event("Approved installation failed",
                                         &format!("{} · {}",project_id,err),"ERROR");
                                 }
                                 if same {
-                                    w.set_install_stage(if canceled{"CANCELED"}else{"FAILED"}.into());
+                                    w.set_install_stage(if canceled{"CANCELED"}
+                                        else if review_required{"NEEDS_REVIEW"}
+                                        else{"FAILED"}.into());
                                     w.set_install_percent(-1);
                                     w.set_install_message(if canceled {
                                         "Cancellation confirmed before any application replacement.".into()
+                                    }else if review_required{
+                                        "Install outcome uncertain: files may have changed. Inspect managed state before retrying.".into()
                                     }else{
                                         format!("Installation stopped/failed: {err}").into()
                                     });

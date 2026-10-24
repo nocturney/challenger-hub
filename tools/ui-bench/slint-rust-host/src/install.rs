@@ -73,7 +73,7 @@ fn valid_history(response:&HistoryResponse)->bool {
         e.sha256.len()==64 && e.sha256.bytes().all(|c|c.is_ascii_hexdigit()) &&
         e.timestamp.len()==24 && e.timestamp.is_ascii() &&
         e.timestamp.ends_with('Z') &&
-        matches!(e.state.as_str(),"COMPLETED"|"CANCELED"|"FAILED"|"UNRESOLVED")
+        matches!(e.state.as_str(),"COMPLETED"|"CANCELED"|"FAILED"|"UNRESOLVED"|"NEEDS_REVIEW")
     )
 }
 pub fn read_local_history()->Result<HistoryResponse,String> {
@@ -306,6 +306,8 @@ mod tests {
             schema:"challenger.native.install-history.v1".into(),
             entries:vec![valid.clone()],incomplete:false,
         };
+        assert!(valid_history(&response));
+        response.entries[0].state="NEEDS_REVIEW".into();
         assert!(valid_history(&response));
         response.entries[0].state="SUCCESS_WITHOUT_PROOF".into();
         assert!(!valid_history(&response));

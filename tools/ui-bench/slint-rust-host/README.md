@@ -362,3 +362,23 @@ New approved native attempts append `STARTED` to a bounded account-local `instal
 In the Native Activity view, **Read local installation history** explicitly reads these records from the current logged-in user profile. Old installs (including the original PdfCraft first acceptance) are **not backfilled**. The in-memory session events continue to be distinct. This is an audit trail of attempts, not proof of current application state or a live update worker.
 
 **Still not implemented:** automatic recovery from power loss/process crash at an arbitrary phase, guaranteed rollback for every interrupted installation, a persistent background worker queue, or a verified installer-history migration from older installations. Do not represent these as complete.
+
+## Native post-commit outcome ambiguity (fails closed)
+
+A verified source worker can successfully replace application files while the
+separate Native bridge fails to publish `managed-installs.json` in the actual
+user profile. The Native bridge now detects this boundary (or a worker failure
+after the commit phase without a confirmed rollback), records `NEEDS_REVIEW` in
+its durable history, and emits a nonzero `NATIVE_INSTALL_NEEDS_REVIEW` error.
+The Slint dossier explicitly shows `NEEDS_REVIEW`, **not** a definite FAILED
+or a verified success, until the user inspects the actual app and state. This
+does not silently re-run an installation. The Windows disposable-runner QA
+injects a post-worker, pre-publication fault, checks that no false completed
+result is emitted, the prior native record was not overwritten and the
+approved executable still matches the official digest.
+
+Remaining issue: an interruption or forced termination can still leave a
+`managed-installs.next` file or a file swap with no fully published record.
+That requires a separate durable transaction journal and explicit,
+identity-verified crash recovery; this scoped change is accurate **detection
+and classification**, not unattended repair after a crash.
