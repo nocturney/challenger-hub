@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "24"
+          node-version: "24.22.1"
       - uses: dtolnay/rust-toolchain@stable
       - name: Linux native Slint development libraries
         if: runner.os == 'Linux'
@@ -60,6 +60,8 @@ jobs:
           app="tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview.app"
           codesign --verify --deep --strict "$app"
           test -f "$app/Contents/Resources/install-bridge.mjs"
+          test -s "$app/Contents/Resources/NODE_LICENSE.txt"
+          test "$("$app/Contents/Resources/node" --version)" = "v24.22.1"
           node --check "$app/Contents/Resources/install-bridge.mjs"
           "$app/Contents/MacOS/challenger-slint-rust-host" --check-backend-only
           "$app/Contents/MacOS/challenger-slint-rust-host" --check-device-only
@@ -71,6 +73,10 @@ jobs:
           ./tools/ui-bench/slint-rust-host/package-windows.ps1 -DebugBuild
           $bridge = "./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/resources/install-bridge.mjs"
           if (!(Test-Path $bridge)) { throw "Bundled native installer policy bridge missing" }
+          $bundledNode = "./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/resources/node.exe"
+          $nodeLicense = "./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/resources/NODE_LICENSE.txt"
+          if (!(Test-Path $nodeLicense) -or (Get-Item $nodeLicense).Length -lt 150000) { throw "Bundled Node license missing" }
+          if ((& $bundledNode --version) -ne "v24.22.1" -or $LASTEXITCODE -ne 0) { throw "Bundled Node version mismatch" }
           & node --check $bridge
           if ($LASTEXITCODE -ne 0) { throw "Bundled install bridge syntax invalid" }
           & ./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe --check-backend-only

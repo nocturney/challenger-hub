@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "24"
+          node-version: "24.22.1"
       - uses: dtolnay/rust-toolchain@stable
       - name: Build isolated Preview12 runtime
         run: node tools/desktop-build/build-runtime.cjs 12
@@ -31,6 +31,10 @@ jobs:
         shell: pwsh
         run: |
           ./tools/ui-bench/slint-rust-host/package-windows.ps1 -DebugBuild
+          $node = "./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/resources/node.exe"
+          $notice = "./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/resources/NODE_LICENSE.txt"
+          if (!(Test-Path $notice) -or (Get-Item $notice).Length -lt 150000) { throw "Node license missing from QA package" }
+          if ((& $node --version) -ne "v24.22.1" -or $LASTEXITCODE -ne 0) { throw "Unpatched Node in QA package" }
           $exe = "./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe"
           $env:SLINT_BACKEND = "winit-software"
           & $exe --smoke

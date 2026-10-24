@@ -11,7 +11,25 @@ test -f "$runtime/desktop-manifest.json"
 test -f "$seed"
 node_bin="$(command -v node)"
 test -x "$node_bin"
-export PATH="$HOME/.cargo/bin:$PATH"
+# The bundled Node runtime must be the reviewed, patched LTS release.
+# Fail closed instead of silently copying an older system executable.
+required_node_version="v24.22.1"
+node_version="$("$node_bin" --version)"
+if [[ "$node_version" != "$required_node_version" ]]; then
+  echo "Refusing unpatched/unreviewed Node: expected $required_node_version, found $node_version" >&2; exit 3
+fi
+case "$(uname -m)" in
+  arm64) expected_node_arch="arm64" ;;
+  x86_64) expected_node_arch="x64" ;;
+  *) echo "Unsupported Mac packaging architecture" >&2; exit 3 ;;
+esac
+if [[ "$("$node_bin" -p 'process.platform')" != "darwin" ||
+      "$("$node_bin" -p 'process.arch')" != "$expected_node_arch" ]]; then
+  echo "Node OS/architecture differs from the Mac package target" >&2; exit 3
+fi
+node_license="$here/legal/node-v24.22.1/LICENSE"
+test -s "$node_license" || { echo "Pinned Node third-party LICENSE missing" >&2; exit 3; }
+export PATH="$HOME/.cargo/bin:$PATH
 cargo build --manifest-path "$here/Cargo.toml" --release --locked
 cargo_target="${CARGO_TARGET_DIR:-$here/target}"
 app="$here/dist/ChallengerHubNativePreview.app"
@@ -25,6 +43,7 @@ else
   cp "$node_bin" "$app/Contents/Resources/node"
 fi
 chmod 755 "$app/Contents/MacOS/challenger-slint-rust-host" "$app/Contents/Resources/node"
+cp "$node_license" "$app/Contents/Resources/NODE_LICENSE.txt"
 cp "$here/../slint-node-bridge/sidecar.mjs" "$app/Contents/Resources/"
 cp "$here/../slint-node-bridge/live-catalog.mjs" "$app/Contents/Resources/"
 cp "$here/../slint-node-bridge/install-bridge.mjs" "$app/Contents/Resources/"
@@ -45,6 +64,12 @@ cat > "$app/Contents/Info.plist" <<'PLIST'
   </dict>
 </plist>
 PLIST
+if [[ "$("$app/Contents/Resources/node" --version)" != "$required_node_version" ||
+      ! -s "$app/Contents/Resources/NODE_LICENSE.txt" ]]; then
+  echo "Bundled Node version or required LICENSE is invalid" >&2; exit 3
+fi
+node_bundle_sha="$(shasum -a 256 "$app/Contents/Resources/node" | awk '{print $1}')"
+echo "MAC_NATIVE_NODE_BUNDLE_PASS version=$required_node_version arch=$expected_node_arch sha256=$node_bundle_sha license=NODE_LICENSE.txt"
 for bin in "$app/Contents/MacOS/challenger-slint-rust-host" "$app/Contents/Resources/node"; do
   if otool -L "$bin" | grep -E '/opt/homebrew/|/usr/local/lib/|libintl[.]8' ; then
     echo "Nonredistributable dynamic dependency in $bin" >&2; exit 2

@@ -75,6 +75,21 @@ third-party media attribution and any other redistributed dependencies, and
 complete publisher signing/notarization. A generic "powered by" footer alone
 is not assumed sufficient. See https://github.com/slint-ui/slint/blob/master/FAQ.md .
 
+### Pinned Node runtime and redistribution notices
+
+Both standalone native packaging scripts require the exact reviewed security
+release **Node.js v24.22.1 LTS** (including matching host architecture). They
+refuse older/unreviewed system `node` binaries rather than silently bundling
+them. The complete upstream Node.js LICENSE from the immutable `v24.22.1`
+tag is retained verbatim in `legal/node-v24.22.1/LICENSE` and packaged as
+`NODE_LICENSE.txt`. Windows and macOS CI assert both the bundled executable
+version and the notice presence; the package logs a SHA-256 of its Node binary.
+The Preview12 media notices are already bundled separately inside its runtime.
+Any later Node security update must explicitly refresh the pinned version,
+source license and checks together; packaging never upgrades a user's Node
+installation automatically. Public release still requires genuine developer
+signing/notarization, dependency/license audit and OS-specific acceptance.
+
 ## Focus/Orbit native UI — implemented read-only routes
 
 This is a **real native Slint interface**, not an Electron/WebView/CSS wrapper:
