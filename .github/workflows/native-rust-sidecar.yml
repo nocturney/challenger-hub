@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - ".github/workflows/native-rust-sidecar.yml"
+      - ".gitattributes"
       - "tools/ui-bench/slint-rust-host/**"
       - "tools/ui-bench/slint-node-bridge/main.slint"
       - "tools/ui-bench/slint-node-bridge/sidecar.mjs"
