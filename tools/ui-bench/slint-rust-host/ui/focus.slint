@@ -138,8 +138,10 @@ export component AppWindow inherits Window {
     property <color> sheet: root.dark-mode ? #1e2925 : #ffffff;
     property <color> muted-sheet: root.dark-mode ? #24312c : #f3f6f1;
     property <color> strong: root.dark-mode ? #eaf0e8 : #263a2e;
-    property <color> muted: root.dark-mode ? #b0beb4 : #718376;
-    property <color> subtle: root.dark-mode ? #8b9b91 : #899a8f;
+    // Light-mode text colors must remain >= 4.5:1 on canvas, sheet,
+    // muted-sheet and accent-bg backgrounds, including 9-11px labels.
+    property <color> muted: root.dark-mode ? #b0beb4 : #536758;
+    property <color> subtle: root.dark-mode ? #8b9b91 : #5b6e60;
     property <color> line: root.dark-mode ? #3b4941 : #dfe7df;
     property <color> accent: root.dark-mode ? #b7d6b9 : #47765a;
     property <color> accent-bg: root.dark-mode ? #2d4534 : #eaf2e8;
