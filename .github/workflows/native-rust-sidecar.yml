@@ -51,7 +51,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          ./tools/ui-bench/slint-rust-host/package-windows.ps1
+          ./tools/ui-bench/slint-rust-host/package-windows.ps1 -DebugBuild
           & ./tools/ui-bench/slint-rust-host/dist/ChallengerHubNativePreview-Win/challenger-slint-rust-host.exe --check-backend-only
       - name: Linux native Slint GUI smoke in Xvfb
         if: runner.os == 'Linux'
