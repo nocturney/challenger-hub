@@ -1,3 +1,4 @@
+import { TextScale } from "text-scale.slint";
 import { ApprovedGalleryThumb } from "approved-gallery.slint";
 import { IdentityTile } from "identity-card.slint";
 import { QuietPremium } from "quiet-premium.slint";
@@ -82,11 +83,11 @@ export component CatalogProductCard inherits Rectangle {
             dark: root.dark;
             high-contrast: root.high-contrast;
         }
-        Text { text: root.project-name; font-size: 17px; font-weight: 800;
+        Text { text: root.project-name; font-size: (17px) * TextScale.factor; font-weight: 800;
             color: root.dark ? #f3f7f2 : #253a2d; overflow: elide; }
-        Text { text: root.project-maker + "  ·  " + root.project-domain; font-size: 11px;
+        Text { text: root.project-maker + "  ·  " + root.project-domain; font-size: (11px) * TextScale.factor;
             color: root.dark ? #b0beb4 : #536758; overflow: elide; }
-        Text { text: root.project-summary; font-size: 12px;
+        Text { text: root.project-summary; font-size: (12px) * TextScale.factor;
             color: root.dark ? #d1d9cf : #4b5d50;
             height: 39px; wrap: word-wrap; overflow: elide; }
     }
@@ -107,34 +108,34 @@ export component CatalogProductCard inherits Rectangle {
             padding-top: 3px; padding-bottom: 3px; spacing: 8px;
             HorizontalLayout {
                 spacing: 12px;
-                Text { text: root.project-name; font-size: root.compact ? 17px : 19px;
+                Text { text: root.project-name; font-size: (root.compact ? 17px : 19px) * TextScale.factor;
                     font-weight: 800; color: root.dark ? #f3f7f2 : #253a2d;
                     overflow: elide; horizontal-stretch: 1; }
                 Rectangle {
                     width: root.compact ? 112px : 154px; height: 24px;
                     border-radius: 12px;
                     background: root.dark ? #314638 : #eaf2e8;
-                    Text { text: root.project-domain; font-size: 10px;
+                    Text { text: root.project-domain; font-size: (10px) * TextScale.factor;
                         font-weight: 700; color: root.dark ? #c0ddc3 : #47765a;
                         horizontal-alignment: center; vertical-alignment: center;
                         overflow: elide; }
                 }
             }
-            Text { text: "By " + root.project-maker; font-size: 11px;
+            Text { text: "By " + root.project-maker; font-size: (11px) * TextScale.factor;
                 color: root.dark ? #b0beb4 : #536758; overflow: elide; }
-            Text { text: root.project-summary; font-size: 12px;
+            Text { text: root.project-summary; font-size: (12px) * TextScale.factor;
                 color: root.dark ? #d1d9cf : #4b5d50;
                 height: 41px; wrap: word-wrap; overflow: elide; }
             HorizontalLayout {
                 spacing: 10px;
-                Text { text: root.project-platforms; font-size: 10px;
+                Text { text: root.project-platforms; font-size: (10px) * TextScale.factor;
                     color: root.dark ? #b0beb4 : #536758;
                     horizontal-stretch: 1; vertical-alignment: center; overflow: elide; }
                 Rectangle {
                     width: root.compact ? 103px : 127px; height: 30px;
                     border-radius: QuietPremium.control-radius;
                     background: root.dark ? #37533d : #e6f1e6;
-                    Text { text: "View details  ↗"; font-size: 11px; font-weight: 800;
+                    Text { text: "View details  ↗"; font-size: (11px) * TextScale.factor; font-weight: 800;
                         color: root.dark ? #d3e7d1 : #356648;
                         horizontal-alignment: center; vertical-alignment: center; }
                 }

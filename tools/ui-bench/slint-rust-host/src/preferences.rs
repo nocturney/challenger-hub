@@ -11,12 +11,15 @@ pub struct Preferences {
     pub appearance: String,
     pub motion: String,
     pub high_contrast: bool,
+    #[serde(default = "default_text_scale")]
+    pub text_scale: u16,
 }
+fn default_text_scale() -> u16 { 100 }
 
 impl Default for Preferences {
     fn default() -> Self {
         Self { schema: SCHEMA, appearance: "system".into(),
-            motion: "system".into(), high_contrast: false }
+            motion: "system".into(), high_contrast: false, text_scale: 100 }
     }
 }
 
@@ -25,6 +28,7 @@ impl Preferences {
         self.schema == SCHEMA
             && ["system", "light", "dark"].contains(&self.appearance.as_str())
             && ["system", "reduce", "full"].contains(&self.motion.as_str())
+            && [100,125,150].contains(&self.text_scale)
     }
 
     pub fn dark_mode(&self) -> bool {
@@ -134,6 +138,8 @@ mod tests {
         let p = Preferences::default();
         assert!(p.valid());
         assert!(!p.high_contrast);
+        assert_eq!(p.text_scale, 100);
+        assert!(!Preferences { text_scale: 400, ..p.clone() }.valid());
         assert_eq!(p.motion, "system");
         assert_eq!(p.appearance, "system");
         assert!(!Preferences { appearance: "violet".into(), ..p.clone() }.valid());
@@ -145,7 +151,8 @@ mod tests {
         let dir = std::env::temp_dir().join(format!("challenger-prefs-{}", std::process::id()));
         let path = dir.join("preferences.json");
         let expected = Preferences { appearance: "dark".into(),
-            motion: "reduce".into(), high_contrast: true, ..Default::default() };
+            motion: "reduce".into(), high_contrast: true,
+            text_scale: 150, ..Default::default() };
         write(&path, &expected).unwrap();
         assert_eq!(read(&path).unwrap(), expected);
         assert!(expected.dark_mode());
@@ -154,6 +161,8 @@ mod tests {
         assert!(read(&path).is_err());
         fs::write(&path, vec![b'X'; 4100]).unwrap();
         assert!(read(&path).is_err());
+        fs::write(&path, br#"{"schema":1,"appearance":"light","motion":"system","high_contrast":false}"#).unwrap();
+        assert_eq!(read(&path).unwrap().text_scale, 100);
         fs::remove_dir_all(dir).unwrap();
     }
 }

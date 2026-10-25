@@ -1,3 +1,4 @@
+import { TextScale } from "text-scale.slint";
 import { AboutSlint, CheckBox, LineEdit, ListView, ScrollView, Palette } from "std-widgets.slint";
 import { ApprovedGalleryThumb, ApprovedGalleryShot, ApprovedGalleryIcon, ApprovedIconCredit } from "approved-gallery.slint";
 import { IdentityTile, IdentityDossier } from "identity-card.slint";
@@ -86,6 +87,8 @@ component KeyboardAction inherits Rectangle {
 
 
 // Keyboard/screen-reader accessible choice; no click-only faux buttons.
+// Native accessibility: role must be a Slint compile-time constant.
+// Distinguish selected radio preferences from command buttons in the UIA tree.
 component PreferenceChoice inherits Rectangle {
     in property <string> label;
     in property <bool> selected;
@@ -94,21 +97,53 @@ component PreferenceChoice inherits Rectangle {
     callback activated();
     height: 41px;
     border-radius: 9px;
-    border-width: root.selected || root.high-contrast ? 2px : 1px;
-    border-color: root.selected
-        ? (root.dark ? #e8d891 : #345d41)
+    border-width: root.selected || root.high-contrast || pref-focus.has-focus ? 2px : 1px;
+    border-color: pref-focus.has-focus ? (root.dark ? #f5d084 : #245d35)
+        : root.selected ? (root.dark ? #e8d891 : #345d41)
         : (root.dark ? #526456 : #cbdacf);
     background: root.selected ? (root.dark ? #36543e : #e5f1e5)
         : (root.dark ? #26352a : #f7faf6);
     Text {
         text: root.label;
-        font-size: 12px; font-weight: root.selected ? 800 : 650;
+        font-size: (12px) * TextScale.factor;
+        font-weight: root.selected ? 800 : 650;
         color: root.dark ? #f5f9f3 : #263a2e;
         horizontal-alignment: center; vertical-alignment: center;
     }
+    accessible-role: radio-button;
+    accessible-checkable: true;
+    accessible-checked: root.selected;
+    accessible-label: root.label;
+    accessible-action-default => { root.activated(); }
+    forward-focus: pref-focus;
+    pref-touch := TouchArea { mouse-cursor: pointer; clicked => { root.activated(); } }
+    pref-focus := FocusScope {
+        width: 0px; height: 0px;
+        key-pressed(event) => {
+            if (event.text == Key.Return || event.text == Key.Space) {
+                root.activated(); return accept;
+            }
+            return reject;
+        }
+    }
+}
+
+component PreferenceAction inherits Rectangle {
+    in property <string> label;
+    in property <bool> dark;
+    in property <bool> high-contrast;
+    callback activated();
+    height: 41px;
+    border-radius: 9px; border-width: root.high-contrast ? 2px : 1px;
+    border-color: root.dark ? #526456 : #cbdacf;
+    background: root.dark ? #26352a : #f7faf6;
+    Text {
+        text: root.label; font-size: (12px) * TextScale.factor;
+        font-weight: 700; color: root.dark ? #f5f9f3 : #263a2e;
+        horizontal-alignment: center; vertical-alignment: center;
+    }
     KeyboardAction {
-        action-dark: root.dark;
-        action-label: root.label + (root.selected ? ", selected" : "");
+        action-dark: root.dark; action-label: root.label;
         activated => { root.activated(); }
     }
 }
@@ -123,6 +158,7 @@ export component AppWindow inherits Window {
     min-height: 560px;
     background: root.canvas;
     default-font-family: "Arial";
+    default-font-size: 13px * TextScale.factor;
     // Keep native Fluent controls in the same light/dark scheme as the custom UI.
     // This also corrects the previously unreadable dark-mode CheckBox label.
     changed dark-mode => {
@@ -136,6 +172,10 @@ export component AppWindow inherits Window {
     in-out property <string> appearance-choice: "system";
     in-out property <string> motion-choice: "system";
     in-out property <bool> high-contrast: false;
+    in-out property <int> text-scale-percent: 100;
+    changed text-scale-percent => {
+        TextScale.factor = root.text-scale-percent / 100.0;
+    }
     in-out property <string> preferences-section: "appearance";
     in-out property <string> preferences-status: "";
     in-out property <bool> update-checking: false;
@@ -240,6 +280,7 @@ export component AppWindow inherits Window {
     callback change-appearance(string);
     callback change-motion(string);
     callback change-contrast(bool);
+    callback change-text-scale(int);
     callback reset-preferences();
     callback check-native-updates();
     callback open-native-release-page();
@@ -314,13 +355,13 @@ export component AppWindow inherits Window {
                         height: root.compact-layout ? 32px : 20px;
                         text: root.compact-layout ? "CHALLENGER" : "C H A L L E N G E R";
                         color: root.strong;
-                        font-size: root.compact-layout ? 11px : 13px;
+                        font-size: (root.compact-layout ? 11px : 13px) * TextScale.factor;
                         font-weight: 800;
                         vertical-alignment: center;
                     }
                     if !root.compact-layout: Text {
                         height: 16px; text: "Independent tools, discovered.";
-                        color: root.subtle; font-size: 10px; vertical-alignment: center;
+                        color: root.subtle; font-size: (10px) * TextScale.factor; vertical-alignment: center;
                     }
                 }
                 Rectangle { horizontal-stretch: 1; background: transparent; }
@@ -338,8 +379,8 @@ export component AppWindow inherits Window {
                         easing: ease-out;
                         enabled: !root.reduced-motion;
                     }
-                    Text { text: "Discover"; color: root.page == "home" ? root.accent : root.muted;
-                           font-size: 12px; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
+                    Text { text: root.compact-layout && root.text-scale-percent >= 125 ? "Home" : "Discover"; color: root.page == "home" ? root.accent : root.muted;
+                           font-size: (12px) * TextScale.factor; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
                     discover-nav := KeyboardAction { action-dark: root.dark-mode; action-label: "Discover software"; activated => { root.navigate("home"); } }
                 }
                 Rectangle {
@@ -357,8 +398,8 @@ export component AppWindow inherits Window {
                         easing: ease-out;
                         enabled: !root.reduced-motion;
                     }
-                    Text { text: "Browse"; color: root.page == "results" ? root.accent : root.muted;
-                        font-size: 12px; font-weight: 700;
+                    Text { text: root.compact-layout && root.text-scale-percent >= 125 ? "Find" : "Browse"; color: root.page == "results" ? root.accent : root.muted;
+                        font-size: (12px) * TextScale.factor; font-weight: 700;
                         horizontal-alignment: center; vertical-alignment: center; }
                     browse-nav := KeyboardAction { action-dark: root.dark-mode; action-label: "Browse full software catalog";
                         activated => { root.open-discipline("all"); } }
@@ -378,8 +419,8 @@ export component AppWindow inherits Window {
                         easing: ease-out;
                         enabled: !root.reduced-motion;
                     }
-                    Text { text: root.compact-layout ? "My apps" : "My software"; color: root.page == "library" || root.page == "device" ? root.accent : root.muted;
-                           font-size: 12px; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
+                    Text { text: root.compact-layout ? (root.text-scale-percent >= 125 ? "Apps" : "My apps") : "My software"; color: root.page == "library" || root.page == "device" ? root.accent : root.muted;
+                           font-size: (12px) * TextScale.factor; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
                     library-nav := KeyboardAction { action-dark: root.dark-mode; action-label: "My software"; activated => { root.navigate("library"); } }
                 }
                 Rectangle {
@@ -396,8 +437,8 @@ export component AppWindow inherits Window {
                         easing: ease-out;
                         enabled: !root.reduced-motion;
                     }
-                    Text { text: "Activity"; color: root.page == "activity" ? root.accent : root.muted;
-                           font-size: 12px; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
+                    Text { text: root.compact-layout && root.text-scale-percent >= 125 ? "Log" : "Activity"; color: root.page == "activity" ? root.accent : root.muted;
+                           font-size: (12px) * TextScale.factor; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
                     activity-nav := KeyboardAction { action-dark: root.dark-mode; action-label: "Activity"; activated => { root.navigate("activity"); } }
                 }
                 Rectangle {
@@ -407,8 +448,8 @@ export component AppWindow inherits Window {
                     border-color: preferences-popup.is-open ? root.accent : root.line;
                     border-width: 1px;
                     Text {
-                        text: root.compact-layout ? "Settings" : "Preferences";
-                        color: root.strong; font-size: 11px; font-weight: 750;
+                        text: root.compact-layout ? (root.text-scale-percent >= 125 ? "Prefs" : "Settings") : "Preferences";
+                        color: root.strong; font-size: (11px) * TextScale.factor; font-weight: 750;
                         horizontal-alignment: center; vertical-alignment: center;
                     }
                     KeyboardAction {
@@ -419,8 +460,9 @@ export component AppWindow inherits Window {
                 }
                 Rectangle {
                     width: root.compact-layout ? 66px : 79px; border-radius: 8px; background: root.accent-bg;
-                    Text { text: root.refreshing ? "Reading..." : "Refresh";
-                        font-size: 11px; font-weight: 700; color: root.accent;
+                    Text { text: root.refreshing ? (root.compact-layout && root.text-scale-percent >= 125 ? "..." : "Reading...")
+                            : (root.compact-layout && root.text-scale-percent >= 125 ? "Sync" : "Refresh");
+                        font-size: (11px) * TextScale.factor; font-weight: 700; color: root.accent;
                         horizontal-alignment: center; vertical-alignment: center; }
                     KeyboardAction { action-dark: root.dark-mode; action-label: "Refresh catalog"; action-enabled: !root.refreshing; activated => { root.refresh-requested(); } }
                 }
@@ -436,16 +478,16 @@ export component AppWindow inherits Window {
                 padding-top: 40px;
                 padding-bottom: 34px;
                 spacing: 17px;
-                Text { text: "DISCOVER  /  INDEPENDENT SOFTWARE"; font-size: 10px; color: root.accent; font-weight: 800; }
-                Text { text: "Find software worth keeping."; font-size: root.compact-layout ? 33px : 43px;
+                Text { text: "DISCOVER  /  INDEPENDENT SOFTWARE"; font-size: (10px) * TextScale.factor; color: root.accent; font-weight: 800; }
+                Text { text: "Find software worth keeping."; font-size: (root.compact-layout ? 33px : 43px) * TextScale.factor;
                     font-weight: 800; color: root.strong; }
                 Text { text: "Find new tools by what you want to make, manage or explore. No sponsored rankings.";
-                    font-size: 13px; color: root.muted; wrap: word-wrap; }
+                    font-size: (13px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
                 // One native input, not a bordered LineEdit nested in another bordered box.
                 // Keep it in the hero flow with a separate, aligned search action.
                 HorizontalLayout {
                     spacing: 11px;
-                    LineEdit {
+                    LineEdit { font-size: 13px * TextScale.factor;
                         horizontal-stretch: 1; height: 54px;
                         text: root.query;
                         placeholder-text: "Search software, categories or capabilities…";
@@ -458,7 +500,7 @@ export component AppWindow inherits Window {
                         height: 54px; border-radius: QuietPremium.control-radius;
                         background: root.strong;
                         Text {
-                            text: "Find tools  ↗"; color: root.sheet; font-size: 12px;
+                            text: "Find tools  ↗"; color: root.sheet; font-size: (12px) * TextScale.factor;
                             font-weight: 700; horizontal-alignment: center;
                             vertical-alignment: center;
                         }
@@ -469,7 +511,7 @@ export component AppWindow inherits Window {
                     }
                 }
                 Text { text: "INSIDE REAL SOFTWARE  /  ORIGINAL UI";
-                    color: root.accent; font-size: 10px; font-weight: 800; }
+                    color: root.accent; font-size: (10px) * TextScale.factor; font-weight: 800; }
                 HorizontalLayout {
                     spacing: 14px;
                     Rectangle {
@@ -483,9 +525,9 @@ export component AppWindow inherits Window {
                             HorizontalLayout {
                                 spacing: 8px;
                                 Image { source: @image-url("dune3d.svg"); width: 23px; height: 23px; image-fit: contain; }
-                                Text { text: "Dune 3D"; font-size: 13px; font-weight: 700; color: root.strong; }
+                                Text { text: "Dune 3D"; font-size: (13px) * TextScale.factor; font-weight: 700; color: root.strong; }
                                 Rectangle { horizontal-stretch: 1; background: transparent; }
-                                Text { text: "SOURCE VERIFIED"; font-size: 9px; font-weight: 700; color: root.accent; }
+                                Text { text: "SOURCE VERIFIED"; font-size: (9px) * TextScale.factor; font-weight: 700; color: root.accent; }
                             }
                             Image { source: @image-url("dune3d.png"); vertical-stretch: 1; image-fit: contain; }
                         }
@@ -502,9 +544,9 @@ export component AppWindow inherits Window {
                             HorizontalLayout {
                                 spacing: 8px;
                                 Image { source: @image-url("material-maker-icon.png"); width: 23px; height: 23px; image-fit: contain; }
-                                Text { text: "Material Maker"; font-size: 13px; font-weight: 700; color: root.strong; }
+                                Text { text: "Material Maker"; font-size: (13px) * TextScale.factor; font-weight: 700; color: root.strong; }
                                 Rectangle { horizontal-stretch: 1; background: transparent; }
-                                Text { text: "SOURCE VERIFIED"; font-size: 9px; font-weight: 700; color: root.accent; }
+                                Text { text: "SOURCE VERIFIED"; font-size: (9px) * TextScale.factor; font-weight: 700; color: root.accent; }
                             }
                             Image { source: @image-url("material-maker.png"); vertical-stretch: 1; image-fit: contain; }
                         }
@@ -518,9 +560,9 @@ export component AppWindow inherits Window {
                             HorizontalLayout {
                                 spacing: 8px;
                                 Image { source: @image-url("craft-pdfcraft-icon.png"); width: 23px; height: 23px; image-fit: contain; }
-                                Text { text: "PdfCraft"; font-size: 13px; font-weight: 700; color: root.strong; }
+                                Text { text: "PdfCraft"; font-size: (13px) * TextScale.factor; font-weight: 700; color: root.strong; }
                                 Rectangle { horizontal-stretch: 1; background: transparent; }
-                                Text { text: "SOURCE VERIFIED"; font-size: 9px; font-weight: 700; color: root.accent; }
+                                Text { text: "SOURCE VERIFIED"; font-size: (9px) * TextScale.factor; font-weight: 700; color: root.accent; }
                             }
                             Image { source: @image-url("screenshots/pdfcraft/viewer.png"); vertical-stretch: 1; image-fit: contain; }
                         }
@@ -530,11 +572,11 @@ export component AppWindow inherits Window {
                 Rectangle { height: 9px; background: transparent; }
                 HorizontalLayout {
                     spacing: 8px;
-                    Text { text: "Explore by discipline"; font-size: 11px; font-weight: 800; color: root.strong; }
+                    Text { text: "Explore by discipline"; font-size: (11px) * TextScale.factor; font-weight: 800; color: root.strong; }
                     Rectangle { horizontal-stretch: 1; background: transparent; }
                     Rectangle {
                         width: 147px; height: 35px; background: root.accent-bg; border-radius: 8px;
-                        Text { text: "Browse all " + root.total + " →"; font-size: 11px;
+                        Text { text: "Browse all " + root.total + " →"; font-size: (11px) * TextScale.factor;
                             font-weight: 700; color: root.accent;
                             horizontal-alignment: center; vertical-alignment: center; }
                         KeyboardAction { action-dark: root.dark-mode; action-label: "Browse all software";
@@ -553,13 +595,13 @@ export component AppWindow inherits Window {
                         border-radius: 11px;
                         VerticalLayout {
                             padding: 14px; spacing: 6px;
-                            Text { text: group.label; color: root.strong; font-size: 14px;
+                            Text { text: group.label; color: root.strong; font-size: (14px) * TextScale.factor;
                                 font-weight: 750; overflow: elide; }
                             HorizontalLayout {
                                 Text { text: group.count + " projects"; color: root.muted;
-                                    font-size: 11px; horizontal-stretch: 1; }
+                                    font-size: (11px) * TextScale.factor; horizontal-stretch: 1; }
                                 Text { text: "Explore →"; color: root.accent; font-weight: 700;
-                                    font-size: 11px; }
+                                    font-size: (11px) * TextScale.factor; }
                             }
                         }
                         KeyboardAction { action-dark: root.dark-mode;
@@ -575,13 +617,13 @@ export component AppWindow inherits Window {
                         border-radius: 11px;
                         VerticalLayout {
                             padding: 14px; spacing: 6px;
-                            Text { text: group.label; color: root.strong; font-size: 14px;
+                            Text { text: group.label; color: root.strong; font-size: (14px) * TextScale.factor;
                                 font-weight: 750; overflow: elide; }
                             HorizontalLayout {
                                 Text { text: group.count + " projects"; color: root.muted;
-                                    font-size: 11px; horizontal-stretch: 1; }
+                                    font-size: (11px) * TextScale.factor; horizontal-stretch: 1; }
                                 Text { text: "Explore →"; color: root.accent; font-weight: 700;
-                                    font-size: 11px; }
+                                    font-size: (11px) * TextScale.factor; }
                             }
                         }
                         KeyboardAction { action-dark: root.dark-mode;
@@ -590,7 +632,7 @@ export component AppWindow inherits Window {
                     }
                 }
                 Text { text: "Research candidates remain visible and labeled. Source presence does not authorize installation.";
-                    font-size: 10px; color: root.subtle; }
+                    font-size: (10px) * TextScale.factor; color: root.subtle; }
             }
         }
 
@@ -603,7 +645,7 @@ export component AppWindow inherits Window {
                 spacing: 9px;
                 Rectangle {
                     width: 120px; height: 35px; border-radius: 7px; background: root.accent-bg;
-                    Text { text: "← Discover"; font-size: 11px; font-weight: 700; color: root.accent;
+                    Text { text: "← Discover"; font-size: (11px) * TextScale.factor; font-weight: 700; color: root.accent;
                         horizontal-alignment: center; vertical-alignment: center; }
                     KeyboardAction { action-dark: root.dark-mode; action-label: "Return to Discover";
                         activated => { root.navigate("home"); } }
@@ -611,39 +653,39 @@ export component AppWindow inherits Window {
                 Rectangle { horizontal-stretch: 1; background: transparent; }
                 Rectangle {
                     width: 64px; height: 35px; border-radius: 7px; background: root.can-back ? root.accent-bg : root.muted-sheet;
-                    Text { text: "← Back"; font-size: 11px; color: root.can-back ? root.accent : root.subtle;
+                    Text { text: "← Back"; font-size: (11px) * TextScale.factor; color: root.can-back ? root.accent : root.subtle;
                         horizontal-alignment: center; vertical-alignment: center; }
                     KeyboardAction { action-dark: root.dark-mode; action-label: "Go back";
                         action-enabled: root.can-back; activated => { root.go-back(); } }
                 }
                 Rectangle {
                     width: 72px; height: 35px; border-radius: 7px; background: root.can-forward ? root.accent-bg : root.muted-sheet;
-                    Text { text: "Next →"; font-size: 11px; color: root.can-forward ? root.accent : root.subtle;
+                    Text { text: "Next →"; font-size: (11px) * TextScale.factor; color: root.can-forward ? root.accent : root.subtle;
                         horizontal-alignment: center; vertical-alignment: center; }
                     KeyboardAction { action-dark: root.dark-mode; action-label: "Go forward";
                         action-enabled: root.can-forward; activated => { root.go-forward(); } }
                 }
             }
             Text { text: root.selected-domain == "all" ? "Discover software" : root.selected-domain-label;
-                color: root.strong; font-size: root.compact-layout ? 27px : 32px; font-weight: 800; }
+                color: root.strong; font-size: (root.compact-layout ? 27px : 32px) * TextScale.factor; font-weight: 800; }
             Text { text: root.selected-domain == "all" ?
                     "Explore real projects and find the tools that fit your workflow." :
                     "Browse source-linked projects in this field. Open any card to learn more.";
-                color: root.muted; font-size: 12px; }
+                color: root.muted; font-size: (12px) * TextScale.factor; }
             // Search is a single aligned field; label and live result count sit above it.
             VerticalLayout {
                 spacing: 7px;
                 HorizontalLayout {
                     height: 19px;
-                    Text { text: "SEARCH SOFTWARE"; font-size: 10px;
+                    Text { text: "SEARCH SOFTWARE"; font-size: (10px) * TextScale.factor;
                         font-weight: 800; color: root.accent;
                         vertical-alignment: center; }
                     Rectangle { horizontal-stretch: 1; background: transparent; }
-                    Text { text: root.matching + " results"; font-size: 12px;
+                    Text { text: root.matching + " results"; font-size: (12px) * TextScale.factor;
                         font-weight: 700; color: root.muted;
                         vertical-alignment: center; }
                 }
-                LineEdit {
+                LineEdit { font-size: 13px * TextScale.factor;
                     horizontal-stretch: 1; height: 52px; text: root.query;
                     placeholder-text: "Search software, tasks or categories...";
                     accessible-label: "Search software catalog";
@@ -654,10 +696,10 @@ export component AppWindow inherits Window {
             HorizontalLayout {
                 height: 41px; spacing: 9px;
                 CheckBox { text: "Release review available (" + root.review-route-count + ")";
-                    checked: root.review-only; font-size: 11px; font-weight: 650;
+                    checked: root.review-only; font-size: (11px) * TextScale.factor; font-weight: 650;
                     toggled => { root.toggle-review-only(); } }
                 Rectangle { horizontal-stretch: 1; background: transparent; }
-                Text { text: "SOFTWARE CARDS"; font-size: 10px; font-weight: 800;
+                Text { text: "SOFTWARE CARDS"; font-size: (10px) * TextScale.factor; font-weight: 800;
                     color: root.subtle; vertical-alignment: center; }
             }
             if root.matching == 0: Rectangle {
@@ -665,12 +707,12 @@ export component AppWindow inherits Window {
                 border-width: 1px; border-radius: 10px;
                 VerticalLayout {
                     padding: 22px; spacing: 10px;
-                    Text { text: "Nothing matches this search yet"; font-size: 17px;
+                    Text { text: "Nothing matches this search yet"; font-size: (17px) * TextScale.factor;
                         font-weight: 800; color: root.strong; }
                     Text { text: root.review-only ?
                         "Turn off the release filter to see every catalog project." :
                         "Try another phrase or browse a different discipline.";
-                        font-size: 12px; color: root.muted; wrap: word-wrap; }
+                        font-size: (12px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
                 }
             }
             // Stable native product cards, one per source-backed result.
@@ -716,11 +758,11 @@ export component AppWindow inherits Window {
             HorizontalLayout {
                 spacing: 12px;
                 Text { text: "Showing " + root.showing + " of " + root.matching + " projects";
-                    font-size: 11px; color: root.subtle; vertical-alignment: center; }
+                    font-size: (11px) * TextScale.factor; color: root.subtle; vertical-alignment: center; }
                 Rectangle { horizontal-stretch: 1; background: transparent; }
                 if root.has-more: Rectangle {
                     width: 150px; height: 39px; background: root.accent-bg; border-radius: 8px;
-                    Text { text: "Load 30 more ↓"; font-size: 11px; font-weight: 700; color: root.accent;
+                    Text { text: "Load 30 more ↓"; font-size: (11px) * TextScale.factor; font-weight: 700; color: root.accent;
                         horizontal-alignment: center; vertical-alignment: center; }
                     KeyboardAction { action-dark: root.dark-mode; action-label: "Show 30 more projects";
                         activated => { root.load-more(); } }
@@ -739,14 +781,14 @@ export component AppWindow inherits Window {
                     spacing: 12px;
                     Rectangle {
                         width: 138px; height: 35px; background: root.accent-bg; border-radius: 7px;
-                        Text { text: "← Back to results"; font-size: 11px; color: root.accent;
+                        Text { text: "← Back to results"; font-size: (11px) * TextScale.factor; color: root.accent;
                             horizontal-alignment: center; vertical-alignment: center; }
                         KeyboardAction { action-dark: root.dark-mode; action-label: "Back to results"; activated => { root.go-back(); } }
                     }
                     Rectangle { horizontal-stretch: 1; background: transparent; }
                     Rectangle {
                         width: 80px; height: 35px; background: root.can-forward ? root.accent-bg : root.muted-sheet; border-radius: 7px;
-                        Text { text: "Forward →"; font-size: 11px; color: root.can-forward ? root.accent : root.subtle;
+                        Text { text: "Forward →"; font-size: (11px) * TextScale.factor; color: root.can-forward ? root.accent : root.subtle;
                             horizontal-alignment: center; vertical-alignment: center; }
                         KeyboardAction { action-dark: root.dark-mode; action-label: "Go forward"; action-enabled: root.can-forward; activated => { root.go-forward(); } }
                     }
@@ -754,11 +796,11 @@ export component AppWindow inherits Window {
                 HorizontalLayout {
                     spacing: 12px;
                     Text { text: root.detail-domain + "  /  SOFTWARE"; color: root.accent;
-                        font-size: 11px; font-weight: 800; vertical-alignment: center;
+                        font-size: (11px) * TextScale.factor; font-weight: 800; vertical-alignment: center;
                         horizontal-stretch: 1; }
                     Rectangle {
                         width: 166px; height: 39px; background: root.strong; border-radius: 8px;
-                        Text { text: "Visit project source ↗"; color: root.sheet; font-size: 11px;
+                        Text { text: "Visit project source ↗"; color: root.sheet; font-size: (11px) * TextScale.factor;
                             font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
                         KeyboardAction { action-dark: root.dark-mode; action-label: "Visit verified project source";
                             action-enabled: root.detail-source != ""; activated => { root.open-source(); } }
@@ -835,10 +877,10 @@ export component AppWindow inherits Window {
                     if root.detail-independent-icon: ApprovedGalleryIcon {
                         media: root.detail-media; width: 58px; height: 58px;
                     }
-                    if root.detail-visual-mode == "official": Text { text: root.detail-name; font-size: root.compact-layout ? 31px : 43px;
+                    if root.detail-visual-mode == "official": Text { text: root.detail-name; font-size: (root.compact-layout ? 31px : 43px) * TextScale.factor;
                         color: root.strong; font-weight: 800; }
                 }
-                if root.detail-visual-mode == "official": Text { text: root.detail-summary; font-size: 14px; color: root.muted; wrap: word-wrap; }
+                if root.detail-visual-mode == "official": Text { text: root.detail-summary; font-size: (14px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
                 if root.detail-has-icon: ApprovedIconCredit {
                     media: root.detail-media; caption-color: root.subtle; height: 16px;
                 }
@@ -872,13 +914,13 @@ export component AppWindow inherits Window {
                             VerticalLayout {
                                 padding: 13px; spacing: 8px;
                                 Text { text: "REAL INTERFACE  /  CHECKSUM-VERIFIED SOURCE";
-                                    font-size: 10px; font-weight: 800; color: root.accent; }
+                                    font-size: (10px) * TextScale.factor; font-weight: 800; color: root.accent; }
                                 HorizontalLayout {
                                     spacing: 10px;
                                     Rectangle {
                                         width: 84px; height: 31px; border-radius: 6px;
                                         background: root.detail-gallery-index > 0 ? root.accent-bg : root.muted-sheet;
-                                        Text { text: "← Previous"; font-size: 10px; font-weight: 700;
+                                        Text { text: "← Previous"; font-size: (10px) * TextScale.factor; font-weight: 700;
                                             color: root.detail-gallery-index > 0 ? root.accent : root.subtle;
                                             horizontal-alignment: center; vertical-alignment: center; }
                                         KeyboardAction { action-dark: root.dark-mode; action-enabled: root.detail-gallery-index > 0;
@@ -887,12 +929,12 @@ export component AppWindow inherits Window {
                                     }
                                     Rectangle { horizontal-stretch: 1; background: transparent; }
                                     Text { text: (root.detail-gallery-index + 1) + " / " + root.detail-gallery-count;
-                                        font-size: 11px; color: root.muted; vertical-alignment: center; }
+                                        font-size: (11px) * TextScale.factor; color: root.muted; vertical-alignment: center; }
                                     Rectangle { horizontal-stretch: 1; background: transparent; }
                                     Rectangle {
                                         width: 90px; height: 31px; border-radius: 6px;
                                         background: root.accent-bg;
-                                        Text { text: "View source ↗"; font-size: 10px; font-weight: 700; color: root.accent;
+                                        Text { text: "View source ↗"; font-size: (10px) * TextScale.factor; font-weight: 700; color: root.accent;
                                             horizontal-alignment: center; vertical-alignment: center; }
                                         KeyboardAction { action-dark: root.dark-mode; action-label: "Open exact screenshot source on GitHub";
                                             activated => { root.open-media-source(root.detail-gallery-index); } }
@@ -900,7 +942,7 @@ export component AppWindow inherits Window {
                                     Rectangle {
                                         width: 62px; height: 31px; border-radius: 6px;
                                         background: root.detail-gallery-index + 1 < root.detail-gallery-count ? root.accent-bg : root.muted-sheet;
-                                        Text { text: "Next →"; font-size: 10px; font-weight: 700;
+                                        Text { text: "Next →"; font-size: (10px) * TextScale.factor; font-weight: 700;
                                             color: root.detail-gallery-index + 1 < root.detail-gallery-count ? root.accent : root.subtle;
                                             horizontal-alignment: center; vertical-alignment: center; }
                                         KeyboardAction { action-dark: root.dark-mode;
@@ -923,16 +965,16 @@ export component AppWindow inherits Window {
                         border-color: root.line; border-width: 1px; border-radius: 11px;
                         VerticalLayout {
                             padding: 19px; spacing: 12px;
-                            Text { text: "AT A GLANCE"; font-size: 10px; font-weight: 800;
+                            Text { text: "AT A GLANCE"; font-size: (10px) * TextScale.factor; font-weight: 800;
                                 color: root.accent; }
-                            Text { text: "CREATED BY"; font-size: 10px; font-weight: 750; color: root.subtle; }
-                            Text { text: root.detail-maker; font-size: 13px; font-weight: 750;
+                            Text { text: "CREATED BY"; font-size: (10px) * TextScale.factor; font-weight: 750; color: root.subtle; }
+                            Text { text: root.detail-maker; font-size: (13px) * TextScale.factor; font-weight: 750;
                                 color: root.strong; overflow: elide; }
-                            Text { text: "PLATFORMS"; font-size: 10px; font-weight: 750; color: root.subtle; }
-                            Text { text: root.detail-platforms; font-size: 12px; color: root.strong;
+                            Text { text: "PLATFORMS"; font-size: (10px) * TextScale.factor; font-weight: 750; color: root.subtle; }
+                            Text { text: root.detail-platforms; font-size: (12px) * TextScale.factor; color: root.strong;
                                 height: 34px; wrap: word-wrap; overflow: elide; }
-                            Text { text: "SOURCE LICENSE"; font-size: 10px; font-weight: 750; color: root.subtle; }
-                            Text { text: root.detail-license; font-size: 12px; color: root.strong; overflow: elide; }
+                            Text { text: "SOURCE LICENSE"; font-size: (10px) * TextScale.factor; font-weight: 750; color: root.subtle; }
+                            Text { text: root.detail-license; font-size: (12px) * TextScale.factor; color: root.strong; overflow: elide; }
                         }
                     }
                 }
@@ -941,9 +983,9 @@ export component AppWindow inherits Window {
                     border-width: 1px; border-radius: 11px;
                     VerticalLayout {
                         padding: 17px; spacing: 9px;
-                        Text { text: "EXPLORE AS AN ALTERNATIVE TO"; font-size: 10px;
+                        Text { text: "EXPLORE AS AN ALTERNATIVE TO"; font-size: (10px) * TextScale.factor;
                             font-weight: 800; color: root.accent; }
-                        Text { text: root.detail-challenges; font-size: 13px;
+                        Text { text: root.detail-challenges; font-size: (13px) * TextScale.factor;
                             color: root.strong; wrap: word-wrap; }
                     }
                 }
@@ -955,9 +997,9 @@ export component AppWindow inherits Window {
                     VerticalLayout {
                         padding: 18px; spacing: 9px;
                         Text { text: "INSTALL VERIFIED RELEASE  /  EXPLICIT APPROVAL";
-                            color: root.accent; font-size: 10px; font-weight: 800; }
+                            color: root.accent; font-size: (10px) * TextScale.factor; font-weight: 800; }
                         Text { text: "Only approved GitHub assets with published SHA-256. No name-based matching, no unattended installs.";
-                            color: root.muted; font-size: 11px; wrap: word-wrap; }
+                            color: root.muted; font-size: (11px) * TextScale.factor; wrap: word-wrap; }
                         HorizontalLayout {
                             spacing: 10px;
                             Rectangle {
@@ -974,7 +1016,7 @@ export component AppWindow inherits Window {
                                 forward-focus: review-focus;
                                 Text { text: root.install-busy ? "Working…" : "Review installer";
                                     color: root.install-busy ? root.muted : root.sheet;
-                                    font-size: 11px; font-weight: 700;
+                                    font-size: (11px) * TextScale.factor; font-weight: 700;
                                     horizontal-alignment: center; vertical-alignment: center; }
                                 TouchArea { enabled: !root.install-busy; clicked => { root.review-install(); } }
                                 review-focus := FocusScope {
@@ -990,12 +1032,12 @@ export component AppWindow inherits Window {
                             }
                             Text { text: root.install-ready ? "Reviewed official release — not yet downloaded" :
                                 "Review is read-only: checks upstream release, adapter, asset and digest.";
-                                font-size: 11px; color: root.muted; wrap: word-wrap; vertical-alignment: center; }
+                                font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; vertical-alignment: center; }
                         }
                         if root.install-stage != "": Text {
                             text: "CURRENT STEP  /  " + root.install-stage
                               + (root.install-percent >= 0 ? " · Download " + root.install-percent + "%" : "");
-                            font-size: 10px; font-weight: 800; color: root.accent;
+                            font-size: (10px) * TextScale.factor; font-weight: 800; color: root.accent;
                         }
                         if root.install-busy && (root.install-cancel-allowed || root.install-cancel-requested): Rectangle {
                             width: 245px; height: 34px; border-radius: 7px;
@@ -1012,7 +1054,7 @@ export component AppWindow inherits Window {
                             }
                             forward-focus: cancel-focus;
                             Text { text: root.install-cancel-requested ? "Cancellation requested" : "Request safe cancellation";
-                                font-size: 11px; font-weight: 700; color: root.strong;
+                                font-size: (11px) * TextScale.factor; font-weight: 700; color: root.strong;
                                 horizontal-alignment: center; vertical-alignment: center; }
                             TouchArea { enabled: root.install-cancel-allowed && !root.install-cancel-requested;
                                 clicked => { root.cancel-install(); } }
@@ -1028,15 +1070,15 @@ export component AppWindow inherits Window {
                                 }
                             }
                         }
-                        Text { text: root.install-message; font-size: 11px; color: root.strong; wrap: word-wrap; }
+                        Text { text: root.install-message; font-size: (11px) * TextScale.factor; color: root.strong; wrap: word-wrap; }
                         if root.install-ready: VerticalLayout {
                             spacing: 5px;
                             Text { text: root.install-version + "  ·  " + root.install-asset;
-                                font-size: 12px; font-weight: 700; color: root.strong; }
+                                font-size: (12px) * TextScale.factor; font-weight: 700; color: root.strong; }
                             Text { text: "GitHub SHA-256: " + root.install-hash;
-                                font-size: 10px; color: root.muted; overflow: elide; }
+                                font-size: (10px) * TextScale.factor; color: root.muted; overflow: elide; }
                             Text { text: "Install destination: " + root.install-destination;
-                                font-size: 10px; color: root.muted; overflow: elide; }
+                                font-size: (10px) * TextScale.factor; color: root.muted; overflow: elide; }
                             HorizontalLayout {
                                 spacing: 12px;
                                 Rectangle {
@@ -1057,7 +1099,7 @@ export component AppWindow inherits Window {
                                     forward-focus: approve-focus;
                                     Text { text: root.install-approved ? "☑ I approve this exact release" :
                                         "☐ I approve this exact release";
-                                        font-size: 11px; font-weight: 700; color: root.strong;
+                                        font-size: (11px) * TextScale.factor; font-weight: 700; color: root.strong;
                                         horizontal-alignment: center; vertical-alignment: center; }
                                     TouchArea {
                                         enabled: !root.install-busy;
@@ -1090,7 +1132,7 @@ export component AppWindow inherits Window {
                                     }
                                     forward-focus: install-focus;
                                     Text { text: root.install-busy ? "Installing…" : "Install verified release";
-                                        font-size: 11px; font-weight: 700;
+                                        font-size: (11px) * TextScale.factor; font-weight: 700;
                                         color: root.install-approved && !root.install-busy ?
                                             root.sheet : root.subtle;
                                         horizontal-alignment: center; vertical-alignment: center; }
@@ -1128,11 +1170,11 @@ export component AppWindow inherits Window {
                     }
                     HorizontalLayout {
                         padding-left: 15px; padding-right: 14px;
-                        Text { text: "Source, version and verification details"; font-size: 12px;
+                        Text { text: "Source, version and verification details"; font-size: (12px) * TextScale.factor;
                             font-weight: 700; color: root.strong; horizontal-stretch: 1;
                             vertical-alignment: center; }
                         Text { text: root.detail-technical-open ? "Hide ↑" : "Details ↓";
-                            font-size: 11px; color: root.accent; vertical-alignment: center; }
+                            font-size: (11px) * TextScale.factor; color: root.accent; vertical-alignment: center; }
                     }
                     KeyboardAction { action-dark: root.dark-mode;
                         action-label: root.detail-technical-open ?
@@ -1145,18 +1187,18 @@ export component AppWindow inherits Window {
                     VerticalLayout {
                         padding: 19px; spacing: 10px;
                         Text { text: "SOURCE STATUS  /  " + root.detail-status;
-                            font-size: 12px; color: root.strong; font-weight: 750;
+                            font-size: (12px) * TextScale.factor; color: root.strong; font-weight: 750;
                             wrap: word-wrap; }
-                        Text { text: root.detail-evidence; color: root.muted; font-size: 11px; }
+                        Text { text: root.detail-evidence; color: root.muted; font-size: (11px) * TextScale.factor; }
                         Text { text: "Creator: " + root.detail-maker + "   ·   Category: " + root.detail-category;
-                            font-size: 11px; color: root.muted; wrap: word-wrap; }
+                            font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
                         Text { text: "Platforms: " + root.detail-platforms + "   ·   License: " + root.detail-license;
-                            font-size: 11px; color: root.muted; wrap: word-wrap; }
+                            font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
                         Text { text: "Source-reported release: " + root.detail-release;
-                            font-size: 11px; color: root.muted; overflow: elide; }
-                        Text { text: root.detail-source; font-size: 10px; color: root.subtle; overflow: elide; }
+                            font-size: (11px) * TextScale.factor; color: root.muted; overflow: elide; }
+                        Text { text: root.detail-source; font-size: (10px) * TextScale.factor; color: root.subtle; overflow: elide; }
                         Text { text: "Source listing alone does not authorize installation or image redistribution.";
-                            font-size: 10px; color: root.subtle; }
+                            font-size: (10px) * TextScale.factor; color: root.subtle; }
                     }
                 }
 
@@ -1168,20 +1210,20 @@ export component AppWindow inherits Window {
             padding-left: root.compact-layout ? 25px : 52px;
             padding-right: root.compact-layout ? 25px : 52px;
             padding-top: 27px; padding-bottom: 18px; spacing: 14px;
-            Text { text: "MY SOFTWARE  /  SUPPORTED APPS"; font-size: 10px;
+            Text { text: "MY SOFTWARE  /  SUPPORTED APPS"; font-size: (10px) * TextScale.factor;
                 font-weight: 800; color: root.accent; }
             HorizontalLayout {
                 spacing: 15px;
                 VerticalLayout {
                     horizontal-stretch: 1; spacing: 7px;
-                    Text { text: "Software on this device."; font-size: root.compact-layout ? 27px : 33px;
+                    Text { text: "Software on this device."; font-size: (root.compact-layout ? 27px : 33px) * TextScale.factor;
                         font-weight: 800; color: root.strong; }
                     Text { text: "Supported tools and their latest local signals.";
-                        font-size: 12px; color: root.muted; }
+                        font-size: (12px) * TextScale.factor; color: root.muted; }
                 }
                 Rectangle {
                     width: 185px; height: 42px; background: root.strong; border-radius: 9px;
-                    Text { text: "Inspect local apps →"; font-size: 12px; font-weight: 700;
+                    Text { text: "Inspect local apps →"; font-size: (12px) * TextScale.factor; font-weight: 700;
                         color: root.sheet; horizontal-alignment: center; vertical-alignment: center; }
                     KeyboardAction { action-dark: root.dark-mode;
                         action-label: "Inspect OS app registrations"; activated => { root.navigate("device"); } }
@@ -1193,32 +1235,32 @@ export component AppWindow inherits Window {
                     padding-left: 21px; padding-right: 21px; spacing: 20px;
                     VerticalLayout {
                         horizontal-stretch: 1; spacing: 5px;
-                        Text { text: "SUPPORTED TOOLS"; font-size: 10px; font-weight: 800; color: root.accent; }
-                        Text { text: root.managed-assessed; font-size: 21px; font-weight: 800; color: root.strong; }
+                        Text { text: "SUPPORTED TOOLS"; font-size: (10px) * TextScale.factor; font-weight: 800; color: root.accent; }
+                        Text { text: root.managed-assessed; font-size: (21px) * TextScale.factor; font-weight: 800; color: root.strong; }
                     }
                     VerticalLayout {
                         horizontal-stretch: 1; spacing: 5px;
-                        Text { text: "VERSION SIGNALS"; font-size: 10px; font-weight: 800; color: root.accent; }
+                        Text { text: "VERSION SIGNALS"; font-size: (10px) * TextScale.factor; font-weight: 800; color: root.accent; }
                         Text { text: root.inventory-status == "assessed" ? root.managed-detected : "Unavailable";
-                            font-size: 21px; font-weight: 800; color: root.strong; }
+                            font-size: (21px) * TextScale.factor; font-weight: 800; color: root.strong; }
                     }
                     VerticalLayout {
                         horizontal-stretch: 1; spacing: 5px;
-                        Text { text: "POSSIBLE UPDATES"; font-size: 10px; font-weight: 800; color: root.accent; }
+                        Text { text: "POSSIBLE UPDATES"; font-size: (10px) * TextScale.factor; font-weight: 800; color: root.accent; }
                         Text { text: root.inventory-status == "assessed" ? root.managed-updates : "Unknown";
-                            font-size: 21px; font-weight: 800; color: root.strong; }
+                            font-size: (21px) * TextScale.factor; font-weight: 800; color: root.strong; }
                     }
                 }
             }
             Text { text: root.inventory-status == "assessed" ?
                 "Checks cover 14 managed apps only. Not detected does not mean uninstalled." :
                 "Local application checks are unavailable here. Installed states are not inferred.";
-                font-size: 11px; color: root.muted; wrap: word-wrap; }
+                font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
             HorizontalLayout {
-                Text { text: "Supported applications"; font-size: 15px; font-weight: 800;
+                Text { text: "Supported applications"; font-size: (15px) * TextScale.factor; font-weight: 800;
                     color: root.strong; vertical-alignment: center; }
                 Rectangle { horizontal-stretch: 1; background: transparent; }
-                Text { text: root.inventory-checked; font-size: 10px; color: root.subtle;
+                Text { text: root.inventory-checked; font-size: (10px) * TextScale.factor; color: root.subtle;
                     vertical-alignment: center; }
             }
             ListView {
@@ -1230,22 +1272,22 @@ export component AppWindow inherits Window {
                         padding-left: 17px; padding-right: 18px; spacing: 16px;
                         VerticalLayout {
                             horizontal-stretch: 3; spacing: 7px;
-                            Text { text: app.name; font-size: 16px;
+                            Text { text: app.name; font-size: (16px) * TextScale.factor;
                                 font-weight: 800; color: root.strong; overflow: elide; }
                             Text { text: "Device version: " + app.installed;
-                                font-size: 11px; color: root.muted; overflow: elide; }
+                                font-size: (11px) * TextScale.factor; color: root.muted; overflow: elide; }
                         }
                         VerticalLayout {
                             horizontal-stretch: 2; spacing: 7px;
-                            Text { text: "REPORTED RELEASE"; font-size: 10px;
+                            Text { text: "REPORTED RELEASE"; font-size: (10px) * TextScale.factor;
                                 font-weight: 800; color: root.subtle; }
-                            Text { text: app.latest; font-size: 12px;
+                            Text { text: app.latest; font-size: (12px) * TextScale.factor;
                                 color: root.strong; overflow: elide; }
                         }
                         Rectangle {
                             width: root.compact-layout ? 128px : 156px;
                             height: 36px; background: root.muted-sheet; border-radius: 7px;
-                            Text { text: app.status; font-size: 11px; font-weight: 700;
+                            Text { text: app.status; font-size: (11px) * TextScale.factor; font-weight: 700;
                                 color: app.status == "Possible update" ? #bd8536 : root.accent;
                                 horizontal-alignment: center; vertical-alignment: center;
                                 overflow: elide; }
@@ -1254,7 +1296,7 @@ export component AppWindow inherits Window {
                 }
             }
             Text { text: "Read-only local name/path/version checks; other catalog projects are not scanned. Refresh only reruns the original detector.";
-                font-size: 10px; color: root.subtle; wrap: word-wrap; }
+                font-size: (10px) * TextScale.factor; color: root.subtle; wrap: word-wrap; }
         }
 
         // Explicit user-triggered OS registration evidence; NOT a package
@@ -1267,35 +1309,35 @@ export component AppWindow inherits Window {
                 spacing: 12px;
                 Rectangle {
                     width: 142px; height: 35px; background: root.accent-bg; border-radius: 7px;
-                    Text { text: "← My software"; font-size: 11px; font-weight: 700; color: root.accent;
+                    Text { text: "← My software"; font-size: (11px) * TextScale.factor; font-weight: 700; color: root.accent;
                         horizontal-alignment: center; vertical-alignment: center; }
                     KeyboardAction { action-dark: root.dark-mode; action-label: "Back to My software"; activated => { root.navigate("library"); } }
                 }
                 Rectangle { horizontal-stretch: 1; background: transparent; }
-                Text { text: "LOCAL / READ ONLY / ON DEMAND"; font-size: 10px; color: root.accent;
+                Text { text: "LOCAL / READ ONLY / ON DEMAND"; font-size: (10px) * TextScale.factor; color: root.accent;
                     font-weight: 800; vertical-alignment: center; }
             }
-            Text { text: "OS app registrations."; font-size: 33px; font-weight: 800; color: root.strong; }
+            Text { text: "OS app registrations."; font-size: (33px) * TextScale.factor; font-weight: 800; color: root.strong; }
             Text { text: "Native OS registration evidence, separate from 181 source projects and 14 managed app signals. Only source-reviewed exact IDs link to a catalog dossier.";
-                font-size: 12px; color: root.muted; wrap: word-wrap; }
+                font-size: (12px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
             Rectangle {
                 height: 112px; background: root.accent-bg; border-radius: 12px;
                 HorizontalLayout {
                     padding: 20px; spacing: 15px;
                     VerticalLayout {
                         spacing: 8px; horizontal-stretch: 1;
-                        Text { text: "OBSERVED REGISTRATION RECORDS"; font-size: 10px; font-weight: 800; color: root.accent; }
+                        Text { text: "OBSERVED REGISTRATION RECORDS"; font-size: (10px) * TextScale.factor; font-weight: 800; color: root.accent; }
                         Text { text: root.device-status == "observed" || root.device-status == "stale" ?
                             root.device-total : "Not read";
-                            font-size: 25px; font-weight: 800; color: root.strong; }
+                            font-size: (25px) * TextScale.factor; font-weight: 800; color: root.strong; }
                         Text { text: root.device-scope + " · " + root.device-linked +
                             " active reviewed ID links · " + root.device-age;
-                            font-size: 10px; color: root.muted; wrap: word-wrap; }
+                            font-size: (10px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
                     }
                     Rectangle {
                         width: 174px; height: 42px; background: root.strong; border-radius: 8px;
                         Text { text: root.device-reading ? "Reading system…" : "Inspect local apps";
-                            font-size: 12px; font-weight: 700; color: root.sheet;
+                            font-size: (12px) * TextScale.factor; font-weight: 700; color: root.sheet;
                             horizontal-alignment: center; vertical-alignment: center; }
                         KeyboardAction { action-dark: root.dark-mode; action-label: "Inspect local registered apps"; action-enabled: !root.device-reading; activated => { root.device-read-requested(); } }
                     }
@@ -1305,17 +1347,17 @@ export component AppWindow inherits Window {
                 height: 112px; background: root.muted-sheet; border-radius: 9px;
                 VerticalLayout {
                     padding: 22px; spacing: 9px;
-                    Text { text: "No local device read has been requested."; font-size: 13px; font-weight: 700; color: root.strong; }
+                    Text { text: "No local device read has been requested."; font-size: (13px) * TextScale.factor; font-weight: 700; color: root.strong; }
                     Text { text: "Use Inspect local apps to read only OS-registered application evidence. This does not scan all directories or discover executables.";
-                        font-size: 12px; color: root.muted; wrap: word-wrap; }
+                        font-size: (12px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
                 }
             }
             if root.device-status == "error": Rectangle {
                 height: 96px; background: root.muted-sheet; border-radius: 9px;
                 VerticalLayout {
                     padding: 17px; spacing: 8px;
-                    Text { text: "Native OS read not available"; font-size: 13px; font-weight: 700; color: root.strong; }
-                    Text { text: root.device-error; font-size: 11px; color: root.muted; wrap: word-wrap; }
+                    Text { text: "Native OS read not available"; font-size: (13px) * TextScale.factor; font-weight: 700; color: root.strong; }
+                    Text { text: root.device-error; font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
                 }
             }
             if root.device-status == "stale": Rectangle {
@@ -1323,17 +1365,17 @@ export component AppWindow inherits Window {
                 VerticalLayout {
                     padding: 12px; spacing: 5px;
                     Text { text: "Observation expired — inspect again to enable source links";
-                        font-size: 12px; font-weight: 700; color: #b18140; }
+                        font-size: (12px) * TextScale.factor; font-weight: 700; color: #b18140; }
                     Text { text: "The previous registration names are retained for reference, but source ID links are disabled after two minutes. Nothing was rescanned automatically.";
-                        font-size: 11px; color: root.muted; wrap: word-wrap; }
+                        font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
                 }
             }
             if root.device-error != "" && root.device-status != "error": Rectangle {
                 height: 76px; background: root.muted-sheet; border-radius: 9px;
                 VerticalLayout {
                     padding: 12px; spacing: 5px;
-                    Text { text: "Latest re-inspection failed — previous observation retained"; font-size: 11px; font-weight: 700; color: #b18140; }
-                    Text { text: root.device-error; font-size: 10px; color: root.muted; wrap: word-wrap; }
+                    Text { text: "Latest re-inspection failed — previous observation retained"; font-size: (11px) * TextScale.factor; font-weight: 700; color: #b18140; }
+                    Text { text: root.device-error; font-size: (10px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
                 }
             }
             if root.device-status == "observed" || root.device-status == "stale": VerticalLayout {
@@ -1344,7 +1386,7 @@ export component AppWindow inherits Window {
                         root.device-scope == "windows-uninstall-registry" ?
                         "Windows: Add/Remove Programs registry entries. Does not include unregistered or portable apps." :
                         "Linux: visible desktop launcher entries, NOT a list of installed packages.";
-                    font-size: 11px; color: root.muted; wrap: word-wrap;
+                    font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap;
                 }
                 HorizontalLayout {
                     spacing: 10px;
@@ -1353,9 +1395,9 @@ export component AppWindow inherits Window {
                         border-color: root.line; border-width: 1px; border-radius: 8px;
                         HorizontalLayout {
                             padding-left: 12px; padding-right: 12px; spacing: 9px;
-                            Text { text: "FILTER"; font-size: 10px; font-weight: 800; color: root.accent;
+                            Text { text: "FILTER"; font-size: (10px) * TextScale.factor; font-weight: 800; color: root.accent;
                                 vertical-alignment: center; }
-                            LineEdit {
+                            LineEdit { font-size: 13px * TextScale.factor;
                                 horizontal-stretch: 1; height: 35px;
                                 text: root.device-query;
                                 placeholder-text: "Name or registered identifier…";
@@ -1366,25 +1408,25 @@ export component AppWindow inherits Window {
                     }
                     Rectangle {
                         width: 124px; height: 43px; background: root.muted-sheet; border-radius: 8px;
-                        Text { text: root.device-showing + " matching"; font-size: 11px; font-weight: 700;
+                        Text { text: root.device-showing + " matching"; font-size: (11px) * TextScale.factor; font-weight: 700;
                             color: root.accent; horizontal-alignment: center; vertical-alignment: center; }
                     }
                 }
                 if root.device-truncated: Text {
                     text: "Safety cap reached: first 512 distinct records only. This is an incomplete observation.";
-                    font-size: 11px; color: #b18140; wrap: word-wrap;
+                    font-size: (11px) * TextScale.factor; color: #b18140; wrap: word-wrap;
                 }
                 Rectangle {
                     height: 34px; background: root.muted-sheet; border-radius: 5px;
                     HorizontalLayout {
                         padding-left: 13px; padding-right: 13px; spacing: 10px;
-                        Text { text: "REGISTERED NAME"; font-size: 9px; font-weight: 800; color: root.subtle;
+                        Text { text: "REGISTERED NAME"; font-size: (9px) * TextScale.factor; font-weight: 800; color: root.subtle;
                             horizontal-stretch: 3; vertical-alignment: center; }
-                        Text { text: "VERSION (IF REPORTED)"; font-size: 9px; font-weight: 800; color: root.subtle;
+                        Text { text: "VERSION (IF REPORTED)"; font-size: (9px) * TextScale.factor; font-weight: 800; color: root.subtle;
                             horizontal-stretch: 2; vertical-alignment: center; }
-                        Text { text: "ID"; font-size: 9px; font-weight: 800; color: root.subtle;
+                        Text { text: "ID"; font-size: (9px) * TextScale.factor; font-weight: 800; color: root.subtle;
                             horizontal-stretch: 3; vertical-alignment: center; }
-                        if root.over-950: Text { text: "REGISTRY SOURCE"; font-size: 9px; font-weight: 800;
+                        if root.over-950: Text { text: "REGISTRY SOURCE"; font-size: (9px) * TextScale.factor; font-weight: 800;
                             color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
                     }
                 }
@@ -1397,18 +1439,18 @@ export component AppWindow inherits Window {
                         padding-left: 13px; padding-right: 13px; spacing: 10px;
                         VerticalLayout {
                             horizontal-stretch: 3; spacing: 2px;
-                            Text { text: app.name; font-size: 12px; font-weight: 700; color: root.strong;
+                            Text { text: app.name; font-size: (12px) * TextScale.factor; font-weight: 700; color: root.strong;
                                 overflow: elide; }
                             if app.linked-id != "": Text {
                                 text: "SOURCE-REVIEWED ID → " + app.linked-project;
-                                font-size: 9px; color: root.accent; overflow: elide; }
+                                font-size: (9px) * TextScale.factor; color: root.accent; overflow: elide; }
                         }
-                        Text { text: app.version == "" ? "Not reported" : app.version; font-size: 11px; color: root.muted;
+                        Text { text: app.version == "" ? "Not reported" : app.version; font-size: (11px) * TextScale.factor; color: root.muted;
                             horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
                         Text { text: app.identifier == "" ? "Not reported" : app.identifier;
-                            font-size: 10px; color: root.muted; horizontal-stretch: 3;
+                            font-size: (10px) * TextScale.factor; color: root.muted; horizontal-stretch: 3;
                             vertical-alignment: center; overflow: elide; }
-                        if root.over-950: Text { text: app.provenance; font-size: 10px; color: root.subtle;
+                        if root.over-950: Text { text: app.provenance; font-size: (10px) * TextScale.factor; color: root.subtle;
                             horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
                     }
                     if app.linked-id != "": KeyboardAction { action-dark: root.dark-mode; action-label: "Open reviewed project " + app.linked-project; activated => { root.open-device-project(app.linked-id); } }
@@ -1416,11 +1458,11 @@ export component AppWindow inherits Window {
             }
             if (root.device-status == "observed" || root.device-status == "stale") && root.device-showing == 0: Text {
                 text: "No registration records match the current filter. This does not prove any app is absent.";
-                color: root.subtle; font-size: 12px;
+                color: root.subtle; font-size: (12px) * TextScale.factor;
             }
             Rectangle { vertical-stretch: root.device-status == "observed" || root.device-status == "stale" ? 0 : 1; background: transparent; }
             Text { text: "Upstream-reviewed ID cross-references are NOT code-signature or installation verification. No installs, launches, network requests, automatic catalog promotion or file writes.";
-                font-size: 10px; color: root.subtle; wrap: word-wrap; }
+                font-size: (10px) * TextScale.factor; color: root.subtle; wrap: word-wrap; }
         }
 
         // Public desktop redistribution under Slint royalty-free terms needs
@@ -1432,18 +1474,18 @@ export component AppWindow inherits Window {
                 padding-right: root.compact-layout ? 24px : 52px;
                 padding-top: 40px; padding-bottom: 32px; spacing: 18px;
                 Text { text: "ABOUT  /  CHALLENGER HUB"; color: root.accent;
-                    font-size: 10px; font-weight: 800; }
+                    font-size: (10px) * TextScale.factor; font-weight: 800; }
                 Text { text: "Independent tools, discovered."; color: root.strong;
-                    font-size: 30px; font-weight: 800; }
+                    font-size: (30px) * TextScale.factor; font-weight: 800; }
                 Text { text: "Challenger Native Preview uses Slint for its desktop interface.";
-                    color: root.muted; font-size: 13px; wrap: word-wrap; }
+                    color: root.muted; font-size: (13px) * TextScale.factor; wrap: word-wrap; }
                 Rectangle {
                     height: 200px; background: root.sheet; border-color: root.line;
                     border-width: 1px; border-radius: 12px;
                     VerticalLayout {
                         padding: 22px; spacing: 12px;
                         Text { text: "FRAMEWORK ATTRIBUTION"; color: root.strong;
-                            font-size: 12px; font-weight: 700; }
+                            font-size: (12px) * TextScale.factor; font-weight: 700; }
                         AboutSlint { height: 130px; }
                     }
                 }
@@ -1453,17 +1495,17 @@ export component AppWindow inherits Window {
                     VerticalLayout {
                         padding: 18px; spacing: 8px;
                         Text { text: "IMAGE CREDITS  /  THIRD-PARTY RIGHTS";
-                            color: root.strong; font-size: 12px; font-weight: 700; }
+                            color: root.strong; font-size: (12px) * TextScale.factor; font-weight: 700; }
                         Text { text: "70 original screenshots and 30 official source icons. Exact credits are shown in each project dossier.";
-                            font-size: 12px; color: root.muted; wrap: word-wrap; }
+                            font-size: (12px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
                         Text { text: "Full original links, SHA-256 and reported repository licenses are packaged in media-notices/MEDIA_CREDITS.md.";
-                            font-size: 11px; color: root.muted; wrap: word-wrap; }
+                            font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
                         Text { text: "Giving credit does not itself license images, artwork or trademarks. No upstream endorsement is implied.";
-                            font-size: 11px; color: root.accent; wrap: word-wrap; }
+                            font-size: (11px) * TextScale.factor; color: root.accent; wrap: word-wrap; }
                     }
                 }
                 Text { text: "This developer preview is not a signed or notarized public release.";
-                    color: root.subtle; font-size: 11px; wrap: word-wrap; }
+                    color: root.subtle; font-size: (11px) * TextScale.factor; wrap: word-wrap; }
             }
         }
 
@@ -1473,33 +1515,33 @@ export component AppWindow inherits Window {
             padding-left: root.compact-layout ? 25px : 52px;
             padding-right: root.compact-layout ? 25px : 52px;
             padding-top: 35px; padding-bottom: 20px; spacing: 17px;
-            Text { text: "ACTIVITY  /  THIS NATIVE SESSION"; font-size: 10px; font-weight: 800; color: root.accent; }
-            Text { text: "Local read diagnostics."; font-size: 33px; font-weight: 800; color: root.strong; }
+            Text { text: "ACTIVITY  /  THIS NATIVE SESSION"; font-size: (10px) * TextScale.factor; font-weight: 800; color: root.accent; }
+            Text { text: "Local read diagnostics."; font-size: (33px) * TextScale.factor; font-weight: 800; color: root.strong; }
             Rectangle {
                 height: 156px; background: root.muted-sheet; border-radius: 12px;
                 VerticalLayout {
                     padding: 22px; spacing: 11px;
-                    Text { text: "INSTALL / UPDATE WORKERS"; font-size: 10px; color: root.accent; font-weight: 800; }
+                    Text { text: "INSTALL / UPDATE WORKERS"; font-size: (10px) * TextScale.factor; color: root.accent; font-weight: 800; }
                     Text { text: "Not connected to a persistent Challenger worker.";
-                        font-size: 15px; color: root.strong; font-weight: 700; }
+                        font-size: (15px) * TextScale.factor; color: root.strong; font-weight: 700; }
                     Text { text: "The backend for this preview exists only during each read. Its empty queue or history cannot prove that the actual device is idle.";
-                        font-size: 12px; color: root.muted; wrap: word-wrap; }
+                        font-size: (12px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
                 }
             }
             HorizontalLayout {
-                Text { text: "PERSISTED INSTALL ATTEMPTS"; font-size: 11px; font-weight: 800; color: root.strong;
+                Text { text: "PERSISTED INSTALL ATTEMPTS"; font-size: (11px) * TextScale.factor; font-weight: 800; color: root.strong;
                     vertical-alignment: center; }
                 Rectangle { horizontal-stretch: 1; background: transparent; }
                 Rectangle {
                     width: 196px; height: 34px; background: root.accent-bg; border-radius: 7px;
                     Text { text: root.install-history-loading ? "Reading local history…" :
                         "Read local installation history";
-                        font-size: 10px; color: root.accent; font-weight: 700;
+                        font-size: (10px) * TextScale.factor; color: root.accent; font-weight: 700;
                         horizontal-alignment: center; vertical-alignment: center; }
                     KeyboardAction { action-dark: root.dark-mode; action-label: "Read local installation history"; action-enabled: !root.install-history-loading; activated => { root.load-install-history(); } }
                 }
             }
-            Text { text: root.install-history-status; font-size: 11px;
+            Text { text: root.install-history-status; font-size: (11px) * TextScale.factor;
                 color: root.muted; wrap: word-wrap; }
             if root.install-history-count > 0: ListView {
                 height: 145px;
@@ -1509,22 +1551,22 @@ export component AppWindow inherits Window {
                         padding-left: 15px; padding-right: 15px; spacing: 12px;
                         VerticalLayout {
                             spacing: 4px; horizontal-stretch: 1;
-                            Text { text: event.name; font-size: 12px; font-weight: 700;
+                            Text { text: event.name; font-size: (12px) * TextScale.factor; font-weight: 700;
                                 color: root.strong; overflow: elide; }
-                            Text { text: event.detail; font-size: 10px; color: root.muted;
+                            Text { text: event.detail; font-size: (10px) * TextScale.factor; color: root.muted;
                                 overflow: elide; }
                         }
-                        Text { text: event.outcome; font-size: 10px;
+                        Text { text: event.outcome; font-size: (10px) * TextScale.factor;
                             color: event.outcome == "COMPLETED" ? root.accent : #c38442;
                             vertical-alignment: center; }
                     }
                 }
             }
             HorizontalLayout {
-                Text { text: "READ-ONLY SESSION EVENTS"; font-size: 11px; font-weight: 800; color: root.strong;
+                Text { text: "READ-ONLY SESSION EVENTS"; font-size: (11px) * TextScale.factor; font-weight: 800; color: root.strong;
                     vertical-alignment: center; }
                 Rectangle { horizontal-stretch: 1; background: transparent; }
-                Text { text: root.session-event-count + " events since launch"; font-size: 11px; color: root.subtle;
+                Text { text: root.session-event-count + " events since launch"; font-size: (11px) * TextScale.factor; color: root.subtle;
                     vertical-alignment: center; }
             }
             ListView {
@@ -1539,16 +1581,16 @@ export component AppWindow inherits Window {
                         }
                         VerticalLayout {
                             spacing: 6px; horizontal-stretch: 1;
-                            Text { text: event.name; font-size: 13px; font-weight: 700; color: root.strong; }
-                            Text { text: event.detail; font-size: 11px; color: root.muted; overflow: elide; }
+                            Text { text: event.name; font-size: (13px) * TextScale.factor; font-weight: 700; color: root.strong; }
+                            Text { text: event.detail; font-size: (11px) * TextScale.factor; color: root.muted; overflow: elide; }
                         }
-                        Text { text: event.outcome; font-size: 10px; color: event.outcome == "OK" ? root.accent : #c38442;
+                        Text { text: event.outcome; font-size: (10px) * TextScale.factor; color: event.outcome == "OK" ? root.accent : #c38442;
                             vertical-alignment: center; }
                     }
                 }
             }
             Text { text: "Session log is memory-only. Refresh failures appear here but never overwrite the last verified catalog or installation signals.";
-                font-size: 10px; color: root.subtle; wrap: word-wrap; }
+                font-size: (10px) * TextScale.factor; color: root.subtle; wrap: word-wrap; }
         }
 
         Rectangle {
@@ -1556,11 +1598,11 @@ export component AppWindow inherits Window {
             HorizontalLayout {
                 padding-left: root.compact-layout ? 22px : 38px;
                 padding-right: root.compact-layout ? 22px : 38px;
-                Text { text: root.compact-layout ? "READ-ONLY  ·  CONSENT REQUIRED" : "READ-ONLY CATALOG  /  EXPLICIT-APPROVAL INSTALLS"; font-size: 9px; font-weight: 800; color: root.accent;
+                Text { text: root.compact-layout ? "READ-ONLY  ·  CONSENT REQUIRED" : "READ-ONLY CATALOG  /  EXPLICIT-APPROVAL INSTALLS"; font-size: (9px) * TextScale.factor; font-weight: 800; color: root.accent;
                     vertical-alignment: center; }
                 Rectangle { horizontal-stretch: 1; background: transparent; }
                 Text { text: root.compact-layout ? root.total + " source projects" : root.total + " projects  ·  verified release adapters only  ·  explicit install consent";
-                    color: root.subtle; font-size: 10px; vertical-alignment: center; }
+                    color: root.subtle; font-size: (10px) * TextScale.factor; vertical-alignment: center; }
             }
         }
         }
@@ -1597,16 +1639,16 @@ export component AppWindow inherits Window {
                     height: 40px;
                     VerticalLayout {
                         spacing: 2px;
-                        Text { text: "PREFERENCES"; font-size: 11px; font-weight: 850;
+                        Text { text: "PREFERENCES"; font-size: (11px) * TextScale.factor; font-weight: 850;
                             color: root.accent; }
-                        Text { text: "Make Challenger yours."; font-size: 17px;
+                        Text { text: "Make Challenger yours."; font-size: (17px) * TextScale.factor;
                             font-weight: 800; color: root.strong; }
                     }
                     Rectangle { horizontal-stretch: 1; background: transparent; }
                     Rectangle {
                         width: 72px; height: 34px; border-radius: 9px;
                         background: root.muted-sheet;
-                        Text { text: "Close"; color: root.strong; font-size: 12px;
+                        Text { text: "Close"; color: root.strong; font-size: (12px) * TextScale.factor;
                             horizontal-alignment: center; vertical-alignment: center; }
                         KeyboardAction { action-dark: root.dark-mode;
                             action-label: "Close Preferences"; activated => { preferences-popup.close(); } }
@@ -1652,11 +1694,11 @@ export component AppWindow inherits Window {
 
                             if root.preferences-section == "appearance": VerticalLayout {
                                 vertical-stretch: 0; spacing: 13px;
-                                Text { vertical-stretch: 0; text: "Appearance"; font-size: 22px;
+                                Text { vertical-stretch: 0; text: "Appearance"; font-size: (22px) * TextScale.factor;
                                     font-weight: 800; color: root.strong; }
                                 Text { vertical-stretch: 0; text: "Follow the device appearance at launch, or choose a permanent theme.";
-                                    font-size: 12px; color: root.muted; wrap: word-wrap; }
-                                Text { vertical-stretch: 0; text: "COLOR THEME"; font-size: 10px;
+                                    font-size: (12px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+                                Text { vertical-stretch: 0; text: "COLOR THEME"; font-size: (10px) * TextScale.factor;
                                     font-weight: 800; color: root.accent; }
                                 HorizontalLayout { vertical-stretch: 0;
                                     spacing: 9px;
@@ -1682,17 +1724,17 @@ export component AppWindow inherits Window {
                                 Text { vertical-stretch: 0; text: "Selected: " + root.appearance-choice
                                         + (root.appearance-choice == "system"
                                         ? (root.dark-mode ? " (system dark)" : " (system light)") : "");
-                                    font-size: 12px; color: root.muted; }
+                                    font-size: (12px) * TextScale.factor; color: root.muted; }
                                 Rectangle { vertical-stretch: 1; background: transparent; }
                             }
 
                             if root.preferences-section == "accessibility": VerticalLayout {
                                 vertical-stretch: 0; spacing: 12px;
-                                Text { vertical-stretch: 0; text: "Accessibility"; font-size: 22px;
+                                Text { vertical-stretch: 0; text: "Accessibility"; font-size: (22px) * TextScale.factor;
                                     font-weight: 800; color: root.strong; }
                                 Text { vertical-stretch: 0; text: "Reduce motion and increase contrast, with real keyboard-accessible controls.";
-                                    font-size: 12px; color: root.muted; wrap: word-wrap; }
-                                Text { vertical-stretch: 0; text: "ANIMATIONS"; font-size: 10px;
+                                    font-size: (12px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+                                Text { vertical-stretch: 0; text: "ANIMATIONS"; font-size: (10px) * TextScale.factor;
                                     font-weight: 800; color: root.accent; }
                                 HorizontalLayout { vertical-stretch: 0;
                                     spacing: 8px;
@@ -1716,8 +1758,8 @@ export component AppWindow inherits Window {
                                     }
                                 }
                                 Text { vertical-stretch: 0; text: root.reduced-motion ? "Motion is reduced." : "Subtle motion is enabled.";
-                                    font-size: 11px; color: root.muted; }
-                                Text { vertical-stretch: 0; text: "HIGH CONTRAST"; font-size: 10px;
+                                    font-size: (11px) * TextScale.factor; color: root.muted; }
+                                Text { vertical-stretch: 0; text: "HIGH CONTRAST"; font-size: (10px) * TextScale.factor;
                                     font-weight: 800; color: root.accent; }
                                 HorizontalLayout { vertical-stretch: 0;
                                     spacing: 8px;
@@ -1734,58 +1776,83 @@ export component AppWindow inherits Window {
                                         activated => { root.change-contrast(true); }
                                     }
                                 }
-                                Text { vertical-stretch: 0; text: "Native buttons expose keyboard focus and spoken labels. OS display scaling is supported; app-wide text scaling and screen-reader audits remain release gates.";
-                                    font-size: 11px; color: root.muted; wrap: word-wrap; }
+                                Text { vertical-stretch: 0; text: "TEXT SIZE"; font-size: (10px) * TextScale.factor;
+                                    font-weight: 800; color: root.accent; }
+                                HorizontalLayout {
+                                    vertical-stretch: 0; spacing: 8px;
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "100%";
+                                        selected: root.text-scale-percent == 100;
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        activated => { root.change-text-scale(100); }
+                                    }
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "125%";
+                                        selected: root.text-scale-percent == 125;
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        activated => { root.change-text-scale(125); }
+                                    }
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "150%";
+                                        selected: root.text-scale-percent == 150;
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        activated => { root.change-text-scale(150); }
+                                    }
+                                }
+                                Text { vertical-stretch: 0; text: "Text enlargement applies immediately to navigation, cards, details, preferences and source credits.";
+                                    font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+                                Text { vertical-stretch: 0; text: "Buttons provide keyboard focus and spoken labels. Screen-reader, 200% zoom, and RTL/IME audits remain release gates.";
+                                    font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
                                 Rectangle { vertical-stretch: 1; background: transparent; }
                             }
 
                             if root.preferences-section == "about": VerticalLayout {
                                 vertical-stretch: 0; spacing: 12px;
-                                Text { vertical-stretch: 0; text: "About Challenger"; font-size: 22px;
+                                Text { vertical-stretch: 0; text: "About Challenger"; font-size: (22px) * TextScale.factor;
                                     font-weight: 800; color: root.strong; }
-                                Text { vertical-stretch: 0; text: root.native-version; font-size: 12px;
+                                Text { vertical-stretch: 0; text: root.native-version; font-size: (12px) * TextScale.factor;
                                     font-weight: 750; color: root.strong; }
                                 Text { vertical-stretch: 0; text: "Developer test channel · no auto-install or background checks.";
-                                    font-size: 11px; color: root.muted; wrap: word-wrap; }
+                                    font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
                                 HorizontalLayout { vertical-stretch: 0;
                                     spacing: 10px;
-                                    PreferenceChoice {
+                                    PreferenceAction {
                                         width: 174px; label: root.update-checking ? "Checking..." : "Check updates";
                                         dark: root.dark-mode; high-contrast: root.high-contrast;
-                                        selected: false;
+
                                         activated => { if (!root.update-checking) { root.check-native-updates(); } }
                                     }
-                                    PreferenceChoice {
+                                    PreferenceAction {
                                         width: 182px; label: "Official releases";
                                         dark: root.dark-mode; high-contrast: root.high-contrast;
-                                        selected: false;
+
                                         activated => { root.open-native-release-page(); }
                                     }
                                 }
-                                Text { vertical-stretch: 0; text: root.update-status; font-size: 11px;
+                                Text { vertical-stretch: 0; text: root.update-status; font-size: (11px) * TextScale.factor;
                                     color: root.muted; wrap: word-wrap; }
                                 Rectangle { height: 1px; background: root.line; }
-                                Text { vertical-stretch: 0; text: "FRAMEWORK ATTRIBUTION"; font-size: 10px;
+                                Text { vertical-stretch: 0; text: "FRAMEWORK ATTRIBUTION"; font-size: (10px) * TextScale.factor;
                                     font-weight: 800; color: root.accent; }
                                 // Required official Slint component. Do not replace with invented credits.
                                 AboutSlint { height: 118px; }
                                 Text { vertical-stretch: 0; text: "Screenshots, source icons and license notices are credited per project. Attribution does not imply redistribution permission.";
-                                    color: root.muted; font-size: 10px; wrap: word-wrap; }
+                                    color: root.muted; font-size: (10px) * TextScale.factor; wrap: word-wrap; }
                                 Rectangle { vertical-stretch: 1; background: transparent; }
                             }
 
                             if root.preferences-section == "privacy": VerticalLayout {
                                 vertical-stretch: 0; spacing: 13px;
-                                Text { vertical-stretch: 0; text: "Privacy & Data"; font-size: 22px;
+                                Text { vertical-stretch: 0; text: "Privacy & Data"; font-size: (22px) * TextScale.factor;
                                     font-weight: 800; color: root.strong; }
                                 Text { vertical-stretch: 0; text: "Appearance and accessibility preferences are saved only on this device. No account or telemetry is added.";
-                                    color: root.muted; font-size: 12px; wrap: word-wrap; }
+                                    color: root.muted; font-size: (12px) * TextScale.factor; wrap: word-wrap; }
                                 Text { vertical-stretch: 0; text: "The catalog remains read-only. Device app inspection still requires an explicit request. Checking official releases is manual.";
-                                    color: root.muted; font-size: 12px; wrap: word-wrap; }
-                                PreferenceChoice {
+                                    color: root.muted; font-size: (12px) * TextScale.factor; wrap: word-wrap; }
+                                PreferenceAction {
                                     width: 192px; label: "Reset preferences";
                                     dark: root.dark-mode; high-contrast: root.high-contrast;
-                                    selected: false;
+
                                     activated => { root.reset-preferences(); }
                                 }
                                 Rectangle { vertical-stretch: 1; background: transparent; }
@@ -1799,7 +1866,7 @@ export component AppWindow inherits Window {
                         ? root.preferences-status
                         : "Changes are saved locally. Escape closes this window.";
                     color: root.preferences-status != "" ? #bf7954 : root.subtle;
-                    font-size: 11px; overflow: elide;
+                    font-size: (11px) * TextScale.factor; overflow: elide;
                 }
             }
         }

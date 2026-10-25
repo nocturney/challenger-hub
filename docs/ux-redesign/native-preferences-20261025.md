@@ -17,8 +17,12 @@ consent and source attribution intact. Avoid duplicate backends or paid APIs.
   preference. Reduced Motion from the host already supports OS preferences;
   choosing a local value overrides it. Slint native widgets use the matching
   Palette color scheme (including dark-mode CheckBox labels). Custom UI tokens
-  use high-contrast colors. All preference choice buttons use the existing
-  keyboard-focus / screen-reader accessible action component.
+  use high-contrast colors. Preferences expose checkable Slint radio-button
+  semantics for actual choices and regular buttons for commands. Three
+  immediate native text sizes (100%, 125%, 150%) are saved locally, apply
+  consistently to app-authored labels and media attribution and do not alter
+  image assets. Screen-reader speech and 200% text enlargement are still
+  acceptance gates.
 - **About & Updates:** current native development version, the unmodified
   official `AboutSlint` attribution component, media/license explanation, a
   manual read-only official release check and an external official Releases
@@ -36,7 +40,7 @@ Preferences instead.
 Versioned JSON schema v1, no tokens or personal records:
 
 ```json
-{"schema":1,"appearance":"system","motion":"system","high_contrast":false}
+{"schema":1,"appearance":"system","motion":"system","high_contrast":false,"text_scale":100}
 ```
 
 Paths: macOS `~/Library/Application Support/Challenger Hub/preferences.json`,
@@ -66,8 +70,10 @@ the modified Rust/Slint binary on MacMiniOffice2. They are not mockups.
 - [Accessibility (motion / high contrast)](qa-native-preferences/02-accessibility.png)
 - [About & Updates, including official Slint attribution](qa-native-preferences/03-about-updates.png)
 - [Preferences in Dark mode](qa-native-preferences/04-dark.png)
+- [Accessibility at 150 percent text](qa-native-preferences/05-accessibility-150.png)
+- [Browse at 820px with 150 percent text](qa-native-preferences/06-browse-820-text-150.png)
 
-Verified local developer checks: native Rust build and 38 unit tests,
+Verified local developer checks: native Rust build and 39 unit tests,
 20 Node release/bridge/security checks, read-only catalog/media gates,
 and a **sandbox-only QA route** that exercises the actual UI preference
 callbacks, persisted JSON and reset-to-defaults without touching the real
@@ -81,8 +87,14 @@ platform-specific screen-reader testing.
 Run native cargo tests and GUI smoke, real window review at compact/regular
 width in both appearances, popup open/dismiss, keyboard navigation and
 reduced-motion/high-contrast visual QA; Node release fixtures and integration
-checks. Still necessary before production: app-wide text scaling, VoiceOver /
-Narrator / NVDA walkthrough, RTL/IME coverage, OS theme switching during
-runtime (currently read on launch/selection), Windows interactive smoke,
-rights clearance and publisher signing. These must not be presented as done
-merely because the Preferences UI exists.
+checks. On the real Windows Chris desktop, a verified portable PR #33
+artifact passed native GUI smoke after warm-up, and UI Automation confirmed
+focusable controls, Ctrl+, to open Preferences and Escape to close it. The
+first *cold* launch timed out and requires retesting with the revised bounded
+Windows sidecar timeout. See [Windows and accessibility evidence](accessibility-qa-20261025.md).
+
+Still necessary before production: a screen-reader speech walkthrough in
+Narrator/NVDA and VoiceOver, 200% text enlargement and clipping QA, RTL/IME,
+live OS theme switching (currently read at launch/selection), Windows UIA
+revalidation on the updated radio-role build, media rights, publisher signing
+and explicit user UX acceptance. These must not be presented as complete.

@@ -1,3 +1,4 @@
+import { TextScale } from "text-scale.slint";
 import { QuietPremium } from "quiet-premium.slint";
 
 // Factual, typography-only identities. Never draw made-up UI, icons or logos.
@@ -14,11 +15,11 @@ export component IdentityTile inherits Rectangle {
     border-radius: QuietPremium.media-radius;
     VerticalLayout {
         padding: 12px; spacing: 9px;
-        Text { text: root.project-domain; font-size: 10px; font-weight: 800;
+        Text { text: root.project-domain; font-size: (10px) * TextScale.factor; font-weight: 800;
             color: root.dark ? #bfdcc1 : #47765a; overflow: elide; }
-        Text { text: root.project-name; font-size: 18px; font-weight: 800;
+        Text { text: root.project-name; font-size: (18px) * TextScale.factor; font-weight: 800;
             color: root.dark ? #f2f7f1 : #263a2e; overflow: elide; }
-        Text { text: "By " + root.project-maker; font-size: 11px;
+        Text { text: "By " + root.project-maker; font-size: (11px) * TextScale.factor;
             color: root.dark ? #b0beb4 : #536758; overflow: elide; }
     }
 }
@@ -47,24 +48,24 @@ export component IdentityDossier inherits Rectangle {
         spacing: root.compact ? 8px : 11px;
         HorizontalLayout {
             spacing: 10px;
-            Text { text: "INDEPENDENT SOFTWARE"; font-size: 10px;
+            Text { text: "INDEPENDENT SOFTWARE"; font-size: (10px) * TextScale.factor;
                 font-weight: 800; color: root.dark ? #b7d6b9 : #47765a;
                 vertical-alignment: center; horizontal-stretch: 1; }
             Rectangle {
                 width: root.compact ? 135px : 185px; height: 28px;
                 border-radius: 14px;
                 background: root.dark ? #314739 : #eaf2e8;
-                Text { text: root.project-domain; font-size: 11px; font-weight: 750;
+                Text { text: root.project-domain; font-size: (11px) * TextScale.factor; font-weight: 750;
                     color: root.dark ? #c4dfc4 : #47765a;
                     horizontal-alignment: center; vertical-alignment: center;
                     overflow: elide; }
             }
         }
         Text { text: root.project-name;
-            font-size: root.compact ? 31px : 46px; font-weight: 800;
+            font-size: (root.compact ? 31px : 46px) * TextScale.factor; font-weight: 800;
             color: root.dark ? #eef5ec : #263a2e; overflow: elide;
             height: root.compact ? 43px : 61px; }
-        Text { text: root.project-summary; font-size: root.compact ? 12px : 14px;
+        Text { text: root.project-summary; font-size: (root.compact ? 12px : 14px) * TextScale.factor;
             height: root.compact ? 46px : 57px;
             color: root.dark ? #c6d2c6 : #4b5d50;
             wrap: word-wrap; overflow: elide; }
@@ -73,24 +74,24 @@ export component IdentityDossier inherits Rectangle {
             spacing: 18px;
             VerticalLayout {
                 horizontal-stretch: 1; spacing: 6px;
-                Text { text: "CREATED BY"; font-size: 10px; font-weight: 800;
+                Text { text: "CREATED BY"; font-size: (10px) * TextScale.factor; font-weight: 800;
                     color: root.dark ? #a8c0ab : #536758; }
-                Text { text: root.project-maker; font-size: 13px; font-weight: 700;
+                Text { text: root.project-maker; font-size: (13px) * TextScale.factor; font-weight: 700;
                     color: root.dark ? #eff7ed : #263a2e; overflow: elide; }
             }
             VerticalLayout {
                 horizontal-stretch: 1; spacing: 6px;
-                Text { text: "AVAILABLE PLATFORMS"; font-size: 10px; font-weight: 800;
+                Text { text: "AVAILABLE PLATFORMS"; font-size: (10px) * TextScale.factor; font-weight: 800;
                     color: root.dark ? #a8c0ab : #536758; }
-                Text { text: root.project-platforms; font-size: 12px;
+                Text { text: root.project-platforms; font-size: (12px) * TextScale.factor;
                     color: root.dark ? #eff7ed : #263a2e; overflow: elide; }
             }
         }
-        Text { text: root.project-source; font-size: 10px;
+        Text { text: root.project-source; font-size: (10px) * TextScale.factor;
             color: root.dark ? #b0beb4 : #536758; overflow: elide; }
         Text { text: "Source-linked " + root.project-kind +
                 " listing. No unverified interface imagery.";
-            font-size: 10px; color: root.dark ? #98b09d : #617568;
+            font-size: (10px) * TextScale.factor; color: root.dark ? #98b09d : #617568;
             overflow: elide; }
     }
 }

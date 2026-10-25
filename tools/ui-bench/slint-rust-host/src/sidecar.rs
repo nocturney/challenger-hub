@@ -10,6 +10,14 @@ use std::{
 
 const MAX_STDOUT: u64 = 1_000_000;
 const MAX_STDERR: u64 = 32_768;
+// First launch of an extracted, unsigned Windows developer ZIP can spend >22s
+// in Defender/OS file verification before the bundled Node runtime is warm.
+// A real Chris machine cold launch exceeded 22s; the next read took 4.5s.
+// Keep the existing kill-tree, output caps and inner engine health deadline.
+// Only Windows gets the bounded cold-start allowance; no indefinite retries.
+#[cfg(windows)]
+const TIMEOUT: Duration = Duration::from_secs(40);
+#[cfg(not(windows))]
 const TIMEOUT: Duration = Duration::from_secs(22);
 
 fn resources() -> Result<(PathBuf, bool), String> {

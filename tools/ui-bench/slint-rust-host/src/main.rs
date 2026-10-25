@@ -466,6 +466,7 @@ fn update_preference_ui(ui: &AppWindow, p: &preferences::Preferences, system_mot
     ui.set_dark_mode(p.dark_mode());
     ui.set_reduced_motion(p.reduced_motion(system_motion));
     ui.set_high_contrast(p.high_contrast);
+    ui.set_text_scale_percent(i32::from(p.text_scale));
 }
 
 fn commit_preference(
@@ -763,6 +764,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         move |value| if let Some(w)=weak.upgrade() {
             let mut next=store.borrow().clone();
             next.high_contrast=value;
+            commit_preference(&w, &mut store.borrow_mut(), next, &path, system_motion);
+        }
+    });
+    ui.on_change_text_scale({
+        let store=Rc::clone(&prefs); let weak=ui.as_weak(); let path=pref_path.clone();
+        move |value| if let Some(w)=weak.upgrade() {
+            if ![100, 125, 150].contains(&value) { return; }
+            let mut next=store.borrow().clone();
+            next.text_scale=value as u16;
             commit_preference(&w, &mut store.borrow_mut(), next, &path, system_motion);
         }
     });
@@ -1428,6 +1438,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if args.iter().any(|a| a == "--qa-preview-dark-results") {
         ui.set_dark_mode(true);
     }
+    if args.iter().any(|a| a == "--qa-preview-text-150") {
+        // Session-only visual test: do not write to real preferences.
+        ui.set_text_scale_percent(150);
+    }
     if args.iter().any(|a| a.starts_with("--qa-preview-preferences")) {
         let weak=ui.as_weak();
         let about=args.iter().any(|a| a == "--qa-preview-preferences-about");
@@ -1452,7 +1466,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "--qa-preview-home", "--qa-preview-goxel", "--qa-preview-profile",
         "--qa-preview-profile-results",
         "--qa-preview-preferences", "--qa-preview-preferences-about",
-        "--qa-preview-preferences-accessibility", "--qa-preview-preferences-dark"
+        "--qa-preview-preferences-accessibility", "--qa-preview-preferences-dark",
+        "--qa-preview-text-150"
         ].contains(&a.as_str())) {
         let weak = ui.as_weak();
         Timer::single_shot(Duration::from_secs(22), move || {
@@ -1748,17 +1763,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         ui.invoke_change_appearance("dark".into());
         ui.invoke_change_motion("reduce".into());
         ui.invoke_change_contrast(true);
+        ui.invoke_change_text_scale(150);
         let observed=preferences::read(pref_path.as_ref().unwrap())
             .map_err(|_| "QA preference file unreadable")?;
         if observed.appearance != "dark" || observed.motion != "reduce"
-            || !observed.high_contrast || !ui.get_dark_mode()
+            || !observed.high_contrast || observed.text_scale != 150
+            || ui.get_text_scale_percent() != 150 || !ui.get_dark_mode()
             || !ui.get_reduced_motion() || !ui.get_high_contrast() {
             return Err("Native preference action/save/binding mismatch".into());
         }
         ui.invoke_reset_preferences();
         let reset=preferences::read(pref_path.as_ref().unwrap())?;
         if reset != preferences::Preferences::default()
-            || ui.get_appearance_choice() != "system" || ui.get_motion_choice() != "system" {
+            || ui.get_appearance_choice() != "system" || ui.get_motion_choice() != "system"
+            || ui.get_text_scale_percent() != 100 {
             return Err("Preferences reset did not restore system defaults".into());
         }
         eprintln!("NATIVE_PREFERENCES_INTEGRATION_PASS save=local reset=verified userHome=isolated");
@@ -1779,6 +1797,36 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn native_text_size_is_systematically_applied_and_radio_choices_are_semantic() {
+        let sources = [
+            ("focus", include_str!("../ui/focus.slint")),
+            ("catalog", include_str!("../ui/catalog-card.slint")),
+            ("identity", include_str!("../ui/identity-card.slint")),
+            ("verified-gallery", include_str!("../ui/approved-gallery.slint")),
+        ];
+        let mut total = 0usize;
+        for (name, source) in sources {
+            for tail in source.split("font-size:").skip(1) {
+                let rule=tail.split(';').next().unwrap_or("");
+                assert!(rule.contains("TextScale.factor"),
+                    "Unscaled font in {name}: {}", rule.trim());
+                total += 1;
+            }
+        }
+        assert!(total >= 425, "Expected all native labels and source credits to scale");
+        let focus = include_str!("../ui/focus.slint");
+        assert!(focus.contains("accessible-role: radio-button;"));
+        assert!(focus.contains("accessible-checked: root.selected;"));
+        assert!(focus.contains("component PreferenceAction inherits Rectangle"));
+        assert!(focus.contains("root.change-text-scale(150)"));
+        assert!(focus.contains("ScrollView {"), "Scaled preferences must scroll");
+        assert!(focus.contains("default-font-size: 13px * TextScale.factor;"));
+        assert!(focus.contains("root.text-scale-percent >= 125 ? \"Home\""));
+        assert_eq!(focus.matches("LineEdit { font-size: 13px * TextScale.factor;").count(),3,
+            "Native input text must also follow the chosen text size");
+    }
 
     #[test]
     fn session_events_are_ephemeral_and_bounded() {
