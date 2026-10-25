@@ -91,11 +91,12 @@ component KeyboardAction inherits Rectangle {
 // Distinguish selected radio preferences from command buttons in the UIA tree.
 component PreferenceChoice inherits Rectangle {
     in property <string> label;
+    in property <string> accessible-name: "";
     in property <bool> selected;
     in property <bool> dark;
     in property <bool> high-contrast;
     callback activated();
-    height: 41px;
+    height: TextScale.factor >= 1.75 ? 52px : 41px;
     border-radius: 9px;
     border-width: root.selected || root.high-contrast || pref-focus.has-focus ? 2px : 1px;
     border-color: pref-focus.has-focus ? (root.dark ? #f5d084 : #245d35)
@@ -113,7 +114,7 @@ component PreferenceChoice inherits Rectangle {
     accessible-role: radio-button;
     accessible-checkable: true;
     accessible-checked: root.selected;
-    accessible-label: root.label;
+    accessible-label: root.accessible-name == "" ? root.label : root.accessible-name;
     accessible-action-default => { root.activated(); }
     forward-focus: pref-focus;
     pref-touch := TouchArea { mouse-cursor: pointer; clicked => { root.activated(); } }
@@ -175,6 +176,9 @@ export component AppWindow inherits Window {
     in-out property <int> text-scale-percent: 100;
     changed text-scale-percent => {
         TextScale.factor = root.text-scale-percent / 100.0;
+        // At 175%+ reflow even a wide window into the compact product layout.
+        root.compact-layout = root.width < 950px || root.text-scale-percent >= 175;
+        root.compact-navigation = root.width < 980px || root.text-scale-percent >= 175;
     }
     in-out property <string> preferences-section: "appearance";
     in-out property <string> preferences-status: "";
@@ -185,6 +189,7 @@ export component AppWindow inherits Window {
     in-out property <bool> can-forward: false;
     in-out property <bool> refreshing: false;
     in-out property <string> query: "";
+    in-out property <bool> query-rtl: false;
     in-out property <string> selected-domain: "all";
     in-out property <string> selected-domain-label: "All software";
     in-out property <[Discipline]> disciplines-left;
@@ -216,6 +221,7 @@ export component AppWindow inherits Window {
     in-out property <string> device-scope: "Not inspected";
     in-out property <string> device-status: "not-read";
     in-out property <string> device-query: "";
+    in-out property <bool> device-query-rtl: false;
     in-out property <bool> device-truncated: false;
     in-out property <bool> device-reading: false;
     in-out property <string> device-error: "";
@@ -313,8 +319,8 @@ export component AppWindow inherits Window {
     property <bool> spacious-layout: true;
     property <bool> over-950: true;
     changed width => {
-        root.compact-layout = root.width < 950px;
-        root.compact-navigation = root.width < 980px;
+        root.compact-layout = root.width < 950px || root.text-scale-percent >= 175;
+        root.compact-navigation = root.width < 980px || root.text-scale-percent >= 175;
         root.show-extended-columns = root.width > 1280px;
         root.show-platforms = root.width > 1550px;
         root.spacious-layout = root.width > 1050px;
@@ -488,6 +494,7 @@ export component AppWindow inherits Window {
                 HorizontalLayout {
                     spacing: 11px;
                     LineEdit { font-size: 13px * TextScale.factor;
+                        horizontal-alignment: root.query-rtl ? right : start; input-type: search;
                         horizontal-stretch: 1; height: 54px;
                         text: root.query;
                         placeholder-text: "Search software, categories or capabilities…";
@@ -640,35 +647,37 @@ export component AppWindow inherits Window {
         if root.page == "results": VerticalLayout {
             padding-left: root.compact-layout ? 25px : 48px;
             padding-right: root.compact-layout ? 25px : 48px;
-            padding-top: 18px; padding-bottom: 17px; spacing: 13px;
+            padding-top: root.text-scale-percent >= 175 ? 10px : 18px;
+            padding-bottom: root.text-scale-percent >= 175 ? 8px : 17px;
+            spacing: root.text-scale-percent >= 175 ? 7px : 13px;
             HorizontalLayout {
                 spacing: 9px;
                 Rectangle {
-                    width: 120px; height: 35px; border-radius: 7px; background: root.accent-bg;
-                    Text { text: "← Discover"; font-size: (11px) * TextScale.factor; font-weight: 700; color: root.accent;
+                    width: root.text-scale-percent >= 175 ? 140px : 120px; height: root.text-scale-percent >= 175 ? 45px : 35px; border-radius: 7px; background: root.accent-bg;
+                    Text { text: root.text-scale-percent >= 175 ? "Discover" : "← Discover"; font-size: (11px) * TextScale.factor; font-weight: 700; color: root.accent;
                         horizontal-alignment: center; vertical-alignment: center; }
                     KeyboardAction { action-dark: root.dark-mode; action-label: "Return to Discover";
                         activated => { root.navigate("home"); } }
                 }
                 Rectangle { horizontal-stretch: 1; background: transparent; }
                 Rectangle {
-                    width: 64px; height: 35px; border-radius: 7px; background: root.can-back ? root.accent-bg : root.muted-sheet;
-                    Text { text: "← Back"; font-size: (11px) * TextScale.factor; color: root.can-back ? root.accent : root.subtle;
+                    width: root.text-scale-percent >= 175 ? 88px : 64px; height: root.text-scale-percent >= 175 ? 45px : 35px; border-radius: 7px; background: root.can-back ? root.accent-bg : root.muted-sheet;
+                    Text { text: root.text-scale-percent >= 175 ? "Back" : "← Back"; font-size: (11px) * TextScale.factor; color: root.can-back ? root.accent : root.subtle;
                         horizontal-alignment: center; vertical-alignment: center; }
                     KeyboardAction { action-dark: root.dark-mode; action-label: "Go back";
                         action-enabled: root.can-back; activated => { root.go-back(); } }
                 }
                 Rectangle {
-                    width: 72px; height: 35px; border-radius: 7px; background: root.can-forward ? root.accent-bg : root.muted-sheet;
-                    Text { text: "Next →"; font-size: (11px) * TextScale.factor; color: root.can-forward ? root.accent : root.subtle;
+                    width: root.text-scale-percent >= 175 ? 92px : 72px; height: root.text-scale-percent >= 175 ? 45px : 35px; border-radius: 7px; background: root.can-forward ? root.accent-bg : root.muted-sheet;
+                    Text { text: root.text-scale-percent >= 175 ? "Next" : "Next →"; font-size: (11px) * TextScale.factor; color: root.can-forward ? root.accent : root.subtle;
                         horizontal-alignment: center; vertical-alignment: center; }
                     KeyboardAction { action-dark: root.dark-mode; action-label: "Go forward";
                         action-enabled: root.can-forward; activated => { root.go-forward(); } }
                 }
             }
             Text { text: root.selected-domain == "all" ? "Discover software" : root.selected-domain-label;
-                color: root.strong; font-size: (root.compact-layout ? 27px : 32px) * TextScale.factor; font-weight: 800; }
-            Text { text: root.selected-domain == "all" ?
+                color: root.strong; font-size: (root.text-scale-percent >= 175 ? 23px : (root.compact-layout ? 27px : 32px)) * TextScale.factor; font-weight: 800; }
+            if root.text-scale-percent < 175: Text { text: root.selected-domain == "all" ?
                     "Explore real projects and find the tools that fit your workflow." :
                     "Browse source-linked projects in this field. Open any card to learn more.";
                 color: root.muted; font-size: (12px) * TextScale.factor; }
@@ -676,7 +685,7 @@ export component AppWindow inherits Window {
             VerticalLayout {
                 spacing: 7px;
                 HorizontalLayout {
-                    height: 19px;
+                    height: root.text-scale-percent >= 175 ? 32px : 19px;
                     Text { text: "SEARCH SOFTWARE"; font-size: (10px) * TextScale.factor;
                         font-weight: 800; color: root.accent;
                         vertical-alignment: center; }
@@ -686,7 +695,8 @@ export component AppWindow inherits Window {
                         vertical-alignment: center; }
                 }
                 LineEdit { font-size: 13px * TextScale.factor;
-                    horizontal-stretch: 1; height: 52px; text: root.query;
+                    horizontal-alignment: root.query-rtl ? right : start; input-type: search;
+                    horizontal-stretch: 1; height: root.text-scale-percent >= 175 ? 64px : 52px; text: root.query;
                     placeholder-text: "Search software, tasks or categories...";
                     accessible-label: "Search software catalog";
                     edited(value) => { root.search-edited(value); }
@@ -694,7 +704,7 @@ export component AppWindow inherits Window {
                 }
             }
             HorizontalLayout {
-                height: 41px; spacing: 9px;
+                height: root.text-scale-percent >= 175 ? 46px : 41px; spacing: 9px;
                 CheckBox { text: "Release review available (" + root.review-route-count + ")";
                     checked: root.review-only; font-size: (11px) * TextScale.factor; font-weight: 650;
                     toggled => { root.toggle-review-only(); } }
@@ -719,7 +729,7 @@ export component AppWindow inherits Window {
             ListView {
                 vertical-stretch: 1;
                 for project[i] in root.entries: Rectangle {
-                    height: root.compact-layout ? 181px : 189px; background: transparent;
+                    height: root.text-scale-percent >= 175 ? (root.compact-layout ? 300px : 310px) : (root.compact-layout ? 181px : 189px); background: transparent;
                     HorizontalLayout {
                         Rectangle {
                             height: parent.height - 10px; horizontal-stretch: 1;
@@ -1398,7 +1408,8 @@ export component AppWindow inherits Window {
                             Text { text: "FILTER"; font-size: (10px) * TextScale.factor; font-weight: 800; color: root.accent;
                                 vertical-alignment: center; }
                             LineEdit { font-size: 13px * TextScale.factor;
-                                horizontal-stretch: 1; height: 35px;
+                                horizontal-alignment: root.device-query-rtl ? right : start; input-type: search;
+                                horizontal-stretch: 1; height: root.text-scale-percent >= 175 ? 50px : 35px;
                                 text: root.device-query;
                                 placeholder-text: "Name or registered identifier…";
                                 accessible-label: "Filter local app registrations";
@@ -1594,7 +1605,7 @@ export component AppWindow inherits Window {
         }
 
         Rectangle {
-            height: 40px; background: root.sheet; border-color: root.line; border-width: 1px;
+            height: root.text-scale-percent >= 175 ? 44px : 40px; background: root.sheet; border-color: root.line; border-width: 1px;
             HorizontalLayout {
                 padding-left: root.compact-layout ? 22px : 38px;
                 padding-right: root.compact-layout ? 22px : 38px;
@@ -1626,8 +1637,8 @@ export component AppWindow inherits Window {
         close-policy: PopupClosePolicy.close-on-click-outside;
         x: root.compact-layout ? 24px : (root.width - 820px) / 2;
         y: root.compact-layout ? 56px : 66px;
-        width: root.compact-layout ? 690px : 820px;
-        height: root.compact-layout ? 466px : 530px;
+        width: root.compact-layout ? (root.width - 48px) : 820px;
+        height: root.compact-layout ? (root.height - 80px) : 530px;
 
         Rectangle {
             width: parent.width; height: parent.height;
@@ -1636,7 +1647,7 @@ export component AppWindow inherits Window {
             VerticalLayout {
                 padding: 20px; spacing: 13px;
                 HorizontalLayout {
-                    height: 40px;
+                    height: root.text-scale-percent >= 175 ? 76px : 40px;
                     VerticalLayout {
                         spacing: 2px;
                         Text { text: "PREFERENCES"; font-size: (11px) * TextScale.factor; font-weight: 850;
@@ -1672,13 +1683,13 @@ export component AppWindow inherits Window {
                             activated => { root.preferences-section = "accessibility"; }
                         }
                         PreferenceChoice {
-                            label: "About & Updates"; dark: root.dark-mode;
+                            label: root.text-scale-percent >= 175 ? "About" : "About & Updates"; accessible-name: "About & Updates"; dark: root.dark-mode;
                             selected: root.preferences-section == "about";
                             high-contrast: root.high-contrast;
                             activated => { root.preferences-section = "about"; }
                         }
                         PreferenceChoice {
-                            label: "Privacy & Data"; dark: root.dark-mode;
+                            label: root.text-scale-percent >= 175 ? "Privacy" : "Privacy & Data"; accessible-name: "Privacy & Data"; dark: root.dark-mode;
                             selected: root.preferences-section == "privacy";
                             high-contrast: root.high-contrast;
                             activated => { root.preferences-section = "privacy"; }
@@ -1798,10 +1809,22 @@ export component AppWindow inherits Window {
                                         dark: root.dark-mode; high-contrast: root.high-contrast;
                                         activated => { root.change-text-scale(150); }
                                     }
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "175%";
+                                        selected: root.text-scale-percent == 175;
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        activated => { root.change-text-scale(175); }
+                                    }
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "200%";
+                                        selected: root.text-scale-percent == 200;
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        activated => { root.change-text-scale(200); }
+                                    }
                                 }
                                 Text { vertical-stretch: 0; text: "Text enlargement applies immediately to navigation, cards, details, preferences and source credits.";
                                     font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
-                                Text { vertical-stretch: 0; text: "Buttons provide keyboard focus and spoken labels. Screen-reader, 200% zoom, and RTL/IME audits remain release gates.";
+                                Text { vertical-stretch: 0; text: "Buttons expose keyboard focus and accessible names. Spoken screen-reader output and native IME composition remain release acceptance gates.";
                                     font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
                                 Rectangle { vertical-stretch: 1; background: transparent; }
                             }

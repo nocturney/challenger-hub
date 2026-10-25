@@ -112,7 +112,8 @@ export component CatalogProductCard inherits Rectangle {
                     font-weight: 800; color: root.dark ? #f3f7f2 : #253a2d;
                     overflow: elide; horizontal-stretch: 1; }
                 Rectangle {
-                    width: root.compact ? 112px : 154px; height: 24px;
+                    width: root.compact ? (TextScale.factor >= 1.75 ? 130px : 112px) : 154px;
+                    height: TextScale.factor >= 1.75 ? 39px : 24px;
                     border-radius: 12px;
                     background: root.dark ? #314638 : #eaf2e8;
                     Text { text: root.project-domain; font-size: (11px) * TextScale.factor;
@@ -125,14 +126,15 @@ export component CatalogProductCard inherits Rectangle {
                 color: root.dark ? #b0beb4 : #536758; overflow: elide; }
             Text { text: root.project-summary; font-size: (13px) * TextScale.factor;
                 color: root.dark ? #d1d9cf : #4b5d50;
-                height: 45px; wrap: word-wrap; overflow: elide; }
+                height: TextScale.factor >= 1.75 ? 118px : 45px; wrap: word-wrap; overflow: elide; }
             HorizontalLayout {
                 spacing: 10px;
                 Text { text: root.project-platforms; font-size: (11px) * TextScale.factor;
                     color: root.dark ? #b0beb4 : #536758;
                     horizontal-stretch: 1; vertical-alignment: center; overflow: elide; }
                 Rectangle {
-                    width: root.compact ? 103px : 127px; height: 30px;
+                    width: root.compact ? (TextScale.factor >= 1.75 ? 119px : 103px) : 127px;
+                    height: TextScale.factor >= 1.75 ? 42px : 30px;
                     border-radius: QuietPremium.control-radius;
                     background: root.dark ? #37533d : #e6f1e6;
                     Text { text: TextScale.factor >= 1.75 ? "Details" : (TextScale.factor >= 1.25 ? "Details  ↗" : "View details  ↗");
