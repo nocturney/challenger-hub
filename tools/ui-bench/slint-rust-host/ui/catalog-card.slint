@@ -1,0 +1,94 @@
+import { ApprovedGalleryThumb } from "approved-gallery.slint";
+import { IdentityTile } from "identity-card.slint";
+
+// An authentic screenshot or a factual, typography-only identity.
+component CardMedia inherits Rectangle {
+    in property <string> project-media;
+    in property <string> project-mode;
+    in property <string> project-name;
+    in property <string> project-maker;
+    in property <string> project-domain;
+    in property <bool> dark;
+    background: root.dark ? #25312a : #edf3ed;
+    border-radius: 9px;
+    if root.project-mode == "official": ApprovedGalleryThumb {
+        media: root.project-media; width: parent.width; height: parent.height;
+    }
+    if root.project-mode == "identity": IdentityTile {
+        project-name: root.project-name;
+        project-maker: root.project-maker;
+        project-domain: root.project-domain;
+        dark: root.dark;
+        width: parent.width; height: parent.height;
+    }
+}
+
+export component CatalogProductCard inherits Rectangle {
+    in property <string> project-name;
+    in property <string> project-maker;
+    in property <string> project-domain;
+    in property <string> project-summary;
+    in property <string> project-platforms;
+    in property <string> project-media;
+    in property <string> project-mode;
+    in property <bool> wide: false;
+    in property <bool> dark: false;
+    in property <bool> highlighted: false;
+    background: root.dark ? #202b24 : #ffffff;
+    border-color: root.highlighted ? #47765a : (root.dark ? #405044 : #dfe7df);
+    border-width: root.highlighted ? 2px : 1px;
+    border-radius: 13px;
+    clip: true;
+    if !root.wide: VerticalLayout {
+        padding: 13px; spacing: 9px;
+        CardMedia {
+            height: 147px;
+            project-media: root.project-media;
+            project-mode: root.project-mode;
+            project-name: root.project-name;
+            project-maker: root.project-maker;
+            project-domain: root.project-domain;
+            dark: root.dark;
+        }
+        HorizontalLayout {
+            spacing: 8px;
+            Text { text: root.project-name; font-size: 17px; font-weight: 800;
+                color: root.dark ? #f3f7f2 : #253a2d; overflow: elide; horizontal-stretch: 1; }
+            Text { text: "VIEW →"; font-size: 10px; font-weight: 800;
+                color: root.dark ? #b7d6b9 : #47765a; vertical-alignment: center; }
+        }
+        Text { text: root.project-maker + "  ·  " + root.project-domain; font-size: 11px;
+            color: root.dark ? #b0beb4 : #536758; overflow: elide; }
+        Text { text: root.project-summary; font-size: 12px;
+            color: root.dark ? #d1d9cf : #4b5d50;
+            height: 39px; wrap: word-wrap; overflow: elide; }
+    }
+    if root.wide: HorizontalLayout {
+        padding: 13px; spacing: 17px;
+        CardMedia {
+            width: 200px;
+            project-media: root.project-media;
+            project-mode: root.project-mode;
+            project-name: root.project-name;
+            project-maker: root.project-maker;
+            project-domain: root.project-domain;
+            dark: root.dark;
+        }
+        VerticalLayout {
+            padding-top: 5px; padding-bottom: 5px; spacing: 8px;
+            Text { text: root.project-name; font-size: 18px; font-weight: 800;
+                color: root.dark ? #f3f7f2 : #253a2d; overflow: elide; }
+            Text { text: root.project-maker + "  ·  " + root.project-domain; font-size: 11px;
+                color: root.dark ? #b0beb4 : #536758; overflow: elide; }
+            Text { text: root.project-summary; font-size: 12px;
+                color: root.dark ? #d1d9cf : #4b5d50;
+                wrap: word-wrap; height: 47px; overflow: elide; }
+            HorizontalLayout {
+                Text { text: root.project-platforms; font-size: 10px;
+                    color: root.dark ? #b0beb4 : #536758; horizontal-stretch: 1; overflow: elide; }
+                Text { text: "EXPLORE →"; font-size: 11px; font-weight: 800;
+                    color: root.dark ? #b7d6b9 : #47765a; }
+            }
+        }
+    }
+}

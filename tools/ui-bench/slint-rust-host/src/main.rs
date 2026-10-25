@@ -250,6 +250,8 @@ fn set_detail(ui: &AppWindow, project: Option<&Project>,review_routes:&HashSet<S
         ui.set_detail_evidence(p.evidence.clone().into());
         ui.set_detail_media(media_id(p).into());
         ui.set_detail_visual_mode(visual_mode(p).into());
+        ui.set_detail_technical_open(false);
+        ui.set_detail_technical_open(false);
         ui.set_detail_media_caption(media_caption(media_id(p)).into());
         ui.set_detail_gallery_count(gallery::count(media_id(p)));
         ui.set_detail_gallery_index(0);
@@ -266,6 +268,8 @@ fn set_detail(ui: &AppWindow, project: Option<&Project>,review_routes:&HashSet<S
         ui.set_detail_source("".into());
         ui.set_detail_media("".into());
         ui.set_detail_visual_mode("identity".into());
+        ui.set_detail_technical_open(false);
+        ui.set_detail_technical_open(false);
         ui.set_detail_media_caption("".into());
         ui.set_detail_gallery_count(0);
         ui.set_detail_gallery_index(0);
@@ -1368,7 +1372,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 w.invoke_open_project(0);
                 if w.get_page() != "detail" || w.get_detail_name().is_empty() ||
                     w.get_detail_visual_mode() != "identity" ||
-                    w.get_detail_gallery_count() != 0 {
+                    w.get_detail_gallery_count() != 0 ||
+                    w.get_detail_technical_open() {
                     fail("source-backed identity dossier for a project without official media");
                 }
                 if w.get_install_ready() || w.get_install_busy() || w.get_install_approved() {

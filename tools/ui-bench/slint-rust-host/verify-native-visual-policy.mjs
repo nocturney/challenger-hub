@@ -8,6 +8,7 @@ import {fileURLToPath} from 'node:url';
 const here=dirname(fileURLToPath(import.meta.url));
 const ui=readFileSync(join(here,'ui/focus.slint'),'utf8');
 const identity=readFileSync(join(here,'ui/identity-card.slint'),'utf8');
+const product=readFileSync(join(here,'ui/catalog-card.slint'),'utf8');
 const rust=readFileSync(join(here,'src/main.rs'),'utf8');
 const inventory=JSON.parse(readFileSync(resolve(here,'../../../docs/visual-catalog/inventory-20261025.json'),'utf8'));
 const gallery=JSON.parse(readFileSync(join(here,'ui/APPROVED_GALLERY_INDEX.json'),'utf8'));
@@ -15,8 +16,9 @@ function requirePolicy(ok,reason) {
   if(!ok)throw Error('NATIVE_VISUAL_POLICY_FAIL: '+reason);
 }
 const checkBindings=[
- 'if project.visual-mode == "official": Rectangle {',
- 'if project.visual-mode == "identity": IdentityTile {',
+ 'project-mode: project.visual-mode;',
+ 'project-summary: project.summary;',
+ 'project-media: project.media;',
  'if root.detail-visual-mode == "official": Rectangle {',
  'if root.detail-visual-mode == "identity": IdentityDossier {',
  'project-name: project.name;',
@@ -30,6 +32,16 @@ const checkBindings=[
  'project-source: root.detail-source;',
 ];
 for(const expr of checkBindings) requirePolicy(ui.includes(expr),'Missing factual native rendering path '+expr);
+for(const expr of [
+ 'if root.project-mode == "official": ApprovedGalleryThumb',
+ 'if root.project-mode == "identity": IdentityTile',
+ 'project-name: root.project-name;',
+ 'project-maker: root.project-maker;',
+ 'project-domain: root.project-domain;',
+])requirePolicy(product.includes(expr),'Unapproved product card content: '+expr);
+requirePolicy(!/@image-url|@linear-gradient|@radial-gradient/.test(product),
+  'Product cards must use only the source-locked gallery or factual identity');
+
 for(const expr of ['if gallery::count(media_id(p)) > 0 { "official" } else { "identity" }',
   'visual_mode: visual_mode(p).into()','ui.set_detail_visual_mode(visual_mode(p).into());']) {
   requirePolicy(rust.includes(expr),'Source-locked visual mode missing '+expr);

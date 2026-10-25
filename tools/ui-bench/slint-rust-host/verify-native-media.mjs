@@ -77,5 +77,7 @@ if(publicAttempt.status===0 || !String(publicAttempt.stderr).includes('PUBLIC_ME
 }
 execFileSync(process.execPath,[join(here,'verify-native-visual-policy.mjs')],
     {stdio:'inherit',timeout:30000});
+execFileSync(process.execPath,[join(here,'verify-product-first-ux.mjs')],
+    {stdio:'inherit',timeout:30000});
 console.log('NATIVE_PUBLIC_MEDIA_RELEASE_BLOCK_PASS thirdPartyAssets=100');
 console.log('NATIVE_MEDIA_PROVENANCE_PASS verifiedProjects=36 nativeIcons=30 approvedScreenshots=70 screenshotProjects=29 source=offline-pinned-manifests');
