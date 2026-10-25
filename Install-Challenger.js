@@ -4,6 +4,32 @@ const fs=require('node:fs'),path=require('node:path'),os=require('node:os');
 const crypto=require('node:crypto'),{spawnSync}=require('node:child_process');
 const ROOT=__dirname,ID=String(process.argv[2]||''),DRY=process.argv.includes('--verify-only'),PLATFORM=process.platform;
 const PORTABLE=process.argv.includes('--download-only');
+// A separate, explicit native UI approval can install the reviewed PdfCraft portable ZIP.
+// No MSI execution, silent installer, elevated rights or generic managed-app exception.
+const NATIVE_PDFCRAFT_INSTALL=process.argv.includes('--native-pdfcraft-install');
+const NATIVE_CANCELABLE=process.argv.includes('--native-approved-install');
+let cancelRequested=false,commitStarted=false;
+const cancelController=new AbortController();
+if(NATIVE_CANCELABLE){
+ let input='';
+ process.stdin.setEncoding('utf8');
+ process.stdin.on('data',chunk=>{
+  if(input.length+chunk.length>64){input='';return}
+  input+=chunk;
+  if(input.includes('cancel\n')){
+   cancelRequested=true;
+   if(!commitStarted)cancelController.abort(Error('INSTALL_CANCELLED_BEFORE_COMMIT'));
+   input='';
+  }
+ });
+ process.stdin.resume();
+}
+function checkCancelable(){
+ if(NATIVE_CANCELABLE&&cancelRequested&&!commitStarted)
+  fail('INSTALL_CANCELLED_BEFORE_COMMIT');
+}
+if(NATIVE_PDFCRAFT_INSTALL&&(PORTABLE||ID!=='pdfcraft'||PLATFORM!=='win32'||process.arch!=='x64'))
+ throw Error('Managed PdfCraft install is only for Windows x64 with explicit native approval');
 const DOWNLOAD_ROOT=PLATFORM==='win32'?'D:\\Downloads\\ChallengerHub\\Portable':path.join(os.homedir(),'Downloads','ChallengerHub','Portable');
 const APP_ROOT=PLATFORM==='win32'?'D:\\Velvet\\Installers\\ChallengerHub\\Managed':path.join(os.homedir(),'Applications','ChallengerHub Apps');
 const BACKUP_ROOT=path.join(APP_ROOT,'.backups'),WORK_ROOT=path.join(APP_ROOT,'.stage');
@@ -17,9 +43,9 @@ function approved(){
  if(!['darwin','win32'].includes(PLATFORM))fail('Unsupported OS');
  const registry=safeJson(path.join(ROOT,'challengers.json'));
  const craftNames=new Set(['photocraft','vectorcraft','lightcraft','filmcraft','effectcraft','designcraft','pdfcraft','wordcraft','gridcraft','deckcraft','cadcraft','soundcraft']);
- const p=registry.projects.find(p=>p.id===ID)||(PORTABLE&&craftNames.has(ID)?{id:ID,name:ID,repository:'storytold/'+ID,installAdapter:null,installable:false}:null);
+ const p=registry.projects.find(p=>p.id===ID)||((PORTABLE||NATIVE_PDFCRAFT_INSTALL)&&craftNames.has(ID)?{id:ID,name:ID,repository:'storytold/'+ID,installAdapter:null,installable:false}:null);
  if(!p||p.installAdapter||p.installable)fail('Unrecognized or unsafe discovery entry');
- const adapters=safeJson(path.join(ROOT,PORTABLE?'portable-assets.json':'adapters.json'));
+ const adapters=safeJson(path.join(ROOT,(PORTABLE||NATIVE_PDFCRAFT_INSTALL)?'portable-assets.json':'adapters.json'));
  const spec=adapters.projects?.[ID]?.[PLATFORM];
  if(PORTABLE&&!['zip','zip-app','exe-portable'].includes(spec?.kind))fail('No allowlisted portable package for this computer');
  if(!spec||!['zip','zip-app','dmg','exe-portable'].includes(spec.kind))fail('No reviewed adapter for this platform');
@@ -45,13 +71,15 @@ function exec(file,args,timeout=120000){
 }
 async function getRelease(asset,dest){
  out('download','Downloading '+asset.name+' ('+(asset.size/1048576).toFixed(1)+' MiB)');
- const response=await fetch(asset.url,{redirect:'follow',headers:{'User-Agent':'ChallengerHub/2.4'},signal:AbortSignal.timeout(6*60*1000)});
+ checkCancelable();
+ const response=await fetch(asset.url,{redirect:'follow',headers:{'User-Agent':'ChallengerHub/2.4'},
+  signal:AbortSignal.any([AbortSignal.timeout(6*60*1000),cancelController.signal])});
  if(!response.ok||!response.body)fail('Official release download HTTP '+response.status);
  const final=new URL(response.url);
  const allowed=['github.com','objects.githubusercontent.com','release-assets.githubusercontent.com','github-releases.githubusercontent.com'];
  if(final.protocol!=='https:'||!allowed.includes(final.hostname))fail('Release asset redirected to an unapproved host');
  const file=fs.openSync(dest,'wx',0o600);
- const hasher=crypto.createHash('sha256');let size=0;
+ const hasher=crypto.createHash('sha256');let size=0,lastReported=0;
  try{
   const reader=response.body.getReader();
   while(true){
@@ -60,6 +88,10 @@ async function getRelease(asset,dest){
    size+=value.byteLength;
    if(size>MAX_PACKAGE||size>asset.size+2048)fail('Download exceeded declared release asset size');
    hasher.update(value);fs.writeSync(file,value);
+   // Report actual received bytes, not a timer-based or guessed percentage.
+   // 100% is intentionally withheld until the complete SHA-256 check passes.
+   const completed=Math.min(90,Math.floor(size/asset.size*10)*10);
+   if(completed>lastReported){lastReported=completed;out('download-progress',String(completed));}
   }
  }finally{fs.closeSync(file)}
  if(size!==asset.size)fail('Release asset size mismatch ('+size+' vs '+asset.size+')');
@@ -103,6 +135,43 @@ function unzipWindows(source,target){
  const fifth="[IO.Compression.ZipFile]::ExtractToDirectory('"+q(source)+"','"+q(target)+"')";
  exec('powershell.exe',['-NoProfile','-NonInteractive','-Command',first+second+third+fourth+fifth],240000);
 }
+// A failure after the approved files are swapped must not leave the prior
+// managed installation displaced when its metadata cannot be committed.
+// This handles synchronous errors; hard power loss remains a separate gap.
+function rollbackSwap({appRoot,backupPath}){
+ const safeParent=path.resolve(APP_ROOT)+path.sep;
+ const target=path.resolve(appRoot);
+ const safeBackup=path.resolve(BACKUP_ROOT)+path.sep;
+ if(!target.startsWith(safeParent)||
+    (backupPath&&!path.resolve(backupPath).startsWith(safeBackup)))
+  fail('Refusing rollback outside the managed app roots');
+ if(!fs.existsSync(target))fail('Cannot roll back: installed app folder is missing');
+ const quarantined=path.join(WORK_ROOT,ID+'-failed-'+crypto.randomBytes(8).toString('hex'));
+ fs.renameSync(target,quarantined);
+ try{
+  if(backupPath){
+   if(!fs.existsSync(backupPath))fail('Cannot roll back: managed backup is missing');
+   fs.renameSync(backupPath,target);
+  }
+ }catch(e){
+  try{fs.renameSync(quarantined,target)}
+  catch(restoreError){throw Error('Rollback and failed-app recovery both failed: '+restoreError.message)}
+  throw e;
+ }
+ try{fs.rmSync(quarantined,{recursive:true,force:true})}
+ catch(e){out('warning','Failed install quarantined for later cleanup: '+e.message)}
+ out('rolled-back',backupPath?'Restored previous managed application':'Removed failed new application');
+}
+function ciOnlyStateFailure(){
+ if(process.env.CHALLENGER_CI_FAIL_STATE_WRITE!=='1')return false;
+ const runner=process.env.RUNNER_TEMP||'';
+ const local=process.env.LOCALAPPDATA||'';
+ if(process.env.GITHUB_ACTIONS!=='true'||process.env.RUNNER_OS!=='Windows'||
+   !runner||!local||!path.resolve(local).toLowerCase()
+     .startsWith(path.resolve(runner).toLowerCase()+path.sep.toLowerCase()))
+  fail('CI state-write fault injection refused outside disposable Windows runner');
+ return true;
+}
 function installWindows({p,spec},src,stage){
  const build=path.join(stage,'payload');fs.mkdirSync(build,{recursive:true});
  let exe=null;
@@ -110,6 +179,8 @@ function installWindows({p,spec},src,stage){
   unzipWindows(src,build);
   exe=chosen(walk(build,(f,e)=>e.isFile()&&/\.exe$/i.test(f)),spec.exeHint||p.name);
   if(!/\.exe$/i.test(exe))fail('No expected Windows executable');
+  if(NATIVE_PDFCRAFT_INSTALL&&path.basename(exe).toLowerCase()!=='pdfcraft.exe')
+   fail('The reviewed PdfCraft GUI executable is missing from the verified archive');
  }else if(spec.kind==='exe-portable'){
   const stem=String(spec.exeHint||p.id).replace(/[^a-zA-Z0-9_-]/g,'');
   exe=path.join(build,stem+'.exe');fs.copyFileSync(src,exe);
@@ -171,6 +242,24 @@ function installMac({p,spec},src,stage){
  const stage=fs.mkdtempSync(path.join(PORTABLE?path.join(DOWNLOAD_ROOT,'.stage'):WORK_ROOT,ID+'-'));
  try{
   out('source','Approved '+entry.p.repository+' '+entry.rel.tag+' for '+PLATFORM);
+  if(NATIVE_CANCELABLE)out('cancel-ready','Cancellation is permitted before package replacement');
+  // Deterministic integration gate; permitted ONLY in a disposable Windows
+  // Actions runner, never in a regular Windows user profile.
+  if(process.env.CHALLENGER_CI_CANCEL_GATE==='1'){
+   const runner=process.env.RUNNER_TEMP||'',local=process.env.LOCALAPPDATA||'';
+   if(process.env.GITHUB_ACTIONS!=='true'||process.env.RUNNER_OS!=='Windows'||
+      !runner||!local||!path.resolve(local).toLowerCase()
+        .startsWith(path.resolve(runner).toLowerCase()+path.sep.toLowerCase()))
+     fail('CI cancel gate refused outside disposable Windows runner');
+   if(!cancelRequested)await new Promise(resolve=>{
+    const timer=setTimeout(resolve,8000);
+    cancelController.signal.addEventListener('abort',()=>{
+     clearTimeout(timer);resolve();
+    },{once:true});
+   });
+   if(!cancelRequested)fail('CI cooperative cancellation never reached worker');
+  }
+  checkCancelable();
   const asset=path.join(stage,entry.asset.name);
   await getRelease(entry.asset,asset);
   if(PORTABLE){
@@ -197,13 +286,35 @@ function installMac({p,spec},src,stage){
     out('verified','Package structure and integrity inspected without installation.');return;
   }
   out('extract','Validating the downloaded application');
+  checkCancelable();
+  // The replacement is synchronous; after this boundary, cancellation
+  // requests do not kill the worker or abandon a partially swapped app.
+  commitStarted=true;
+  out('committing','Applying verified package; cancellation is no longer safe');
   const installed=PLATFORM==='win32'?installWindows(entry,asset,stage):installMac(entry,asset,stage);
-  const data=safeReadState();if(!data.installed||typeof data.installed!=='object')data.installed={};
-  data.installed[ID]={id:ID,repository:entry.p.repository,version:entry.rel.tag,installedAt:new Date().toISOString(),
-    installedPath:installed.installedPath,appRoot:installed.appRoot,assetName:entry.asset.name,
-    sha256:entry.asset.sha256,kind:entry.spec.kind,managed:true,
-    integrity:'SHA-256 from GitHub release metadata'};
-  saveState(data);
+  try{
+   const data=safeReadState();if(!data.installed||typeof data.installed!=='object')data.installed={};
+   data.installed[ID]={id:ID,repository:entry.p.repository,version:entry.rel.tag,installedAt:new Date().toISOString(),
+     installedPath:installed.installedPath,appRoot:installed.appRoot,assetName:entry.asset.name,
+     sha256:entry.asset.sha256,kind:entry.spec.kind,managed:true,
+     integrity:'SHA-256 from GitHub release metadata'};
+   if(ciOnlyStateFailure())fail('CI-only injected managed install state-write failure');
+   saveState(data);
+  }catch(e){
+   // The backup remains owned by this worker until metadata commits.
+   // Restore it on a synchronous failure; never emit a false success.
+   try{rollbackSwap(installed)}
+   catch(rollback){throw Error('Install record failed ('+e.message+
+     '); failed to restore previous application ('+rollback.message+')')}
+   throw e;
+  }
   out('success',entry.p.name+' '+entry.rel.tag+' installed and tracked');
  }finally{try{fs.rmSync(stage,{recursive:true,force:true})}catch(_){}}
-})().catch(e=>{out('failed',String(e.message));process.exitCode=1});
+})().catch(e=>{
+ if(cancelRequested&&!commitStarted){
+  out('cancelled','User cancellation confirmed before application replacement');
+  process.exitCode=2;
+ }else{
+  out('failed',String(e.message));process.exitCode=1;
+ }
+}).finally(()=>{if(NATIVE_CANCELABLE)process.stdin.pause()});

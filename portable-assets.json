@@ -110,7 +110,8 @@
     "pdfcraft": {
       "win32": {
         "kind": "zip",
-        "asset": "^pdfcraft-[^/]+-windows-x64-portable\\.zip$"
+        "asset": "^pdfcraft-[^/]+-windows-x64-portable\\.zip$",
+        "exeHint": "pdfcraft"
       }
     },
     "wordcraft": {

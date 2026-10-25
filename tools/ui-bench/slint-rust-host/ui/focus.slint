@@ -1,0 +1,1874 @@
+import { TextScale } from "text-scale.slint";
+import { AboutSlint, CheckBox, LineEdit, ListView, ScrollView, Palette } from "std-widgets.slint";
+import { ApprovedGalleryThumb, ApprovedGalleryShot, ApprovedGalleryIcon, ApprovedIconCredit } from "approved-gallery.slint";
+import { IdentityTile, IdentityDossier } from "identity-card.slint";
+import { CatalogProductCard } from "catalog-card.slint";
+import { QuietPremium } from "quiet-premium.slint";
+
+// This is the approved Focus/Orbit information architecture implemented in genuine
+// native Slint. The old Slint/Node experiment has a separate, unchanged UI.
+export struct Discipline {
+    id: string,
+    label: string,
+    count: int,
+}
+export struct ProjectEntry {
+    id: string,
+    name: string,
+    maker: string,
+    domain: string,
+    summary: string,
+    platforms: string,
+    status: string,
+    kind: string,
+    review-route: bool,
+    media: string,
+    has-preview: bool,
+    visual-mode: string,
+    has-icon: bool,
+    has-independent-icon: bool,
+}
+export struct ManagedEntry {
+    name: string,
+    installed: string,
+    latest: string,
+    status: string,
+}
+export struct DeviceEntry {
+    name: string,
+    identifier: string,
+    version: string,
+    provenance: string,
+    linked-project: string,
+    linked-id: string,
+}
+export struct SessionEvent {
+    name: string,
+    detail: string,
+    outcome: string,
+}
+// Native button semantics for custom Focus/Orbit click targets. Without this,
+ // a TouchArea looks clickable but provides no keyboard focus or UIA Button.
+component KeyboardAction inherits Rectangle {
+    in property <string> action-label;
+    in property <bool> action-enabled: true;
+    in property <bool> action-dark: false;
+    callback activated();
+    out property <bool> hovered: action-touch.has-hover;
+    out property <bool> pressed: action-touch.pressed;
+    background: transparent;
+    // Strong on light surfaces; amber remains highly visible on dark surfaces.
+    border-color: key-focus.has-focus ? (root.action-dark ? #e8a64f : #47765a) : transparent;
+    border-width: key-focus.has-focus ? 2px : 0px;
+    accessible-role: button;
+    accessible-label: root.action-label;
+    accessible-enabled: root.action-enabled;
+    accessible-action-default => {
+        if (root.action-enabled) { root.activated(); }
+    }
+    forward-focus: key-focus;
+    action-touch := TouchArea {
+        enabled: root.action-enabled;
+        mouse-cursor: pointer;
+        clicked => { root.activated(); }
+    }
+    key-focus := FocusScope {
+        width: 0px; height: 0px;
+        enabled: root.action-enabled;
+        key-pressed(event) => {
+            if (event.text == Key.Return || event.text == Key.Space) {
+                root.activated();
+                return accept;
+            }
+            return reject;
+        }
+    }
+}
+
+
+// Keyboard/screen-reader accessible choice; no click-only faux buttons.
+// Native accessibility: role must be a Slint compile-time constant.
+// Distinguish selected radio preferences from command buttons in the UIA tree.
+component PreferenceChoice inherits Rectangle {
+    in property <string> label;
+    in property <bool> selected;
+    in property <bool> dark;
+    in property <bool> high-contrast;
+    callback activated();
+    height: 41px;
+    border-radius: 9px;
+    border-width: root.selected || root.high-contrast || pref-focus.has-focus ? 2px : 1px;
+    border-color: pref-focus.has-focus ? (root.dark ? #f5d084 : #245d35)
+        : root.selected ? (root.dark ? #e8d891 : #345d41)
+        : (root.dark ? #526456 : #cbdacf);
+    background: root.selected ? (root.dark ? #36543e : #e5f1e5)
+        : (root.dark ? #26352a : #f7faf6);
+    Text {
+        text: root.label;
+        font-size: (12px) * TextScale.factor;
+        font-weight: root.selected ? 800 : 650;
+        color: root.dark ? #f5f9f3 : #263a2e;
+        horizontal-alignment: center; vertical-alignment: center;
+    }
+    accessible-role: radio-button;
+    accessible-checkable: true;
+    accessible-checked: root.selected;
+    accessible-label: root.label;
+    accessible-action-default => { root.activated(); }
+    forward-focus: pref-focus;
+    pref-touch := TouchArea { mouse-cursor: pointer; clicked => { root.activated(); } }
+    pref-focus := FocusScope {
+        width: 0px; height: 0px;
+        key-pressed(event) => {
+            if (event.text == Key.Return || event.text == Key.Space) {
+                root.activated(); return accept;
+            }
+            return reject;
+        }
+    }
+}
+
+component PreferenceAction inherits Rectangle {
+    in property <string> label;
+    in property <bool> dark;
+    in property <bool> high-contrast;
+    callback activated();
+    height: 41px;
+    border-radius: 9px; border-width: root.high-contrast ? 2px : 1px;
+    border-color: root.dark ? #526456 : #cbdacf;
+    background: root.dark ? #26352a : #f7faf6;
+    Text {
+        text: root.label; font-size: (12px) * TextScale.factor;
+        font-weight: 700; color: root.dark ? #f5f9f3 : #263a2e;
+        horizontal-alignment: center; vertical-alignment: center;
+    }
+    KeyboardAction {
+        action-dark: root.dark; action-label: root.label;
+        activated => { root.activated(); }
+    }
+}
+
+export component AppWindow inherits Window {
+    title: "Challenger · Focus Native Preview";
+    // Preferred size, not fixed width/height: the OS can now resize/maximize the window.
+    // Leave sufficient room for the safety/consent controls in the dossier.
+    preferred-width: 1210px;
+    preferred-height: 805px;
+    min-width: 760px;
+    min-height: 560px;
+    background: root.canvas;
+    default-font-family: "Arial";
+    default-font-size: 13px * TextScale.factor;
+    // Keep native Fluent controls in the same light/dark scheme as the custom UI.
+    // This also corrects the previously unreadable dark-mode CheckBox label.
+    changed dark-mode => {
+        Palette.color-scheme = root.dark-mode ? ColorScheme.dark : ColorScheme.light;
+    }
+
+    in-out property <string> page: "home";
+    in-out property <bool> dark-mode: false;
+    // Passed by host; zero-duration animations when accessibility requires it.
+    in-out property <bool> reduced-motion: false;
+    in-out property <string> appearance-choice: "system";
+    in-out property <string> motion-choice: "system";
+    in-out property <bool> high-contrast: false;
+    in-out property <int> text-scale-percent: 100;
+    changed text-scale-percent => {
+        TextScale.factor = root.text-scale-percent / 100.0;
+    }
+    in-out property <string> preferences-section: "appearance";
+    in-out property <string> preferences-status: "";
+    in-out property <bool> update-checking: false;
+    in-out property <string> update-status: "Not checked. Checks are manual only.";
+    in-out property <string> native-version: "Native developer preview";
+    in-out property <bool> can-back: false;
+    in-out property <bool> can-forward: false;
+    in-out property <bool> refreshing: false;
+    in-out property <string> query: "";
+    in-out property <string> selected-domain: "all";
+    in-out property <string> selected-domain-label: "All software";
+    in-out property <[Discipline]> disciplines-left;
+    in-out property <[Discipline]> disciplines-right;
+    in-out property <[ProjectEntry]> entries;
+    in-out property <int> total: 0;
+    in-out property <int> matching: 0;
+    in-out property <int> showing: 0;
+    in-out property <bool> has-more: false;
+    in-out property <bool> review-only: false;
+    in-out property <int> review-route-count: 0;
+    in-out property <[ManagedEntry]> managed-entries;
+    in-out property <int> managed-assessed: 0;
+    in-out property <int> managed-detected: 0;
+    in-out property <int> managed-updates: 0;
+    in-out property <string> inventory-status: "unsupported";
+    in-out property <string> inventory-checked: "Not assessed";
+    in-out property <[SessionEvent]> session-events;
+    in-out property <int> session-event-count: 0;
+    in-out property <[SessionEvent]> install-history-events;
+    in-out property <int> install-history-count: 0;
+    in-out property <string> install-history-status: "Not loaded. Select Read local installation history.";
+    in-out property <bool> install-history-loading: false;
+    in-out property <[DeviceEntry]> device-entries;
+    in-out property <int> device-total: 0;
+    in-out property <int> device-showing: 0;
+    in-out property <int> device-linked: 0;
+    in-out property <string> device-age: "";
+    in-out property <string> device-scope: "Not inspected";
+    in-out property <string> device-status: "not-read";
+    in-out property <string> device-query: "";
+    in-out property <bool> device-truncated: false;
+    in-out property <bool> device-reading: false;
+    in-out property <string> device-error: "";
+
+    in-out property <string> detail-name: "";
+    in-out property <string> detail-maker: "";
+    in-out property <string> detail-summary: "";
+    in-out property <string> detail-domain: "";
+    in-out property <string> detail-category: "";
+    in-out property <string> detail-platforms: "";
+    in-out property <string> detail-kind: "";
+    in-out property <string> detail-status: "";
+    in-out property <string> detail-source: "";
+    in-out property <string> detail-license: "";
+    in-out property <string> detail-challenges: "";
+    in-out property <string> detail-release: "";
+    in-out property <string> detail-media: "";
+    in-out property <string> detail-visual-mode: "identity";
+    in-out property <bool> detail-technical-open: false;
+    in-out property <string> detail-media-caption: "";
+    in-out property <int> detail-gallery-count: 0;
+    in-out property <int> detail-gallery-index: 0;
+    in-out property <bool> detail-independent-icon: false;
+    in-out property <bool> detail-has-icon: false;
+    in-out property <string> detail-evidence: "";
+    in-out property <string> install-project-id: "";
+    in-out property <bool> detail-reviewable: false;
+    in-out property <string> install-message: "Review the official release before approving an install.";
+    in-out property <string> install-stage: "";
+    // Percentage applies to the download bytes only, never the overall install.
+    in-out property <int> install-percent: -1;
+    in-out property <string> install-version: "";
+    in-out property <string> install-asset: "";
+    in-out property <string> install-hash: "";
+    in-out property <string> install-destination: "";
+    in-out property <bool> install-ready: false;
+    in-out property <bool> install-busy: false;
+    in-out property <bool> install-approved: false;
+    in-out property <bool> install-cancel-allowed: false;
+    in-out property <bool> install-cancel-requested: false;
+
+    callback navigate(string);
+    callback go-back();
+    callback go-forward();
+    callback open-discipline(string);
+    callback search-edited(string);
+    callback search-submitted(string);
+    callback open-project(int);
+    callback load-more();
+    callback toggle-review-only();
+    callback open-source();
+    callback open-media-source(int);
+    callback refresh-requested();
+    callback device-read-requested();
+    callback device-search-edited(string);
+    callback open-device-project(string);
+    callback review-install();
+    callback confirm-install();
+    callback cancel-install();
+    callback load-install-history();
+    callback toggle-theme();
+    callback change-appearance(string);
+    callback change-motion(string);
+    callback change-contrast(bool);
+    callback change-text-scale(int);
+    callback reset-preferences();
+    callback check-native-updates();
+    callback open-native-release-page();
+
+    // The native Preferences popup is also available from Cmd+, / Ctrl+,.
+    public function open-preferences() {
+        root.preferences-section = "appearance";
+        preferences-popup.show();
+    }
+
+    property <color> canvas: root.dark-mode ? #131b19 : #fafaf6;
+    property <color> sheet: root.dark-mode ? #1e2925 : #ffffff;
+    property <color> muted-sheet: root.dark-mode ? #24312c : #f3f6f1;
+    property <color> strong: root.dark-mode ? #eaf0e8 : #263a2e;
+    // Light-mode text colors must remain >= 4.5:1 on canvas, sheet,
+    // muted-sheet and accent-bg backgrounds, including 9-11px labels.
+    property <color> muted: root.high-contrast ? (root.dark-mode ? #f1f7ef : #1c3024) : (root.dark-mode ? #b0beb4 : #536758);
+    property <color> subtle: root.high-contrast ? (root.dark-mode ? #e3f0e1 : #263a2e) : (root.dark-mode ? #8b9b91 : #5b6e60);
+    property <color> line: root.high-contrast ? (root.dark-mode ? #93b59b : #537360) : (root.dark-mode ? #3b4941 : #dfe7df);
+    property <color> accent: root.high-contrast ? (root.dark-mode ? #ebf5e8 : #294c35) : (root.dark-mode ? #b7d6b9 : #47765a);
+    property <color> accent-bg: root.dark-mode ? #2d4534 : #eaf2e8;
+
+    // The breakpoint values are updated by the window resize event rather than
+    // binding layout constraints to Window.width. This avoids Slint layout-info
+    // dependency cycles while preserving responsive sizing.
+    property <bool> compact-layout: false;
+    property <bool> compact-navigation: false;
+    property <bool> show-extended-columns: true;
+    property <bool> show-platforms: false;
+    property <bool> spacious-layout: true;
+    property <bool> over-950: true;
+    changed width => {
+        root.compact-layout = root.width < 950px;
+        root.compact-navigation = root.width < 980px;
+        root.show-extended-columns = root.width > 1280px;
+        root.show-platforms = root.width > 1550px;
+        root.spacious-layout = root.width > 1050px;
+        root.over-950 = root.width > 950px;
+    }
+
+    // A fill container keeps the window's intrinsic size independent of responsive
+    // padding in the child layout (no root-width/layout-info binding cycle).
+    Rectangle {
+        VerticalLayout {
+            spacing: 0px;
+        Rectangle {
+            height: root.compact-layout ? 64px : 72px;
+            background: root.sheet;
+            drop-shadow-blur: 8px; drop-shadow-offset-y: 2px;
+            drop-shadow-color: root.dark-mode ? #00000033 : #21372712;
+            border-color: root.line;
+            border-width: 1px;
+            HorizontalLayout {
+                // The native header previously anchored the brand at the top edge.
+                // Provide explicit breathing room without stealing navigation width at 820px.
+                padding-left: root.compact-navigation ? 22px : 48px;
+                padding-right: root.compact-navigation ? 18px : 40px;
+                padding-top: root.compact-layout ? 11px : 14px;
+                padding-bottom: root.compact-layout ? 11px : 14px;
+                spacing: root.compact-navigation ? 9px : 16px;
+                Image {
+                    source: @image-url("orbit-app-128.png");
+                    width: root.compact-layout ? 29px : 38px;
+                    height: root.compact-layout ? 29px : 38px;
+                    image-fit: contain;
+                    vertical-alignment: center;
+                }
+                VerticalLayout {
+                    height: root.compact-layout ? 32px : 40px;
+                    spacing: root.compact-layout ? 0px : 4px;
+                    Text {
+                        height: root.compact-layout ? 32px : 20px;
+                        text: root.compact-layout ? "CHALLENGER" : "C H A L L E N G E R";
+                        color: root.strong;
+                        font-size: (root.compact-layout ? 11px : 13px) * TextScale.factor;
+                        font-weight: 800;
+                        vertical-alignment: center;
+                    }
+                    if !root.compact-layout: Text {
+                        height: 16px; text: "Independent tools, discovered.";
+                        color: root.subtle; font-size: (10px) * TextScale.factor; vertical-alignment: center;
+                    }
+                }
+                Rectangle { horizontal-stretch: 1; background: transparent; }
+                Rectangle {
+                    width: root.compact-layout ? 70px : 90px; background: discover-nav.pressed ? root.accent-bg :
+                        (root.page == "home") ? root.accent-bg :
+                        discover-nav.hovered ? root.muted-sheet : transparent;
+                    border-radius: QuietPremium.control-radius;
+                    border-width: 1px;
+                    border-color: (root.page == "home")
+                        ? (root.dark-mode ? QuietPremium.dark-outline : QuietPremium.light-outline)
+                        : transparent;
+                    animate background, border-color {
+                        duration: QuietPremium.tab-motion;
+                        easing: ease-out;
+                        enabled: !root.reduced-motion;
+                    }
+                    Text { text: root.compact-layout && root.text-scale-percent >= 125 ? "Home" : "Discover"; color: root.page == "home" ? root.accent : root.muted;
+                           font-size: (12px) * TextScale.factor; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
+                    discover-nav := KeyboardAction { action-dark: root.dark-mode; action-label: "Discover software"; activated => { root.navigate("home"); } }
+                }
+                Rectangle {
+                    width: root.compact-layout ? 67px : 82px;
+                    background: browse-nav.pressed ? root.accent-bg :
+                        (root.page == "results") ? root.accent-bg :
+                        browse-nav.hovered ? root.muted-sheet : transparent;
+                    border-radius: QuietPremium.control-radius;
+                    border-width: 1px;
+                    border-color: (root.page == "results")
+                        ? (root.dark-mode ? QuietPremium.dark-outline : QuietPremium.light-outline)
+                        : transparent;
+                    animate background, border-color {
+                        duration: QuietPremium.tab-motion;
+                        easing: ease-out;
+                        enabled: !root.reduced-motion;
+                    }
+                    Text { text: root.compact-layout && root.text-scale-percent >= 125 ? "Find" : "Browse"; color: root.page == "results" ? root.accent : root.muted;
+                        font-size: (12px) * TextScale.factor; font-weight: 700;
+                        horizontal-alignment: center; vertical-alignment: center; }
+                    browse-nav := KeyboardAction { action-dark: root.dark-mode; action-label: "Browse full software catalog";
+                        activated => { root.open-discipline("all"); } }
+                }
+                Rectangle {
+                    width: root.compact-layout ? 74px : (root.compact-navigation ? 94px : 114px);
+                    background: library-nav.pressed ? root.accent-bg :
+                        (root.page == "library" || root.page == "device") ? root.accent-bg :
+                        library-nav.hovered ? root.muted-sheet : transparent;
+                    border-radius: QuietPremium.control-radius;
+                    border-width: 1px;
+                    border-color: (root.page == "library" || root.page == "device")
+                        ? (root.dark-mode ? QuietPremium.dark-outline : QuietPremium.light-outline)
+                        : transparent;
+                    animate background, border-color {
+                        duration: QuietPremium.tab-motion;
+                        easing: ease-out;
+                        enabled: !root.reduced-motion;
+                    }
+                    Text { text: root.compact-layout ? (root.text-scale-percent >= 125 ? "Apps" : "My apps") : "My software"; color: root.page == "library" || root.page == "device" ? root.accent : root.muted;
+                           font-size: (12px) * TextScale.factor; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
+                    library-nav := KeyboardAction { action-dark: root.dark-mode; action-label: "My software"; activated => { root.navigate("library"); } }
+                }
+                Rectangle {
+                    width: root.compact-layout ? 68px : 78px; background: activity-nav.pressed ? root.accent-bg :
+                        (root.page == "activity") ? root.accent-bg :
+                        activity-nav.hovered ? root.muted-sheet : transparent;
+                    border-radius: QuietPremium.control-radius;
+                    border-width: 1px;
+                    border-color: (root.page == "activity")
+                        ? (root.dark-mode ? QuietPremium.dark-outline : QuietPremium.light-outline)
+                        : transparent;
+                    animate background, border-color {
+                        duration: QuietPremium.tab-motion;
+                        easing: ease-out;
+                        enabled: !root.reduced-motion;
+                    }
+                    Text { text: root.compact-layout && root.text-scale-percent >= 125 ? "Log" : "Activity"; color: root.page == "activity" ? root.accent : root.muted;
+                           font-size: (12px) * TextScale.factor; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
+                    activity-nav := KeyboardAction { action-dark: root.dark-mode; action-label: "Activity"; activated => { root.navigate("activity"); } }
+                }
+                Rectangle {
+                    width: root.compact-layout ? 76px : 115px;
+                    border-radius: QuietPremium.control-radius;
+                    background: preferences-popup.is-open ? root.accent-bg : root.muted-sheet;
+                    border-color: preferences-popup.is-open ? root.accent : root.line;
+                    border-width: 1px;
+                    Text {
+                        text: root.compact-layout ? (root.text-scale-percent >= 125 ? "Prefs" : "Settings") : "Preferences";
+                        color: root.strong; font-size: (11px) * TextScale.factor; font-weight: 750;
+                        horizontal-alignment: center; vertical-alignment: center;
+                    }
+                    KeyboardAction {
+                        action-dark: root.dark-mode;
+                        action-label: "Open Preferences, appearance, accessibility and about";
+                        activated => { root.open-preferences(); }
+                    }
+                }
+                Rectangle {
+                    width: root.compact-layout ? 66px : 79px; border-radius: 8px; background: root.accent-bg;
+                    Text { text: root.refreshing ? (root.compact-layout && root.text-scale-percent >= 125 ? "..." : "Reading...")
+                            : (root.compact-layout && root.text-scale-percent >= 125 ? "Sync" : "Refresh");
+                        font-size: (11px) * TextScale.factor; font-weight: 700; color: root.accent;
+                        horizontal-alignment: center; vertical-alignment: center; }
+                    KeyboardAction { action-dark: root.dark-mode; action-label: "Refresh catalog"; action-enabled: !root.refreshing; activated => { root.refresh-requested(); } }
+                }
+            }
+        }
+
+        // DISCOVER / HOME: no permanent sidebar, hero dashboard, or project cards.
+        if root.page == "home": ScrollView {
+            vertical-stretch: 1;
+            VerticalLayout {
+                padding-left: root.compact-layout ? 34px : 80px;
+                padding-right: root.compact-layout ? 34px : 80px;
+                padding-top: 40px;
+                padding-bottom: 34px;
+                spacing: 17px;
+                Text { text: "DISCOVER  /  INDEPENDENT SOFTWARE"; font-size: (10px) * TextScale.factor; color: root.accent; font-weight: 800; }
+                Text { text: "Find software worth keeping."; font-size: (root.compact-layout ? 33px : 43px) * TextScale.factor;
+                    font-weight: 800; color: root.strong; }
+                Text { text: "Find new tools by what you want to make, manage or explore. No sponsored rankings.";
+                    font-size: (13px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+                // One native input, not a bordered LineEdit nested in another bordered box.
+                // Keep it in the hero flow with a separate, aligned search action.
+                HorizontalLayout {
+                    spacing: 11px;
+                    LineEdit { font-size: 13px * TextScale.factor;
+                        horizontal-stretch: 1; height: 54px;
+                        text: root.query;
+                        placeholder-text: "Search software, categories or capabilities…";
+                        accessible-label: "Search software catalog";
+                        edited(value) => { root.search-edited(value); }
+                        accepted(value) => { root.search-submitted(value); }
+                    }
+                    Rectangle {
+                        width: root.compact-layout ? 115px : 132px;
+                        height: 54px; border-radius: QuietPremium.control-radius;
+                        background: root.strong;
+                        Text {
+                            text: "Find tools  ↗"; color: root.sheet; font-size: (12px) * TextScale.factor;
+                            font-weight: 700; horizontal-alignment: center;
+                            vertical-alignment: center;
+                        }
+                        KeyboardAction {
+                            action-dark: root.dark-mode; action-label: "Find tools";
+                            activated => { root.search-submitted(root.query); }
+                        }
+                    }
+                }
+                Text { text: "INSIDE REAL SOFTWARE  /  ORIGINAL UI";
+                    color: root.accent; font-size: (10px) * TextScale.factor; font-weight: 800; }
+                HorizontalLayout {
+                    spacing: 14px;
+                    Rectangle {
+                        height: root.compact-layout ? 150px : 180px;
+                        horizontal-stretch: 1;
+                        background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 13px;
+                        drop-shadow-blur: 13px; drop-shadow-offset-y: 4px;
+                        drop-shadow-color: root.dark-mode ? #00000033 : #203d2418;
+                        VerticalLayout {
+                            padding: 12px; spacing: 7px;
+                            HorizontalLayout {
+                                spacing: 8px;
+                                Image { source: @image-url("dune3d.svg"); width: 23px; height: 23px; image-fit: contain; }
+                                Text { text: "Dune 3D"; font-size: (13px) * TextScale.factor; font-weight: 700; color: root.strong; }
+                                Rectangle { horizontal-stretch: 1; background: transparent; }
+                                Text { text: "SOURCE VERIFIED"; font-size: (9px) * TextScale.factor; font-weight: 700; color: root.accent; }
+                            }
+                            Image { source: @image-url("dune3d.png"); vertical-stretch: 1; image-fit: contain; }
+                        }
+                        KeyboardAction { action-dark: root.dark-mode; action-label: "Explore Dune 3D, verified source"; activated => { root.search-submitted("Dune 3D"); } }
+                    }
+                    Rectangle {
+                        height: root.compact-layout ? 150px : 180px;
+                        horizontal-stretch: 1;
+                        background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 13px;
+                        drop-shadow-blur: 13px; drop-shadow-offset-y: 4px;
+                        drop-shadow-color: root.dark-mode ? #00000033 : #203d2418;
+                        VerticalLayout {
+                            padding: 12px; spacing: 7px;
+                            HorizontalLayout {
+                                spacing: 8px;
+                                Image { source: @image-url("material-maker-icon.png"); width: 23px; height: 23px; image-fit: contain; }
+                                Text { text: "Material Maker"; font-size: (13px) * TextScale.factor; font-weight: 700; color: root.strong; }
+                                Rectangle { horizontal-stretch: 1; background: transparent; }
+                                Text { text: "SOURCE VERIFIED"; font-size: (9px) * TextScale.factor; font-weight: 700; color: root.accent; }
+                            }
+                            Image { source: @image-url("material-maker.png"); vertical-stretch: 1; image-fit: contain; }
+                        }
+                        KeyboardAction { action-dark: root.dark-mode; action-label: "Explore Material Maker, verified source"; activated => { root.search-submitted("Material Maker"); } }
+                    }
+                    if root.spacious-layout: Rectangle {
+                        height: 180px; horizontal-stretch: 1;
+                        background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 13px;
+                        VerticalLayout {
+                            padding: 12px; spacing: 7px;
+                            HorizontalLayout {
+                                spacing: 8px;
+                                Image { source: @image-url("craft-pdfcraft-icon.png"); width: 23px; height: 23px; image-fit: contain; }
+                                Text { text: "PdfCraft"; font-size: (13px) * TextScale.factor; font-weight: 700; color: root.strong; }
+                                Rectangle { horizontal-stretch: 1; background: transparent; }
+                                Text { text: "SOURCE VERIFIED"; font-size: (9px) * TextScale.factor; font-weight: 700; color: root.accent; }
+                            }
+                            Image { source: @image-url("screenshots/pdfcraft/viewer.png"); vertical-stretch: 1; image-fit: contain; }
+                        }
+                        KeyboardAction { action-dark: root.dark-mode; action-label: "Explore PdfCraft, verified source"; activated => { root.search-submitted("PdfCraft"); } }
+                    }
+                }
+                Rectangle { height: 9px; background: transparent; }
+                HorizontalLayout {
+                    spacing: 8px;
+                    Text { text: "Explore by discipline"; font-size: (11px) * TextScale.factor; font-weight: 800; color: root.strong; }
+                    Rectangle { horizontal-stretch: 1; background: transparent; }
+                    Rectangle {
+                        width: 147px; height: 35px; background: root.accent-bg; border-radius: 8px;
+                        Text { text: "Browse all " + root.total + " →"; font-size: (11px) * TextScale.factor;
+                            font-weight: 700; color: root.accent;
+                            horizontal-alignment: center; vertical-alignment: center; }
+                        KeyboardAction { action-dark: root.dark-mode; action-label: "Browse all software";
+                            activated => { root.open-discipline("all"); } }
+                    }
+                }
+                // The 17 real source disciplines become flexible browse tiles.
+                FlexboxLayout {
+                    flex-direction: row; flex-wrap: wrap; spacing: 12px;
+                    for group in root.disciplines-left: Rectangle {
+                        width: root.compact-layout ? (root.width - 115px) / 2 : (root.width - 225px) / 3;
+                        height: 80px;
+                        background: root.sheet;
+                        border-color: root.line;
+                        border-width: 1px;
+                        border-radius: 11px;
+                        VerticalLayout {
+                            padding: 14px; spacing: 6px;
+                            Text { text: group.label; color: root.strong; font-size: (14px) * TextScale.factor;
+                                font-weight: 750; overflow: elide; }
+                            HorizontalLayout {
+                                Text { text: group.count + " projects"; color: root.muted;
+                                    font-size: (11px) * TextScale.factor; horizontal-stretch: 1; }
+                                Text { text: "Explore →"; color: root.accent; font-weight: 700;
+                                    font-size: (11px) * TextScale.factor; }
+                            }
+                        }
+                        KeyboardAction { action-dark: root.dark-mode;
+                            action-label: "Browse " + group.label;
+                            activated => { root.open-discipline(group.id); } }
+                    }
+                    for group in root.disciplines-right: Rectangle {
+                        width: root.compact-layout ? (root.width - 115px) / 2 : (root.width - 225px) / 3;
+                        height: 80px;
+                        background: root.sheet;
+                        border-color: root.line;
+                        border-width: 1px;
+                        border-radius: 11px;
+                        VerticalLayout {
+                            padding: 14px; spacing: 6px;
+                            Text { text: group.label; color: root.strong; font-size: (14px) * TextScale.factor;
+                                font-weight: 750; overflow: elide; }
+                            HorizontalLayout {
+                                Text { text: group.count + " projects"; color: root.muted;
+                                    font-size: (11px) * TextScale.factor; horizontal-stretch: 1; }
+                                Text { text: "Explore →"; color: root.accent; font-weight: 700;
+                                    font-size: (11px) * TextScale.factor; }
+                            }
+                        }
+                        KeyboardAction { action-dark: root.dark-mode;
+                            action-label: "Browse " + group.label;
+                            activated => { root.open-discipline(group.id); } }
+                    }
+                }
+                Text { text: "Research candidates remain visible and labeled. Source presence does not authorize installation.";
+                    font-size: (10px) * TextScale.factor; color: root.subtle; }
+            }
+        }
+
+        // Product-first browse: stable virtualized list, original UI or truthful identity only.
+        if root.page == "results": VerticalLayout {
+            padding-left: root.compact-layout ? 25px : 48px;
+            padding-right: root.compact-layout ? 25px : 48px;
+            padding-top: 18px; padding-bottom: 17px; spacing: 13px;
+            HorizontalLayout {
+                spacing: 9px;
+                Rectangle {
+                    width: 120px; height: 35px; border-radius: 7px; background: root.accent-bg;
+                    Text { text: "← Discover"; font-size: (11px) * TextScale.factor; font-weight: 700; color: root.accent;
+                        horizontal-alignment: center; vertical-alignment: center; }
+                    KeyboardAction { action-dark: root.dark-mode; action-label: "Return to Discover";
+                        activated => { root.navigate("home"); } }
+                }
+                Rectangle { horizontal-stretch: 1; background: transparent; }
+                Rectangle {
+                    width: 64px; height: 35px; border-radius: 7px; background: root.can-back ? root.accent-bg : root.muted-sheet;
+                    Text { text: "← Back"; font-size: (11px) * TextScale.factor; color: root.can-back ? root.accent : root.subtle;
+                        horizontal-alignment: center; vertical-alignment: center; }
+                    KeyboardAction { action-dark: root.dark-mode; action-label: "Go back";
+                        action-enabled: root.can-back; activated => { root.go-back(); } }
+                }
+                Rectangle {
+                    width: 72px; height: 35px; border-radius: 7px; background: root.can-forward ? root.accent-bg : root.muted-sheet;
+                    Text { text: "Next →"; font-size: (11px) * TextScale.factor; color: root.can-forward ? root.accent : root.subtle;
+                        horizontal-alignment: center; vertical-alignment: center; }
+                    KeyboardAction { action-dark: root.dark-mode; action-label: "Go forward";
+                        action-enabled: root.can-forward; activated => { root.go-forward(); } }
+                }
+            }
+            Text { text: root.selected-domain == "all" ? "Discover software" : root.selected-domain-label;
+                color: root.strong; font-size: (root.compact-layout ? 27px : 32px) * TextScale.factor; font-weight: 800; }
+            Text { text: root.selected-domain == "all" ?
+                    "Explore real projects and find the tools that fit your workflow." :
+                    "Browse source-linked projects in this field. Open any card to learn more.";
+                color: root.muted; font-size: (12px) * TextScale.factor; }
+            // Search is a single aligned field; label and live result count sit above it.
+            VerticalLayout {
+                spacing: 7px;
+                HorizontalLayout {
+                    height: 19px;
+                    Text { text: "SEARCH SOFTWARE"; font-size: (10px) * TextScale.factor;
+                        font-weight: 800; color: root.accent;
+                        vertical-alignment: center; }
+                    Rectangle { horizontal-stretch: 1; background: transparent; }
+                    Text { text: root.matching + " results"; font-size: (12px) * TextScale.factor;
+                        font-weight: 700; color: root.muted;
+                        vertical-alignment: center; }
+                }
+                LineEdit { font-size: 13px * TextScale.factor;
+                    horizontal-stretch: 1; height: 52px; text: root.query;
+                    placeholder-text: "Search software, tasks or categories...";
+                    accessible-label: "Search software catalog";
+                    edited(value) => { root.search-edited(value); }
+                    accepted(value) => { root.search-submitted(value); }
+                }
+            }
+            HorizontalLayout {
+                height: 41px; spacing: 9px;
+                CheckBox { text: "Release review available (" + root.review-route-count + ")";
+                    checked: root.review-only; font-size: (11px) * TextScale.factor; font-weight: 650;
+                    toggled => { root.toggle-review-only(); } }
+                Rectangle { horizontal-stretch: 1; background: transparent; }
+                Text { text: "SOFTWARE CARDS"; font-size: (10px) * TextScale.factor; font-weight: 800;
+                    color: root.subtle; vertical-alignment: center; }
+            }
+            if root.matching == 0: Rectangle {
+                height: 115px; background: root.sheet; border-color: root.line;
+                border-width: 1px; border-radius: 10px;
+                VerticalLayout {
+                    padding: 22px; spacing: 10px;
+                    Text { text: "Nothing matches this search yet"; font-size: (17px) * TextScale.factor;
+                        font-weight: 800; color: root.strong; }
+                    Text { text: root.review-only ?
+                        "Turn off the release filter to see every catalog project." :
+                        "Try another phrase or browse a different discipline.";
+                        font-size: (12px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+                }
+            }
+            // Stable native product cards, one per source-backed result.
+            ListView {
+                vertical-stretch: 1;
+                for project[i] in root.entries: Rectangle {
+                    height: root.compact-layout ? 181px : 189px; background: transparent;
+                    HorizontalLayout {
+                        Rectangle {
+                            height: parent.height - 10px; horizontal-stretch: 1;
+                            accessible-role: button;
+                            accessible-label: "Explore " + project.name;
+                            accessible-action-default => { root.open-project(i); }
+                            forward-focus: product-focus;
+                            CatalogProductCard {
+                                width: parent.width; height: parent.height;
+                                wide: true; compact: root.compact-layout;
+                                highlighted: product-focus.has-focus;
+                                hovered: product-hit.has-hover; pressed: product-hit.pressed;
+                                reduced-motion: root.reduced-motion;
+                                high-contrast: root.high-contrast;
+                                dark: root.dark-mode;
+                                project-name: project.name; project-maker: project.maker;
+                                project-domain: project.domain; project-summary: project.summary;
+                                project-media: project.media; project-mode: project.visual-mode;
+                                project-platforms: project.platforms;
+                            }
+                            product-hit := TouchArea { mouse-cursor: pointer; clicked => { root.open-project(i); } }
+                            product-focus := FocusScope {
+                                width: 0px; height: 0px;
+                                key-pressed(event) => {
+                                    if (event.text == Key.Return || event.text == Key.Space) {
+                                        root.open-project(i);
+                                        return accept;
+                                    }
+                                    return reject;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            HorizontalLayout {
+                spacing: 12px;
+                Text { text: "Showing " + root.showing + " of " + root.matching + " projects";
+                    font-size: (11px) * TextScale.factor; color: root.subtle; vertical-alignment: center; }
+                Rectangle { horizontal-stretch: 1; background: transparent; }
+                if root.has-more: Rectangle {
+                    width: 150px; height: 39px; background: root.accent-bg; border-radius: 8px;
+                    Text { text: "Load 30 more ↓"; font-size: (11px) * TextScale.factor; font-weight: 700; color: root.accent;
+                        horizontal-alignment: center; vertical-alignment: center; }
+                    KeyboardAction { action-dark: root.dark-mode; action-label: "Show 30 more projects";
+                        activated => { root.load-more(); } }
+                }
+            }
+        }
+
+        // A full-page dossier, not a fixed right-hand inspector.
+        if root.page == "detail": ScrollView {
+            vertical-stretch: 1;
+            VerticalLayout {
+                padding-left: root.compact-layout ? 32px : 76px;
+                padding-right: root.compact-layout ? 32px : 76px;
+                padding-top: 22px; padding-bottom: 42px; spacing: 19px;
+                HorizontalLayout {
+                    spacing: 12px;
+                    Rectangle {
+                        width: 138px; height: 35px; background: root.accent-bg; border-radius: 7px;
+                        Text { text: "← Back to results"; font-size: (11px) * TextScale.factor; color: root.accent;
+                            horizontal-alignment: center; vertical-alignment: center; }
+                        KeyboardAction { action-dark: root.dark-mode; action-label: "Back to results"; activated => { root.go-back(); } }
+                    }
+                    Rectangle { horizontal-stretch: 1; background: transparent; }
+                    Rectangle {
+                        width: 80px; height: 35px; background: root.can-forward ? root.accent-bg : root.muted-sheet; border-radius: 7px;
+                        Text { text: "Forward →"; font-size: (11px) * TextScale.factor; color: root.can-forward ? root.accent : root.subtle;
+                            horizontal-alignment: center; vertical-alignment: center; }
+                        KeyboardAction { action-dark: root.dark-mode; action-label: "Go forward"; action-enabled: root.can-forward; activated => { root.go-forward(); } }
+                    }
+                }
+                HorizontalLayout {
+                    spacing: 12px;
+                    Text { text: root.detail-domain + "  /  SOFTWARE"; color: root.accent;
+                        font-size: (11px) * TextScale.factor; font-weight: 800; vertical-alignment: center;
+                        horizontal-stretch: 1; }
+                    Rectangle {
+                        width: 166px; height: 39px; background: root.strong; border-radius: 8px;
+                        Text { text: "Visit project source ↗"; color: root.sheet; font-size: (11px) * TextScale.factor;
+                            font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
+                        KeyboardAction { action-dark: root.dark-mode; action-label: "Visit verified project source";
+                            action-enabled: root.detail-source != ""; activated => { root.open-source(); } }
+                    }
+                }
+                HorizontalLayout {
+                    spacing: 14px;
+                    if root.detail-media == "dune3d": Image {
+                        source: @image-url("dune3d.svg"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "material-maker": Image {
+                        source: @image-url("material-maker-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "compositor": Image {
+                        source: @image-url("compositor-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "kiri-moto": Image {
+                        source: @image-url("kiri-moto-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "espocrm": Image {
+                        source: @image-url("espocrm-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "docuseal": Image {
+                        source: @image-url("docuseal-icon.svg"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "meshcentral": Image {
+                        source: @image-url("meshcentral-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "openhands": Image {
+                        source: @image-url("openhands-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "real-video-enhancer": Image {
+                        source: @image-url("real-video-enhancer-icon.svg"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "craft-photocraft": Image {
+                        source: @image-url("craft-photocraft-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "craft-lightcraft": Image {
+                        source: @image-url("craft-lightcraft-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "craft-filmcraft": Image {
+                        source: @image-url("craft-filmcraft-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "craft-designcraft": Image {
+                        source: @image-url("craft-designcraft-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "craft-vectorcraft": Image {
+                        source: @image-url("craft-vectorcraft-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "craft-pdfcraft": Image {
+                        source: @image-url("craft-pdfcraft-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "craft-effectcraft": Image {
+                        source: @image-url("craft-effectcraft-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "craft-wordcraft": Image {
+                        source: @image-url("craft-wordcraft-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "craft-deckcraft": Image {
+                        source: @image-url("craft-deckcraft-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "craft-gridcraft": Image {
+                        source: @image-url("craft-gridcraft-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "craft-cadcraft": Image {
+                        source: @image-url("craft-cadcraft-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "craft-soundcraft": Image {
+                        source: @image-url("craft-soundcraft-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-media == "craft-figcraft": Image {
+                        source: @image-url("craft-figcraft-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-independent-icon: ApprovedGalleryIcon {
+                        media: root.detail-media; width: 58px; height: 58px;
+                    }
+                    if root.detail-visual-mode == "official": Text { text: root.detail-name; font-size: (root.compact-layout ? 31px : 43px) * TextScale.factor;
+                        color: root.strong; font-weight: 800; }
+                }
+                if root.detail-visual-mode == "official": Text { text: root.detail-summary; font-size: (14px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+                if root.detail-has-icon: ApprovedIconCredit {
+                    media: root.detail-media; caption-color: root.subtle; height: 16px;
+                }
+                Rectangle { height: 1px; background: root.line; }
+                // Genuine product hero comes first. Technical provenance and installer
+                // diagnostics are available below, not the primary experience.
+                HorizontalLayout {
+                    spacing: 18px;
+                    VerticalLayout {
+                        horizontal-stretch: 3; spacing: 12px;
+
+                        if root.detail-visual-mode == "identity": IdentityDossier {
+                            project-name: root.detail-name;
+                            project-maker: root.detail-maker;
+                            project-domain: root.detail-domain;
+                            project-platforms: root.detail-platforms;
+                            project-kind: root.detail-kind;
+                            project-summary: root.detail-summary;
+                            project-source: root.detail-source;
+                            dark: root.dark-mode;
+                            high-contrast: root.high-contrast;
+                            compact: root.compact-layout;
+                            height: root.compact-layout ? 347px : 370px;
+                        }
+                        if root.detail-visual-mode == "official": Rectangle {
+                            height: root.compact-layout ? 385px : 470px;
+                            background: root.sheet; border-color: root.line; border-width: 1px;
+                            border-radius: QuietPremium.card-radius;
+                            drop-shadow-blur: 14px; drop-shadow-offset-y: 4px;
+                            drop-shadow-color: root.dark-mode ? #00000036 : #23452b1a;
+                            VerticalLayout {
+                                padding: 13px; spacing: 8px;
+                                Text { text: "REAL INTERFACE  /  CHECKSUM-VERIFIED SOURCE";
+                                    font-size: (10px) * TextScale.factor; font-weight: 800; color: root.accent; }
+                                HorizontalLayout {
+                                    spacing: 10px;
+                                    Rectangle {
+                                        width: 84px; height: 31px; border-radius: 6px;
+                                        background: root.detail-gallery-index > 0 ? root.accent-bg : root.muted-sheet;
+                                        Text { text: "← Previous"; font-size: (10px) * TextScale.factor; font-weight: 700;
+                                            color: root.detail-gallery-index > 0 ? root.accent : root.subtle;
+                                            horizontal-alignment: center; vertical-alignment: center; }
+                                        KeyboardAction { action-dark: root.dark-mode; action-enabled: root.detail-gallery-index > 0;
+                                            action-label: "Previous authentic interface screenshot";
+                                            activated => { root.detail-gallery-index -= 1; } }
+                                    }
+                                    Rectangle { horizontal-stretch: 1; background: transparent; }
+                                    Text { text: (root.detail-gallery-index + 1) + " / " + root.detail-gallery-count;
+                                        font-size: (11px) * TextScale.factor; color: root.muted; vertical-alignment: center; }
+                                    Rectangle { horizontal-stretch: 1; background: transparent; }
+                                    Rectangle {
+                                        width: 90px; height: 31px; border-radius: 6px;
+                                        background: root.accent-bg;
+                                        Text { text: "View source ↗"; font-size: (10px) * TextScale.factor; font-weight: 700; color: root.accent;
+                                            horizontal-alignment: center; vertical-alignment: center; }
+                                        KeyboardAction { action-dark: root.dark-mode; action-label: "Open exact screenshot source on GitHub";
+                                            activated => { root.open-media-source(root.detail-gallery-index); } }
+                                    }
+                                    Rectangle {
+                                        width: 62px; height: 31px; border-radius: 6px;
+                                        background: root.detail-gallery-index + 1 < root.detail-gallery-count ? root.accent-bg : root.muted-sheet;
+                                        Text { text: "Next →"; font-size: (10px) * TextScale.factor; font-weight: 700;
+                                            color: root.detail-gallery-index + 1 < root.detail-gallery-count ? root.accent : root.subtle;
+                                            horizontal-alignment: center; vertical-alignment: center; }
+                                        KeyboardAction { action-dark: root.dark-mode;
+                                            action-enabled: root.detail-gallery-index + 1 < root.detail-gallery-count;
+                                            action-label: "Next authentic interface screenshot";
+                                            activated => { root.detail-gallery-index += 1; } }
+                                    }
+                                }
+                                ApprovedGalleryShot {
+                                    media: root.detail-media;
+                                    index: root.detail-gallery-index;
+                                    caption-color: root.subtle;
+                                    height: root.compact-layout ? 285px : 365px;
+                                }
+                            }
+                        }
+                    }
+                    if root.detail-visual-mode == "official" && !root.compact-layout: Rectangle {
+                        width: 256px; height: 310px; background: root.sheet;
+                        border-color: root.line; border-width: 1px; border-radius: 11px;
+                        VerticalLayout {
+                            padding: 19px; spacing: 12px;
+                            Text { text: "AT A GLANCE"; font-size: (10px) * TextScale.factor; font-weight: 800;
+                                color: root.accent; }
+                            Text { text: "CREATED BY"; font-size: (10px) * TextScale.factor; font-weight: 750; color: root.subtle; }
+                            Text { text: root.detail-maker; font-size: (13px) * TextScale.factor; font-weight: 750;
+                                color: root.strong; overflow: elide; }
+                            Text { text: "PLATFORMS"; font-size: (10px) * TextScale.factor; font-weight: 750; color: root.subtle; }
+                            Text { text: root.detail-platforms; font-size: (12px) * TextScale.factor; color: root.strong;
+                                height: 34px; wrap: word-wrap; overflow: elide; }
+                            Text { text: "SOURCE LICENSE"; font-size: (10px) * TextScale.factor; font-weight: 750; color: root.subtle; }
+                            Text { text: root.detail-license; font-size: (12px) * TextScale.factor; color: root.strong; overflow: elide; }
+                        }
+                    }
+                }
+                if root.detail-challenges != "" && root.detail-challenges != "Not reported": Rectangle {
+                    height: 98px; background: root.sheet; border-color: root.line;
+                    border-width: 1px; border-radius: 11px;
+                    VerticalLayout {
+                        padding: 17px; spacing: 9px;
+                        Text { text: "EXPLORE AS AN ALTERNATIVE TO"; font-size: (10px) * TextScale.factor;
+                            font-weight: 800; color: root.accent; }
+                        Text { text: root.detail-challenges; font-size: (13px) * TextScale.factor;
+                            color: root.strong; wrap: word-wrap; }
+                    }
+                }
+
+                if root.detail-reviewable: Rectangle {
+                    height: root.install-ready ? 336px :
+                        (root.install-busy && (root.install-cancel-allowed || root.install-cancel-requested) ? 245px : 194px);
+                    background: root.accent-bg; border-radius: 11px;
+                    VerticalLayout {
+                        padding: 18px; spacing: 9px;
+                        Text { text: "INSTALL VERIFIED RELEASE  /  EXPLICIT APPROVAL";
+                            color: root.accent; font-size: (10px) * TextScale.factor; font-weight: 800; }
+                        Text { text: "Only approved GitHub assets with published SHA-256. No name-based matching, no unattended installs.";
+                            color: root.muted; font-size: (11px) * TextScale.factor; wrap: word-wrap; }
+                        HorizontalLayout {
+                            spacing: 10px;
+                            Rectangle {
+                                width: 175px; height: 36px; border-radius: 8px;
+                                background: root.install-busy ? root.muted-sheet : root.strong;
+                                border-width: review-focus.has-focus ? 2px : 0px;
+                                border-color: review-focus.has-focus ? #e8a64f : transparent;
+                                accessible-role: button;
+                                accessible-label: "Review official installer release";
+                                accessible-enabled: !root.install-busy;
+                                accessible-action-default => {
+                                    if (!root.install-busy) { root.review-install(); }
+                                }
+                                forward-focus: review-focus;
+                                Text { text: root.install-busy ? "Working…" : "Review installer";
+                                    color: root.install-busy ? root.muted : root.sheet;
+                                    font-size: (11px) * TextScale.factor; font-weight: 700;
+                                    horizontal-alignment: center; vertical-alignment: center; }
+                                TouchArea { enabled: !root.install-busy; clicked => { root.review-install(); } }
+                                review-focus := FocusScope {
+                                    width: 0px; height: 0px; enabled: !root.install-busy;
+                                    key-pressed(event) => {
+                                        if (event.text == Key.Return || event.text == Key.Space) {
+                                            root.review-install();
+                                            return accept;
+                                        }
+                                        return reject;
+                                    }
+                                }
+                            }
+                            Text { text: root.install-ready ? "Reviewed official release — not yet downloaded" :
+                                "Review is read-only: checks upstream release, adapter, asset and digest.";
+                                font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; vertical-alignment: center; }
+                        }
+                        if root.install-stage != "": Text {
+                            text: "CURRENT STEP  /  " + root.install-stage
+                              + (root.install-percent >= 0 ? " · Download " + root.install-percent + "%" : "");
+                            font-size: (10px) * TextScale.factor; font-weight: 800; color: root.accent;
+                        }
+                        if root.install-busy && (root.install-cancel-allowed || root.install-cancel-requested): Rectangle {
+                            width: 245px; height: 34px; border-radius: 7px;
+                            background: root.install-cancel-requested ? root.muted-sheet : root.sheet;
+                            border-color: cancel-focus.has-focus ? root.accent : root.line;
+                            border-width: cancel-focus.has-focus ? 2px : 1px;
+                            accessible-role: button;
+                            accessible-label: "Request cancellation before application replacement";
+                            accessible-enabled: root.install-cancel-allowed && !root.install-cancel-requested;
+                            accessible-action-default => {
+                                if (root.install-cancel-allowed && !root.install-cancel-requested) {
+                                    root.cancel-install();
+                                }
+                            }
+                            forward-focus: cancel-focus;
+                            Text { text: root.install-cancel-requested ? "Cancellation requested" : "Request safe cancellation";
+                                font-size: (11px) * TextScale.factor; font-weight: 700; color: root.strong;
+                                horizontal-alignment: center; vertical-alignment: center; }
+                            TouchArea { enabled: root.install-cancel-allowed && !root.install-cancel-requested;
+                                clicked => { root.cancel-install(); } }
+                            cancel-focus := FocusScope {
+                                width: 0px; height: 0px;
+                                enabled: root.install-cancel-allowed && !root.install-cancel-requested;
+                                key-pressed(event) => {
+                                    if (event.text == Key.Return || event.text == Key.Space) {
+                                        root.cancel-install();
+                                        return accept;
+                                    }
+                                    return reject;
+                                }
+                            }
+                        }
+                        Text { text: root.install-message; font-size: (11px) * TextScale.factor; color: root.strong; wrap: word-wrap; }
+                        if root.install-ready: VerticalLayout {
+                            spacing: 5px;
+                            Text { text: root.install-version + "  ·  " + root.install-asset;
+                                font-size: (12px) * TextScale.factor; font-weight: 700; color: root.strong; }
+                            Text { text: "GitHub SHA-256: " + root.install-hash;
+                                font-size: (10px) * TextScale.factor; color: root.muted; overflow: elide; }
+                            Text { text: "Install destination: " + root.install-destination;
+                                font-size: (10px) * TextScale.factor; color: root.muted; overflow: elide; }
+                            HorizontalLayout {
+                                spacing: 12px;
+                                Rectangle {
+                                    height: 36px; width: 330px; border-radius: 7px;
+                                    background: root.install-approved ? root.sheet : root.muted-sheet;
+                                    border-width: approve-focus.has-focus ? 2px : 0px;
+                                    border-color: approve-focus.has-focus ? root.accent : transparent;
+                                    accessible-role: checkbox;
+                                    accessible-label: "I approve this exact release";
+                                    accessible-checkable: true;
+                                    accessible-checked: root.install-approved;
+                                    accessible-enabled: !root.install-busy;
+                                    accessible-action-default => {
+                                        if (!root.install-busy) {
+                                            root.install-approved = !root.install-approved;
+                                        }
+                                    }
+                                    forward-focus: approve-focus;
+                                    Text { text: root.install-approved ? "☑ I approve this exact release" :
+                                        "☐ I approve this exact release";
+                                        font-size: (11px) * TextScale.factor; font-weight: 700; color: root.strong;
+                                        horizontal-alignment: center; vertical-alignment: center; }
+                                    TouchArea {
+                                        enabled: !root.install-busy;
+                                        clicked => { root.install-approved = !root.install-approved; }
+                                    }
+                                    approve-focus := FocusScope {
+                                        width: 0px; height: 0px; enabled: !root.install-busy;
+                                        key-pressed(event) => {
+                                            if (event.text == Key.Space || event.text == Key.Return) {
+                                                root.install-approved = !root.install-approved;
+                                                return accept;
+                                            }
+                                            return reject;
+                                        }
+                                    }
+                                }
+                                Rectangle {
+                                    width: 190px; height: 36px; border-radius: 8px;
+                                    background: root.install-approved && !root.install-busy ?
+                                        root.strong : root.muted-sheet;
+                                    border-width: install-focus.has-focus ? 2px : 0px;
+                                    border-color: install-focus.has-focus ? #e8a64f : transparent;
+                                    accessible-role: button;
+                                    accessible-label: "Install approved verified release";
+                                    accessible-enabled: root.install-approved && !root.install-busy;
+                                    accessible-action-default => {
+                                        if (root.install-approved && !root.install-busy) {
+                                            root.confirm-install();
+                                        }
+                                    }
+                                    forward-focus: install-focus;
+                                    Text { text: root.install-busy ? "Installing…" : "Install verified release";
+                                        font-size: (11px) * TextScale.factor; font-weight: 700;
+                                        color: root.install-approved && !root.install-busy ?
+                                            root.sheet : root.subtle;
+                                        horizontal-alignment: center; vertical-alignment: center; }
+                                    TouchArea {
+                                        enabled: root.install-approved && !root.install-busy;
+                                        clicked => { root.confirm-install(); }
+                                    }
+                                    install-focus := FocusScope {
+                                        width: 0px; height: 0px;
+                                        enabled: root.install-approved && !root.install-busy;
+                                        key-pressed(event) => {
+                                            if (event.text == Key.Return || event.text == Key.Space) {
+                                                root.confirm-install();
+                                                return accept;
+                                            }
+                                            return reject;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                Rectangle {
+                    height: 49px; border-radius: QuietPremium.control-radius;
+                    background: root.detail-technical-open ? root.accent-bg : root.muted-sheet;
+                    border-color: root.detail-technical-open
+                        ? (root.dark-mode ? QuietPremium.dark-outline : QuietPremium.light-outline)
+                        : root.line;
+                    border-width: 1px;
+                    animate background, border-color {
+                        duration: QuietPremium.tab-motion;
+                        easing: ease-out;
+                        enabled: !root.reduced-motion;
+                    }
+                    HorizontalLayout {
+                        padding-left: 15px; padding-right: 14px;
+                        Text { text: "Source, version and verification details"; font-size: (12px) * TextScale.factor;
+                            font-weight: 700; color: root.strong; horizontal-stretch: 1;
+                            vertical-alignment: center; }
+                        Text { text: root.detail-technical-open ? "Hide ↑" : "Details ↓";
+                            font-size: (11px) * TextScale.factor; color: root.accent; vertical-alignment: center; }
+                    }
+                    KeyboardAction { action-dark: root.dark-mode;
+                        action-label: root.detail-technical-open ?
+                            "Hide source and release details" : "Show source and release details";
+                        activated => { root.detail-technical-open = !root.detail-technical-open; } }
+                }
+                if root.detail-technical-open: Rectangle {
+                    height: 226px; background: root.sheet;
+                    border-color: root.line; border-width: 1px; border-radius: 11px;
+                    VerticalLayout {
+                        padding: 19px; spacing: 10px;
+                        Text { text: "SOURCE STATUS  /  " + root.detail-status;
+                            font-size: (12px) * TextScale.factor; color: root.strong; font-weight: 750;
+                            wrap: word-wrap; }
+                        Text { text: root.detail-evidence; color: root.muted; font-size: (11px) * TextScale.factor; }
+                        Text { text: "Creator: " + root.detail-maker + "   ·   Category: " + root.detail-category;
+                            font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+                        Text { text: "Platforms: " + root.detail-platforms + "   ·   License: " + root.detail-license;
+                            font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+                        Text { text: "Source-reported release: " + root.detail-release;
+                            font-size: (11px) * TextScale.factor; color: root.muted; overflow: elide; }
+                        Text { text: root.detail-source; font-size: (10px) * TextScale.factor; color: root.subtle; overflow: elide; }
+                        Text { text: "Source listing alone does not authorize installation or image redistribution.";
+                            font-size: (10px) * TextScale.factor; color: root.subtle; }
+                    }
+                }
+
+            }
+        }
+
+        // MY SOFTWARE: a supported-app view, never a fabricated OS-wide inventory.
+        if root.page == "library": VerticalLayout {
+            padding-left: root.compact-layout ? 25px : 52px;
+            padding-right: root.compact-layout ? 25px : 52px;
+            padding-top: 27px; padding-bottom: 18px; spacing: 14px;
+            Text { text: "MY SOFTWARE  /  SUPPORTED APPS"; font-size: (10px) * TextScale.factor;
+                font-weight: 800; color: root.accent; }
+            HorizontalLayout {
+                spacing: 15px;
+                VerticalLayout {
+                    horizontal-stretch: 1; spacing: 7px;
+                    Text { text: "Software on this device."; font-size: (root.compact-layout ? 27px : 33px) * TextScale.factor;
+                        font-weight: 800; color: root.strong; }
+                    Text { text: "Supported tools and their latest local signals.";
+                        font-size: (12px) * TextScale.factor; color: root.muted; }
+                }
+                Rectangle {
+                    width: 185px; height: 42px; background: root.strong; border-radius: 9px;
+                    Text { text: "Inspect local apps →"; font-size: (12px) * TextScale.factor; font-weight: 700;
+                        color: root.sheet; horizontal-alignment: center; vertical-alignment: center; }
+                    KeyboardAction { action-dark: root.dark-mode;
+                        action-label: "Inspect OS app registrations"; activated => { root.navigate("device"); } }
+                }
+            }
+            Rectangle {
+                height: 66px; border-radius: 10px; background: root.accent-bg;
+                HorizontalLayout {
+                    padding-left: 21px; padding-right: 21px; spacing: 20px;
+                    VerticalLayout {
+                        horizontal-stretch: 1; spacing: 5px;
+                        Text { text: "SUPPORTED TOOLS"; font-size: (10px) * TextScale.factor; font-weight: 800; color: root.accent; }
+                        Text { text: root.managed-assessed; font-size: (21px) * TextScale.factor; font-weight: 800; color: root.strong; }
+                    }
+                    VerticalLayout {
+                        horizontal-stretch: 1; spacing: 5px;
+                        Text { text: "VERSION SIGNALS"; font-size: (10px) * TextScale.factor; font-weight: 800; color: root.accent; }
+                        Text { text: root.inventory-status == "assessed" ? root.managed-detected : "Unavailable";
+                            font-size: (21px) * TextScale.factor; font-weight: 800; color: root.strong; }
+                    }
+                    VerticalLayout {
+                        horizontal-stretch: 1; spacing: 5px;
+                        Text { text: "POSSIBLE UPDATES"; font-size: (10px) * TextScale.factor; font-weight: 800; color: root.accent; }
+                        Text { text: root.inventory-status == "assessed" ? root.managed-updates : "Unknown";
+                            font-size: (21px) * TextScale.factor; font-weight: 800; color: root.strong; }
+                    }
+                }
+            }
+            Text { text: root.inventory-status == "assessed" ?
+                "Checks cover 14 managed apps only. Not detected does not mean uninstalled." :
+                "Local application checks are unavailable here. Installed states are not inferred.";
+                font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+            HorizontalLayout {
+                Text { text: "Supported applications"; font-size: (15px) * TextScale.factor; font-weight: 800;
+                    color: root.strong; vertical-alignment: center; }
+                Rectangle { horizontal-stretch: 1; background: transparent; }
+                Text { text: root.inventory-checked; font-size: (10px) * TextScale.factor; color: root.subtle;
+                    vertical-alignment: center; }
+            }
+            ListView {
+                vertical-stretch: 1;
+                for app in root.managed-entries: Rectangle {
+                    height: 84px; background: root.sheet; border-color: root.line;
+                    border-width: 1px; border-radius: 9px;
+                    HorizontalLayout {
+                        padding-left: 17px; padding-right: 18px; spacing: 16px;
+                        VerticalLayout {
+                            horizontal-stretch: 3; spacing: 7px;
+                            Text { text: app.name; font-size: (16px) * TextScale.factor;
+                                font-weight: 800; color: root.strong; overflow: elide; }
+                            Text { text: "Device version: " + app.installed;
+                                font-size: (11px) * TextScale.factor; color: root.muted; overflow: elide; }
+                        }
+                        VerticalLayout {
+                            horizontal-stretch: 2; spacing: 7px;
+                            Text { text: "REPORTED RELEASE"; font-size: (10px) * TextScale.factor;
+                                font-weight: 800; color: root.subtle; }
+                            Text { text: app.latest; font-size: (12px) * TextScale.factor;
+                                color: root.strong; overflow: elide; }
+                        }
+                        Rectangle {
+                            width: root.compact-layout ? 128px : 156px;
+                            height: 36px; background: root.muted-sheet; border-radius: 7px;
+                            Text { text: app.status; font-size: (11px) * TextScale.factor; font-weight: 700;
+                                color: app.status == "Possible update" ? #bd8536 : root.accent;
+                                horizontal-alignment: center; vertical-alignment: center;
+                                overflow: elide; }
+                        }
+                    }
+                }
+            }
+            Text { text: "Read-only local name/path/version checks; other catalog projects are not scanned. Refresh only reruns the original detector.";
+                font-size: (10px) * TextScale.factor; color: root.subtle; wrap: word-wrap; }
+        }
+
+        // Explicit user-triggered OS registration evidence; NOT a package
+        // install verification, launch capability, catalog auto-match or job.
+        if root.page == "device": VerticalLayout {
+            padding-left: root.compact-layout ? 25px : 52px;
+            padding-right: root.compact-layout ? 25px : 52px;
+            padding-top: 25px; padding-bottom: 20px; spacing: 14px;
+            HorizontalLayout {
+                spacing: 12px;
+                Rectangle {
+                    width: 142px; height: 35px; background: root.accent-bg; border-radius: 7px;
+                    Text { text: "← My software"; font-size: (11px) * TextScale.factor; font-weight: 700; color: root.accent;
+                        horizontal-alignment: center; vertical-alignment: center; }
+                    KeyboardAction { action-dark: root.dark-mode; action-label: "Back to My software"; activated => { root.navigate("library"); } }
+                }
+                Rectangle { horizontal-stretch: 1; background: transparent; }
+                Text { text: "LOCAL / READ ONLY / ON DEMAND"; font-size: (10px) * TextScale.factor; color: root.accent;
+                    font-weight: 800; vertical-alignment: center; }
+            }
+            Text { text: "OS app registrations."; font-size: (33px) * TextScale.factor; font-weight: 800; color: root.strong; }
+            Text { text: "Native OS registration evidence, separate from 181 source projects and 14 managed app signals. Only source-reviewed exact IDs link to a catalog dossier.";
+                font-size: (12px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+            Rectangle {
+                height: 112px; background: root.accent-bg; border-radius: 12px;
+                HorizontalLayout {
+                    padding: 20px; spacing: 15px;
+                    VerticalLayout {
+                        spacing: 8px; horizontal-stretch: 1;
+                        Text { text: "OBSERVED REGISTRATION RECORDS"; font-size: (10px) * TextScale.factor; font-weight: 800; color: root.accent; }
+                        Text { text: root.device-status == "observed" || root.device-status == "stale" ?
+                            root.device-total : "Not read";
+                            font-size: (25px) * TextScale.factor; font-weight: 800; color: root.strong; }
+                        Text { text: root.device-scope + " · " + root.device-linked +
+                            " active reviewed ID links · " + root.device-age;
+                            font-size: (10px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+                    }
+                    Rectangle {
+                        width: 174px; height: 42px; background: root.strong; border-radius: 8px;
+                        Text { text: root.device-reading ? "Reading system…" : "Inspect local apps";
+                            font-size: (12px) * TextScale.factor; font-weight: 700; color: root.sheet;
+                            horizontal-alignment: center; vertical-alignment: center; }
+                        KeyboardAction { action-dark: root.dark-mode; action-label: "Inspect local registered apps"; action-enabled: !root.device-reading; activated => { root.device-read-requested(); } }
+                    }
+                }
+            }
+            if root.device-status == "not-read": Rectangle {
+                height: 112px; background: root.muted-sheet; border-radius: 9px;
+                VerticalLayout {
+                    padding: 22px; spacing: 9px;
+                    Text { text: "No local device read has been requested."; font-size: (13px) * TextScale.factor; font-weight: 700; color: root.strong; }
+                    Text { text: "Use Inspect local apps to read only OS-registered application evidence. This does not scan all directories or discover executables.";
+                        font-size: (12px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+                }
+            }
+            if root.device-status == "error": Rectangle {
+                height: 96px; background: root.muted-sheet; border-radius: 9px;
+                VerticalLayout {
+                    padding: 17px; spacing: 8px;
+                    Text { text: "Native OS read not available"; font-size: (13px) * TextScale.factor; font-weight: 700; color: root.strong; }
+                    Text { text: root.device-error; font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+                }
+            }
+            if root.device-status == "stale": Rectangle {
+                height: 78px; background: root.muted-sheet; border-radius: 9px;
+                VerticalLayout {
+                    padding: 12px; spacing: 5px;
+                    Text { text: "Observation expired — inspect again to enable source links";
+                        font-size: (12px) * TextScale.factor; font-weight: 700; color: #b18140; }
+                    Text { text: "The previous registration names are retained for reference, but source ID links are disabled after two minutes. Nothing was rescanned automatically.";
+                        font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+                }
+            }
+            if root.device-error != "" && root.device-status != "error": Rectangle {
+                height: 76px; background: root.muted-sheet; border-radius: 9px;
+                VerticalLayout {
+                    padding: 12px; spacing: 5px;
+                    Text { text: "Latest re-inspection failed — previous observation retained"; font-size: (11px) * TextScale.factor; font-weight: 700; color: #b18140; }
+                    Text { text: root.device-error; font-size: (10px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+                }
+            }
+            if root.device-status == "observed" || root.device-status == "stale": VerticalLayout {
+                spacing: 12px;
+                Text {
+                    text: root.device-scope == "known-application-bundle-roots" ?
+                        "macOS: .app bundles in known system/user Application folders only. Does not include every portable app." :
+                        root.device-scope == "windows-uninstall-registry" ?
+                        "Windows: Add/Remove Programs registry entries. Does not include unregistered or portable apps." :
+                        "Linux: visible desktop launcher entries, NOT a list of installed packages.";
+                    font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap;
+                }
+                HorizontalLayout {
+                    spacing: 10px;
+                    Rectangle {
+                        height: 43px; horizontal-stretch: 1; background: root.sheet;
+                        border-color: root.line; border-width: 1px; border-radius: 8px;
+                        HorizontalLayout {
+                            padding-left: 12px; padding-right: 12px; spacing: 9px;
+                            Text { text: "FILTER"; font-size: (10px) * TextScale.factor; font-weight: 800; color: root.accent;
+                                vertical-alignment: center; }
+                            LineEdit { font-size: 13px * TextScale.factor;
+                                horizontal-stretch: 1; height: 35px;
+                                text: root.device-query;
+                                placeholder-text: "Name or registered identifier…";
+                                accessible-label: "Filter local app registrations";
+                                edited(v) => { root.device-search-edited(v); }
+                            }
+                        }
+                    }
+                    Rectangle {
+                        width: 124px; height: 43px; background: root.muted-sheet; border-radius: 8px;
+                        Text { text: root.device-showing + " matching"; font-size: (11px) * TextScale.factor; font-weight: 700;
+                            color: root.accent; horizontal-alignment: center; vertical-alignment: center; }
+                    }
+                }
+                if root.device-truncated: Text {
+                    text: "Safety cap reached: first 512 distinct records only. This is an incomplete observation.";
+                    font-size: (11px) * TextScale.factor; color: #b18140; wrap: word-wrap;
+                }
+                Rectangle {
+                    height: 34px; background: root.muted-sheet; border-radius: 5px;
+                    HorizontalLayout {
+                        padding-left: 13px; padding-right: 13px; spacing: 10px;
+                        Text { text: "REGISTERED NAME"; font-size: (9px) * TextScale.factor; font-weight: 800; color: root.subtle;
+                            horizontal-stretch: 3; vertical-alignment: center; }
+                        Text { text: "VERSION (IF REPORTED)"; font-size: (9px) * TextScale.factor; font-weight: 800; color: root.subtle;
+                            horizontal-stretch: 2; vertical-alignment: center; }
+                        Text { text: "ID"; font-size: (9px) * TextScale.factor; font-weight: 800; color: root.subtle;
+                            horizontal-stretch: 3; vertical-alignment: center; }
+                        if root.over-950: Text { text: "REGISTRY SOURCE"; font-size: (9px) * TextScale.factor; font-weight: 800;
+                            color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
+                    }
+                }
+            }
+            if root.device-status == "observed" || root.device-status == "stale": ListView {
+                vertical-stretch: 1;
+                for app in root.device-entries: Rectangle {
+                    height: 49px; background: root.sheet; border-color: root.line; border-width: 1px;
+                    HorizontalLayout {
+                        padding-left: 13px; padding-right: 13px; spacing: 10px;
+                        VerticalLayout {
+                            horizontal-stretch: 3; spacing: 2px;
+                            Text { text: app.name; font-size: (12px) * TextScale.factor; font-weight: 700; color: root.strong;
+                                overflow: elide; }
+                            if app.linked-id != "": Text {
+                                text: "SOURCE-REVIEWED ID → " + app.linked-project;
+                                font-size: (9px) * TextScale.factor; color: root.accent; overflow: elide; }
+                        }
+                        Text { text: app.version == "" ? "Not reported" : app.version; font-size: (11px) * TextScale.factor; color: root.muted;
+                            horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
+                        Text { text: app.identifier == "" ? "Not reported" : app.identifier;
+                            font-size: (10px) * TextScale.factor; color: root.muted; horizontal-stretch: 3;
+                            vertical-alignment: center; overflow: elide; }
+                        if root.over-950: Text { text: app.provenance; font-size: (10px) * TextScale.factor; color: root.subtle;
+                            horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
+                    }
+                    if app.linked-id != "": KeyboardAction { action-dark: root.dark-mode; action-label: "Open reviewed project " + app.linked-project; activated => { root.open-device-project(app.linked-id); } }
+                }
+            }
+            if (root.device-status == "observed" || root.device-status == "stale") && root.device-showing == 0: Text {
+                text: "No registration records match the current filter. This does not prove any app is absent.";
+                color: root.subtle; font-size: (12px) * TextScale.factor;
+            }
+            Rectangle { vertical-stretch: root.device-status == "observed" || root.device-status == "stale" ? 0 : 1; background: transparent; }
+            Text { text: "Upstream-reviewed ID cross-references are NOT code-signature or installation verification. No installs, launches, network requests, automatic catalog promotion or file writes.";
+                font-size: (10px) * TextScale.factor; color: root.subtle; wrap: word-wrap; }
+        }
+
+        // Public desktop redistribution under Slint royalty-free terms needs
+        // the official AboutSlint widget reachable from top-level navigation.
+        if root.page == "about": ScrollView {
+            vertical-stretch: 1;
+            VerticalLayout {
+                padding-left: root.compact-layout ? 24px : 52px;
+                padding-right: root.compact-layout ? 24px : 52px;
+                padding-top: 40px; padding-bottom: 32px; spacing: 18px;
+                Text { text: "ABOUT  /  CHALLENGER HUB"; color: root.accent;
+                    font-size: (10px) * TextScale.factor; font-weight: 800; }
+                Text { text: "Independent tools, discovered."; color: root.strong;
+                    font-size: (30px) * TextScale.factor; font-weight: 800; }
+                Text { text: "Challenger Native Preview uses Slint for its desktop interface.";
+                    color: root.muted; font-size: (13px) * TextScale.factor; wrap: word-wrap; }
+                Rectangle {
+                    height: 200px; background: root.sheet; border-color: root.line;
+                    border-width: 1px; border-radius: 12px;
+                    VerticalLayout {
+                        padding: 22px; spacing: 12px;
+                        Text { text: "FRAMEWORK ATTRIBUTION"; color: root.strong;
+                            font-size: (12px) * TextScale.factor; font-weight: 700; }
+                        AboutSlint { height: 130px; }
+                    }
+                }
+                Rectangle {
+                    height: 148px; background: root.sheet; border-color: root.line;
+                    border-width: 1px; border-radius: 12px;
+                    VerticalLayout {
+                        padding: 18px; spacing: 8px;
+                        Text { text: "IMAGE CREDITS  /  THIRD-PARTY RIGHTS";
+                            color: root.strong; font-size: (12px) * TextScale.factor; font-weight: 700; }
+                        Text { text: "70 original screenshots and 30 official source icons. Exact credits are shown in each project dossier.";
+                            font-size: (12px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+                        Text { text: "Full original links, SHA-256 and reported repository licenses are packaged in media-notices/MEDIA_CREDITS.md.";
+                            font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+                        Text { text: "Giving credit does not itself license images, artwork or trademarks. No upstream endorsement is implied.";
+                            font-size: (11px) * TextScale.factor; color: root.accent; wrap: word-wrap; }
+                    }
+                }
+                Text { text: "This developer preview is not a signed or notarized public release.";
+                    color: root.subtle; font-size: (11px) * TextScale.factor; wrap: word-wrap; }
+            }
+        }
+
+        // Only events generated by THIS native preview session; never present
+        // its temporary Node child's queue/history as persistent worker data.
+        if root.page == "activity": VerticalLayout {
+            padding-left: root.compact-layout ? 25px : 52px;
+            padding-right: root.compact-layout ? 25px : 52px;
+            padding-top: 35px; padding-bottom: 20px; spacing: 17px;
+            Text { text: "ACTIVITY  /  THIS NATIVE SESSION"; font-size: (10px) * TextScale.factor; font-weight: 800; color: root.accent; }
+            Text { text: "Local read diagnostics."; font-size: (33px) * TextScale.factor; font-weight: 800; color: root.strong; }
+            Rectangle {
+                height: 156px; background: root.muted-sheet; border-radius: 12px;
+                VerticalLayout {
+                    padding: 22px; spacing: 11px;
+                    Text { text: "INSTALL / UPDATE WORKERS"; font-size: (10px) * TextScale.factor; color: root.accent; font-weight: 800; }
+                    Text { text: "Not connected to a persistent Challenger worker.";
+                        font-size: (15px) * TextScale.factor; color: root.strong; font-weight: 700; }
+                    Text { text: "The backend for this preview exists only during each read. Its empty queue or history cannot prove that the actual device is idle.";
+                        font-size: (12px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+                }
+            }
+            HorizontalLayout {
+                Text { text: "PERSISTED INSTALL ATTEMPTS"; font-size: (11px) * TextScale.factor; font-weight: 800; color: root.strong;
+                    vertical-alignment: center; }
+                Rectangle { horizontal-stretch: 1; background: transparent; }
+                Rectangle {
+                    width: 196px; height: 34px; background: root.accent-bg; border-radius: 7px;
+                    Text { text: root.install-history-loading ? "Reading local history…" :
+                        "Read local installation history";
+                        font-size: (10px) * TextScale.factor; color: root.accent; font-weight: 700;
+                        horizontal-alignment: center; vertical-alignment: center; }
+                    KeyboardAction { action-dark: root.dark-mode; action-label: "Read local installation history"; action-enabled: !root.install-history-loading; activated => { root.load-install-history(); } }
+                }
+            }
+            Text { text: root.install-history-status; font-size: (11px) * TextScale.factor;
+                color: root.muted; wrap: word-wrap; }
+            if root.install-history-count > 0: ListView {
+                height: 145px;
+                for event in root.install-history-events : Rectangle {
+                    height: 54px; background: root.sheet; border-color: root.line; border-width: 1px;
+                    HorizontalLayout {
+                        padding-left: 15px; padding-right: 15px; spacing: 12px;
+                        VerticalLayout {
+                            spacing: 4px; horizontal-stretch: 1;
+                            Text { text: event.name; font-size: (12px) * TextScale.factor; font-weight: 700;
+                                color: root.strong; overflow: elide; }
+                            Text { text: event.detail; font-size: (10px) * TextScale.factor; color: root.muted;
+                                overflow: elide; }
+                        }
+                        Text { text: event.outcome; font-size: (10px) * TextScale.factor;
+                            color: event.outcome == "COMPLETED" ? root.accent : #c38442;
+                            vertical-alignment: center; }
+                    }
+                }
+            }
+            HorizontalLayout {
+                Text { text: "READ-ONLY SESSION EVENTS"; font-size: (11px) * TextScale.factor; font-weight: 800; color: root.strong;
+                    vertical-alignment: center; }
+                Rectangle { horizontal-stretch: 1; background: transparent; }
+                Text { text: root.session-event-count + " events since launch"; font-size: (11px) * TextScale.factor; color: root.subtle;
+                    vertical-alignment: center; }
+            }
+            ListView {
+                vertical-stretch: 1;
+                for event in root.session-events : Rectangle {
+                    height: 78px; background: root.sheet; border-color: root.line; border-width: 1px;
+                    HorizontalLayout {
+                        padding-left: 17px; padding-right: 17px; spacing: 14px;
+                        Rectangle {
+                            width: 9px; height: 9px; border-radius: 5px;
+                            background: event.outcome == "OK" ? root.accent : #c38442;
+                        }
+                        VerticalLayout {
+                            spacing: 6px; horizontal-stretch: 1;
+                            Text { text: event.name; font-size: (13px) * TextScale.factor; font-weight: 700; color: root.strong; }
+                            Text { text: event.detail; font-size: (11px) * TextScale.factor; color: root.muted; overflow: elide; }
+                        }
+                        Text { text: event.outcome; font-size: (10px) * TextScale.factor; color: event.outcome == "OK" ? root.accent : #c38442;
+                            vertical-alignment: center; }
+                    }
+                }
+            }
+            Text { text: "Session log is memory-only. Refresh failures appear here but never overwrite the last verified catalog or installation signals.";
+                font-size: (10px) * TextScale.factor; color: root.subtle; wrap: word-wrap; }
+        }
+
+        Rectangle {
+            height: 40px; background: root.sheet; border-color: root.line; border-width: 1px;
+            HorizontalLayout {
+                padding-left: root.compact-layout ? 22px : 38px;
+                padding-right: root.compact-layout ? 22px : 38px;
+                Text { text: root.compact-layout ? "READ-ONLY  ·  CONSENT REQUIRED" : "READ-ONLY CATALOG  /  EXPLICIT-APPROVAL INSTALLS"; font-size: (9px) * TextScale.factor; font-weight: 800; color: root.accent;
+                    vertical-alignment: center; }
+                Rectangle { horizontal-stretch: 1; background: transparent; }
+                Text { text: root.compact-layout ? root.total + " source projects" : root.total + " projects  ·  verified release adapters only  ·  explicit install consent";
+                    color: root.subtle; font-size: (10px) * TextScale.factor; vertical-alignment: center; }
+            }
+        }
+        }
+    }
+
+    MenuBar {
+        visible: false;
+        Menu {
+            title: "Challenger";
+            MenuItem {
+                title: "Preferences...";
+                shortcut: @keys(Control + Comma);
+                activated => { root.open-preferences(); }
+            }
+        }
+    }
+
+    // A real Slint native popup, not a navigation page or web view.
+    // Escape and outside-click dismiss it; opening restores previously focused item.
+    preferences-popup := PopupWindow {
+        close-policy: PopupClosePolicy.close-on-click-outside;
+        x: root.compact-layout ? 24px : (root.width - 820px) / 2;
+        y: root.compact-layout ? 56px : 66px;
+        width: root.compact-layout ? 690px : 820px;
+        height: root.compact-layout ? 466px : 530px;
+
+        Rectangle {
+            width: parent.width; height: parent.height;
+            background: root.sheet; border-color: root.line;
+            border-width: 1px; border-radius: 16px;
+            VerticalLayout {
+                padding: 20px; spacing: 13px;
+                HorizontalLayout {
+                    height: 40px;
+                    VerticalLayout {
+                        spacing: 2px;
+                        Text { text: "PREFERENCES"; font-size: (11px) * TextScale.factor; font-weight: 850;
+                            color: root.accent; }
+                        Text { text: "Make Challenger yours."; font-size: (17px) * TextScale.factor;
+                            font-weight: 800; color: root.strong; }
+                    }
+                    Rectangle { horizontal-stretch: 1; background: transparent; }
+                    Rectangle {
+                        width: 72px; height: 34px; border-radius: 9px;
+                        background: root.muted-sheet;
+                        Text { text: "Close"; color: root.strong; font-size: (12px) * TextScale.factor;
+                            horizontal-alignment: center; vertical-alignment: center; }
+                        KeyboardAction { action-dark: root.dark-mode;
+                            action-label: "Close Preferences"; activated => { preferences-popup.close(); } }
+                    }
+                }
+                Rectangle { height: 1px; background: root.line; }
+                HorizontalLayout {
+                    spacing: 15px;
+                    VerticalLayout {
+                        width: 178px; spacing: 9px;
+                        PreferenceChoice {
+                            label: "Appearance"; dark: root.dark-mode;
+                            selected: root.preferences-section == "appearance";
+                            high-contrast: root.high-contrast;
+                            activated => { root.preferences-section = "appearance"; }
+                        }
+                        PreferenceChoice {
+                            label: "Accessibility"; dark: root.dark-mode;
+                            selected: root.preferences-section == "accessibility";
+                            high-contrast: root.high-contrast;
+                            activated => { root.preferences-section = "accessibility"; }
+                        }
+                        PreferenceChoice {
+                            label: "About & Updates"; dark: root.dark-mode;
+                            selected: root.preferences-section == "about";
+                            high-contrast: root.high-contrast;
+                            activated => { root.preferences-section = "about"; }
+                        }
+                        PreferenceChoice {
+                            label: "Privacy & Data"; dark: root.dark-mode;
+                            selected: root.preferences-section == "privacy";
+                            high-contrast: root.high-contrast;
+                            activated => { root.preferences-section = "privacy"; }
+                        }
+                        Rectangle { vertical-stretch: 1; background: transparent; }
+                    }
+                    Rectangle { width: 1px; background: root.line; }
+                    ScrollView {
+                        horizontal-stretch: 1; vertical-stretch: 1;
+                        VerticalLayout {
+                            padding-left: 11px; padding-right: 6px;
+                            padding-top: 3px; padding-bottom: 8px; spacing: 14px;
+
+                            if root.preferences-section == "appearance": VerticalLayout {
+                                vertical-stretch: 0; spacing: 13px;
+                                Text { vertical-stretch: 0; text: "Appearance"; font-size: (22px) * TextScale.factor;
+                                    font-weight: 800; color: root.strong; }
+                                Text { vertical-stretch: 0; text: "Follow the device appearance at launch, or choose a permanent theme.";
+                                    font-size: (12px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+                                Text { vertical-stretch: 0; text: "COLOR THEME"; font-size: (10px) * TextScale.factor;
+                                    font-weight: 800; color: root.accent; }
+                                HorizontalLayout { vertical-stretch: 0;
+                                    spacing: 9px;
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "System";
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        selected: root.appearance-choice == "system";
+                                        activated => { root.change-appearance("system"); }
+                                    }
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "Light";
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        selected: root.appearance-choice == "light";
+                                        activated => { root.change-appearance("light"); }
+                                    }
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "Dark";
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        selected: root.appearance-choice == "dark";
+                                        activated => { root.change-appearance("dark"); }
+                                    }
+                                }
+                                Text { vertical-stretch: 0; text: "Selected: " + root.appearance-choice
+                                        + (root.appearance-choice == "system"
+                                        ? (root.dark-mode ? " (system dark)" : " (system light)") : "");
+                                    font-size: (12px) * TextScale.factor; color: root.muted; }
+                                Rectangle { vertical-stretch: 1; background: transparent; }
+                            }
+
+                            if root.preferences-section == "accessibility": VerticalLayout {
+                                vertical-stretch: 0; spacing: 12px;
+                                Text { vertical-stretch: 0; text: "Accessibility"; font-size: (22px) * TextScale.factor;
+                                    font-weight: 800; color: root.strong; }
+                                Text { vertical-stretch: 0; text: "Reduce motion and increase contrast, with real keyboard-accessible controls.";
+                                    font-size: (12px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+                                Text { vertical-stretch: 0; text: "ANIMATIONS"; font-size: (10px) * TextScale.factor;
+                                    font-weight: 800; color: root.accent; }
+                                HorizontalLayout { vertical-stretch: 0;
+                                    spacing: 8px;
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "System";
+                                        selected: root.motion-choice == "system";
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        activated => { root.change-motion("system"); }
+                                    }
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "Reduce";
+                                        selected: root.motion-choice == "reduce";
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        activated => { root.change-motion("reduce"); }
+                                    }
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "Allow";
+                                        selected: root.motion-choice == "full";
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        activated => { root.change-motion("full"); }
+                                    }
+                                }
+                                Text { vertical-stretch: 0; text: root.reduced-motion ? "Motion is reduced." : "Subtle motion is enabled.";
+                                    font-size: (11px) * TextScale.factor; color: root.muted; }
+                                Text { vertical-stretch: 0; text: "HIGH CONTRAST"; font-size: (10px) * TextScale.factor;
+                                    font-weight: 800; color: root.accent; }
+                                HorizontalLayout { vertical-stretch: 0;
+                                    spacing: 8px;
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "Off";
+                                        selected: !root.high-contrast;
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        activated => { root.change-contrast(false); }
+                                    }
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "On";
+                                        selected: root.high-contrast;
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        activated => { root.change-contrast(true); }
+                                    }
+                                }
+                                Text { vertical-stretch: 0; text: "TEXT SIZE"; font-size: (10px) * TextScale.factor;
+                                    font-weight: 800; color: root.accent; }
+                                HorizontalLayout {
+                                    vertical-stretch: 0; spacing: 8px;
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "100%";
+                                        selected: root.text-scale-percent == 100;
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        activated => { root.change-text-scale(100); }
+                                    }
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "125%";
+                                        selected: root.text-scale-percent == 125;
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        activated => { root.change-text-scale(125); }
+                                    }
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "150%";
+                                        selected: root.text-scale-percent == 150;
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        activated => { root.change-text-scale(150); }
+                                    }
+                                }
+                                Text { vertical-stretch: 0; text: "Text enlargement applies immediately to navigation, cards, details, preferences and source credits.";
+                                    font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+                                Text { vertical-stretch: 0; text: "Buttons provide keyboard focus and spoken labels. Screen-reader, 200% zoom, and RTL/IME audits remain release gates.";
+                                    font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+                                Rectangle { vertical-stretch: 1; background: transparent; }
+                            }
+
+                            if root.preferences-section == "about": VerticalLayout {
+                                vertical-stretch: 0; spacing: 12px;
+                                Text { vertical-stretch: 0; text: "About Challenger"; font-size: (22px) * TextScale.factor;
+                                    font-weight: 800; color: root.strong; }
+                                Text { vertical-stretch: 0; text: root.native-version; font-size: (12px) * TextScale.factor;
+                                    font-weight: 750; color: root.strong; }
+                                Text { vertical-stretch: 0; text: "Developer test channel · no auto-install or background checks.";
+                                    font-size: (11px) * TextScale.factor; color: root.muted; wrap: word-wrap; }
+                                HorizontalLayout { vertical-stretch: 0;
+                                    spacing: 10px;
+                                    PreferenceAction {
+                                        width: 174px; label: root.update-checking ? "Checking..." : "Check updates";
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+
+                                        activated => { if (!root.update-checking) { root.check-native-updates(); } }
+                                    }
+                                    PreferenceAction {
+                                        width: 182px; label: "Official releases";
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+
+                                        activated => { root.open-native-release-page(); }
+                                    }
+                                }
+                                Text { vertical-stretch: 0; text: root.update-status; font-size: (11px) * TextScale.factor;
+                                    color: root.muted; wrap: word-wrap; }
+                                Rectangle { height: 1px; background: root.line; }
+                                Text { vertical-stretch: 0; text: "FRAMEWORK ATTRIBUTION"; font-size: (10px) * TextScale.factor;
+                                    font-weight: 800; color: root.accent; }
+                                // Required official Slint component. Do not replace with invented credits.
+                                AboutSlint { height: 118px; }
+                                Text { vertical-stretch: 0; text: "Screenshots, source icons and license notices are credited per project. Attribution does not imply redistribution permission.";
+                                    color: root.muted; font-size: (10px) * TextScale.factor; wrap: word-wrap; }
+                                Rectangle { vertical-stretch: 1; background: transparent; }
+                            }
+
+                            if root.preferences-section == "privacy": VerticalLayout {
+                                vertical-stretch: 0; spacing: 13px;
+                                Text { vertical-stretch: 0; text: "Privacy & Data"; font-size: (22px) * TextScale.factor;
+                                    font-weight: 800; color: root.strong; }
+                                Text { vertical-stretch: 0; text: "Appearance and accessibility preferences are saved only on this device. No account or telemetry is added.";
+                                    color: root.muted; font-size: (12px) * TextScale.factor; wrap: word-wrap; }
+                                Text { vertical-stretch: 0; text: "The catalog remains read-only. Device app inspection still requires an explicit request. Checking official releases is manual.";
+                                    color: root.muted; font-size: (12px) * TextScale.factor; wrap: word-wrap; }
+                                PreferenceAction {
+                                    width: 192px; label: "Reset preferences";
+                                    dark: root.dark-mode; high-contrast: root.high-contrast;
+
+                                    activated => { root.reset-preferences(); }
+                                }
+                                Rectangle { vertical-stretch: 1; background: transparent; }
+                            }
+                        }
+                    }
+                }
+                Rectangle { height: 1px; background: root.line; }
+                Text {
+                    text: root.preferences-status != ""
+                        ? root.preferences-status
+                        : "Changes are saved locally. Escape closes this window.";
+                    color: root.preferences-status != "" ? #bf7954 : root.subtle;
+                    font-size: (11px) * TextScale.factor; overflow: elide;
+                }
+            }
+        }
+    }
+}

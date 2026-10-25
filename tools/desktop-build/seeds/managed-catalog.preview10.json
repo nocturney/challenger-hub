@@ -6,7 +6,7 @@
       "title": "CADCraft",
       "original": "Autodesk AutoCAD",
       "group": "CAD",
-      "description": "CADCraft: computer-aided design and drafting â€” an open-source, clean-room AutoCAD-style app in pure Rust",
+      "description": "CADCraft: computer-aided design and drafting — an open-source, clean-room AutoCAD-style app in pure Rust",
       "isNew": false,
       "repoUrl": "https://github.com/storytold/cadcraft",
       "pushedAt": "2026-10-23T10:07:34Z",

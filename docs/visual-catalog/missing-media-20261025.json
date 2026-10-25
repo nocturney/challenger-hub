@@ -1,0 +1,1284 @@
+{
+  "schema": "challenger-native-media-missing.v1",
+  "counts": {
+    "projects": 181,
+    "managed": 14,
+    "curated": 152,
+    "research": 15,
+    "nativeIcons": 30,
+    "sourceApprovedIconsNotYetEmbedded": 1,
+    "screenshotProjects": 29,
+    "officialPreviewProjects": 29,
+    "identityCardProjects": 152,
+    "screenshotFrames": 70,
+    "missingIcons": 151,
+    "missingScreenshots": 152,
+    "screenshotBytes": 15836310
+  },
+  "items": [
+    {
+      "projectId": "managed:AniCraft",
+      "name": "AniCraft",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/storytold/AniCraft",
+      "kind": "managed"
+    },
+    {
+      "projectId": "curated:compositor",
+      "name": "Compositor",
+      "iconStatus": "embedded",
+      "missingScreenshot": true,
+      "source": "https://github.com/robbietilton/Compositor",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:composa",
+      "name": "Composa",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/dvdstelt/Composa",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:infinite",
+      "name": "Infinite",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/n1m21n/Infinite",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:friction",
+      "name": "Friction",
+      "iconStatus": "source-approved-not-embedded",
+      "missingScreenshot": true,
+      "source": "https://github.com/friction2d/friction",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:grida",
+      "name": "Grida",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/gridaco/grida",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:limo-cad",
+      "name": "Limo CAD",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/limo-cad/Limo-CAD",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:godsvg",
+      "name": "GodSVG",
+      "iconStatus": "embedded",
+      "missingScreenshot": true,
+      "source": "https://github.com/MewPurPur/GodSVG",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:vgc",
+      "name": "VGC",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/vgc/vgc",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:glaxnimate",
+      "name": "Glaxnimate",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/KDE/glaxnimate",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:zrythm",
+      "name": "Zrythm",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/zrythm/zrythm",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:bespoke-synth",
+      "name": "Bespoke Synth",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/BespokeSynth/BespokeSynth",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:stargate-daw",
+      "name": "Stargate DAW",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/stargatedaw/stargate",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:horizon-eda",
+      "name": "Horizon EDA",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/horizon-eda/horizon",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:kiri-moto",
+      "name": "Kiri:Moto",
+      "iconStatus": "embedded",
+      "missingScreenshot": true,
+      "source": "https://github.com/GridSpace/grid-apps",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:inochi-creator",
+      "name": "Inochi Creator",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/Inochi2D/inochi-creator",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:pixieditor",
+      "name": "PixiEditor",
+      "iconStatus": "missing",
+      "missingScreenshot": false,
+      "source": "https://github.com/PixiEditor/PixiEditor",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:photodemon",
+      "name": "PhotoDemon",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/tannerhelland/PhotoDemon",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:armorpaint",
+      "name": "ArmorPaint",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/armory3d/armorpaint",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:solvespace",
+      "name": "SolveSpace",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/solvespace/solvespace",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:losslesscut",
+      "name": "LosslessCut",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/mifi/lossless-cut",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gyroflow",
+      "name": "Gyroflow",
+      "iconStatus": "missing",
+      "missingScreenshot": false,
+      "source": "https://github.com/gyroflow/gyroflow",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:synfig",
+      "name": "Synfig Studio",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/synfig/synfig",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:cardinal",
+      "name": "Cardinal",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/DISTRHO/Cardinal",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:cloudcompare",
+      "name": "CloudCompare",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/CloudCompare/CloudCompare",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:meshlab",
+      "name": "MeshLab",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/cnr-isti-vclab/meshlab",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:f3d",
+      "name": "F3D",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/f3d-app/f3d",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:olive",
+      "name": "Olive Editor",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/olive-editor/olive",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:twenty",
+      "name": "Twenty CRM",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/twentyhq/twenty",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:carbon-erp",
+      "name": "Carbon",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/crbnos/carbon",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:filaops",
+      "name": "FilaOps",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/BLB3DPrinting/filaops",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:nocobase",
+      "name": "NocoBase",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/nocobase/nocobase",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:baserow",
+      "name": "Baserow",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/baserow/baserow",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:directus",
+      "name": "Directus",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/directus/directus",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:erpnext",
+      "name": "ERPNext",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/frappe/erpnext",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:akaunting",
+      "name": "Akaunting",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/akaunting/akaunting",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:postiz",
+      "name": "Postiz",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/gitroomhq/postiz-app",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:bifrost",
+      "name": "Bifrost",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/maximhq/bifrost",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:restate",
+      "name": "Restate",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/restatedev/restate",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:hatchet",
+      "name": "Hatchet",
+      "iconStatus": "missing",
+      "missingScreenshot": false,
+      "source": "https://github.com/hatchet-dev/hatchet",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:hindsight",
+      "name": "Hindsight",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/vectorize-io/hindsight",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:graphiti",
+      "name": "Graphiti",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/getzep/graphiti",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:letta",
+      "name": "Letta",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/letta-ai/letta",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:agent-vault",
+      "name": "Infisical Agent Vault",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/Infisical/agent-vault",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:dify",
+      "name": "Dify",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/langgenius/dify",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:ragflow",
+      "name": "RAGFlow",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/infiniflow/ragflow",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:appsmith",
+      "name": "Appsmith",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/appsmithorg/appsmith",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:espocrm",
+      "name": "EspoCRM",
+      "iconStatus": "embedded",
+      "missingScreenshot": true,
+      "source": "https://github.com/espocrm/espocrm",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:plane",
+      "name": "Plane",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/makeplane/plane",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:affine",
+      "name": "AFFiNE",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/toeverything/AFFiNE",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:appflowy",
+      "name": "AppFlowy",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/AppFlowy-IO/AppFlowy",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:activepieces",
+      "name": "Activepieces",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/activepieces/activepieces",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:docuseal",
+      "name": "DocuSeal",
+      "iconStatus": "embedded",
+      "missingScreenshot": true,
+      "source": "https://github.com/docusealco/docuseal",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:paperless",
+      "name": "Paperless-ngx",
+      "iconStatus": "missing",
+      "missingScreenshot": false,
+      "source": "https://github.com/paperless-ngx/paperless-ngx",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:meshcentral",
+      "name": "MeshCentral",
+      "iconStatus": "embedded",
+      "missingScreenshot": true,
+      "source": "https://github.com/Ylianst/MeshCentral",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:rustdesk",
+      "name": "RustDesk",
+      "iconStatus": "missing",
+      "missingScreenshot": false,
+      "source": "https://github.com/rustdesk/rustdesk",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:sim",
+      "name": "Sim Studio",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/simstudioai/sim",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:zed",
+      "name": "Zed",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/zed-industries/zed",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:openhands",
+      "name": "OpenHands",
+      "iconStatus": "embedded",
+      "missingScreenshot": true,
+      "source": "https://github.com/OpenHands/OpenHands",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:librechat",
+      "name": "LibreChat",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/LibreChat-AI/LibreChat",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:anythingllm",
+      "name": "AnythingLLM",
+      "iconStatus": "missing",
+      "missingScreenshot": false,
+      "source": "https://github.com/Mintplex-Labs/anything-llm",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:hoppscotch",
+      "name": "Hoppscotch",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/hoppscotch/hoppscotch",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:n8n",
+      "name": "n8n",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/n8n-io/n8n",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:flowise",
+      "name": "Flowise (archived)",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/FlowiseAI/Flowise",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:mastra",
+      "name": "Mastra",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/mastra-ai/mastra",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:peta-core",
+      "name": "Peta",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/dunialabs/peta-core",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:agentgateway",
+      "name": "agentgateway",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/agentgateway/agentgateway",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:contextforge",
+      "name": "ContextForge",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/IBM/mcp-context-forge",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:langfuse",
+      "name": "Langfuse",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/langfuse/langfuse",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:windmill",
+      "name": "Windmill",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/windmill-labs/windmill",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-benkuper-chataigne",
+      "name": "Chataigne",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/benkuper/Chataigne",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-mcallegari-qlcplus",
+      "name": "QLC+",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/mcallegari/qlcplus",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-xlightssequencer-xlights",
+      "name": "xLights",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/xLightsSequencer/xLights",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-xlightssequencer-xschedule",
+      "name": "xSchedule",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/xLightsSequencer/xSchedule",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-obsproject-obs-studio",
+      "name": "OBS Studio",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/obsproject/obs-studio",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-mixxxdj-mixxx",
+      "name": "Mixxx",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/mixxxdj/mixxx",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-abemelic-freeshow",
+      "name": "FreeShow",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/abemelic/freeshow",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-mapmapteam-mapmap",
+      "name": "MapMap",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/mapmapteam/mapmap",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-openfoam-openfoam-dev",
+      "name": "OpenFOAM",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/OpenFOAM/OpenFOAM-dev",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-su2code-su2",
+      "name": "SU2",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/su2code/SU2",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-elmercsc-elmerfem",
+      "name": "Elmer FEM",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/ElmerCSC/elmerfem",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-openmodelica-openmodelica",
+      "name": "OpenModelica",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/OpenModelica/OpenModelica",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-openmdao-openmdao",
+      "name": "OpenMDAO",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/OpenMDAO/OpenMDAO",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-qelectrotech-qelectrotech-source-mirror",
+      "name": "QElectroTech",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/qelectrotech/qelectrotech-source-mirror",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-openrocket-openrocket",
+      "name": "OpenRocket",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/openrocket/openrocket",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-ifcopenshell-ifcopenshell",
+      "name": "Bonsai BIM / IfcOpenShell",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/IfcOpenShell/IfcOpenShell",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-opendronemap-odm",
+      "name": "OpenDroneMap ODM",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/OpenDroneMap/ODM",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-webodm-webodm",
+      "name": "WebODM",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/WebODM/WebODM",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-xibyte-jsketcher",
+      "name": "JSketcher original",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/xibyte/jsketcher",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-box-of-dragons-jsketcher",
+      "name": "JSketcher experimental fork",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/Box-of-Dragons/JSketcher",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-meerk40t-meerk40t",
+      "name": "MeerK40t",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/meerk40t/meerk40t",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-inkcut-inkcut",
+      "name": "Inkcut",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/inkcut/inkcut",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-donkie-spoolman",
+      "name": "Spoolman",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/Donkie/Spoolman",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-openscan-org-openscan3",
+      "name": "OpenScan",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/OpenScan-org/OpenScan3",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-qgis-qgis",
+      "name": "QGIS",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/qgis/QGIS",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-slicer-slicer",
+      "name": "3D Slicer",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/Slicer/Slicer",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-qupath-qupath",
+      "name": "QuPath",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/qupath/qupath",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-napari-napari",
+      "name": "napari",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/napari/napari",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-biolab-orange3",
+      "name": "Orange Data Mining",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/biolab/orange3",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-jasp-stats-jasp-desktop",
+      "name": "JASP",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/jasp-stats/jasp-desktop",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-jamovi-jamovi",
+      "name": "jamovi",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/jamovi/jamovi",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-openchemistry-avogadroapp",
+      "name": "Avogadro 2",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/OpenChemistry/avogadroapp",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-opencpn-opencpn",
+      "name": "OpenCPN",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/OpenCPN/OpenCPN",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-stellarium-stellarium",
+      "name": "Stellarium",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/Stellarium/stellarium",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-openbao-openbao",
+      "name": "OpenBao",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/openbao/openbao",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-infisical-infisical",
+      "name": "Infisical",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/Infisical/infisical",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-zitadel-zitadel",
+      "name": "ZITADEL",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/zitadel/zitadel",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-goauthentik-authentik",
+      "name": "authentik",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/goauthentik/authentik",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-openziti-ziti",
+      "name": "OpenZiti",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/openziti/ziti",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-netbirdio-netbird",
+      "name": "NetBird",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/netbirdio/netbird",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-wazuh-wazuh",
+      "name": "Wazuh",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/wazuh/wazuh",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-greenbone-openvas-scanner",
+      "name": "Greenbone OpenVAS",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/greenbone/openvas-scanner",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-zaproxy-zaproxy",
+      "name": "OWASP ZAP",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/zaproxy/zaproxy",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-werwolv-imhex",
+      "name": "ImHex",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/WerWolv/ImHex",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-sleuthkit-autopsy",
+      "name": "Autopsy",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/sleuthkit/autopsy",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-usebruno-bruno",
+      "name": "Bruno",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/usebruno/bruno",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-rizinorg-cutter",
+      "name": "Cutter",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/rizinorg/cutter",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-dolibarr-dolibarr",
+      "name": "Dolibarr",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/Dolibarr/dolibarr",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-documenso-documenso",
+      "name": "Documenso",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/documenso/documenso",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-formbricks-formbricks",
+      "name": "Formbricks",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/formbricks/formbricks",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-zammad-zammad",
+      "name": "Zammad",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/zammad/zammad",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-chatwoot-chatwoot",
+      "name": "Chatwoot",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/chatwoot/chatwoot",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-actualbudget-actual",
+      "name": "Actual Budget",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/actualbudget/actual",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-open-source-legal-opencontracts",
+      "name": "OpenContracts",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/Open-Source-Legal/OpenContracts",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-calcom-cal-diy",
+      "name": "Cal.diy",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/calcom/cal.diy",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-apache-superset",
+      "name": "Apache Superset",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/apache/superset",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-metabase-metabase",
+      "name": "Metabase",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/metabase/metabase",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-lightdash-lightdash",
+      "name": "Lightdash",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/lightdash/lightdash",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-evidence-dev-evidence",
+      "name": "Evidence",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/evidence-dev/evidence",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-openobserve-openobserve",
+      "name": "OpenObserve",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/openobserve/openobserve",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-signoz-signoz",
+      "name": "SigNoz",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/SigNoz/signoz",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-openpanel-dev-openpanel",
+      "name": "OpenPanel Analytics",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/Openpanel-dev/openpanel",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-gristlabs-grist-core",
+      "name": "Grist",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/gristlabs/grist-core",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-mathesar-foundation-mathesar",
+      "name": "Mathesar",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/mathesar-foundation/mathesar",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-pocketbase-pocketbase",
+      "name": "PocketBase",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/pocketbase/pocketbase",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-payloadcms-payload",
+      "name": "Payload CMS",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/payloadcms/payload",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-strapi-strapi",
+      "name": "Strapi",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/strapi/strapi",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-surge-synthesizer-surge",
+      "name": "Surge XT",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/surge-synthesizer/surge",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-falktx-carla",
+      "name": "Carla",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/falkTX/Carla",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-anjok07-ultimatevocalremovergui",
+      "name": "Ultimate Vocal Remover",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/Anjok07/ultimatevocalremovergui",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-stride3d-stride",
+      "name": "Stride",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/stride3d/stride",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-turanszkij-wickedengine",
+      "name": "Wicked Engine",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/turanszkij/WickedEngine",
+      "kind": "curated"
+    },
+    {
+      "projectId": "curated:gh-4ian-gdevelop",
+      "name": "GDevelop",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/4ian/GDevelop",
+      "kind": "curated"
+    },
+    {
+      "projectId": "research:tangency-labs-solidcraft",
+      "name": "SolidCraft",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/tangency-labs/solidcraft",
+      "kind": "research"
+    },
+    {
+      "projectId": "research:freecad-freecad",
+      "name": "FreeCAD",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/FreeCAD/FreeCAD",
+      "kind": "research"
+    },
+    {
+      "projectId": "research:openscad-openscad",
+      "name": "OpenSCAD",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/openscad/openscad",
+      "kind": "research"
+    },
+    {
+      "projectId": "research:orcaslicer-orcaslicer",
+      "name": "OrcaSlicer",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/OrcaSlicer/OrcaSlicer",
+      "kind": "research"
+    },
+    {
+      "projectId": "research:graphiteeditor-graphite",
+      "name": "Graphite",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/GraphiteEditor/Graphite",
+      "kind": "research"
+    },
+    {
+      "projectId": "research:kde-kdenlive",
+      "name": "Kdenlive",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/KDE/kdenlive",
+      "kind": "research"
+    },
+    {
+      "projectId": "research:dcc-mcp-dcc-mcp-core",
+      "name": "DCC-MCP Core",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/dcc-mcp/dcc-mcp-core",
+      "kind": "research"
+    },
+    {
+      "projectId": "research:ahujasid-mcp-for-blender",
+      "name": "Blender MCP",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/ahujasid/mcp-for-blender",
+      "kind": "research"
+    },
+    {
+      "projectId": "research:neka-nat-freecad-mcp",
+      "name": "FreeCAD MCP",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/neka-nat/freecad-mcp",
+      "kind": "research"
+    },
+    {
+      "projectId": "research:earthtojake-text-to-cad",
+      "name": "text-to-cad",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/earthtojake/text-to-cad",
+      "kind": "research"
+    },
+    {
+      "projectId": "research:varvedesign-varve",
+      "name": "Varve",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/varvedesign/varve",
+      "kind": "research"
+    },
+    {
+      "projectId": "research:paraxdev-fundacad",
+      "name": "FundaCAD",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/Paraxdev/FundaCAD",
+      "kind": "research"
+    },
+    {
+      "projectId": "research:opencut-app-opencut",
+      "name": "OpenCut",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/OpenCut-app/OpenCut",
+      "kind": "research"
+    },
+    {
+      "projectId": "research:comfy-org-comfyui",
+      "name": "ComfyUI",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/Comfy-Org/ComfyUI",
+      "kind": "research"
+    },
+    {
+      "projectId": "research:genspark-ai-genoffice",
+      "name": "GenOffice",
+      "iconStatus": "missing",
+      "missingScreenshot": true,
+      "source": "https://github.com/genspark-ai/genoffice",
+      "kind": "research"
+    }
+  ]
+}
