@@ -4,6 +4,7 @@ mod gallery;
 mod identity;
 mod install;
 mod sidecar;
+mod preferences;
 
 use catalog::{domain_counts, domain_label, domain_of, filtered_domain, Catalog, Inventory, Project, DOMAINS};
 use slint::{ComponentHandle, Model, ModelRc, SharedString, Timer, TimerMode, VecModel};
@@ -458,6 +459,34 @@ fn reduced_motion_requested() -> bool {
     false
 }
 
+/// The only persistent user state consists of these three non-sensitive preferences.
+fn update_preference_ui(ui: &AppWindow, p: &preferences::Preferences, system_motion: bool) {
+    ui.set_appearance_choice(p.appearance.as_str().into());
+    ui.set_motion_choice(p.motion.as_str().into());
+    ui.set_dark_mode(p.dark_mode());
+    ui.set_reduced_motion(p.reduced_motion(system_motion));
+    ui.set_high_contrast(p.high_contrast);
+}
+
+fn commit_preference(
+    ui: &AppWindow, state: &mut preferences::Preferences,
+    next: preferences::Preferences, path: &Option<std::path::PathBuf>,
+    system_motion: bool,
+) {
+    let outcome = path.as_ref().ok_or_else(|| "No writable user config directory".to_string())
+        .and_then(|path| preferences::write(path, &next));
+    match outcome {
+        Ok(()) => {
+            *state = next;
+            update_preference_ui(ui, state, system_motion);
+            ui.set_preferences_status("Preferences saved on this device.".into());
+        }
+        Err(e) => {
+            ui.set_preferences_status(format!("Cannot save preferences: {e}").into());
+        }
+    }
+}
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let started = Instant::now();
     let args: Vec<String> = std::env::args().collect();
@@ -559,7 +588,24 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     };
     let ui = AppWindow::new()?;
-    ui.set_reduced_motion(reduced_motion_requested());
+    let system_motion = reduced_motion_requested();
+    let pref_path = preferences::path();
+    let prefs = match pref_path.as_ref().map(|p| preferences::read(p)) {
+        Some(Ok(p)) => p,
+        Some(Err(e)) => {
+            eprintln!("NATIVE_PREFERENCES_INVALID {e}; using defaults without overwriting");
+            ui.set_preferences_status("Saved preferences could not be read; defaults shown.".into());
+            preferences::Preferences::default()
+        }
+        None => {
+            ui.set_preferences_status("No writable user preferences directory.".into());
+            preferences::Preferences::default()
+        }
+    };
+    update_preference_ui(&ui, &prefs, system_motion);
+    ui.set_native_version(format!("Native developer preview {} · {}", env!("CARGO_PKG_VERSION"),
+        std::env::consts::OS).into());
+    let prefs = Rc::new(RefCell::new(prefs));
     let state = Rc::new(RefCell::new(State::default()));
     {
         let mut s = state.borrow_mut();
@@ -694,6 +740,92 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
         }
     });
+    ui.on_change_appearance({
+        let store=Rc::clone(&prefs); let weak=ui.as_weak(); let path=pref_path.clone();
+        move |value| if let Some(w)=weak.upgrade() {
+            let mut next=store.borrow().clone();
+            next.appearance=value.to_string();
+            if !next.valid() { return; }
+            commit_preference(&w, &mut store.borrow_mut(), next, &path, system_motion);
+        }
+    });
+    ui.on_change_motion({
+        let store=Rc::clone(&prefs); let weak=ui.as_weak(); let path=pref_path.clone();
+        move |value| if let Some(w)=weak.upgrade() {
+            let mut next=store.borrow().clone();
+            next.motion=value.to_string();
+            if !next.valid() { return; }
+            commit_preference(&w, &mut store.borrow_mut(), next, &path, system_motion);
+        }
+    });
+    ui.on_change_contrast({
+        let store=Rc::clone(&prefs); let weak=ui.as_weak(); let path=pref_path.clone();
+        move |value| if let Some(w)=weak.upgrade() {
+            let mut next=store.borrow().clone();
+            next.high_contrast=value;
+            commit_preference(&w, &mut store.borrow_mut(), next, &path, system_motion);
+        }
+    });
+    ui.on_reset_preferences({
+        let store=Rc::clone(&prefs); let weak=ui.as_weak(); let path=pref_path.clone();
+        move || if let Some(w)=weak.upgrade() {
+            commit_preference(&w, &mut store.borrow_mut(),
+                preferences::Preferences::default(), &path, system_motion);
+        }
+    });
+    ui.on_open_native_release_page(|| {
+        if let Err(e)=webbrowser::open("https://github.com/nocturney/challenger-hub/releases") {
+            eprintln!("NATIVE_RELEASE_PAGE_OPEN_FAILED {e}");
+        }
+    });
+    // The update worker is entirely dormant until Check Updates is clicked.
+    let (update_tx, update_rx)=mpsc::channel::<Result<String,String>>();
+    let update_busy=Rc::new(Cell::new(false));
+    ui.on_check_native_updates({
+        let weak=ui.as_weak(); let tx=update_tx.clone(); let busy=Rc::clone(&update_busy);
+        move || if let Some(w)=weak.upgrade() {
+            if busy.replace(true) { return; }
+            w.set_update_checking(true);
+            w.set_update_status("Checking official native releases (read-only)…".into());
+            let tx=tx.clone();
+            thread::spawn(move || {
+                let _=tx.send(sidecar::native_update_check());
+            });
+        }
+    });
+    let update_poll=Timer::default();
+    update_poll.start(TimerMode::Repeated, Duration::from_millis(130), {
+        let weak=ui.as_weak(); let busy=Rc::clone(&update_busy);
+        move || {
+            if let Ok(result)=update_rx.try_recv() {
+                busy.set(false);
+                if let Some(w)=weak.upgrade() {
+                    w.set_update_checking(false);
+                    let label=match result {
+                        Ok(json) => match serde_json::from_str::<serde_json::Value>(&json) {
+                            Ok(v) if v["schema"] == "challenger.native.updates.v1"
+                                && v["automaticInstallation"] == false
+                                && v["manual"] == true => match v["status"].as_str() {
+                                Some("available") => {
+                                    let ver=v["releaseVersion"].as_str().unwrap_or("unknown");
+                                    format!("Verified native release {ver} is available. Open official releases to review manually.")
+                                }
+                                Some("current") => "This native developer build is at least as recent as the verified native release.".into(),
+                                Some("not-published") => "No compatible verified native release is published yet. The old Windows Preview12 release is not an update.".into(),
+                                Some("unsupported") => "No native release channel for this operating system/architecture.".into(),
+                                Some("error") => "Official release check unavailable. Try again later.".into(),
+                                _ => "Update checker returned an unsupported state.".into(),
+                            },
+                            _ => "Update checker returned invalid or untrusted data.".into(),
+                        },
+                        Err(e) => format!("Update check unavailable: {}", e.chars().take(90).collect::<String>()),
+                    };
+                    w.set_update_status(label.into());
+                }
+            }
+        }
+    });
+
     ui.on_toggle_theme({
         let weak = ui.as_weak();
         move || if let Some(w) = weak.upgrade() {
@@ -1296,6 +1428,21 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if args.iter().any(|a| a == "--qa-preview-dark-results") {
         ui.set_dark_mode(true);
     }
+    if args.iter().any(|a| a.starts_with("--qa-preview-preferences")) {
+        let weak=ui.as_weak();
+        let about=args.iter().any(|a| a == "--qa-preview-preferences-about");
+        let accessibility=args.iter().any(|a| a == "--qa-preview-preferences-accessibility");
+        let dark=args.iter().any(|a| a == "--qa-preview-preferences-dark");
+        Timer::single_shot(Duration::from_millis(1500), move || {
+            if let Some(w)=weak.upgrade() {
+                if dark { w.set_dark_mode(true); }
+                w.invoke_open_preferences();
+                if about { w.set_preferences_section("about".into()); }
+                if accessibility { w.set_preferences_section("accessibility".into()); }
+                eprintln!("NATIVE_PREFERENCES_QA_OPEN section={}", w.get_preferences_section());
+            }
+        });
+    }
     if args.iter().any(|a| ["--qa-preview-results", "--qa-preview-dune",
         "--qa-preview-library", "--qa-preview-activity",
         "--qa-preview-activity-refresh", "--qa-preview-device",
@@ -1303,7 +1450,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "--qa-preview-pdfcraft", "--qa-preview-craft-results",
         "--qa-preview-compact-results", "--qa-preview-dark-results",
         "--qa-preview-home", "--qa-preview-goxel", "--qa-preview-profile",
-        "--qa-preview-profile-results"].contains(&a.as_str())) {
+        "--qa-preview-profile-results",
+        "--qa-preview-preferences", "--qa-preview-preferences-about",
+        "--qa-preview-preferences-accessibility", "--qa-preview-preferences-dark"
+        ].contains(&a.as_str())) {
         let weak = ui.as_weak();
         Timer::single_shot(Duration::from_secs(22), move || {
             if let Some(w) = weak.upgrade() { let _ = w.hide(); }
@@ -1584,6 +1734,35 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let _ = w.hide();
             }
         });
+    }
+
+    // Safe, explicit integration QA: actual Slint callbacks, state and disk.
+    // Refuse to write to the real user's HOME under any circumstances.
+    if args.iter().any(|a| a == "--qa-verify-preferences-sandbox") {
+        let home=std::env::var("HOME").unwrap_or_default();
+        if !home.starts_with("/tmp/challenger-native-preferences-qa.")
+            || std::env::var("CHALLENGER_PREFS_QA").as_deref() != Ok("isolated-v1")
+            || pref_path.as_ref().map(|p| !p.starts_with(&home)).unwrap_or(true) {
+            return Err("Preferences integration QA requires isolated temporary HOME".into());
+        }
+        ui.invoke_change_appearance("dark".into());
+        ui.invoke_change_motion("reduce".into());
+        ui.invoke_change_contrast(true);
+        let observed=preferences::read(pref_path.as_ref().unwrap())
+            .map_err(|_| "QA preference file unreadable")?;
+        if observed.appearance != "dark" || observed.motion != "reduce"
+            || !observed.high_contrast || !ui.get_dark_mode()
+            || !ui.get_reduced_motion() || !ui.get_high_contrast() {
+            return Err("Native preference action/save/binding mismatch".into());
+        }
+        ui.invoke_reset_preferences();
+        let reset=preferences::read(pref_path.as_ref().unwrap())?;
+        if reset != preferences::Preferences::default()
+            || ui.get_appearance_choice() != "system" || ui.get_motion_choice() != "system" {
+            return Err("Preferences reset did not restore system defaults".into());
+        }
+        eprintln!("NATIVE_PREFERENCES_INTEGRATION_PASS save=local reset=verified userHome=isolated");
+        return Ok(());
     }
 
     ui.run()?;

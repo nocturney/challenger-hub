@@ -44,6 +44,7 @@ Copy-Item (Join-Path $here 'ui\MEDIA_CREDITS.json') $mediaNoticeDest
 Copy-Item (Join-Path $here 'ui\MEDIA_CREDITS.md') $mediaNoticeDest
 
 Copy-Item (Join-Path $here '..\slint-node-bridge\sidecar.mjs') (Join-Path $out 'resources')
+Copy-Item (Join-Path $here '..\slint-node-bridge\native-updates.mjs') (Join-Path $out 'resources')
 Copy-Item (Join-Path $here '..\slint-node-bridge\live-catalog.mjs') (Join-Path $out 'resources')
 Copy-Item (Join-Path $here '..\slint-node-bridge\install-bridge.mjs') (Join-Path $out 'resources')
 Copy-Item $seed (Join-Path $out 'resources\catalog-candidates.preview10.json')

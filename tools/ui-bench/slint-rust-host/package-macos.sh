@@ -56,6 +56,7 @@ cp "$here/ui/MEDIA_CREDITS.json" "$app/Contents/Resources/media-notices/"
 cp "$here/ui/MEDIA_CREDITS.md" "$app/Contents/Resources/media-notices/"
 
 cp "$here/../slint-node-bridge/sidecar.mjs" "$app/Contents/Resources/"
+cp "$here/../slint-node-bridge/native-updates.mjs" "$app/Contents/Resources/"
 cp "$here/../slint-node-bridge/live-catalog.mjs" "$app/Contents/Resources/"
 cp "$here/../slint-node-bridge/install-bridge.mjs" "$app/Contents/Resources/"
 cp "$seed" "$app/Contents/Resources/catalog-candidates.preview10.json"

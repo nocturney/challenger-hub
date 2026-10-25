@@ -1,4 +1,4 @@
-import { AboutSlint, CheckBox, LineEdit, ListView, ScrollView } from "std-widgets.slint";
+import { AboutSlint, CheckBox, LineEdit, ListView, ScrollView, Palette } from "std-widgets.slint";
 import { ApprovedGalleryThumb, ApprovedGalleryShot, ApprovedGalleryIcon, ApprovedIconCredit } from "approved-gallery.slint";
 import { IdentityTile, IdentityDossier } from "identity-card.slint";
 import { CatalogProductCard } from "catalog-card.slint";
@@ -84,6 +84,35 @@ component KeyboardAction inherits Rectangle {
     }
 }
 
+
+// Keyboard/screen-reader accessible choice; no click-only faux buttons.
+component PreferenceChoice inherits Rectangle {
+    in property <string> label;
+    in property <bool> selected;
+    in property <bool> dark;
+    in property <bool> high-contrast;
+    callback activated();
+    height: 41px;
+    border-radius: 9px;
+    border-width: root.selected || root.high-contrast ? 2px : 1px;
+    border-color: root.selected
+        ? (root.dark ? #e8d891 : #345d41)
+        : (root.dark ? #526456 : #cbdacf);
+    background: root.selected ? (root.dark ? #36543e : #e5f1e5)
+        : (root.dark ? #26352a : #f7faf6);
+    Text {
+        text: root.label;
+        font-size: 12px; font-weight: root.selected ? 800 : 650;
+        color: root.dark ? #f5f9f3 : #263a2e;
+        horizontal-alignment: center; vertical-alignment: center;
+    }
+    KeyboardAction {
+        action-dark: root.dark;
+        action-label: root.label + (root.selected ? ", selected" : "");
+        activated => { root.activated(); }
+    }
+}
+
 export component AppWindow inherits Window {
     title: "Challenger · Focus Native Preview";
     // Preferred size, not fixed width/height: the OS can now resize/maximize the window.
@@ -94,11 +123,24 @@ export component AppWindow inherits Window {
     min-height: 560px;
     background: root.canvas;
     default-font-family: "Arial";
+    // Keep native Fluent controls in the same light/dark scheme as the custom UI.
+    // This also corrects the previously unreadable dark-mode CheckBox label.
+    changed dark-mode => {
+        Palette.color-scheme = root.dark-mode ? ColorScheme.dark : ColorScheme.light;
+    }
 
     in-out property <string> page: "home";
     in-out property <bool> dark-mode: false;
     // Passed by host; zero-duration animations when accessibility requires it.
     in-out property <bool> reduced-motion: false;
+    in-out property <string> appearance-choice: "system";
+    in-out property <string> motion-choice: "system";
+    in-out property <bool> high-contrast: false;
+    in-out property <string> preferences-section: "appearance";
+    in-out property <string> preferences-status: "";
+    in-out property <bool> update-checking: false;
+    in-out property <string> update-status: "Not checked. Checks are manual only.";
+    in-out property <string> native-version: "Native developer preview";
     in-out property <bool> can-back: false;
     in-out property <bool> can-forward: false;
     in-out property <bool> refreshing: false;
@@ -195,6 +237,18 @@ export component AppWindow inherits Window {
     callback cancel-install();
     callback load-install-history();
     callback toggle-theme();
+    callback change-appearance(string);
+    callback change-motion(string);
+    callback change-contrast(bool);
+    callback reset-preferences();
+    callback check-native-updates();
+    callback open-native-release-page();
+
+    // The native Preferences popup is also available from Cmd+, / Ctrl+,.
+    public function open-preferences() {
+        root.preferences-section = "appearance";
+        preferences-popup.show();
+    }
 
     property <color> canvas: root.dark-mode ? #131b19 : #fafaf6;
     property <color> sheet: root.dark-mode ? #1e2925 : #ffffff;
@@ -202,10 +256,10 @@ export component AppWindow inherits Window {
     property <color> strong: root.dark-mode ? #eaf0e8 : #263a2e;
     // Light-mode text colors must remain >= 4.5:1 on canvas, sheet,
     // muted-sheet and accent-bg backgrounds, including 9-11px labels.
-    property <color> muted: root.dark-mode ? #b0beb4 : #536758;
-    property <color> subtle: root.dark-mode ? #8b9b91 : #5b6e60;
-    property <color> line: root.dark-mode ? #3b4941 : #dfe7df;
-    property <color> accent: root.dark-mode ? #b7d6b9 : #47765a;
+    property <color> muted: root.high-contrast ? (root.dark-mode ? #f1f7ef : #1c3024) : (root.dark-mode ? #b0beb4 : #536758);
+    property <color> subtle: root.high-contrast ? (root.dark-mode ? #e3f0e1 : #263a2e) : (root.dark-mode ? #8b9b91 : #5b6e60);
+    property <color> line: root.high-contrast ? (root.dark-mode ? #93b59b : #537360) : (root.dark-mode ? #3b4941 : #dfe7df);
+    property <color> accent: root.high-contrast ? (root.dark-mode ? #ebf5e8 : #294c35) : (root.dark-mode ? #b7d6b9 : #47765a);
     property <color> accent-bg: root.dark-mode ? #2d4534 : #eaf2e8;
 
     // The breakpoint values are updated by the window resize event rather than
@@ -347,28 +401,21 @@ export component AppWindow inherits Window {
                     activity-nav := KeyboardAction { action-dark: root.dark-mode; action-label: "Activity"; activated => { root.navigate("activity"); } }
                 }
                 Rectangle {
-                    width: root.compact-layout ? 52px : 68px; background: about-nav.pressed ? root.accent-bg :
-                        (root.page == "about") ? root.accent-bg :
-                        about-nav.hovered ? root.muted-sheet : transparent;
+                    width: root.compact-layout ? 76px : 115px;
                     border-radius: QuietPremium.control-radius;
+                    background: preferences-popup.is-open ? root.accent-bg : root.muted-sheet;
+                    border-color: preferences-popup.is-open ? root.accent : root.line;
                     border-width: 1px;
-                    border-color: (root.page == "about")
-                        ? (root.dark-mode ? QuietPremium.dark-outline : QuietPremium.light-outline)
-                        : transparent;
-                    animate background, border-color {
-                        duration: QuietPremium.tab-motion;
-                        easing: ease-out;
-                        enabled: !root.reduced-motion;
+                    Text {
+                        text: root.compact-layout ? "Settings" : "Preferences";
+                        color: root.strong; font-size: 11px; font-weight: 750;
+                        horizontal-alignment: center; vertical-alignment: center;
                     }
-                    Text { text: "About"; color: root.page == "about" ? root.accent : root.muted;
-                           font-size: 12px; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
-                    about-nav := KeyboardAction { action-dark: root.dark-mode; action-label: "About Challenger and Slint"; activated => { root.navigate("about"); } }
-                }
-                Rectangle {
-                    width: root.compact-layout ? 44px : 60px;
-                    Text { text: root.dark-mode ? "Light" : "Dark"; color: root.subtle; font-size: 11px;
-                        horizontal-alignment: center; vertical-alignment: center; }
-                    KeyboardAction { action-dark: root.dark-mode; action-label: root.dark-mode ? "Switch to light theme" : "Switch to dark theme"; activated => { root.toggle-theme(); } }
+                    KeyboardAction {
+                        action-dark: root.dark-mode;
+                        action-label: "Open Preferences, appearance, accessibility and about";
+                        activated => { root.open-preferences(); }
+                    }
                 }
                 Rectangle {
                     width: root.compact-layout ? 66px : 79px; border-radius: 8px; background: root.accent-bg;
@@ -644,6 +691,7 @@ export component AppWindow inherits Window {
                                 highlighted: product-focus.has-focus;
                                 hovered: product-hit.has-hover; pressed: product-hit.pressed;
                                 reduced-motion: root.reduced-motion;
+                                high-contrast: root.high-contrast;
                                 dark: root.dark-mode;
                                 project-name: project.name; project-maker: project.maker;
                                 project-domain: project.domain; project-summary: project.summary;
@@ -811,6 +859,7 @@ export component AppWindow inherits Window {
                             project-summary: root.detail-summary;
                             project-source: root.detail-source;
                             dark: root.dark-mode;
+                            high-contrast: root.high-contrast;
                             compact: root.compact-layout;
                             height: root.compact-layout ? 347px : 370px;
                         }
@@ -1514,6 +1563,245 @@ export component AppWindow inherits Window {
                     color: root.subtle; font-size: 10px; vertical-alignment: center; }
             }
         }
+        }
+    }
+
+    MenuBar {
+        visible: false;
+        Menu {
+            title: "Challenger";
+            MenuItem {
+                title: "Preferences...";
+                shortcut: @keys(Control + Comma);
+                activated => { root.open-preferences(); }
+            }
+        }
+    }
+
+    // A real Slint native popup, not a navigation page or web view.
+    // Escape and outside-click dismiss it; opening restores previously focused item.
+    preferences-popup := PopupWindow {
+        close-policy: PopupClosePolicy.close-on-click-outside;
+        x: root.compact-layout ? 24px : (root.width - 820px) / 2;
+        y: root.compact-layout ? 56px : 66px;
+        width: root.compact-layout ? 690px : 820px;
+        height: root.compact-layout ? 466px : 530px;
+
+        Rectangle {
+            width: parent.width; height: parent.height;
+            background: root.sheet; border-color: root.line;
+            border-width: 1px; border-radius: 16px;
+            VerticalLayout {
+                padding: 20px; spacing: 13px;
+                HorizontalLayout {
+                    height: 40px;
+                    VerticalLayout {
+                        spacing: 2px;
+                        Text { text: "PREFERENCES"; font-size: 11px; font-weight: 850;
+                            color: root.accent; }
+                        Text { text: "Make Challenger yours."; font-size: 17px;
+                            font-weight: 800; color: root.strong; }
+                    }
+                    Rectangle { horizontal-stretch: 1; background: transparent; }
+                    Rectangle {
+                        width: 72px; height: 34px; border-radius: 9px;
+                        background: root.muted-sheet;
+                        Text { text: "Close"; color: root.strong; font-size: 12px;
+                            horizontal-alignment: center; vertical-alignment: center; }
+                        KeyboardAction { action-dark: root.dark-mode;
+                            action-label: "Close Preferences"; activated => { preferences-popup.close(); } }
+                    }
+                }
+                Rectangle { height: 1px; background: root.line; }
+                HorizontalLayout {
+                    spacing: 15px;
+                    VerticalLayout {
+                        width: 178px; spacing: 9px;
+                        PreferenceChoice {
+                            label: "Appearance"; dark: root.dark-mode;
+                            selected: root.preferences-section == "appearance";
+                            high-contrast: root.high-contrast;
+                            activated => { root.preferences-section = "appearance"; }
+                        }
+                        PreferenceChoice {
+                            label: "Accessibility"; dark: root.dark-mode;
+                            selected: root.preferences-section == "accessibility";
+                            high-contrast: root.high-contrast;
+                            activated => { root.preferences-section = "accessibility"; }
+                        }
+                        PreferenceChoice {
+                            label: "About & Updates"; dark: root.dark-mode;
+                            selected: root.preferences-section == "about";
+                            high-contrast: root.high-contrast;
+                            activated => { root.preferences-section = "about"; }
+                        }
+                        PreferenceChoice {
+                            label: "Privacy & Data"; dark: root.dark-mode;
+                            selected: root.preferences-section == "privacy";
+                            high-contrast: root.high-contrast;
+                            activated => { root.preferences-section = "privacy"; }
+                        }
+                        Rectangle { vertical-stretch: 1; background: transparent; }
+                    }
+                    Rectangle { width: 1px; background: root.line; }
+                    ScrollView {
+                        horizontal-stretch: 1; vertical-stretch: 1;
+                        VerticalLayout {
+                            padding-left: 11px; padding-right: 6px;
+                            padding-top: 3px; padding-bottom: 8px; spacing: 14px;
+
+                            if root.preferences-section == "appearance": VerticalLayout {
+                                vertical-stretch: 0; spacing: 13px;
+                                Text { vertical-stretch: 0; text: "Appearance"; font-size: 22px;
+                                    font-weight: 800; color: root.strong; }
+                                Text { vertical-stretch: 0; text: "Follow the device appearance at launch, or choose a permanent theme.";
+                                    font-size: 12px; color: root.muted; wrap: word-wrap; }
+                                Text { vertical-stretch: 0; text: "COLOR THEME"; font-size: 10px;
+                                    font-weight: 800; color: root.accent; }
+                                HorizontalLayout { vertical-stretch: 0;
+                                    spacing: 9px;
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "System";
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        selected: root.appearance-choice == "system";
+                                        activated => { root.change-appearance("system"); }
+                                    }
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "Light";
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        selected: root.appearance-choice == "light";
+                                        activated => { root.change-appearance("light"); }
+                                    }
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "Dark";
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        selected: root.appearance-choice == "dark";
+                                        activated => { root.change-appearance("dark"); }
+                                    }
+                                }
+                                Text { vertical-stretch: 0; text: "Selected: " + root.appearance-choice
+                                        + (root.appearance-choice == "system"
+                                        ? (root.dark-mode ? " (system dark)" : " (system light)") : "");
+                                    font-size: 12px; color: root.muted; }
+                                Rectangle { vertical-stretch: 1; background: transparent; }
+                            }
+
+                            if root.preferences-section == "accessibility": VerticalLayout {
+                                vertical-stretch: 0; spacing: 12px;
+                                Text { vertical-stretch: 0; text: "Accessibility"; font-size: 22px;
+                                    font-weight: 800; color: root.strong; }
+                                Text { vertical-stretch: 0; text: "Reduce motion and increase contrast, with real keyboard-accessible controls.";
+                                    font-size: 12px; color: root.muted; wrap: word-wrap; }
+                                Text { vertical-stretch: 0; text: "ANIMATIONS"; font-size: 10px;
+                                    font-weight: 800; color: root.accent; }
+                                HorizontalLayout { vertical-stretch: 0;
+                                    spacing: 8px;
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "System";
+                                        selected: root.motion-choice == "system";
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        activated => { root.change-motion("system"); }
+                                    }
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "Reduce";
+                                        selected: root.motion-choice == "reduce";
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        activated => { root.change-motion("reduce"); }
+                                    }
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "Allow";
+                                        selected: root.motion-choice == "full";
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        activated => { root.change-motion("full"); }
+                                    }
+                                }
+                                Text { vertical-stretch: 0; text: root.reduced-motion ? "Motion is reduced." : "Subtle motion is enabled.";
+                                    font-size: 11px; color: root.muted; }
+                                Text { vertical-stretch: 0; text: "HIGH CONTRAST"; font-size: 10px;
+                                    font-weight: 800; color: root.accent; }
+                                HorizontalLayout { vertical-stretch: 0;
+                                    spacing: 8px;
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "Off";
+                                        selected: !root.high-contrast;
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        activated => { root.change-contrast(false); }
+                                    }
+                                    PreferenceChoice {
+                                        horizontal-stretch: 1; label: "On";
+                                        selected: root.high-contrast;
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        activated => { root.change-contrast(true); }
+                                    }
+                                }
+                                Text { vertical-stretch: 0; text: "Native buttons expose keyboard focus and spoken labels. OS display scaling is supported; app-wide text scaling and screen-reader audits remain release gates.";
+                                    font-size: 11px; color: root.muted; wrap: word-wrap; }
+                                Rectangle { vertical-stretch: 1; background: transparent; }
+                            }
+
+                            if root.preferences-section == "about": VerticalLayout {
+                                vertical-stretch: 0; spacing: 12px;
+                                Text { vertical-stretch: 0; text: "About Challenger"; font-size: 22px;
+                                    font-weight: 800; color: root.strong; }
+                                Text { vertical-stretch: 0; text: root.native-version; font-size: 12px;
+                                    font-weight: 750; color: root.strong; }
+                                Text { vertical-stretch: 0; text: "Developer test channel · no auto-install or background checks.";
+                                    font-size: 11px; color: root.muted; wrap: word-wrap; }
+                                HorizontalLayout { vertical-stretch: 0;
+                                    spacing: 10px;
+                                    PreferenceChoice {
+                                        width: 174px; label: root.update-checking ? "Checking..." : "Check updates";
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        selected: false;
+                                        activated => { if (!root.update-checking) { root.check-native-updates(); } }
+                                    }
+                                    PreferenceChoice {
+                                        width: 182px; label: "Official releases";
+                                        dark: root.dark-mode; high-contrast: root.high-contrast;
+                                        selected: false;
+                                        activated => { root.open-native-release-page(); }
+                                    }
+                                }
+                                Text { vertical-stretch: 0; text: root.update-status; font-size: 11px;
+                                    color: root.muted; wrap: word-wrap; }
+                                Rectangle { height: 1px; background: root.line; }
+                                Text { vertical-stretch: 0; text: "FRAMEWORK ATTRIBUTION"; font-size: 10px;
+                                    font-weight: 800; color: root.accent; }
+                                // Required official Slint component. Do not replace with invented credits.
+                                AboutSlint { height: 118px; }
+                                Text { vertical-stretch: 0; text: "Screenshots, source icons and license notices are credited per project. Attribution does not imply redistribution permission.";
+                                    color: root.muted; font-size: 10px; wrap: word-wrap; }
+                                Rectangle { vertical-stretch: 1; background: transparent; }
+                            }
+
+                            if root.preferences-section == "privacy": VerticalLayout {
+                                vertical-stretch: 0; spacing: 13px;
+                                Text { vertical-stretch: 0; text: "Privacy & Data"; font-size: 22px;
+                                    font-weight: 800; color: root.strong; }
+                                Text { vertical-stretch: 0; text: "Appearance and accessibility preferences are saved only on this device. No account or telemetry is added.";
+                                    color: root.muted; font-size: 12px; wrap: word-wrap; }
+                                Text { vertical-stretch: 0; text: "The catalog remains read-only. Device app inspection still requires an explicit request. Checking official releases is manual.";
+                                    color: root.muted; font-size: 12px; wrap: word-wrap; }
+                                PreferenceChoice {
+                                    width: 192px; label: "Reset preferences";
+                                    dark: root.dark-mode; high-contrast: root.high-contrast;
+                                    selected: false;
+                                    activated => { root.reset-preferences(); }
+                                }
+                                Rectangle { vertical-stretch: 1; background: transparent; }
+                            }
+                        }
+                    }
+                }
+                Rectangle { height: 1px; background: root.line; }
+                Text {
+                    text: root.preferences-status != ""
+                        ? root.preferences-status
+                        : "Changes are saved locally. Escape closes this window.";
+                    color: root.preferences-status != "" ? #bf7954 : root.subtle;
+                    font-size: 11px; overflow: elide;
+                }
+            }
         }
     }
 }

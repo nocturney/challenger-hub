@@ -119,6 +119,19 @@ fn run_bounded(mut cmd: Command, timeout: Duration) -> Result<String, String> {
     String::from_utf8(out).map_err(|_| "Sidecar sent non-UTF-8 JSON".into())
 }
 
+/// A user-initiated, bounded *read-only* release-metadata query. No install,
+/// token, fallback web-preview channel or scheduled background check.
+pub fn native_update_check() -> Result<String, String> {
+    let (resources_dir, packaged) = resources()?;
+    let node = node_executable(&resources_dir, packaged)?;
+    let script = resources_dir.join("native-updates.mjs");
+    if !script.is_file() { return Err("Native update checker is not bundled".into()); }
+    let mut cmd = Command::new(node);
+    cmd.arg(script).env("CHALLENGER_NATIVE_VERSION", env!("CARGO_PKG_VERSION"))
+        .stdout(Stdio::piped()).stderr(Stdio::piped());
+    run_bounded(cmd, Duration::from_secs(17))
+}
+
 // Read installer stdout while it runs. Every line is bounded, and the full
 // stdout is separately retained for the final authenticated completion record.
 // The live lines are progress hints only, NEVER proof of an installation.

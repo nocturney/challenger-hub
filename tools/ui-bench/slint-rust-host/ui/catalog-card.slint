@@ -10,7 +10,9 @@ component CardMedia inherits Rectangle {
     in property <string> project-maker;
     in property <string> project-domain;
     in property <bool> dark;
-    background: root.dark ? #25352a : #eef4ee;
+    in property <bool> high-contrast: false;
+    background: root.high-contrast ? (root.dark ? #101a12 : #ffffff)
+        : (root.dark ? #25352a : #eef4ee);
     border-radius: QuietPremium.media-radius;
     clip: true;
     if root.project-mode == "official": ApprovedGalleryThumb {
@@ -21,6 +23,7 @@ component CardMedia inherits Rectangle {
         project-maker: root.project-maker;
         project-domain: root.project-domain;
         dark: root.dark;
+        high-contrast: root.high-contrast;
         width: parent.width; height: parent.height;
     }
 }
@@ -40,19 +43,20 @@ export component CatalogProductCard inherits Rectangle {
     in property <bool> hovered: false;
     in property <bool> pressed: false;
     in property <bool> reduced-motion: false;
+    in property <bool> high-contrast: false;
 
     property <bool> active: root.highlighted || root.hovered || root.pressed;
-    background: root.pressed
+    background: root.high-contrast ? (root.dark ? #101b13 : #ffffff) : root.pressed
         ? (root.dark ? QuietPremium.dark-pressed : QuietPremium.light-pressed)
         : (root.active
             ? (root.dark ? QuietPremium.dark-hover : QuietPremium.light-hover)
             : (root.dark ? #202b24 : #ffffff));
-    border-color: root.highlighted
+    border-color: root.high-contrast ? (root.dark ? #c9f4d1 : #244a30) : root.highlighted
         ? (root.dark ? #e8a64f : #47765a)
         : (root.active
             ? (root.dark ? QuietPremium.dark-outline : QuietPremium.light-outline)
             : (root.dark ? #425348 : #dce7dc));
-    border-width: root.highlighted ? 2px : 1px;
+    border-width: root.high-contrast ? 2px : (root.highlighted ? 2px : 1px);
     border-radius: QuietPremium.card-radius;
     // Shadow is allocated only on the interacted card; scrolling remains flat/cheap.
     drop-shadow-blur: root.active ? 11px : 0px;
@@ -76,6 +80,7 @@ export component CatalogProductCard inherits Rectangle {
             project-maker: root.project-maker;
             project-domain: root.project-domain;
             dark: root.dark;
+            high-contrast: root.high-contrast;
         }
         Text { text: root.project-name; font-size: 17px; font-weight: 800;
             color: root.dark ? #f3f7f2 : #253a2d; overflow: elide; }
@@ -96,6 +101,7 @@ export component CatalogProductCard inherits Rectangle {
             project-maker: root.project-maker;
             project-domain: root.project-domain;
             dark: root.dark;
+            high-contrast: root.high-contrast;
         }
         VerticalLayout {
             padding-top: 3px; padding-bottom: 3px; spacing: 8px;

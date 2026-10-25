@@ -6,9 +6,11 @@ export component IdentityTile inherits Rectangle {
     in property <string> project-maker;
     in property <string> project-domain;
     in property <bool> dark: false;
-    background: root.dark ? #26392e : #edf4ec;
-    border-color: root.dark ? #526957 : #d2e2d2;
-    border-width: 1px;
+    in property <bool> high-contrast: false;
+    background: root.high-contrast ? (root.dark ? #111b15 : #f8fff8)
+        : (root.dark ? #26392e : #edf4ec);
+    border-color: root.high-contrast ? (root.dark ? #d7f2da : #274e32) : (root.dark ? #526957 : #d2e2d2);
+    border-width: root.high-contrast ? 2px : 1px;
     border-radius: QuietPremium.media-radius;
     VerticalLayout {
         padding: 12px; spacing: 9px;
@@ -31,9 +33,11 @@ export component IdentityDossier inherits Rectangle {
     in property <string> project-source;
     in property <bool> dark: false;
     in property <bool> compact: false;
-    background: root.dark ? #202e27 : #ffffff;
-    border-color: root.dark ? #465949 : #d9e6d9;
-    border-width: 1px;
+    in property <bool> high-contrast: false;
+    background: root.high-contrast ? (root.dark ? #101b14 : #ffffff)
+        : (root.dark ? #202e27 : #ffffff);
+    border-color: root.high-contrast ? (root.dark ? #c9f4d1 : #244a30) : (root.dark ? #465949 : #d9e6d9);
+    border-width: root.high-contrast ? 2px : 1px;
     border-radius: QuietPremium.card-radius;
     drop-shadow-blur: 14px;
     drop-shadow-offset-y: 4px;

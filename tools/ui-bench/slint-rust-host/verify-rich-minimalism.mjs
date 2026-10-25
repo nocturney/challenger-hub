@@ -24,13 +24,13 @@ requireGate(focus.includes('product-hit.has-hover') &&
     focus.includes('product-focus.has-focus'), 'Interaction state regression');
 requireGate(focus.includes('accessible-action-default => { root.open-project(i); }') &&
     focus.includes('root.open-project(i);'), 'Keyboard project action regression');
-for (const name of ['discover-nav','browse-nav','library-nav','activity-nav','about-nav']) {
+for (const name of ['discover-nav','browse-nav','library-nav','activity-nav']) {
     requireGate(focus.includes(name + '.hovered') &&
         focus.includes(name + '.pressed'), 'Nav hover or press missing: ' + name);
 }
-requireGate((focus.match(/enabled: !root.reduced-motion;/g) || []).length >= 6,
+requireGate((focus.match(/enabled: !root.reduced-motion;/g) || []).length >= 5,
     'Motion preference missing from navigation or disclosure');
-requireGate(host.includes('set_reduced_motion(reduced_motion_requested())') &&
+requireGate(host.includes('update_preference_ui(&ui, &prefs, system_motion)') &&
     host.includes('CHALLENGER_REDUCED_MOTION') &&
     host.includes('SPI_GETCLIENTAREAANIMATION'), 'Host preference wiring missing');
 requireGate(card.includes('ApprovedGalleryThumb') && card.includes('IdentityTile') &&
@@ -58,4 +58,13 @@ for (const fragment of ['padding-top: root.compact-layout ? 11px : 14px',
 requireGate(host.includes('--qa-preview-compact-results') &&
     host.includes('--qa-preview-dark-results'),
     'Native compact/dark layout QA routes missing');
-console.log('RICH_MINIMALISM_GATE_PASS tokens=shared hover=on focus=preserved motion=guarded media=truthful search=aligned brand=inset');
+requireGate(focus.includes('preferences-popup := PopupWindow') &&
+    focus.includes('Palette.color-scheme =') &&
+    focus.includes('AboutSlint { height: 118px;'),
+    'Preferences popup, accessible native widget colors or official attribution missing');
+requireGate(focus.includes('root.change-appearance("system")') &&
+    focus.includes('root.change-motion("system")') &&
+    focus.includes('root.change-contrast(true)') &&
+    focus.includes('root.check-native-updates()'),
+    'Preferences actions are not wired to native behavior');
+console.log('RICH_MINIMALISM_GATE_PASS tokens=shared focus=preserved motion=guarded media=truthful preferences=native');

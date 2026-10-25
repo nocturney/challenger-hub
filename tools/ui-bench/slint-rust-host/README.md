@@ -16,9 +16,13 @@ Rust schema/count/trust checks → native Slint UI.
 - Exact protocol version, backend version/platform/architecture and
   **14 managed + 152 curated + 15 research = 181 unique records** checked
   before the UI opens; research entries remain visible.
-- Scanner-off and no-write checks are mandatory. No POST, install, filesystem
-  mutation from UI, external network discovery, scheduled tasks, daemon,
-  background refresh or telemetry.
+- Scanner-off and catalog/device no-write checks are mandatory. No POST,
+  external network discovery, scheduled tasks, daemon, background refresh or
+  telemetry. Vetted explicit user-approved installer actions are separate.
+  The **only new local write** is the user's non-sensitive appearance and
+  accessibility preferences, saved to the platform's application config folder
+  after an explicit choice; the catalog and device inventory remain read-only.
+  A manual native-release check fetches read-only metadata only and never installs.
 - Node subprocess stdout (1 MiB) and stderr (32 KiB) are capped; a 22s
   supervisor timeout ends the process tree, including the temporary server.
   A failed or unexpected response fails closed.
@@ -474,3 +478,20 @@ Remaining issue: an interruption or forced termination can still leave a
 That requires a separate durable transaction journal and explicit,
 identity-verified crash recovery; this scoped change is accurate **detection
 and classification**, not unattended repair after a crash.
+
+
+## Native Preferences (Draft, stacked on Rich Minimalism PR #32)
+
+The top-level Preferences control opens a native Slint popup. It holds System /
+Light / Dark appearance, System / Reduced / Full motion, high contrast,
+About & Updates (including the legally-required official AboutSlint widget)
+and Privacy & Data. Cmd+, on macOS / Ctrl+, on Windows uses a hidden native
+menu shortcut. Preferences use schema-checked, bounded, local JSON and
+atomic-ish staging+rename; corrupt values do not silently overwrite files.
+
+The manual update check is implemented in the existing bounded Node sidecar
+path with a platform-specific, digest-verified **native** release manifest
+only. The legacy Windows Preview12 release channel is never used as a Native
+update candidate. No auto-checks, auto-download, or auto-install.
+
+See [implementation and remaining accessibility gates](../../../docs/ux-redesign/native-preferences-20261025.md).
