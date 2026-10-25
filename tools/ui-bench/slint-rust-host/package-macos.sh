@@ -44,6 +44,14 @@ else
 fi
 chmod 755 "$app/Contents/MacOS/challenger-slint-rust-host" "$app/Contents/Resources/node"
 cp "$node_license" "$app/Contents/Resources/NODE_LICENSE.txt"
+# The Slint binary embeds third-party official UI media. Ship the matching
+# pinned attribution and license notices in the portable developer package.
+mkdir -p "$app/Contents/Resources/media-notices"
+cp "$repo/tools/preview-build/media-source/CRAFT_SUITE_MEDIA_NOTICES.md" "$app/Contents/Resources/media-notices/"
+cp "$repo/tools/preview-build/media-source/THIRD_PARTY_MEDIA_NOTICES.md" "$app/Contents/Resources/media-notices/"
+cp "$repo/tools/preview-build/media-source/licenses/"*.txt "$app/Contents/Resources/media-notices/"
+cp "$here/ui/APPROVED_GALLERY_INDEX.json" "$app/Contents/Resources/media-notices/"
+
 cp "$here/../slint-node-bridge/sidecar.mjs" "$app/Contents/Resources/"
 cp "$here/../slint-node-bridge/live-catalog.mjs" "$app/Contents/Resources/"
 cp "$here/../slint-node-bridge/install-bridge.mjs" "$app/Contents/Resources/"

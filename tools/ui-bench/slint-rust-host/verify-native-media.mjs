@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Offline provenance gate: only approved, checksum-matched upstream media enters Slint.
 import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import { readFileSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -62,4 +63,9 @@ const brandDigest = createHash('sha256').update(brand).digest('hex');
 if (brandDigest !== 'a22b1ff013ed293120921ce77c6e15fc51982adb103c7d7ecdde240a6b597358') {
   throw new Error('Project-owned Orbit icon digest mismatch');
 }
-console.log('NATIVE_MEDIA_PROVENANCE_PASS verifiedProjects=22 approvedIcons=22 approvedScreenshots=3 source=offline-manifest');
+// Re-check 47 genuine pre-approved Craft interface images, their exact
+// original source bytes, copyright/license metadata, and generated UI maps.
+// This runs offline and never replaces checked-in images.
+execFileSync(process.execPath, [join(here,'sync-approved-gallery.mjs'),'--check'],
+    {stdio:'inherit', timeout:30000});
+console.log('NATIVE_MEDIA_PROVENANCE_PASS verifiedProjects=22 approvedIcons=22 approvedScreenshots=50 screenshotProjects=16 source=offline-manifest');

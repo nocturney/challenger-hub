@@ -1,5 +1,6 @@
 mod catalog;
 mod device;
+mod gallery;
 mod identity;
 mod install;
 mod sidecar;
@@ -196,6 +197,7 @@ fn entry(p: &Project, reviewable:bool) -> ProjectEntry {
         kind: p.kind.clone().into(),
         review_route: reviewable,
         media: media_id(p).into(),
+        has_preview: gallery::count(media_id(p)) > 0,
         initial: p.name.chars().next().unwrap_or('?').to_string().into(),
     }
 }
@@ -240,6 +242,8 @@ fn set_detail(ui: &AppWindow, project: Option<&Project>,review_routes:&HashSet<S
         ui.set_detail_evidence(p.evidence.clone().into());
         ui.set_detail_media(media_id(p).into());
         ui.set_detail_media_caption(media_caption(media_id(p)).into());
+        ui.set_detail_gallery_count(gallery::count(media_id(p)));
+        ui.set_detail_gallery_index(0);
     } else {
         ui.set_detail_reviewable(false);
         ui.set_install_project_id("".into());
@@ -251,6 +255,8 @@ fn set_detail(ui: &AppWindow, project: Option<&Project>,review_routes:&HashSet<S
         ui.set_detail_source("".into());
         ui.set_detail_media("".into());
         ui.set_detail_media_caption("".into());
+        ui.set_detail_gallery_count(0);
+        ui.set_detail_gallery_index(0);
     }
 }
 
@@ -602,6 +608,22 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 if let Some(url) = state.all.iter().find(|p| &p.id == id).and_then(|p| safe_source(&p.source)) {
                     if let Err(e) = webbrowser::open(&url) { eprintln!("NATIVE_SOURCE_OPEN_FAILED {e}"); }
                 }
+            }
+        }
+    });
+    // This action can only open the pinned, immutable screenshot URL for the
+    // exact currently selected project. UI-provided frame indexes are untrusted.
+    ui.on_open_media_source({
+        let state = Rc::clone(&state);
+        move |index| {
+            let state = state.borrow();
+            if state.route().page != "detail" { return; }
+            let Some(id) = &state.route().selected else { return; };
+            let Some(project) = state.all.iter().find(|p| &p.id == id) else { return; };
+            let media = media_id(project);
+            let Some(url) = gallery::source(media, index).and_then(safe_source) else { return; };
+            if let Err(e) = webbrowser::open(&url) {
+                eprintln!("NATIVE_MEDIA_SOURCE_OPEN_FAILED {e}");
             }
         }
     });
@@ -1165,10 +1187,21 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         ui.invoke_search_submitted("Dune 3D".into());
         ui.invoke_open_project(0);
     }
+    if args.iter().any(|a| a == "--qa-preview-pdfcraft") {
+        ui.invoke_search_submitted("PdfCraft".into());
+        ui.invoke_open_project(0);
+        if ui.get_detail_media() != "craft-pdfcraft" || ui.get_detail_gallery_count() != 4 {
+            return Err("PdfCraft verified gallery QA route missing".into());
+        }
+    }
+    if args.iter().any(|a| a == "--qa-preview-craft-results") {
+        ui.invoke_search_submitted("Craft".into());
+    }
     if args.iter().any(|a| ["--qa-preview-results", "--qa-preview-dune",
         "--qa-preview-library", "--qa-preview-activity",
         "--qa-preview-activity-refresh", "--qa-preview-device",
-        "--qa-preview-identity", "--qa-preview-install"].contains(&a.as_str())) {
+        "--qa-preview-identity", "--qa-preview-install",
+        "--qa-preview-pdfcraft", "--qa-preview-craft-results"].contains(&a.as_str())) {
         let weak = ui.as_weak();
         Timer::single_shot(Duration::from_secs(22), move || {
             if let Some(w) = weak.upgrade() { let _ = w.hide(); }
@@ -1369,7 +1402,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 w.invoke_navigate("home".into());
                 w.invoke_search_submitted("Dune 3D".into());
                 w.invoke_open_project(0);
-                if w.get_page() != "detail" || w.get_detail_media() != "dune3d" {
+                if w.get_page() != "detail" || w.get_detail_media() != "dune3d" ||
+                    w.get_detail_gallery_count() != 1 {
                     fail("source-verified Dune 3D screenshot");
                 }
                 w.invoke_navigate("home".into());
@@ -1385,17 +1419,33 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     fail("source-verified REAL Video Enhancer screenshot");
                 }
                 w.invoke_navigate("home".into());
+                w.invoke_search_submitted("PdfCraft".into());
+                w.invoke_open_project(0);
+                if w.get_page() != "detail" || w.get_detail_media() != "craft-pdfcraft" ||
+                    w.get_detail_gallery_count() != 4 || w.get_detail_gallery_index() != 0 {
+                    fail("source-verified four-frame Craft gallery");
+                }
+                w.set_detail_gallery_index(3);
+                if w.get_detail_gallery_index() != 3 ||
+                    gallery::source("craft-pdfcraft", 3).is_none() ||
+                    gallery::source("craft-pdfcraft", 4).is_some() {
+                    fail("pinned screenshot gallery page bounds");
+                }
+                w.invoke_navigate("home".into());
                 w.invoke_search_submitted("OpenHands".into());
                 w.invoke_open_project(0);
-                if w.get_page() != "detail" || w.get_detail_media() != "openhands" {
-                    fail("source-verified OpenHands icon");
+                if w.get_page() != "detail" || w.get_detail_media() != "openhands" ||
+                    w.get_detail_gallery_count() != 0 {
+                    fail("source-verified OpenHands icon and honest no-image fallback");
                 }
                 eprintln!("FOCUS_NATIVE_GUI_PASS {}", serde_json::json!({
                     "count": w.get_total(), "disciplines": 17,
                     "pages": ["home","results","detail","library","activity"],
                     "history": "back+forward", "pageSize": 30,
                     "pageSizeVerified": 60, "reviewRouteCount": review_routes,
-                    "reviewFilterVerified": true, "sourceScreenshots": 3, "approvedMediaIdentities": 22, "darkMode": true,
+                    "reviewFilterVerified": true, "sourceScreenshots": 50,
+                    "screenshotProjects": 16, "approvedMediaIdentities": 22,
+                    "multiFrameGalleryVerified": true, "darkMode": true,
                     "managedCoverage": w.get_managed_assessed(),
                     "managedDetected": w.get_managed_detected(),
                     "sessionEvents": w.get_session_event_count(),

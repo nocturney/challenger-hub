@@ -46,3 +46,25 @@ licenses; do not use an ArtCraft wordmark or brand symbol.
 | craft-figcraft-icon.png | 13d5236adb30c2bd4ff3eb7bcb7bb5a70d8de2ef36a81a5ffaf43ea171c7f51b | MIT OR Apache-2.0 |
 
 These assets already appeared in the audited Focus preview media manifest (with source commits, license links and image checksums). For third-party redistribution, retain the full accompanying source/license notices in `tools/preview-build/media-source/licenses/` and review Slint's own license obligations before publishing a release. This is a local developer preview only, not public distribution.
+
+## 25 Oct 2026 — approved Craft interface gallery
+
+The native project now uses 50 original, source-verified UI screenshots across
+16 exact project IDs: three previously embedded curated frames and 47
+previously reviewed **unaltered Craft screenshots** for 13 managed apps. The
+Craft assets are from the pinned `craft-suite-media.v1.json` and checked-in
+`assets/media/craft/screenshots/`; upstream licensing and per-image attribution
+remain in `CRAFT_SUITE_MEDIA_NOTICES.md` and `craft-suite-{MIT,Apache-2.0}.txt`.
+The 47 frames were not retrieved via a scraping service, hotlinked, upscaled,
+or generated as mock interfaces. Exact original SHA256 digests and lengths are
+revalidated offline by `sync-approved-gallery.mjs --check`. The generator
+produces the Slint `ApprovedGalleryThumb` and `ApprovedGalleryShot` components,
+Rust media count/source allowlist, and a JSON evidence index. Every image is
+bound to the exact `managed:app` + original source identity in `media_id()`.
+
+The UI's `View source` action is constrained to the precise GitHub source URL
+for a known gallery frame; no arbitrary external URLs or install permissions
+are derived from the images. Runtime images are embedded in the native binary;
+no remote image request occurs on browse. Portable packages include the
+existing third-party media notices and license texts beside the Node license.
+For the complete 181-project coverage list see `docs/visual-catalog/`.

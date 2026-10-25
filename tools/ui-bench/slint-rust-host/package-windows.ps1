@@ -32,6 +32,14 @@ New-Item -ItemType Directory -Force -Path (Join-Path $out 'resources') | Out-Nul
 Copy-Item (Join-Path (Join-Path $target $profile) 'challenger-slint-rust-host.exe') $out
 Copy-Item $node (Join-Path $out 'resources\node.exe')
 Copy-Item $nodeLicense (Join-Path $out 'resources\NODE_LICENSE.txt')
+# Keep exact source and license notices beside bundled, in-binary media.
+$mediaNoticeDest = Join-Path $out 'resources\media-notices'
+New-Item -ItemType Directory -Force -Path $mediaNoticeDest | Out-Null
+Copy-Item (Join-Path $repo 'tools\preview-build\media-source\CRAFT_SUITE_MEDIA_NOTICES.md') $mediaNoticeDest
+Copy-Item (Join-Path $repo 'tools\preview-build\media-source\THIRD_PARTY_MEDIA_NOTICES.md') $mediaNoticeDest
+Copy-Item (Join-Path $repo 'tools\preview-build\media-source\licenses\*.txt') $mediaNoticeDest
+Copy-Item (Join-Path $here 'ui\APPROVED_GALLERY_INDEX.json') $mediaNoticeDest
+
 Copy-Item (Join-Path $here '..\slint-node-bridge\sidecar.mjs') (Join-Path $out 'resources')
 Copy-Item (Join-Path $here '..\slint-node-bridge\live-catalog.mjs') (Join-Path $out 'resources')
 Copy-Item (Join-Path $here '..\slint-node-bridge\install-bridge.mjs') (Join-Path $out 'resources')

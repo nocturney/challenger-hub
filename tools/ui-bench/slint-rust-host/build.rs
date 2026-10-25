@@ -3,6 +3,9 @@ fn main() {
     slint_build::compile("ui/focus.slint")
         .expect("Native Challenger Focus/Orbit UI compilation failed");
     println!("cargo:rerun-if-changed=ui/focus.slint");
+    println!("cargo:rerun-if-changed=ui/approved-gallery.slint");
+    println!("cargo:rerun-if-changed=ui/screenshots");
+    println!("cargo:rerun-if-changed=ui/APPROVED_GALLERY_INDEX.json");
     for asset in [
         "orbit-app-128.png",
         "dune3d.svg", "dune3d.png",
