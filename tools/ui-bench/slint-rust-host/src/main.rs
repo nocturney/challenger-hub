@@ -410,6 +410,54 @@ fn redraw(ui: &AppWindow, state: &mut State) {
     update_os_device_panel(ui, state);
 }
 
+// Prefer the OS accessibility setting. The environment override enables
+// deterministic QA and accommodates desktops where no setting is available.
+fn reduced_motion_requested() -> bool {
+    if let Ok(raw) = std::env::var("CHALLENGER_REDUCED_MOTION") {
+        return matches!(raw.trim().to_ascii_lowercase().as_str(),
+            "1" | "true" | "yes" | "on");
+    }
+    #[cfg(target_os = "macos")]
+    {
+        for domain in ["com.apple.universalaccess", "-g"] {
+            if let Ok(out) = std::process::Command::new("/usr/bin/defaults")
+                .args(["read", domain, "reduceMotion"]).output() {
+                if out.status.success() {
+                    return String::from_utf8_lossy(&out.stdout).trim() == "1";
+                }
+            }
+        }
+    }
+    #[cfg(target_os = "windows")]
+    {
+        // SPI_GETCLIENTAREAANIMATION: Windows Accessibility / Animation effects.
+        #[link(name = "user32")]
+        extern "system" {
+            fn SystemParametersInfoW(action: u32, param: u32,
+                value: *mut std::ffi::c_void, win_ini: u32) -> i32;
+        }
+        let mut enabled: i32 = 1;
+        if unsafe {
+            SystemParametersInfoW(0x1042, 0,
+                &mut enabled as *mut i32 as *mut std::ffi::c_void, 0)
+        } != 0 { return enabled == 0; }
+    }
+    #[cfg(target_os = "linux")]
+    {
+        if std::env::var("XDG_CURRENT_DESKTOP").unwrap_or_default()
+            .to_ascii_lowercase().contains("gnome") {
+            if let Ok(out) = std::process::Command::new("gsettings")
+                .args(["get", "org.gnome.desktop.interface", "enable-animations"])
+                .output() {
+                if out.status.success() {
+                    return String::from_utf8_lossy(&out.stdout).trim() == "false";
+                }
+            }
+        }
+    }
+    false
+}
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let started = Instant::now();
     let args: Vec<String> = std::env::args().collect();
@@ -511,6 +559,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     };
     let ui = AppWindow::new()?;
+    ui.set_reduced_motion(reduced_motion_requested());
     let state = Rc::new(RefCell::new(State::default()));
     {
         let mut s = state.borrow_mut();

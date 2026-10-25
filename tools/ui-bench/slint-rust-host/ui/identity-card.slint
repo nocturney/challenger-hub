@@ -1,34 +1,23 @@
-// Factual, typography-only catalog identities. This intentionally contains NO
-// image, simulated application UI, illustration, icon, monogram or logo.
-// If official screenshots are unavailable, the catalog is still presentation-ready.
+import { QuietPremium } from "quiet-premium.slint";
+
+// Factual, typography-only identities. Never draw made-up UI, icons or logos.
 export component IdentityTile inherits Rectangle {
     in property <string> project-name;
     in property <string> project-maker;
     in property <string> project-domain;
     in property <bool> dark: false;
-    background: root.dark ? #24352d : #eef4ed;
-    border-color: root.dark ? #496353 : #d3e1d3;
+    background: root.dark ? #26392e : #edf4ec;
+    border-color: root.dark ? #526957 : #d2e2d2;
     border-width: 1px;
-    border-radius: 8px;
+    border-radius: QuietPremium.media-radius;
     VerticalLayout {
-        padding: 9px;
-        spacing: 4px;
-        Text {
-            text: "PROJECT PROFILE"; font-size: 9px; font-weight: 800;
-            color: root.dark ? #b7d6b9 : #47765a; overflow: elide;
-        }
-        Text {
-            text: root.project-name; font-size: 13px; font-weight: 800;
-            color: root.dark ? #eaf0e8 : #263a2e; overflow: elide;
-        }
-        Text {
-            text: root.project-domain; font-size: 10px;
-            color: root.dark ? #b0beb4 : #536758; overflow: elide;
-        }
-        Text {
-            text: root.project-maker; font-size: 10px;
-            color: root.dark ? #b0beb4 : #536758; overflow: elide;
-        }
+        padding: 12px; spacing: 9px;
+        Text { text: root.project-domain; font-size: 10px; font-weight: 800;
+            color: root.dark ? #bfdcc1 : #47765a; overflow: elide; }
+        Text { text: root.project-name; font-size: 18px; font-weight: 800;
+            color: root.dark ? #f2f7f1 : #263a2e; overflow: elide; }
+        Text { text: "By " + root.project-maker; font-size: 11px;
+            color: root.dark ? #b0beb4 : #536758; overflow: elide; }
     }
 }
 
@@ -42,91 +31,62 @@ export component IdentityDossier inherits Rectangle {
     in property <string> project-source;
     in property <bool> dark: false;
     in property <bool> compact: false;
-    background: root.dark ? #1e2925 : #ffffff;
-    border-color: root.dark ? #3b4941 : #dfe7df;
+    background: root.dark ? #202e27 : #ffffff;
+    border-color: root.dark ? #465949 : #d9e6d9;
     border-width: 1px;
-    border-radius: 11px;
+    border-radius: QuietPremium.card-radius;
+    drop-shadow-blur: 14px;
+    drop-shadow-offset-y: 4px;
+    drop-shadow-color: root.dark ? #00000036 : #23452b1a;
     VerticalLayout {
-        padding: root.compact ? 18px : 23px;
+        padding: root.compact ? 18px : 26px;
         spacing: root.compact ? 8px : 11px;
-        Text {
-            text: "INDEPENDENT SOFTWARE   /   PROJECT PROFILE";
-            color: root.dark ? #b7d6b9 : #47765a;
-            font-size: 10px; font-weight: 800; overflow: elide;
-        }
-        Text {
-            text: root.project-name;
-            font-size: root.compact ? 29px : 38px; font-weight: 800;
-            color: root.dark ? #eaf0e8 : #263a2e; overflow: elide;
-            height: root.compact ? 39px : 49px;
-        }
-        Text {
-            text: root.project-summary; font-size: root.compact ? 12px : 13px;
-            height: root.compact ? 49px : 55px;
-            color: root.dark ? #b0beb4 : #536758;
-            wrap: word-wrap; overflow: elide;
-        }
-        Rectangle {
-            height: 1px;
-            background: root.dark ? #3b4941 : #dfe7df;
-        }
         HorizontalLayout {
-            spacing: 15px;
-            VerticalLayout {
-                horizontal-stretch: 1; spacing: 6px;
-                Text {
-                    text: "CREATOR"; font-size: 9px; font-weight: 800;
-                    color: root.dark ? #8b9b91 : #5b6e60;
-                }
-                Text {
-                    text: root.project-maker; font-size: 12px; font-weight: 700;
-                    color: root.dark ? #eaf0e8 : #263a2e; overflow: elide;
-                }
-            }
-            VerticalLayout {
-                horizontal-stretch: 1; spacing: 6px;
-                Text {
-                    text: "DISCIPLINE"; font-size: 9px; font-weight: 800;
-                    color: root.dark ? #8b9b91 : #5b6e60;
-                }
-                Text {
-                    text: root.project-domain; font-size: 12px; font-weight: 700;
-                    color: root.dark ? #eaf0e8 : #263a2e; overflow: elide;
-                }
+            spacing: 10px;
+            Text { text: "INDEPENDENT SOFTWARE"; font-size: 10px;
+                font-weight: 800; color: root.dark ? #b7d6b9 : #47765a;
+                vertical-alignment: center; horizontal-stretch: 1; }
+            Rectangle {
+                width: root.compact ? 135px : 185px; height: 28px;
+                border-radius: 14px;
+                background: root.dark ? #314739 : #eaf2e8;
+                Text { text: root.project-domain; font-size: 11px; font-weight: 750;
+                    color: root.dark ? #c4dfc4 : #47765a;
+                    horizontal-alignment: center; vertical-alignment: center;
+                    overflow: elide; }
             }
         }
+        Text { text: root.project-name;
+            font-size: root.compact ? 31px : 46px; font-weight: 800;
+            color: root.dark ? #eef5ec : #263a2e; overflow: elide;
+            height: root.compact ? 43px : 61px; }
+        Text { text: root.project-summary; font-size: root.compact ? 12px : 14px;
+            height: root.compact ? 46px : 57px;
+            color: root.dark ? #c6d2c6 : #4b5d50;
+            wrap: word-wrap; overflow: elide; }
+        Rectangle { height: 1px; background: root.dark ? #465949 : #d9e6d9; }
         HorizontalLayout {
-            spacing: 15px;
+            spacing: 18px;
             VerticalLayout {
-                horizontal-stretch: 2; spacing: 6px;
-                Text {
-                    text: "PLATFORMS"; font-size: 9px; font-weight: 800;
-                    color: root.dark ? #8b9b91 : #5b6e60;
-                }
-                Text {
-                    text: root.project-platforms; font-size: 11px;
-                    color: root.dark ? #eaf0e8 : #263a2e; overflow: elide;
-                }
+                horizontal-stretch: 1; spacing: 6px;
+                Text { text: "CREATED BY"; font-size: 10px; font-weight: 800;
+                    color: root.dark ? #a8c0ab : #536758; }
+                Text { text: root.project-maker; font-size: 13px; font-weight: 700;
+                    color: root.dark ? #eff7ed : #263a2e; overflow: elide; }
             }
             VerticalLayout {
                 horizontal-stretch: 1; spacing: 6px;
-                Text {
-                    text: "LISTING TYPE"; font-size: 9px; font-weight: 800;
-                    color: root.dark ? #8b9b91 : #5b6e60;
-                }
-                Text {
-                    text: root.project-kind; font-size: 11px;
-                    color: root.dark ? #eaf0e8 : #263a2e; overflow: elide;
-                }
+                Text { text: "AVAILABLE PLATFORMS"; font-size: 10px; font-weight: 800;
+                    color: root.dark ? #a8c0ab : #536758; }
+                Text { text: root.project-platforms; font-size: 12px;
+                    color: root.dark ? #eff7ed : #263a2e; overflow: elide; }
             }
         }
-        Text {
-            text: root.project-source; font-size: 10px;
-            color: root.dark ? #b0beb4 : #536758; overflow: elide;
-        }
-        Text {
-            text: "Project information, without a simulated interface.";
-            font-size: 10px; color: root.dark ? #8b9b91 : #5b6e60;
-        }
+        Text { text: root.project-source; font-size: 10px;
+            color: root.dark ? #b0beb4 : #536758; overflow: elide; }
+        Text { text: "Source-linked " + root.project-kind +
+                " listing. No unverified interface imagery.";
+            font-size: 10px; color: root.dark ? #98b09d : #617568;
+            overflow: elide; }
     }
 }

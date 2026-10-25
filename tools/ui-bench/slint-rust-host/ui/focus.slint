@@ -2,6 +2,7 @@ import { AboutSlint, CheckBox, LineEdit, ListView, ScrollView } from "std-widget
 import { ApprovedGalleryThumb, ApprovedGalleryShot, ApprovedGalleryIcon, ApprovedIconCredit } from "approved-gallery.slint";
 import { IdentityTile, IdentityDossier } from "identity-card.slint";
 import { CatalogProductCard } from "catalog-card.slint";
+import { QuietPremium } from "quiet-premium.slint";
 
 // This is the approved Focus/Orbit information architecture implemented in genuine
 // native Slint. The old Slint/Node experiment has a separate, unchanged UI.
@@ -52,6 +53,8 @@ component KeyboardAction inherits Rectangle {
     in property <bool> action-enabled: true;
     in property <bool> action-dark: false;
     callback activated();
+    out property <bool> hovered: action-touch.has-hover;
+    out property <bool> pressed: action-touch.pressed;
     background: transparent;
     // Strong on light surfaces; amber remains highly visible on dark surfaces.
     border-color: key-focus.has-focus ? (root.action-dark ? #e8a64f : #47765a) : transparent;
@@ -63,8 +66,9 @@ component KeyboardAction inherits Rectangle {
         if (root.action-enabled) { root.activated(); }
     }
     forward-focus: key-focus;
-    TouchArea {
+    action-touch := TouchArea {
         enabled: root.action-enabled;
+        mouse-cursor: pointer;
         clicked => { root.activated(); }
     }
     key-focus := FocusScope {
@@ -93,6 +97,8 @@ export component AppWindow inherits Window {
 
     in-out property <string> page: "home";
     in-out property <bool> dark-mode: false;
+    // Passed by host; zero-duration animations when accessibility requires it.
+    in-out property <bool> reduced-motion: false;
     in-out property <bool> can-back: false;
     in-out property <bool> can-forward: false;
     in-out property <bool> refreshing: false;
@@ -251,43 +257,98 @@ export component AppWindow inherits Window {
                 }
                 Rectangle { horizontal-stretch: 1; background: transparent; }
                 Rectangle {
-                    width: root.compact-layout ? 70px : 90px; background: root.page == "home" ? root.accent-bg : transparent;
-                    border-radius: 8px;
+                    width: root.compact-layout ? 70px : 90px; background: discover-nav.pressed ? root.accent-bg :
+                        (root.page == "home") ? root.accent-bg :
+                        discover-nav.hovered ? root.muted-sheet : transparent;
+                    border-radius: QuietPremium.control-radius;
+                    border-width: 1px;
+                    border-color: (root.page == "home")
+                        ? (root.dark-mode ? QuietPremium.dark-outline : QuietPremium.light-outline)
+                        : transparent;
+                    animate background, border-color {
+                        duration: QuietPremium.tab-motion;
+                        easing: ease-out;
+                        enabled: !root.reduced-motion;
+                    }
                     Text { text: "Discover"; color: root.page == "home" ? root.accent : root.muted;
                            font-size: 12px; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
-                    KeyboardAction { action-dark: root.dark-mode; action-label: "Discover software"; activated => { root.navigate("home"); } }
+                    discover-nav := KeyboardAction { action-dark: root.dark-mode; action-label: "Discover software"; activated => { root.navigate("home"); } }
                 }
                 Rectangle {
                     width: root.compact-layout ? 67px : 82px;
-                    background: root.page == "results" ? root.accent-bg : transparent;
-                    border-radius: 8px;
+                    background: browse-nav.pressed ? root.accent-bg :
+                        (root.page == "results") ? root.accent-bg :
+                        browse-nav.hovered ? root.muted-sheet : transparent;
+                    border-radius: QuietPremium.control-radius;
+                    border-width: 1px;
+                    border-color: (root.page == "results")
+                        ? (root.dark-mode ? QuietPremium.dark-outline : QuietPremium.light-outline)
+                        : transparent;
+                    animate background, border-color {
+                        duration: QuietPremium.tab-motion;
+                        easing: ease-out;
+                        enabled: !root.reduced-motion;
+                    }
                     Text { text: "Browse"; color: root.page == "results" ? root.accent : root.muted;
                         font-size: 12px; font-weight: 700;
                         horizontal-alignment: center; vertical-alignment: center; }
-                    KeyboardAction { action-dark: root.dark-mode; action-label: "Browse full software catalog";
+                    browse-nav := KeyboardAction { action-dark: root.dark-mode; action-label: "Browse full software catalog";
                         activated => { root.open-discipline("all"); } }
                 }
                 Rectangle {
                     width: root.compact-layout ? 74px : (root.compact-navigation ? 94px : 114px);
-                    background: root.page == "library" || root.page == "device" ? root.accent-bg : transparent;
-                    border-radius: 8px;
+                    background: library-nav.pressed ? root.accent-bg :
+                        (root.page == "library" || root.page == "device") ? root.accent-bg :
+                        library-nav.hovered ? root.muted-sheet : transparent;
+                    border-radius: QuietPremium.control-radius;
+                    border-width: 1px;
+                    border-color: (root.page == "library" || root.page == "device")
+                        ? (root.dark-mode ? QuietPremium.dark-outline : QuietPremium.light-outline)
+                        : transparent;
+                    animate background, border-color {
+                        duration: QuietPremium.tab-motion;
+                        easing: ease-out;
+                        enabled: !root.reduced-motion;
+                    }
                     Text { text: root.compact-layout ? "My apps" : "My software"; color: root.page == "library" || root.page == "device" ? root.accent : root.muted;
                            font-size: 12px; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
-                    KeyboardAction { action-dark: root.dark-mode; action-label: "My software"; activated => { root.navigate("library"); } }
+                    library-nav := KeyboardAction { action-dark: root.dark-mode; action-label: "My software"; activated => { root.navigate("library"); } }
                 }
                 Rectangle {
-                    width: root.compact-layout ? 68px : 78px; background: root.page == "activity" ? root.accent-bg : transparent;
-                    border-radius: 8px;
+                    width: root.compact-layout ? 68px : 78px; background: activity-nav.pressed ? root.accent-bg :
+                        (root.page == "activity") ? root.accent-bg :
+                        activity-nav.hovered ? root.muted-sheet : transparent;
+                    border-radius: QuietPremium.control-radius;
+                    border-width: 1px;
+                    border-color: (root.page == "activity")
+                        ? (root.dark-mode ? QuietPremium.dark-outline : QuietPremium.light-outline)
+                        : transparent;
+                    animate background, border-color {
+                        duration: QuietPremium.tab-motion;
+                        easing: ease-out;
+                        enabled: !root.reduced-motion;
+                    }
                     Text { text: "Activity"; color: root.page == "activity" ? root.accent : root.muted;
                            font-size: 12px; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
-                    KeyboardAction { action-dark: root.dark-mode; action-label: "Activity"; activated => { root.navigate("activity"); } }
+                    activity-nav := KeyboardAction { action-dark: root.dark-mode; action-label: "Activity"; activated => { root.navigate("activity"); } }
                 }
                 Rectangle {
-                    width: root.compact-layout ? 52px : 68px; background: root.page == "about" ? root.accent-bg : transparent;
-                    border-radius: 8px;
+                    width: root.compact-layout ? 52px : 68px; background: about-nav.pressed ? root.accent-bg :
+                        (root.page == "about") ? root.accent-bg :
+                        about-nav.hovered ? root.muted-sheet : transparent;
+                    border-radius: QuietPremium.control-radius;
+                    border-width: 1px;
+                    border-color: (root.page == "about")
+                        ? (root.dark-mode ? QuietPremium.dark-outline : QuietPremium.light-outline)
+                        : transparent;
+                    animate background, border-color {
+                        duration: QuietPremium.tab-motion;
+                        easing: ease-out;
+                        enabled: !root.reduced-motion;
+                    }
                     Text { text: "About"; color: root.page == "about" ? root.accent : root.muted;
                            font-size: 12px; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
-                    KeyboardAction { action-dark: root.dark-mode; action-label: "About Challenger and Slint"; activated => { root.navigate("about"); } }
+                    about-nav := KeyboardAction { action-dark: root.dark-mode; action-label: "About Challenger and Slint"; activated => { root.navigate("about"); } }
                 }
                 Rectangle {
                     width: root.compact-layout ? 44px : 60px;
@@ -470,7 +531,7 @@ export component AppWindow inherits Window {
             }
         }
 
-        // Product-first browse, with two truthful visual states and a genuine grid/list switch.
+        // Product-first browse: stable virtualized list, original UI or truthful identity only.
         if root.page == "results": VerticalLayout {
             padding-left: root.compact-layout ? 25px : 48px;
             padding-right: root.compact-layout ? 25px : 48px;
@@ -510,7 +571,9 @@ export component AppWindow inherits Window {
                 spacing: 12px;
                 Rectangle {
                     height: 51px; background: root.sheet; border-color: root.line;
-                    border-width: 1px; border-radius: 10px; horizontal-stretch: 1;
+                    border-width: 1px; border-radius: QuietPremium.control-radius; horizontal-stretch: 1;
+                    drop-shadow-blur: 8px; drop-shadow-offset-y: 2px;
+                    drop-shadow-color: root.dark-mode ? #00000028 : #23452b12;
                     HorizontalLayout {
                         padding-left: 15px; padding-right: 12px; spacing: 10px;
                         Text { text: "SEARCH"; font-size: 10px; font-weight: 800; color: root.accent;
@@ -556,24 +619,27 @@ export component AppWindow inherits Window {
             ListView {
                 vertical-stretch: 1;
                 for project[i] in root.entries: Rectangle {
-                    height: 181px; background: transparent;
+                    height: root.compact-layout ? 181px : 189px; background: transparent;
                     HorizontalLayout {
                         Rectangle {
-                            height: parent.height; horizontal-stretch: 1;
+                            height: parent.height - 10px; horizontal-stretch: 1;
                             accessible-role: button;
                             accessible-label: "Explore " + project.name;
                             accessible-action-default => { root.open-project(i); }
                             forward-focus: product-focus;
                             CatalogProductCard {
                                 width: parent.width; height: parent.height;
-                                wide: true; highlighted: product-focus.has-focus;
+                                wide: true; compact: root.compact-layout;
+                                highlighted: product-focus.has-focus;
+                                hovered: product-hit.has-hover; pressed: product-hit.pressed;
+                                reduced-motion: root.reduced-motion;
                                 dark: root.dark-mode;
                                 project-name: project.name; project-maker: project.maker;
                                 project-domain: project.domain; project-summary: project.summary;
                                 project-media: project.media; project-mode: project.visual-mode;
                                 project-platforms: project.platforms;
                             }
-                            TouchArea { clicked => { root.open-project(i); } }
+                            product-hit := TouchArea { mouse-cursor: pointer; clicked => { root.open-project(i); } }
                             product-focus := FocusScope {
                                 width: 0px; height: 0px;
                                 key-pressed(event) => {
@@ -739,7 +805,10 @@ export component AppWindow inherits Window {
                         }
                         if root.detail-visual-mode == "official": Rectangle {
                             height: root.compact-layout ? 385px : 470px;
-                            background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 11px;
+                            background: root.sheet; border-color: root.line; border-width: 1px;
+                            border-radius: QuietPremium.card-radius;
+                            drop-shadow-blur: 14px; drop-shadow-offset-y: 4px;
+                            drop-shadow-color: root.dark-mode ? #00000036 : #23452b1a;
                             VerticalLayout {
                                 padding: 13px; spacing: 8px;
                                 Text { text: "REAL INTERFACE  /  CHECKSUM-VERIFIED SOURCE";
@@ -986,8 +1055,17 @@ export component AppWindow inherits Window {
                     }
                 }
                 Rectangle {
-                    height: 49px; border-radius: 9px;
-                    background: root.muted-sheet;
+                    height: 49px; border-radius: QuietPremium.control-radius;
+                    background: root.detail-technical-open ? root.accent-bg : root.muted-sheet;
+                    border-color: root.detail-technical-open
+                        ? (root.dark-mode ? QuietPremium.dark-outline : QuietPremium.light-outline)
+                        : root.line;
+                    border-width: 1px;
+                    animate background, border-color {
+                        duration: QuietPremium.tab-motion;
+                        easing: ease-out;
+                        enabled: !root.reduced-motion;
+                    }
                     HorizontalLayout {
                         padding-left: 15px; padding-right: 14px;
                         Text { text: "Source, version and verification details"; font-size: 12px;
