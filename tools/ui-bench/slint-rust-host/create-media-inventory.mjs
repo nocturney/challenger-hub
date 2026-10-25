@@ -16,10 +16,18 @@ if(snap.schema!=='challenger.native.catalog.v2'||snap.items.length!==181||
    !snap.networkScanDisabled||snap.writeActionsExposed)throw Error('Unverified real catalog snapshot');
 const craft=JSON.parse(readFileSync(join(sourceRoot,'craft-suite-media.v1.json'),'utf8'));
 const curated=JSON.parse(readFileSync(join(sourceRoot,'project-media.v1.json'),'utf8'));
+const independent=JSON.parse(readFileSync(resolve(here,'../../../independent-media.v1.json'),'utf8'));
+const selected=JSON.parse(readFileSync(join(here,'independent-native-selection.v1.json'),'utf8'));
+if(independent.schema!=='challenger-independent-media.v1' ||
+  selected.schema!=='challenger-native-independent-gallery-selection.v1') {
+  throw Error('Independent visual audit missing');
+}
+const auditedById=new Map(selected.selected.map(x=>['curated:'+x.key,x]));
 const gallery=JSON.parse(readFileSync(join(here,'ui','APPROVED_GALLERY_INDEX.json'),'utf8'));
 const rows=[], missing=[];
 const byMedia=Map.groupBy?Map.groupBy(gallery.assets,a=>a.media):
   gallery.assets.reduce((m,a)=>{m.set(a.media,[...(m.get(a.media)||[]),a]);return m;},new Map());
+const icons=new Map((gallery.icons||[]).map(x=>[x.media,x]));
 const curatedNative=new Set(['dune3d','material-maker','compositor','kiri-moto','espocrm',
   'docuseal','meshcentral','openhands','real-video-enhancer']);
 const names=new Set();
@@ -40,6 +48,23 @@ for(const p of snap.items) {
    sourceStatus='pinned-source';
    if(m.icon?.status==='approved') icon=curatedNative.has(key)?'embedded':'source-approved-not-embedded';
    if(curatedNative.has(key))media=key;
+ } else if(p.kind==='curated'&&auditedById.has(p.id)) {
+   const audit=auditedById.get(p.id),m=independent.apps[audit.key];
+   if(m?.reviewStatus!=='repository-confirmed' ||
+      m.repository!==audit.repository || m.commit!==audit.commit ||
+      m.license!==audit.sourceReportedRepositoryLicense ||
+      p.source!=='https://github.com/'+m.repository) {
+     throw Error('Source identity mismatch in independently reviewed catalog: '+p.id);
+   }
+   media='independent-'+audit.key;
+   mediaLicense=m.license;
+   sourceStatus='independently-reviewed-pinned-source';
+   if(audit.icon) {
+     if(!icons.get(media) || icons.get(media).sha256!==m.icon.sha256) {
+       throw Error('Independent native icon not pinned: '+p.id);
+     }
+     icon='embedded';
+   }
  }
  const assets=byMedia.get(media)||[];
  const frames=assets.length;
@@ -55,6 +80,9 @@ for(const p of snap.items) {
    screenshotSourceLicenses:assets.map(s=>s.license),
    screenshotBytes:assets.reduce((sum,s)=>sum+s.bytes,0),
    mediaLicense:mediaLicense||'Not established',galleryMediaId:media,
+   mediaSourceReview:sourceStatus,
+   embeddedIconSource:icons.get(media)?.sourceUrl||'',
+   embeddedIconSha256:icons.get(media)?.sha256||'',
    featuredOnExplore:featured.has(p.id),
    integration:frames?'Native Search thumbnail + Detail gallery':
      icon==='embedded'?'Native icon only':'Neutral fallback',
@@ -71,7 +99,8 @@ const counts={
  missingScreenshots:rows.filter(r=>r.screenshotCount===0).length,
  screenshotBytes:rows.reduce((n,r)=>n+r.screenshotBytes,0)
 };
-if(counts.nativeIcons!==22||counts.screenshotProjects!==16||counts.screenshotFrames!==50) {
+if(counts.nativeIcons!==30||counts.screenshotProjects!==29||counts.screenshotFrames!==70 ||
+   gallery.totalIcons!==30 || gallery.independentSelectedProjects!==14) {
  throw Error('Coverage discrepancy; media identity or manifests changed: '+JSON.stringify(counts));
 }
 const report={
@@ -84,10 +113,30 @@ const report={
 const out=join(here,'qa-results');mkdirSync(out,{recursive:true});
 writeFileSync(join(out,'visual-media-inventory.json'),JSON.stringify(report,null,2)+'\n');
 const cols=['projectId','name','kind','sourceCategory','repository','sourceLicense',
- 'iconStatus','screenshotCount','screenshotBytes','mediaLicense','galleryMediaId','featuredOnExplore','integration'];
+ 'iconStatus','embeddedIconSource','embeddedIconSha256','screenshotCount','screenshotBytes',
+ 'mediaLicense','mediaSourceReview','galleryMediaId','featuredOnExplore','integration'];
 const csv=x=>'"'+String(x??'').replaceAll('"','""')+'"';
 writeFileSync(join(out,'visual-media-inventory.csv'),
   [cols.map(csv).join(','),...rows.map(r=>cols.map(c=>csv(r[c])).join(','))].join('\n')+'\n');
 writeFileSync(join(out,'visual-media-missing.json'),JSON.stringify({
   schema:'challenger-native-media-missing.v1',counts,items:missing},null,2)+'\n');
+// Category-by-category backlog, derived only from verified live catalog rows.
+const byCategory=new Map();
+for(const r of rows) {
+ const key=r.sourceCategory||'Uncategorized';
+ if(!byCategory.has(key))byCategory.set(key,{sourceCategory:key,totalProjects:0,
+   projectsWithScreenshots:0,projectsWithIcons:0,missingScreenshots:0,missingIcons:0});
+ const x=byCategory.get(key);
+ x.totalProjects++;
+ if(r.screenshotCount)x.projectsWithScreenshots++;else x.missingScreenshots++;
+ if(r.iconStatus==='embedded')x.projectsWithIcons++;else x.missingIcons++;
+}
+const categories=[...byCategory.values()].sort((a,b)=>b.missingScreenshots-a.missingScreenshots||
+  b.totalProjects-a.totalProjects||a.sourceCategory.localeCompare(b.sourceCategory));
+writeFileSync(join(out,'visual-media-category-coverage.json'),JSON.stringify({
+  schema:'challenger-native-visual-category-coverage.v1',categories},null,2)+'\n');
+const catColumns=['sourceCategory','totalProjects','projectsWithScreenshots',
+ 'projectsWithIcons','missingScreenshots','missingIcons'];
+writeFileSync(join(out,'visual-media-category-coverage.csv'),
+  [catColumns.map(csv).join(','),...categories.map(x=>catColumns.map(k=>csv(x[k])).join(','))].join('\n')+'\n');
 console.log('NATIVE_VISUAL_INVENTORY_PASS '+JSON.stringify(counts));

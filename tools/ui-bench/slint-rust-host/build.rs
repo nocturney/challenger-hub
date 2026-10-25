@@ -5,6 +5,7 @@ fn main() {
     println!("cargo:rerun-if-changed=ui/focus.slint");
     println!("cargo:rerun-if-changed=ui/approved-gallery.slint");
     println!("cargo:rerun-if-changed=ui/screenshots");
+    println!("cargo:rerun-if-changed=ui/icons");
     println!("cargo:rerun-if-changed=ui/APPROVED_GALLERY_INDEX.json");
     for asset in [
         "orbit-app-128.png",

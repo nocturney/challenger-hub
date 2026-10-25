@@ -68,3 +68,30 @@ are derived from the images. Runtime images are embedded in the native binary;
 no remote image request occurs on browse. Portable packages include the
 existing third-party media notices and license texts beside the Node license.
 For the complete 181-project coverage list see `docs/visual-catalog/`.
+
+
+## 25 Oct 2026 — independent curated visual source wave
+
+The second native source-verified wave adds 20 authentic application interface
+screenshots for 13 new curated project IDs and eight native icons, one icon-only.
+The unique screenshot project coverage is now 29; embedded frames 70 and
+source-checked native icons 30. These selected original files are pinned to
+specific upstream GitHub commits by `independent-media.v1.json` and explicitly
+selected in `independent-native-selection.v1.json`. Only
+`reviewStatus=repository-confirmed` projects with a reported repository license
+were eligible; three unverified research-candidate upstream entries were
+**excluded** even though their downloaded bytes passed checksum validation.
+
+The native gallery generator confirms every original SHA-256, file length,
+image dimension, path, pinned commit and source URL completely offline. Rust
+routes media only when both the exact curated project ID and upstream repository
+match the preapproved mapping. Any research entry, lookalike fork, unknown
+license or missing asset gets a neutral fallback. Neither browsing nor CI downloads
+remote imagery. The checked-in assets are unmodified; no artificial screenshots.
+
+Source-reported repository licenses are **not** necessarily a standalone image,
+artwork or trademark redistribution grant. The generated
+`INDEPENDENT_NATIVE_MEDIA_NOTICES.md` records all pinned source/commit/sha and
+reported repository license metadata. Public distribution must remain blocked
+pending a separate legal/license audit. Preview packaging carries this notice,
+but cannot be assumed legally cleared for release solely from this review.

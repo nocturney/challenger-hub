@@ -172,7 +172,7 @@ fn media_id(p: &Project) -> &'static str {
         ("curated:meshcentral", "https://github.com/Ylianst/MeshCentral") => "meshcentral",
         ("curated:openhands", "https://github.com/OpenHands/OpenHands") => "openhands",
         ("curated:real-video-enhancer", "https://github.com/TNTwise/REAL-Video-Enhancer") => "real-video-enhancer",
-        _ => "",
+        _ => gallery::independent_media(p.id.as_str(), p.source.as_str()).unwrap_or(""),
     }
 }
 
@@ -198,6 +198,8 @@ fn entry(p: &Project, reviewable:bool) -> ProjectEntry {
         review_route: reviewable,
         media: media_id(p).into(),
         has_preview: gallery::count(media_id(p)) > 0,
+        has_icon: gallery::has_icon(media_id(p)),
+        has_independent_icon: gallery::has_independent_icon(media_id(p)),
         initial: p.name.chars().next().unwrap_or('?').to_string().into(),
     }
 }
@@ -244,6 +246,7 @@ fn set_detail(ui: &AppWindow, project: Option<&Project>,review_routes:&HashSet<S
         ui.set_detail_media_caption(media_caption(media_id(p)).into());
         ui.set_detail_gallery_count(gallery::count(media_id(p)));
         ui.set_detail_gallery_index(0);
+        ui.set_detail_independent_icon(gallery::has_independent_icon(media_id(p)));
     } else {
         ui.set_detail_reviewable(false);
         ui.set_install_project_id("".into());
@@ -257,6 +260,7 @@ fn set_detail(ui: &AppWindow, project: Option<&Project>,review_routes:&HashSet<S
         ui.set_detail_media_caption("".into());
         ui.set_detail_gallery_count(0);
         ui.set_detail_gallery_index(0);
+        ui.set_detail_independent_icon(false);
     }
 }
 
@@ -1187,6 +1191,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         ui.invoke_search_submitted("Dune 3D".into());
         ui.invoke_open_project(0);
     }
+    if args.iter().any(|a| a == "--qa-preview-goxel") {
+        ui.invoke_search_submitted("Goxel".into());
+        ui.invoke_open_project(0);
+        if ui.get_detail_media() != "independent-goxel" ||
+            ui.get_detail_gallery_count() != 2 || !ui.get_detail_independent_icon() {
+            return Err("Goxel upstream gallery and icon QA route missing".into());
+        }
+    }
     if args.iter().any(|a| a == "--qa-preview-pdfcraft") {
         ui.invoke_search_submitted("PdfCraft".into());
         ui.invoke_open_project(0);
@@ -1201,7 +1213,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "--qa-preview-library", "--qa-preview-activity",
         "--qa-preview-activity-refresh", "--qa-preview-device",
         "--qa-preview-identity", "--qa-preview-install",
-        "--qa-preview-pdfcraft", "--qa-preview-craft-results"].contains(&a.as_str())) {
+        "--qa-preview-pdfcraft", "--qa-preview-craft-results",
+        "--qa-preview-goxel"].contains(&a.as_str())) {
         let weak = ui.as_weak();
         Timer::single_shot(Duration::from_secs(22), move || {
             if let Some(w) = weak.upgrade() { let _ = w.hide(); }
@@ -1432,6 +1445,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     fail("pinned screenshot gallery page bounds");
                 }
                 w.invoke_navigate("home".into());
+                w.invoke_search_submitted("Goxel".into());
+                w.invoke_open_project(0);
+                if w.get_page() != "detail" || w.get_detail_media() != "independent-goxel" ||
+                    w.get_detail_gallery_count() != 2 || !w.get_detail_independent_icon() {
+                    fail("source-verified independent Goxel screenshots and icon");
+                }
+                w.invoke_navigate("home".into());
+                w.invoke_search_submitted("RustDesk".into());
+                w.invoke_open_project(0);
+                if w.get_page() != "detail" || w.get_detail_media() != "independent-rustdesk" ||
+                    w.get_detail_gallery_count() != 1 || w.get_detail_independent_icon() {
+                    fail("independent RustDesk source screenshot with honest icon fallback");
+                }
+                w.invoke_navigate("home".into());
                 w.invoke_search_submitted("OpenHands".into());
                 w.invoke_open_project(0);
                 if w.get_page() != "detail" || w.get_detail_media() != "openhands" ||
@@ -1443,8 +1470,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     "pages": ["home","results","detail","library","activity"],
                     "history": "back+forward", "pageSize": 30,
                     "pageSizeVerified": 60, "reviewRouteCount": review_routes,
-                    "reviewFilterVerified": true, "sourceScreenshots": 50,
-                    "screenshotProjects": 16, "approvedMediaIdentities": 22,
+                    "reviewFilterVerified": true, "sourceScreenshots": 70,
+                    "screenshotProjects": 29, "approvedMediaIdentities": 36,
+                    "sourceVerifiedNativeIcons": 30,
                     "multiFrameGalleryVerified": true, "darkMode": true,
                     "managedCoverage": w.get_managed_assessed(),
                     "managedDetected": w.get_managed_detected(),
@@ -1568,6 +1596,35 @@ mod tests {
             p.source.push_str("-fork");
             assert_eq!(media_id(&p), "");
         }
+    }
+
+    #[test]
+    fn selected_independent_gallery_requires_exact_curated_id_and_source() {
+        let mut p = Project {
+            id:"curated:rustdesk".into(), name:"RustDesk".into(),
+            maker:"Independent".into(), category:"Remote support".into(),
+            summary:"Preview".into(), platforms:"Windows".into(),
+            evidence:"Curated source".into(), source:"https://github.com/rustdesk/rustdesk".into(),
+            kind:"curated".into(), license:"AGPL-3.0".into(), challenges:"".into(),
+            release:"".into(), managed_install_signal:"".into(), installed_version:"".into(),
+            latest_version:"".into(), update_hint:false
+        };
+        assert_eq!(media_id(&p), "independent-rustdesk");
+        assert!(!gallery::has_icon(media_id(&p)));
+        assert_eq!(gallery::count(media_id(&p)),1);
+        p.kind="research".into();
+        assert_eq!(media_id(&p),"");
+        p.kind="curated".into();
+        p.source.push_str("-attacker");
+        assert_eq!(media_id(&p),"");
+        p.source="https://github.com/rustdesk/rustdesk".into();
+        p.id="curated:gh-actualbudget-actual".into();
+        assert_eq!(media_id(&p),"");
+        p.id="curated:godsvg".into();
+        p.source="https://github.com/MewPurPur/GodSVG".into();
+        assert_eq!(media_id(&p),"independent-godsvg");
+        assert!(gallery::has_icon(media_id(&p)));
+        assert_eq!(gallery::count(media_id(&p)),0);
     }
 
     #[test]

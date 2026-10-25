@@ -8,13 +8,13 @@
     "managed": 14,
     "curated": 152,
     "research": 15,
-    "nativeIcons": 22,
+    "nativeIcons": 30,
     "sourceApprovedIconsNotYetEmbedded": 1,
-    "screenshotProjects": 16,
-    "screenshotFrames": 50,
-    "missingIcons": 159,
-    "missingScreenshots": 165,
-    "screenshotBytes": 8878287
+    "screenshotProjects": 29,
+    "screenshotFrames": 70,
+    "missingIcons": 151,
+    "missingScreenshots": 152,
+    "screenshotBytes": 15836310
   },
   "records": [
     {
@@ -44,6 +44,9 @@
       "screenshotBytes": 239947,
       "mediaLicense": "MIT OR Apache-2.0",
       "galleryMediaId": "craft-cadcraft",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -78,6 +81,9 @@
       "screenshotBytes": 285292,
       "mediaLicense": "MIT OR Apache-2.0",
       "galleryMediaId": "craft-deckcraft",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -103,6 +109,9 @@
       "screenshotBytes": 135340,
       "mediaLicense": "MIT OR Apache-2.0",
       "galleryMediaId": "craft-designcraft",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -137,6 +146,9 @@
       "screenshotBytes": 317154,
       "mediaLicense": "MIT OR Apache-2.0",
       "galleryMediaId": "craft-effectcraft",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -168,6 +180,9 @@
       "screenshotBytes": 326039,
       "mediaLicense": "MIT OR Apache-2.0",
       "galleryMediaId": "craft-filmcraft",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -202,6 +217,9 @@
       "screenshotBytes": 408054,
       "mediaLicense": "MIT OR Apache-2.0",
       "galleryMediaId": "craft-gridcraft",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -236,6 +254,9 @@
       "screenshotBytes": 258629,
       "mediaLicense": "MIT OR Apache-2.0",
       "galleryMediaId": "craft-lightcraft",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -270,6 +291,9 @@
       "screenshotBytes": 2416540,
       "mediaLicense": "MIT OR Apache-2.0",
       "galleryMediaId": "craft-pdfcraft",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": true,
       "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -304,6 +328,9 @@
       "screenshotBytes": 333459,
       "mediaLicense": "MIT OR Apache-2.0",
       "galleryMediaId": "craft-photocraft",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -338,6 +365,9 @@
       "screenshotBytes": 453918,
       "mediaLicense": "MIT OR Apache-2.0",
       "galleryMediaId": "craft-soundcraft",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -372,6 +402,9 @@
       "screenshotBytes": 386342,
       "mediaLicense": "MIT OR Apache-2.0",
       "galleryMediaId": "craft-vectorcraft",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -406,6 +439,9 @@
       "screenshotBytes": 428364,
       "mediaLicense": "MIT OR Apache-2.0",
       "galleryMediaId": "craft-wordcraft",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -425,6 +461,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -459,6 +498,9 @@
       "screenshotBytes": 1467385,
       "mediaLicense": "MIT OR Apache-2.0",
       "galleryMediaId": "craft-figcraft",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -478,6 +520,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "MIT",
       "galleryMediaId": "compositor",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Native icon only",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -497,6 +542,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -516,6 +564,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -535,6 +586,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "GPL-3.0",
       "galleryMediaId": "",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -554,6 +608,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -573,6 +630,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -598,6 +658,9 @@
       "screenshotBytes": 79937,
       "mediaLicense": "GPL-3.0",
       "galleryMediaId": "dune3d",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": true,
       "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -623,6 +686,9 @@
       "screenshotBytes": 1246803,
       "mediaLicense": "MIT",
       "galleryMediaId": "material-maker",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": true,
       "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -634,16 +700,19 @@
       "sourceCategory": "Vector & UI design",
       "repository": "https://github.com/MewPurPur/GodSVG",
       "sourceLicense": "MIT",
-      "iconStatus": "missing",
+      "iconStatus": "embedded",
       "screenshotCount": 0,
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
       "screenshotBytes": 0,
-      "mediaLicense": "Not established",
-      "galleryMediaId": "",
+      "mediaLicense": "MIT",
+      "galleryMediaId": "independent-godsvg",
+      "mediaSourceReview": "independently-reviewed-pinned-source",
+      "embeddedIconSource": "https://github.com/MewPurPur/GodSVG/blob/de273a028f2b604f5bfa210e029320c468c423e1/assets/logos/icon.png",
+      "embeddedIconSha256": "28d5f232e6195a48e0b2a7e6e9259ced57b3b2a3caf46756f36c3bb00f1cabfc",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Native icon only",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -661,6 +730,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -680,6 +752,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -691,16 +766,28 @@
       "sourceCategory": "Fonts & typography",
       "repository": "https://github.com/MFEK/glif",
       "sourceLicense": "Apache-2.0",
-      "iconStatus": "missing",
-      "screenshotCount": 0,
-      "screenshotChecksums": [],
-      "screenshotSources": [],
-      "screenshotSourceLicenses": [],
-      "screenshotBytes": 0,
-      "mediaLicense": "Not established",
-      "galleryMediaId": "",
+      "iconStatus": "embedded",
+      "screenshotCount": 2,
+      "screenshotChecksums": [
+        "6e61c1e35acaa17ce37a1d25e21b8dda284a11b7893472882b7c8bec19377f43",
+        "0b407e9f4ae686f50a5e3dfaa788eb24d40a36b8aa5d7aa56c7df242489894dc"
+      ],
+      "screenshotSources": [
+        "https://github.com/MFEK/glif/blob/e7c24c5d77b768429b7c7f13605b080fd3f1ca98/doc/screenshot_main.png",
+        "https://github.com/MFEK/glif/blob/e7c24c5d77b768429b7c7f13605b080fd3f1ca98/doc/screenshot2.png"
+      ],
+      "screenshotSourceLicenses": [
+        "Apache-2.0",
+        "Apache-2.0"
+      ],
+      "screenshotBytes": 268764,
+      "mediaLicense": "Apache-2.0",
+      "galleryMediaId": "independent-mfek-glif",
+      "mediaSourceReview": "independently-reviewed-pinned-source",
+      "embeddedIconSource": "https://github.com/MFEK/glif/blob/e7c24c5d77b768429b7c7f13605b080fd3f1ca98/resources/icon.png",
+      "embeddedIconSha256": "fdb97aec7052535dac62984a71ed2cae594d4afae509175d4836751b132691af",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -718,6 +805,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -737,6 +827,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -756,6 +849,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -775,6 +871,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -794,6 +893,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "MIT",
       "galleryMediaId": "kiri-moto",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Native icon only",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -813,6 +915,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -825,15 +930,27 @@
       "repository": "https://github.com/PixiEditor/PixiEditor",
       "sourceLicense": "LGPL-3.0",
       "iconStatus": "missing",
-      "screenshotCount": 0,
-      "screenshotChecksums": [],
-      "screenshotSources": [],
-      "screenshotSourceLicenses": [],
-      "screenshotBytes": 0,
-      "mediaLicense": "Not established",
-      "galleryMediaId": "",
+      "screenshotCount": 2,
+      "screenshotChecksums": [
+        "44351372087859d9f7b3af00871b381e0a4ef10400c9eb609a09cc98810451ac",
+        "4555997b4ad655adccdbbf6beba46ad2ab67a1bddb02fe1a82ae557067cc3bb4"
+      ],
+      "screenshotSources": [
+        "https://github.com/PixiEditor/PixiEditor/blob/f3fe8b4d031c64cb563b6135a0d961a05a2728c3/Screenshot.png",
+        "https://github.com/PixiEditor/PixiEditor/blob/f3fe8b4d031c64cb563b6135a0d961a05a2728c3/assets/flatpak/screenshots/palettes.png"
+      ],
+      "screenshotSourceLicenses": [
+        "LGPL-3.0",
+        "LGPL-3.0"
+      ],
+      "screenshotBytes": 325809,
+      "mediaLicense": "LGPL-3.0",
+      "galleryMediaId": "independent-pixieditor",
+      "mediaSourceReview": "independently-reviewed-pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -851,6 +968,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -876,6 +996,9 @@
       "screenshotBytes": 95084,
       "mediaLicense": "AGPL-3.0",
       "galleryMediaId": "real-video-enhancer",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -887,16 +1010,25 @@
       "sourceCategory": "Video editing",
       "repository": "https://github.com/OakVideoEditorCommunity/oak",
       "sourceLicense": "GPL-3.0",
-      "iconStatus": "missing",
-      "screenshotCount": 0,
-      "screenshotChecksums": [],
-      "screenshotSources": [],
-      "screenshotSourceLicenses": [],
-      "screenshotBytes": 0,
-      "mediaLicense": "Not established",
-      "galleryMediaId": "",
+      "iconStatus": "embedded",
+      "screenshotCount": 1,
+      "screenshotChecksums": [
+        "32d11c9847c192c4d94339b712a49f29c14bb954da13804efa313c9e1c7d6d9d"
+      ],
+      "screenshotSources": [
+        "https://github.com/OakVideoEditorCommunity/oak/blob/096b105a74802cedf657c7e07906cb0ca7f32146/docs/imgs/screenshot.png"
+      ],
+      "screenshotSourceLicenses": [
+        "GPL-3.0"
+      ],
+      "screenshotBytes": 708368,
+      "mediaLicense": "GPL-3.0",
+      "galleryMediaId": "independent-oak-video-editor",
+      "mediaSourceReview": "independently-reviewed-pinned-source",
+      "embeddedIconSource": "https://github.com/OakVideoEditorCommunity/oak/blob/096b105a74802cedf657c7e07906cb0ca7f32146/assets/appicon/icon.png",
+      "embeddedIconSha256": "7a9b317d563ebc9441031165a1514b7c693c3f26717b794bc61f9ed167930ed4",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -914,6 +1046,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -933,6 +1068,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -952,6 +1090,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -964,15 +1105,24 @@
       "repository": "https://github.com/gyroflow/gyroflow",
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
-      "screenshotCount": 0,
-      "screenshotChecksums": [],
-      "screenshotSources": [],
-      "screenshotSourceLicenses": [],
-      "screenshotBytes": 0,
-      "mediaLicense": "Not established",
-      "galleryMediaId": "",
+      "screenshotCount": 1,
+      "screenshotChecksums": [
+        "b28384f66cd04f1090286bc7d8324db9c09ba6a88a432cab0a02509e01fee404"
+      ],
+      "screenshotSources": [
+        "https://github.com/gyroflow/gyroflow/blob/1a78c952dca33e656e772552b48133fa805e2ab0/resources/screenshot.jpg"
+      ],
+      "screenshotSourceLicenses": [
+        "GPL-3.0"
+      ],
+      "screenshotBytes": 372945,
+      "mediaLicense": "GPL-3.0",
+      "galleryMediaId": "independent-gyroflow",
+      "mediaSourceReview": "independently-reviewed-pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -990,6 +1140,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1001,16 +1154,25 @@
       "sourceCategory": "Audio & music",
       "repository": "https://github.com/helio-fm/helio-sequencer",
       "sourceLicense": "GPL-3.0",
-      "iconStatus": "missing",
-      "screenshotCount": 0,
-      "screenshotChecksums": [],
-      "screenshotSources": [],
-      "screenshotSourceLicenses": [],
-      "screenshotBytes": 0,
-      "mediaLicense": "Not established",
-      "galleryMediaId": "",
+      "iconStatus": "embedded",
+      "screenshotCount": 1,
+      "screenshotChecksums": [
+        "5ae3c696e5ac83f07b6934cec5b458b4a98acdd76bc1a661fb36de8c1680b9d8"
+      ],
+      "screenshotSources": [
+        "https://github.com/helio-fm/helio-sequencer/blob/5a21fbc862af349234d51008f75844e943f80603/Projects/Android/app/src/main/play/listings/en-US/graphics/phone-screenshots/1.png"
+      ],
+      "screenshotSourceLicenses": [
+        "GPL-3.0"
+      ],
+      "screenshotBytes": 54190,
+      "mediaLicense": "GPL-3.0",
+      "galleryMediaId": "independent-helio",
+      "mediaSourceReview": "independently-reviewed-pinned-source",
+      "embeddedIconSource": "https://github.com/helio-fm/helio-sequencer/blob/5a21fbc862af349234d51008f75844e943f80603/Projects/iOS/Helio/Images.xcassets/AppIcon.appiconset/Icon.png",
+      "embeddedIconSha256": "b2f2c6502fc93551dbff151ecb3ce8d3efb8bbc5acc93751f817f238706dd2bc",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1028,6 +1190,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1039,16 +1204,28 @@
       "sourceCategory": "3D voxel modeling",
       "repository": "https://github.com/guillaumechereau/goxel",
       "sourceLicense": "GPL-3.0",
-      "iconStatus": "missing",
-      "screenshotCount": 0,
-      "screenshotChecksums": [],
-      "screenshotSources": [],
-      "screenshotSourceLicenses": [],
-      "screenshotBytes": 0,
-      "mediaLicense": "Not established",
-      "galleryMediaId": "",
+      "iconStatus": "embedded",
+      "screenshotCount": 2,
+      "screenshotChecksums": [
+        "e5f6437763a52b6719be69458b8f2da668beea4f12d014599fb4e0da32b80aa9",
+        "c4d4810f4767a14478ea6e30327a09ebbd0785e38ec3a55d85138a16959141ff"
+      ],
+      "screenshotSources": [
+        "https://github.com/guillaumechereau/goxel/blob/33be5c8ed826105ab35746f893065e9ef00d3134/screenshots/screenshot-procedural-city.png",
+        "https://github.com/guillaumechereau/goxel/blob/33be5c8ed826105ab35746f893065e9ef00d3134/screenshots/screenshot-castle.png"
+      ],
+      "screenshotSourceLicenses": [
+        "GPL-3.0",
+        "GPL-3.0"
+      ],
+      "screenshotBytes": 191597,
+      "mediaLicense": "GPL-3.0",
+      "galleryMediaId": "independent-goxel",
+      "mediaSourceReview": "independently-reviewed-pinned-source",
+      "embeddedIconSource": "https://github.com/guillaumechereau/goxel/blob/33be5c8ed826105ab35746f893065e9ef00d3134/osx/goxel/goxel/Assets.xcassets/AppIcon.appiconset/256.png",
+      "embeddedIconSha256": "e6486695d7763bf83d399a55ed88141dc4e649ca4d00feb0d9d264da3ee1ae3c",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1066,6 +1243,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1085,6 +1265,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1104,6 +1287,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1115,16 +1301,28 @@
       "sourceCategory": "CAD & engineering",
       "repository": "https://github.com/fougue/mayo",
       "sourceLicense": "BSD-2-Clause",
-      "iconStatus": "missing",
-      "screenshotCount": 0,
-      "screenshotChecksums": [],
-      "screenshotSources": [],
-      "screenshotSourceLicenses": [],
-      "screenshotBytes": 0,
-      "mediaLicense": "Not established",
-      "galleryMediaId": "",
+      "iconStatus": "embedded",
+      "screenshotCount": 2,
+      "screenshotChecksums": [
+        "e96702406d0df0d8314d2775331b6b43c5f59691a7650f7ad2a3ec9bc128f5df",
+        "aa071b784a784006794f9e611825eab2acabf9f538b84ffd1cd8898a2ebb32be"
+      ],
+      "screenshotSources": [
+        "https://github.com/fougue/mayo/blob/8e69135dd5259a6a2b77568fcf630f969f408762/doc/screenshot_1.png",
+        "https://github.com/fougue/mayo/blob/8e69135dd5259a6a2b77568fcf630f969f408762/doc/screenshot_4.png"
+      ],
+      "screenshotSourceLicenses": [
+        "BSD-2-Clause",
+        "BSD-2-Clause"
+      ],
+      "screenshotBytes": 121556,
+      "mediaLicense": "BSD-2-Clause",
+      "galleryMediaId": "independent-mayo",
+      "mediaSourceReview": "independently-reviewed-pinned-source",
+      "embeddedIconSource": "https://github.com/fougue/mayo/blob/8e69135dd5259a6a2b77568fcf630f969f408762/images/appicon_128.png",
+      "embeddedIconSha256": "746d84e2a27718c5abd22a0b44ab67351fd1a9d592dcb89246eb99166bad1d9f",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1142,6 +1340,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1161,6 +1362,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1172,16 +1376,28 @@
       "sourceCategory": "CRM",
       "repository": "https://github.com/frappe/crm",
       "sourceLicense": "AGPL-3.0",
-      "iconStatus": "missing",
-      "screenshotCount": 0,
-      "screenshotChecksums": [],
-      "screenshotSources": [],
-      "screenshotSourceLicenses": [],
-      "screenshotBytes": 0,
-      "mediaLicense": "Not established",
-      "galleryMediaId": "",
+      "iconStatus": "embedded",
+      "screenshotCount": 2,
+      "screenshotChecksums": [
+        "1260534916fdf69aafd92274fc5d982139bcca08240d648d0a1696d8577aa426",
+        "8104e880b6f7fa97512a7924a16af22dca1b5697f5b7668204d7c078ec89e064"
+      ],
+      "screenshotSources": [
+        "https://github.com/frappe/crm/blob/85af16ce20325a3c91f8970a37c74adae377ac01/.github/screenshots/LeadPage.png",
+        "https://github.com/frappe/crm/blob/85af16ce20325a3c91f8970a37c74adae377ac01/.github/screenshots/CallLog.png"
+      ],
+      "screenshotSourceLicenses": [
+        "AGPL-3.0",
+        "AGPL-3.0"
+      ],
+      "screenshotBytes": 2084465,
+      "mediaLicense": "AGPL-3.0",
+      "galleryMediaId": "independent-frappe-crm",
+      "mediaSourceReview": "independently-reviewed-pinned-source",
+      "embeddedIconSource": "https://github.com/frappe/crm/blob/85af16ce20325a3c91f8970a37c74adae377ac01/crm/public/images/logo.png",
+      "embeddedIconSha256": "84c79bc789c8695d1a194ee420b6f7ebd66f19003e41b64c756168eab8550c90",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1199,6 +1415,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1218,6 +1437,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1229,16 +1451,25 @@
       "sourceCategory": "Inventory management",
       "repository": "https://github.com/inventree/InvenTree",
       "sourceLicense": "MIT",
-      "iconStatus": "missing",
-      "screenshotCount": 0,
-      "screenshotChecksums": [],
-      "screenshotSources": [],
-      "screenshotSourceLicenses": [],
-      "screenshotBytes": 0,
-      "mediaLicense": "Not established",
-      "galleryMediaId": "",
+      "iconStatus": "embedded",
+      "screenshotCount": 1,
+      "screenshotChecksums": [
+        "a601bc89bd9f6d69089fd01149ac085e74b1b8f09c620cc1e59ba8017c37360a"
+      ],
+      "screenshotSources": [
+        "https://github.com/inventree/InvenTree/blob/d11b74fd857a6ebf47658b707605a64a10be764f/docs/docs/assets/images/appgallery/Screenshot_1681915404.png"
+      ],
+      "screenshotSourceLicenses": [
+        "MIT"
+      ],
+      "screenshotBytes": 67763,
+      "mediaLicense": "MIT",
+      "galleryMediaId": "independent-inventree",
+      "mediaSourceReview": "independently-reviewed-pinned-source",
+      "embeddedIconSource": "https://github.com/inventree/InvenTree/blob/d11b74fd857a6ebf47658b707605a64a10be764f/docs/docs/assets/logo.png",
+      "embeddedIconSha256": "4e882f8bfc2d21745038df8f9b4aec2240067558437f99dda274380847e48ef3",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1256,6 +1487,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1275,6 +1509,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1294,6 +1531,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1313,6 +1553,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1332,6 +1575,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1351,6 +1597,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1370,6 +1619,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1389,6 +1641,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1401,15 +1656,24 @@
       "repository": "https://github.com/hatchet-dev/hatchet",
       "sourceLicense": "MIT",
       "iconStatus": "missing",
-      "screenshotCount": 0,
-      "screenshotChecksums": [],
-      "screenshotSources": [],
-      "screenshotSourceLicenses": [],
-      "screenshotBytes": 0,
-      "mediaLicense": "Not established",
-      "galleryMediaId": "",
+      "screenshotCount": 1,
+      "screenshotChecksums": [
+        "15db9c9d37363265619cde20a7fdfe80b34590f30f83eaac71289492cbd4f7fd"
+      ],
+      "screenshotSources": [
+        "https://github.com/hatchet-dev/hatchet/blob/ae05c4bb06c3335b502c1979a5af87313f710180/frontend/docs/public/hatchet-screenshot-1.png"
+      ],
+      "screenshotSourceLicenses": [
+        "MIT"
+      ],
+      "screenshotBytes": 747606,
+      "mediaLicense": "MIT",
+      "galleryMediaId": "independent-hatchet",
+      "mediaSourceReview": "independently-reviewed-pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1427,6 +1691,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1446,6 +1713,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1465,6 +1735,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1484,6 +1757,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1503,6 +1779,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1522,6 +1801,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1541,6 +1823,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1560,6 +1845,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "AGPL-3.0",
       "galleryMediaId": "espocrm",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Native icon only",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1579,6 +1867,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1598,6 +1889,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1617,6 +1911,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1636,6 +1933,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1655,6 +1955,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "AGPL-3.0",
       "galleryMediaId": "docuseal",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Native icon only",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1667,15 +1970,27 @@
       "repository": "https://github.com/paperless-ngx/paperless-ngx",
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
-      "screenshotCount": 0,
-      "screenshotChecksums": [],
-      "screenshotSources": [],
-      "screenshotSourceLicenses": [],
-      "screenshotBytes": 0,
-      "mediaLicense": "Not established",
-      "galleryMediaId": "",
+      "screenshotCount": 2,
+      "screenshotChecksums": [
+        "9f53ec3e80b49dbff2eeaeeb4e71efc7b53fc0001f1459e795e0ddf1c0ca8bc5",
+        "612eaee59d04ff3dcc3f37aa0bb08c5cfc55d4c4b33860567daa9d788d3f1307"
+      ],
+      "screenshotSources": [
+        "https://github.com/paperless-ngx/paperless-ngx/blob/f71a9a6eda217a0f3e84ff9a40e0e57d10e7d9ae/docs/assets/screenshots/search-preview.png",
+        "https://github.com/paperless-ngx/paperless-ngx/blob/f71a9a6eda217a0f3e84ff9a40e0e57d10e7d9ae/docs/assets/screenshots/dashboard.png"
+      ],
+      "screenshotSourceLicenses": [
+        "GPL-3.0",
+        "GPL-3.0"
+      ],
+      "screenshotBytes": 1463916,
+      "mediaLicense": "GPL-3.0",
+      "galleryMediaId": "independent-paperless",
+      "mediaSourceReview": "independently-reviewed-pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1693,6 +2008,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Apache-2.0",
       "galleryMediaId": "meshcentral",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Native icon only",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1705,15 +2023,24 @@
       "repository": "https://github.com/rustdesk/rustdesk",
       "sourceLicense": "AGPL-3.0",
       "iconStatus": "missing",
-      "screenshotCount": 0,
-      "screenshotChecksums": [],
-      "screenshotSources": [],
-      "screenshotSourceLicenses": [],
-      "screenshotBytes": 0,
-      "mediaLicense": "Not established",
-      "galleryMediaId": "",
+      "screenshotCount": 1,
+      "screenshotChecksums": [
+        "2a98a0c7921ce4ffe554d58d0c82724a01e475f29bd8edefaac03d19fc05f41b"
+      ],
+      "screenshotSources": [
+        "https://github.com/rustdesk/rustdesk/blob/4d37f00af964e8a43fb2239d8599ff8690e4d906/fastlane/metadata/android/en-US/images/sevenInchScreenshots/8.png"
+      ],
+      "screenshotSourceLicenses": [
+        "AGPL-3.0"
+      ],
+      "screenshotBytes": 272856,
+      "mediaLicense": "AGPL-3.0",
+      "galleryMediaId": "independent-rustdesk",
+      "mediaSourceReview": "independently-reviewed-pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1731,6 +2058,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1750,6 +2080,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1769,6 +2102,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "MIT",
       "galleryMediaId": "openhands",
+      "mediaSourceReview": "pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Native icon only",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1788,6 +2124,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1800,15 +2139,27 @@
       "repository": "https://github.com/Mintplex-Labs/anything-llm",
       "sourceLicense": "MIT",
       "iconStatus": "missing",
-      "screenshotCount": 0,
-      "screenshotChecksums": [],
-      "screenshotSources": [],
-      "screenshotSourceLicenses": [],
-      "screenshotBytes": 0,
-      "mediaLicense": "Not established",
-      "galleryMediaId": "",
+      "screenshotCount": 2,
+      "screenshotChecksums": [
+        "aabb65516366aeff2218549a14983787bb4662f6fa864c8cef67ee927980ec45",
+        "a69c16cdf8a60e6fbf90be39e12e8ba4bf0bb8348d380c57b456c274821e6c13"
+      ],
+      "screenshotSources": [
+        "https://github.com/Mintplex-Labs/anything-llm/blob/8239cd85a22d847337215988c69a8d1c0fba3c94/images/screenshots/upload.png",
+        "https://github.com/Mintplex-Labs/anything-llm/blob/8239cd85a22d847337215988c69a8d1c0fba3c94/images/screenshots/create_stack.png"
+      ],
+      "screenshotSourceLicenses": [
+        "MIT",
+        "MIT"
+      ],
+      "screenshotBytes": 278188,
+      "mediaLicense": "MIT",
+      "galleryMediaId": "independent-anythingllm",
+      "mediaSourceReview": "independently-reviewed-pinned-source",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Native Search thumbnail + Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1826,6 +2177,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1845,6 +2199,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1864,6 +2221,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1883,6 +2243,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1902,6 +2265,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1921,6 +2287,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1940,6 +2309,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1959,6 +2331,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1978,6 +2353,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -1997,6 +2375,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2016,6 +2397,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2035,6 +2419,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2054,6 +2441,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2073,6 +2463,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2092,6 +2485,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2111,6 +2507,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2130,6 +2529,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2149,6 +2551,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2168,6 +2573,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2187,6 +2595,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2206,6 +2617,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2225,6 +2639,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2244,6 +2661,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2263,6 +2683,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2282,6 +2705,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2301,6 +2727,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2320,6 +2749,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2339,6 +2771,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2358,6 +2793,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2377,6 +2815,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2396,6 +2837,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2415,6 +2859,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2434,6 +2881,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2453,6 +2903,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2472,6 +2925,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2491,6 +2947,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2510,6 +2969,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2529,6 +2991,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2548,6 +3013,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2567,6 +3035,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2586,6 +3057,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2605,6 +3079,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2624,6 +3101,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2643,6 +3123,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2662,6 +3145,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2681,6 +3167,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2700,6 +3189,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2719,6 +3211,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2738,6 +3233,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2757,6 +3255,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2776,6 +3277,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2795,6 +3299,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2814,6 +3321,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2833,6 +3343,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2852,6 +3365,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2871,6 +3387,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2890,6 +3409,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2909,6 +3431,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2928,6 +3453,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2947,6 +3475,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2966,6 +3497,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -2985,6 +3519,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3004,6 +3541,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3023,6 +3563,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3042,6 +3585,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3061,6 +3607,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3080,6 +3629,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3099,6 +3651,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3118,6 +3673,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3137,6 +3695,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3156,6 +3717,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3175,6 +3739,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3194,6 +3761,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3213,6 +3783,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3232,6 +3805,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3251,6 +3827,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3270,6 +3849,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3289,6 +3871,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3308,6 +3893,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3327,6 +3915,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3346,6 +3937,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3365,6 +3959,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3384,6 +3981,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3403,6 +4003,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3422,6 +4025,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3441,6 +4047,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3460,6 +4069,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3479,6 +4091,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3498,6 +4113,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3517,6 +4135,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3536,6 +4157,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3555,6 +4179,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3574,6 +4201,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3593,6 +4223,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3612,6 +4245,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3631,6 +4267,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3650,6 +4289,9 @@
       "screenshotBytes": 0,
       "mediaLicense": "Not established",
       "galleryMediaId": "",
+      "mediaSourceReview": "no-approved-media",
+      "embeddedIconSource": "",
+      "embeddedIconSha256": "",
       "featuredOnExplore": false,
       "integration": "Neutral fallback",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
@@ -3715,7 +4357,7 @@
     {
       "projectId": "curated:godsvg",
       "name": "GodSVG",
-      "iconStatus": "missing",
+      "iconStatus": "embedded",
       "missingScreenshot": true,
       "source": "https://github.com/MewPurPur/GodSVG",
       "kind": "curated"
@@ -3734,14 +4376,6 @@
       "iconStatus": "missing",
       "missingScreenshot": true,
       "source": "https://github.com/KDE/glaxnimate",
-      "kind": "curated"
-    },
-    {
-      "projectId": "curated:mfek-glif",
-      "name": "MFEKglif",
-      "iconStatus": "missing",
-      "missingScreenshot": true,
-      "source": "https://github.com/MFEK/glif",
       "kind": "curated"
     },
     {
@@ -3796,7 +4430,7 @@
       "projectId": "curated:pixieditor",
       "name": "PixiEditor",
       "iconStatus": "missing",
-      "missingScreenshot": true,
+      "missingScreenshot": false,
       "source": "https://github.com/PixiEditor/PixiEditor",
       "kind": "curated"
     },
@@ -3806,14 +4440,6 @@
       "iconStatus": "missing",
       "missingScreenshot": true,
       "source": "https://github.com/tannerhelland/PhotoDemon",
-      "kind": "curated"
-    },
-    {
-      "projectId": "curated:oak-video-editor",
-      "name": "Oak Video Editor",
-      "iconStatus": "missing",
-      "missingScreenshot": true,
-      "source": "https://github.com/OakVideoEditorCommunity/oak",
       "kind": "curated"
     },
     {
@@ -3844,7 +4470,7 @@
       "projectId": "curated:gyroflow",
       "name": "Gyroflow",
       "iconStatus": "missing",
-      "missingScreenshot": true,
+      "missingScreenshot": false,
       "source": "https://github.com/gyroflow/gyroflow",
       "kind": "curated"
     },
@@ -3857,27 +4483,11 @@
       "kind": "curated"
     },
     {
-      "projectId": "curated:helio",
-      "name": "Helio Sequencer",
-      "iconStatus": "missing",
-      "missingScreenshot": true,
-      "source": "https://github.com/helio-fm/helio-sequencer",
-      "kind": "curated"
-    },
-    {
       "projectId": "curated:cardinal",
       "name": "Cardinal",
       "iconStatus": "missing",
       "missingScreenshot": true,
       "source": "https://github.com/DISTRHO/Cardinal",
-      "kind": "curated"
-    },
-    {
-      "projectId": "curated:goxel",
-      "name": "Goxel",
-      "iconStatus": "missing",
-      "missingScreenshot": true,
-      "source": "https://github.com/guillaumechereau/goxel",
       "kind": "curated"
     },
     {
@@ -3905,14 +4515,6 @@
       "kind": "curated"
     },
     {
-      "projectId": "curated:mayo",
-      "name": "Mayo",
-      "iconStatus": "missing",
-      "missingScreenshot": true,
-      "source": "https://github.com/fougue/mayo",
-      "kind": "curated"
-    },
-    {
       "projectId": "curated:olive",
       "name": "Olive Editor",
       "iconStatus": "missing",
@@ -3929,14 +4531,6 @@
       "kind": "curated"
     },
     {
-      "projectId": "curated:frappe-crm",
-      "name": "Frappe CRM",
-      "iconStatus": "missing",
-      "missingScreenshot": true,
-      "source": "https://github.com/frappe/crm",
-      "kind": "curated"
-    },
-    {
       "projectId": "curated:carbon-erp",
       "name": "Carbon",
       "iconStatus": "missing",
@@ -3950,14 +4544,6 @@
       "iconStatus": "missing",
       "missingScreenshot": true,
       "source": "https://github.com/BLB3DPrinting/filaops",
-      "kind": "curated"
-    },
-    {
-      "projectId": "curated:inventree",
-      "name": "InvenTree",
-      "iconStatus": "missing",
-      "missingScreenshot": true,
-      "source": "https://github.com/inventree/InvenTree",
       "kind": "curated"
     },
     {
@@ -4028,7 +4614,7 @@
       "projectId": "curated:hatchet",
       "name": "Hatchet",
       "iconStatus": "missing",
-      "missingScreenshot": true,
+      "missingScreenshot": false,
       "source": "https://github.com/hatchet-dev/hatchet",
       "kind": "curated"
     },
@@ -4140,7 +4726,7 @@
       "projectId": "curated:paperless",
       "name": "Paperless-ngx",
       "iconStatus": "missing",
-      "missingScreenshot": true,
+      "missingScreenshot": false,
       "source": "https://github.com/paperless-ngx/paperless-ngx",
       "kind": "curated"
     },
@@ -4156,7 +4742,7 @@
       "projectId": "curated:rustdesk",
       "name": "RustDesk",
       "iconStatus": "missing",
-      "missingScreenshot": true,
+      "missingScreenshot": false,
       "source": "https://github.com/rustdesk/rustdesk",
       "kind": "curated"
     },
@@ -4196,7 +4782,7 @@
       "projectId": "curated:anythingllm",
       "name": "AnythingLLM",
       "iconStatus": "missing",
-      "missingScreenshot": true,
+      "missingScreenshot": false,
       "source": "https://github.com/Mintplex-Labs/anything-llm",
       "kind": "curated"
     },

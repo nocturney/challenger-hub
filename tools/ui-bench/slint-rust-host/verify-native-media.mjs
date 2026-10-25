@@ -68,4 +68,4 @@ if (brandDigest !== 'a22b1ff013ed293120921ce77c6e15fc51982adb103c7d7ecdde240a6b5
 // This runs offline and never replaces checked-in images.
 execFileSync(process.execPath, [join(here,'sync-approved-gallery.mjs'),'--check'],
     {stdio:'inherit', timeout:30000});
-console.log('NATIVE_MEDIA_PROVENANCE_PASS verifiedProjects=22 approvedIcons=22 approvedScreenshots=50 screenshotProjects=16 source=offline-manifest');
+console.log('NATIVE_MEDIA_PROVENANCE_PASS verifiedProjects=36 nativeIcons=30 approvedScreenshots=70 screenshotProjects=29 source=offline-pinned-manifests');

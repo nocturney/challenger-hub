@@ -39,6 +39,7 @@ Copy-Item (Join-Path $repo 'tools\preview-build\media-source\CRAFT_SUITE_MEDIA_N
 Copy-Item (Join-Path $repo 'tools\preview-build\media-source\THIRD_PARTY_MEDIA_NOTICES.md') $mediaNoticeDest
 Copy-Item (Join-Path $repo 'tools\preview-build\media-source\licenses\*.txt') $mediaNoticeDest
 Copy-Item (Join-Path $here 'ui\APPROVED_GALLERY_INDEX.json') $mediaNoticeDest
+Copy-Item (Join-Path $here 'ui\INDEPENDENT_NATIVE_MEDIA_NOTICES.md') $mediaNoticeDest
 
 Copy-Item (Join-Path $here '..\slint-node-bridge\sidecar.mjs') (Join-Path $out 'resources')
 Copy-Item (Join-Path $here '..\slint-node-bridge\live-catalog.mjs') (Join-Path $out 'resources')

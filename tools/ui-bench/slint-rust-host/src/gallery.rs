@@ -17,6 +17,19 @@ pub fn count(media: &str) -> i32 {
         "craft-cadcraft" => 3,
         "craft-soundcraft" => 4,
         "craft-figcraft" => 4,
+        "independent-anythingllm" => 2,
+        "independent-frappe-crm" => 2,
+        "independent-goxel" => 2,
+        "independent-gyroflow" => 1,
+        "independent-hatchet" => 1,
+        "independent-helio" => 1,
+        "independent-inventree" => 1,
+        "independent-mayo" => 2,
+        "independent-mfek-glif" => 2,
+        "independent-oak-video-editor" => 1,
+        "independent-paperless" => 2,
+        "independent-pixieditor" => 2,
+        "independent-rustdesk" => 1,
         _ => 0,
     }
 }
@@ -73,15 +86,63 @@ pub fn source(media: &str, index: i32) -> Option<&'static str> {
         ("craft-figcraft", 1) => Some("https://github.com/storytold/figcraft/blob/80f916326fb94f3a88cb24e64f396f564a0ebc06/docs/images/shot-2-components.png"),
         ("craft-figcraft", 2) => Some("https://github.com/storytold/figcraft/blob/80f916326fb94f3a88cb24e64f396f564a0ebc06/docs/images/shot-3-prototype.png"),
         ("craft-figcraft", 3) => Some("https://github.com/storytold/figcraft/blob/80f916326fb94f3a88cb24e64f396f564a0ebc06/docs/images/shot-4-devmode.png"),
+        ("independent-anythingllm", 0) => Some("https://github.com/Mintplex-Labs/anything-llm/blob/8239cd85a22d847337215988c69a8d1c0fba3c94/images/screenshots/upload.png"),
+        ("independent-anythingllm", 1) => Some("https://github.com/Mintplex-Labs/anything-llm/blob/8239cd85a22d847337215988c69a8d1c0fba3c94/images/screenshots/create_stack.png"),
+        ("independent-frappe-crm", 0) => Some("https://github.com/frappe/crm/blob/85af16ce20325a3c91f8970a37c74adae377ac01/.github/screenshots/LeadPage.png"),
+        ("independent-frappe-crm", 1) => Some("https://github.com/frappe/crm/blob/85af16ce20325a3c91f8970a37c74adae377ac01/.github/screenshots/CallLog.png"),
+        ("independent-goxel", 0) => Some("https://github.com/guillaumechereau/goxel/blob/33be5c8ed826105ab35746f893065e9ef00d3134/screenshots/screenshot-procedural-city.png"),
+        ("independent-goxel", 1) => Some("https://github.com/guillaumechereau/goxel/blob/33be5c8ed826105ab35746f893065e9ef00d3134/screenshots/screenshot-castle.png"),
+        ("independent-gyroflow", 0) => Some("https://github.com/gyroflow/gyroflow/blob/1a78c952dca33e656e772552b48133fa805e2ab0/resources/screenshot.jpg"),
+        ("independent-hatchet", 0) => Some("https://github.com/hatchet-dev/hatchet/blob/ae05c4bb06c3335b502c1979a5af87313f710180/frontend/docs/public/hatchet-screenshot-1.png"),
+        ("independent-helio", 0) => Some("https://github.com/helio-fm/helio-sequencer/blob/5a21fbc862af349234d51008f75844e943f80603/Projects/Android/app/src/main/play/listings/en-US/graphics/phone-screenshots/1.png"),
+        ("independent-inventree", 0) => Some("https://github.com/inventree/InvenTree/blob/d11b74fd857a6ebf47658b707605a64a10be764f/docs/docs/assets/images/appgallery/Screenshot_1681915404.png"),
+        ("independent-mayo", 0) => Some("https://github.com/fougue/mayo/blob/8e69135dd5259a6a2b77568fcf630f969f408762/doc/screenshot_1.png"),
+        ("independent-mayo", 1) => Some("https://github.com/fougue/mayo/blob/8e69135dd5259a6a2b77568fcf630f969f408762/doc/screenshot_4.png"),
+        ("independent-mfek-glif", 0) => Some("https://github.com/MFEK/glif/blob/e7c24c5d77b768429b7c7f13605b080fd3f1ca98/doc/screenshot_main.png"),
+        ("independent-mfek-glif", 1) => Some("https://github.com/MFEK/glif/blob/e7c24c5d77b768429b7c7f13605b080fd3f1ca98/doc/screenshot2.png"),
+        ("independent-oak-video-editor", 0) => Some("https://github.com/OakVideoEditorCommunity/oak/blob/096b105a74802cedf657c7e07906cb0ca7f32146/docs/imgs/screenshot.png"),
+        ("independent-paperless", 0) => Some("https://github.com/paperless-ngx/paperless-ngx/blob/f71a9a6eda217a0f3e84ff9a40e0e57d10e7d9ae/docs/assets/screenshots/search-preview.png"),
+        ("independent-paperless", 1) => Some("https://github.com/paperless-ngx/paperless-ngx/blob/f71a9a6eda217a0f3e84ff9a40e0e57d10e7d9ae/docs/assets/screenshots/dashboard.png"),
+        ("independent-pixieditor", 0) => Some("https://github.com/PixiEditor/PixiEditor/blob/f3fe8b4d031c64cb563b6135a0d961a05a2728c3/Screenshot.png"),
+        ("independent-pixieditor", 1) => Some("https://github.com/PixiEditor/PixiEditor/blob/f3fe8b4d031c64cb563b6135a0d961a05a2728c3/assets/flatpak/screenshots/palettes.png"),
+        ("independent-rustdesk", 0) => Some("https://github.com/rustdesk/rustdesk/blob/4d37f00af964e8a43fb2239d8599ff8690e4d906/fastlane/metadata/android/en-US/images/sevenInchScreenshots/8.png"),
         _ => None,
     }
+}
+
+pub fn independent_media(id: &str, source: &str) -> Option<&'static str> {
+    match (id,source) {
+        ("curated:anythingllm", "https://github.com/Mintplex-Labs/anything-llm") => Some("independent-anythingllm"),
+        ("curated:frappe-crm", "https://github.com/frappe/crm") => Some("independent-frappe-crm"),
+        ("curated:goxel", "https://github.com/guillaumechereau/goxel") => Some("independent-goxel"),
+        ("curated:gyroflow", "https://github.com/gyroflow/gyroflow") => Some("independent-gyroflow"),
+        ("curated:hatchet", "https://github.com/hatchet-dev/hatchet") => Some("independent-hatchet"),
+        ("curated:helio", "https://github.com/helio-fm/helio-sequencer") => Some("independent-helio"),
+        ("curated:inventree", "https://github.com/inventree/InvenTree") => Some("independent-inventree"),
+        ("curated:mayo", "https://github.com/fougue/mayo") => Some("independent-mayo"),
+        ("curated:mfek-glif", "https://github.com/MFEK/glif") => Some("independent-mfek-glif"),
+        ("curated:oak-video-editor", "https://github.com/OakVideoEditorCommunity/oak") => Some("independent-oak-video-editor"),
+        ("curated:paperless", "https://github.com/paperless-ngx/paperless-ngx") => Some("independent-paperless"),
+        ("curated:pixieditor", "https://github.com/PixiEditor/PixiEditor") => Some("independent-pixieditor"),
+        ("curated:rustdesk", "https://github.com/rustdesk/rustdesk") => Some("independent-rustdesk"),
+        ("curated:godsvg", "https://github.com/MewPurPur/GodSVG") => Some("independent-godsvg"),
+        _ => None,
+    }
+}
+
+pub fn has_independent_icon(media: &str) -> bool {
+    matches!(media, "independent-frappe-crm" | "independent-goxel" | "independent-helio" | "independent-inventree" | "independent-mayo" | "independent-mfek-glif" | "independent-oak-video-editor" | "independent-godsvg")
+}
+
+pub fn has_icon(media: &str) -> bool {
+    matches!(media, "dune3d" | "material-maker" | "compositor" | "kiri-moto" | "espocrm" | "docuseal" | "meshcentral" | "openhands" | "real-video-enhancer" | "craft-photocraft" | "craft-lightcraft" | "craft-filmcraft" | "craft-designcraft" | "craft-vectorcraft" | "craft-pdfcraft" | "craft-effectcraft" | "craft-wordcraft" | "craft-deckcraft" | "craft-gridcraft" | "craft-cadcraft" | "craft-soundcraft" | "craft-figcraft" | "independent-frappe-crm" | "independent-goxel" | "independent-helio" | "independent-inventree" | "independent-mayo" | "independent-mfek-glif" | "independent-oak-video-editor" | "independent-godsvg")
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     #[test]
-    fn pinned_gallery_has_exact_50_approved_frames_and_safe_sources() {
+    fn pinned_gallery_has_exact_70_source_verified_frames_and_safe_sources() {
         let all: Vec<(&str,i32)> = vec![
             ("dune3d", 1),
             ("material-maker", 1),
@@ -99,8 +160,21 @@ mod tests {
             ("craft-cadcraft", 3),
             ("craft-soundcraft", 4),
             ("craft-figcraft", 4),
+            ("independent-anythingllm", 2),
+            ("independent-frappe-crm", 2),
+            ("independent-goxel", 2),
+            ("independent-gyroflow", 1),
+            ("independent-hatchet", 1),
+            ("independent-helio", 1),
+            ("independent-inventree", 1),
+            ("independent-mayo", 2),
+            ("independent-mfek-glif", 2),
+            ("independent-oak-video-editor", 1),
+            ("independent-paperless", 2),
+            ("independent-pixieditor", 2),
+            ("independent-rustdesk", 1),
         ];
-        assert_eq!(all.iter().map(|(_,n)| n).sum::<i32>(), 50);
+        assert_eq!(all.iter().map(|(_,n)| n).sum::<i32>(), 70);
         for (media,n) in all {
             assert_eq!(count(media),n);
             for index in 0..n {
@@ -110,5 +184,11 @@ mod tests {
         }
         assert_eq!(count("research:unverified"),0);
         assert_eq!(source("craft-pdfcraft",99),None);
+        assert_eq!(independent_media("curated:rustdesk","https://github.com/rustdesk/rustdesk"),Some("independent-rustdesk"));
+        assert_eq!(independent_media("research:rustdesk","https://github.com/rustdesk/rustdesk"),None);
+        assert_eq!(independent_media("curated:rustdesk","https://github.com/attacker/rustdesk"),None);
+        assert!(!has_icon("independent-rustdesk"));
+        assert!(has_icon("independent-godsvg"));
+        assert!(!has_icon("independent-unknown"));
     }
 }

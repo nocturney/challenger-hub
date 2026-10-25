@@ -19,6 +19,19 @@ export component ApprovedGalleryThumb inherits Rectangle {
   if root.media == "craft-cadcraft": Image { source: @image-url("screenshots/cadcraft/apartment.jpg"); width: parent.width; height: parent.height; image-fit: cover; }
   if root.media == "craft-soundcraft": Image { source: @image-url("screenshots/soundcraft/automation.jpg"); width: parent.width; height: parent.height; image-fit: cover; }
   if root.media == "craft-figcraft": Image { source: @image-url("screenshots/figcraft/hero.png"); width: parent.width; height: parent.height; image-fit: cover; }
+  if root.media == "independent-anythingllm": Image { source: @image-url("screenshots/independent/anythingllm/0.png"); width: parent.width; height: parent.height; image-fit: cover; }
+  if root.media == "independent-frappe-crm": Image { source: @image-url("screenshots/independent/frappe-crm/0.png"); width: parent.width; height: parent.height; image-fit: cover; }
+  if root.media == "independent-goxel": Image { source: @image-url("screenshots/independent/goxel/0.png"); width: parent.width; height: parent.height; image-fit: cover; }
+  if root.media == "independent-gyroflow": Image { source: @image-url("screenshots/independent/gyroflow/0.jpg"); width: parent.width; height: parent.height; image-fit: cover; }
+  if root.media == "independent-hatchet": Image { source: @image-url("screenshots/independent/hatchet/0.png"); width: parent.width; height: parent.height; image-fit: cover; }
+  if root.media == "independent-helio": Image { source: @image-url("screenshots/independent/helio/0.png"); width: parent.width; height: parent.height; image-fit: cover; }
+  if root.media == "independent-inventree": Image { source: @image-url("screenshots/independent/inventree/0.png"); width: parent.width; height: parent.height; image-fit: cover; }
+  if root.media == "independent-mayo": Image { source: @image-url("screenshots/independent/mayo/0.png"); width: parent.width; height: parent.height; image-fit: cover; }
+  if root.media == "independent-mfek-glif": Image { source: @image-url("screenshots/independent/mfek-glif/0.png"); width: parent.width; height: parent.height; image-fit: cover; }
+  if root.media == "independent-oak-video-editor": Image { source: @image-url("screenshots/independent/oak-video-editor/0.png"); width: parent.width; height: parent.height; image-fit: cover; }
+  if root.media == "independent-paperless": Image { source: @image-url("screenshots/independent/paperless/0.png"); width: parent.width; height: parent.height; image-fit: cover; }
+  if root.media == "independent-pixieditor": Image { source: @image-url("screenshots/independent/pixieditor/0.png"); width: parent.width; height: parent.height; image-fit: cover; }
+  if root.media == "independent-rustdesk": Image { source: @image-url("screenshots/independent/rustdesk/0.png"); width: parent.width; height: parent.height; image-fit: cover; }
 }
 
 export component ApprovedGalleryShot inherits Rectangle {
@@ -276,4 +289,117 @@ export component ApprovedGalleryShot inherits Rectangle {
     Image { source: @image-url("screenshots/figcraft/devmode.png"); image-fit: contain; vertical-stretch: 1; }
     Text { text: "figcraft · devmode"; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }
   }
+  if root.media == "independent-anythingllm" && root.index == 0: VerticalLayout {
+    spacing: 7px;
+    Image { source: @image-url("screenshots/independent/anythingllm/0.png"); image-fit: contain; vertical-stretch: 1; }
+    Text { text: "anythingllm · upload"; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }
+  }
+  if root.media == "independent-anythingllm" && root.index == 1: VerticalLayout {
+    spacing: 7px;
+    Image { source: @image-url("screenshots/independent/anythingllm/1.png"); image-fit: contain; vertical-stretch: 1; }
+    Text { text: "anythingllm · create stack"; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }
+  }
+  if root.media == "independent-frappe-crm" && root.index == 0: VerticalLayout {
+    spacing: 7px;
+    Image { source: @image-url("screenshots/independent/frappe-crm/0.png"); image-fit: contain; vertical-stretch: 1; }
+    Text { text: "frappe-crm · LeadPage"; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }
+  }
+  if root.media == "independent-frappe-crm" && root.index == 1: VerticalLayout {
+    spacing: 7px;
+    Image { source: @image-url("screenshots/independent/frappe-crm/1.png"); image-fit: contain; vertical-stretch: 1; }
+    Text { text: "frappe-crm · CallLog"; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }
+  }
+  if root.media == "independent-goxel" && root.index == 0: VerticalLayout {
+    spacing: 7px;
+    Image { source: @image-url("screenshots/independent/goxel/0.png"); image-fit: contain; vertical-stretch: 1; }
+    Text { text: "goxel · screenshot procedural city"; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }
+  }
+  if root.media == "independent-goxel" && root.index == 1: VerticalLayout {
+    spacing: 7px;
+    Image { source: @image-url("screenshots/independent/goxel/1.png"); image-fit: contain; vertical-stretch: 1; }
+    Text { text: "goxel · screenshot castle"; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }
+  }
+  if root.media == "independent-gyroflow" && root.index == 0: VerticalLayout {
+    spacing: 7px;
+    Image { source: @image-url("screenshots/independent/gyroflow/0.jpg"); image-fit: contain; vertical-stretch: 1; }
+    Text { text: "gyroflow · screenshot"; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }
+  }
+  if root.media == "independent-hatchet" && root.index == 0: VerticalLayout {
+    spacing: 7px;
+    Image { source: @image-url("screenshots/independent/hatchet/0.png"); image-fit: contain; vertical-stretch: 1; }
+    Text { text: "hatchet · hatchet screenshot 1"; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }
+  }
+  if root.media == "independent-helio" && root.index == 0: VerticalLayout {
+    spacing: 7px;
+    Image { source: @image-url("screenshots/independent/helio/0.png"); image-fit: contain; vertical-stretch: 1; }
+    Text { text: "helio · 1"; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }
+  }
+  if root.media == "independent-inventree" && root.index == 0: VerticalLayout {
+    spacing: 7px;
+    Image { source: @image-url("screenshots/independent/inventree/0.png"); image-fit: contain; vertical-stretch: 1; }
+    Text { text: "inventree · Screenshot 1681915404"; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }
+  }
+  if root.media == "independent-mayo" && root.index == 0: VerticalLayout {
+    spacing: 7px;
+    Image { source: @image-url("screenshots/independent/mayo/0.png"); image-fit: contain; vertical-stretch: 1; }
+    Text { text: "mayo · screenshot 1"; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }
+  }
+  if root.media == "independent-mayo" && root.index == 1: VerticalLayout {
+    spacing: 7px;
+    Image { source: @image-url("screenshots/independent/mayo/1.png"); image-fit: contain; vertical-stretch: 1; }
+    Text { text: "mayo · screenshot 4"; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }
+  }
+  if root.media == "independent-mfek-glif" && root.index == 0: VerticalLayout {
+    spacing: 7px;
+    Image { source: @image-url("screenshots/independent/mfek-glif/0.png"); image-fit: contain; vertical-stretch: 1; }
+    Text { text: "mfek-glif · screenshot main"; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }
+  }
+  if root.media == "independent-mfek-glif" && root.index == 1: VerticalLayout {
+    spacing: 7px;
+    Image { source: @image-url("screenshots/independent/mfek-glif/1.png"); image-fit: contain; vertical-stretch: 1; }
+    Text { text: "mfek-glif · screenshot2"; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }
+  }
+  if root.media == "independent-oak-video-editor" && root.index == 0: VerticalLayout {
+    spacing: 7px;
+    Image { source: @image-url("screenshots/independent/oak-video-editor/0.png"); image-fit: contain; vertical-stretch: 1; }
+    Text { text: "oak-video-editor · screenshot"; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }
+  }
+  if root.media == "independent-paperless" && root.index == 0: VerticalLayout {
+    spacing: 7px;
+    Image { source: @image-url("screenshots/independent/paperless/0.png"); image-fit: contain; vertical-stretch: 1; }
+    Text { text: "paperless · search preview"; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }
+  }
+  if root.media == "independent-paperless" && root.index == 1: VerticalLayout {
+    spacing: 7px;
+    Image { source: @image-url("screenshots/independent/paperless/1.png"); image-fit: contain; vertical-stretch: 1; }
+    Text { text: "paperless · dashboard"; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }
+  }
+  if root.media == "independent-pixieditor" && root.index == 0: VerticalLayout {
+    spacing: 7px;
+    Image { source: @image-url("screenshots/independent/pixieditor/0.png"); image-fit: contain; vertical-stretch: 1; }
+    Text { text: "pixieditor · Screenshot"; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }
+  }
+  if root.media == "independent-pixieditor" && root.index == 1: VerticalLayout {
+    spacing: 7px;
+    Image { source: @image-url("screenshots/independent/pixieditor/1.png"); image-fit: contain; vertical-stretch: 1; }
+    Text { text: "pixieditor · palettes"; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }
+  }
+  if root.media == "independent-rustdesk" && root.index == 0: VerticalLayout {
+    spacing: 7px;
+    Image { source: @image-url("screenshots/independent/rustdesk/0.png"); image-fit: contain; vertical-stretch: 1; }
+    Text { text: "rustdesk · 8"; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }
+  }
+}
+
+export component ApprovedGalleryIcon inherits Rectangle {
+  in property <string> media;
+  background: transparent;
+  if root.media == "independent-frappe-crm": Image { source: @image-url("icons/independent/frappe-crm.png"); width: parent.width; height: parent.height; image-fit: contain; }
+  if root.media == "independent-goxel": Image { source: @image-url("icons/independent/goxel.png"); width: parent.width; height: parent.height; image-fit: contain; }
+  if root.media == "independent-helio": Image { source: @image-url("icons/independent/helio.png"); width: parent.width; height: parent.height; image-fit: contain; }
+  if root.media == "independent-inventree": Image { source: @image-url("icons/independent/inventree.png"); width: parent.width; height: parent.height; image-fit: contain; }
+  if root.media == "independent-mayo": Image { source: @image-url("icons/independent/mayo.png"); width: parent.width; height: parent.height; image-fit: contain; }
+  if root.media == "independent-mfek-glif": Image { source: @image-url("icons/independent/mfek-glif.png"); width: parent.width; height: parent.height; image-fit: contain; }
+  if root.media == "independent-oak-video-editor": Image { source: @image-url("icons/independent/oak-video-editor.png"); width: parent.width; height: parent.height; image-fit: contain; }
+  if root.media == "independent-godsvg": Image { source: @image-url("icons/independent/godsvg.png"); width: parent.width; height: parent.height; image-fit: contain; }
 }

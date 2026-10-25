@@ -1,0 +1,133 @@
+{
+  "schema": "challenger-native-independent-gallery-selection.v1",
+  "basis": "independent-media.v1.json pinned upstream SHA-256 and selected original source bytes; review icons and interface screenshots only",
+  "packagePolicy": "Developer preview only; upstream repository licenses are source-reported, not a blanket image/trademark grant",
+  "selected": [
+    {
+      "key": "anythingllm",
+      "repository": "Mintplex-Labs/anything-llm",
+      "commit": "8239cd85a22d847337215988c69a8d1c0fba3c94",
+      "sourceReportedRepositoryLicense": "MIT",
+      "screenshotCount": 2,
+      "icon": false,
+      "reviewedUse": "Source-pinned visual reference; not a trademark grant or installation approval"
+    },
+    {
+      "key": "frappe-crm",
+      "repository": "frappe/crm",
+      "commit": "85af16ce20325a3c91f8970a37c74adae377ac01",
+      "sourceReportedRepositoryLicense": "AGPL-3.0",
+      "screenshotCount": 2,
+      "icon": true,
+      "reviewedUse": "Source-pinned visual reference; not a trademark grant or installation approval"
+    },
+    {
+      "key": "goxel",
+      "repository": "guillaumechereau/goxel",
+      "commit": "33be5c8ed826105ab35746f893065e9ef00d3134",
+      "sourceReportedRepositoryLicense": "GPL-3.0",
+      "screenshotCount": 2,
+      "icon": true,
+      "reviewedUse": "Source-pinned visual reference; not a trademark grant or installation approval"
+    },
+    {
+      "key": "gyroflow",
+      "repository": "gyroflow/gyroflow",
+      "commit": "1a78c952dca33e656e772552b48133fa805e2ab0",
+      "sourceReportedRepositoryLicense": "GPL-3.0",
+      "screenshotCount": 1,
+      "icon": false,
+      "reviewedUse": "Source-pinned visual reference; not a trademark grant or installation approval"
+    },
+    {
+      "key": "hatchet",
+      "repository": "hatchet-dev/hatchet",
+      "commit": "ae05c4bb06c3335b502c1979a5af87313f710180",
+      "sourceReportedRepositoryLicense": "MIT",
+      "screenshotCount": 1,
+      "icon": false,
+      "reviewedUse": "Source-pinned visual reference; not a trademark grant or installation approval"
+    },
+    {
+      "key": "helio",
+      "repository": "helio-fm/helio-sequencer",
+      "commit": "5a21fbc862af349234d51008f75844e943f80603",
+      "sourceReportedRepositoryLicense": "GPL-3.0",
+      "screenshotCount": 1,
+      "icon": true,
+      "reviewedUse": "Source-pinned visual reference; not a trademark grant or installation approval"
+    },
+    {
+      "key": "inventree",
+      "repository": "inventree/InvenTree",
+      "commit": "d11b74fd857a6ebf47658b707605a64a10be764f",
+      "sourceReportedRepositoryLicense": "MIT",
+      "screenshotCount": 1,
+      "icon": true,
+      "reviewedUse": "Source-pinned visual reference; not a trademark grant or installation approval"
+    },
+    {
+      "key": "mayo",
+      "repository": "fougue/mayo",
+      "commit": "8e69135dd5259a6a2b77568fcf630f969f408762",
+      "sourceReportedRepositoryLicense": "BSD-2-Clause",
+      "screenshotCount": 2,
+      "icon": true,
+      "reviewedUse": "Source-pinned visual reference; not a trademark grant or installation approval"
+    },
+    {
+      "key": "mfek-glif",
+      "repository": "MFEK/glif",
+      "commit": "e7c24c5d77b768429b7c7f13605b080fd3f1ca98",
+      "sourceReportedRepositoryLicense": "Apache-2.0",
+      "screenshotCount": 2,
+      "icon": true,
+      "reviewedUse": "Source-pinned visual reference; not a trademark grant or installation approval"
+    },
+    {
+      "key": "oak-video-editor",
+      "repository": "OakVideoEditorCommunity/oak",
+      "commit": "096b105a74802cedf657c7e07906cb0ca7f32146",
+      "sourceReportedRepositoryLicense": "GPL-3.0",
+      "screenshotCount": 1,
+      "icon": true,
+      "reviewedUse": "Source-pinned visual reference; not a trademark grant or installation approval"
+    },
+    {
+      "key": "paperless",
+      "repository": "paperless-ngx/paperless-ngx",
+      "commit": "f71a9a6eda217a0f3e84ff9a40e0e57d10e7d9ae",
+      "sourceReportedRepositoryLicense": "GPL-3.0",
+      "screenshotCount": 2,
+      "icon": false,
+      "reviewedUse": "Source-pinned visual reference; not a trademark grant or installation approval"
+    },
+    {
+      "key": "pixieditor",
+      "repository": "PixiEditor/PixiEditor",
+      "commit": "f3fe8b4d031c64cb563b6135a0d961a05a2728c3",
+      "sourceReportedRepositoryLicense": "LGPL-3.0",
+      "screenshotCount": 2,
+      "icon": false,
+      "reviewedUse": "Source-pinned visual reference; not a trademark grant or installation approval"
+    },
+    {
+      "key": "rustdesk",
+      "repository": "rustdesk/rustdesk",
+      "commit": "4d37f00af964e8a43fb2239d8599ff8690e4d906",
+      "sourceReportedRepositoryLicense": "AGPL-3.0",
+      "screenshotCount": 1,
+      "icon": false,
+      "reviewedUse": "Source-pinned visual reference; not a trademark grant or installation approval"
+    },
+    {
+      "key": "godsvg",
+      "repository": "MewPurPur/GodSVG",
+      "commit": "de273a028f2b604f5bfa210e029320c468c423e1",
+      "sourceReportedRepositoryLicense": "MIT",
+      "screenshotCount": 0,
+      "icon": true,
+      "reviewedUse": "Source-pinned visual reference; not a trademark grant or installation approval"
+    }
+  ]
+}

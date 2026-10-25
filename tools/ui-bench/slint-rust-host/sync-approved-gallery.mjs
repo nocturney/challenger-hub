@@ -10,6 +10,8 @@ const here=dirname(fileURLToPath(import.meta.url));
 const sources=resolve(here,'../../preview-build/media-source');
 const craft=JSON.parse(readFileSync(join(sources,'craft-suite-media.v1.json'),'utf8'));
 const curated=JSON.parse(readFileSync(join(sources,'project-media.v1.json'),'utf8'));
+const independent=JSON.parse(readFileSync(resolve(here,'../../../independent-media.v1.json'),'utf8'));
+const selection=JSON.parse(readFileSync(join(here,'independent-native-selection.v1.json'),'utf8'));
 const check=process.argv.includes('--check');
 const sha=(b)=>createHash('sha256').update(b).digest('hex');
 function pixelSize(b) {
@@ -35,6 +37,7 @@ function pixelSize(b) {
 }
 const files=[];
 const shots=[];
+const icons=[];
 function addShot(media,index,sourcePath,manifest,uiPath,sourceUrl,caption) {
   if (!manifest.sha256 || !manifest.size || !manifest.license && !manifest.licenseSpdx) {
     throw Error('Unapproved screenshot metadata: '+media+'/'+index);
@@ -53,7 +56,7 @@ function addShot(media,index,sourcePath,manifest,uiPath,sourceUrl,caption) {
     }
   } else {
     mkdirSync(dirname(output),{recursive:true});
-    copyFileSync(sourcePath,output);
+    if(sourcePath!==output)copyFileSync(sourcePath,output);
   }
   files.push(uiPath);
   shots.push({media,index,uiPath,sourceUrl,caption,sha256:manifest.sha256,
@@ -96,7 +99,73 @@ for(const [key,app] of Object.entries(craft.apps)) {
     addShot('craft-'+key,i,original,s,native,s.source,label);
   }
 }
-if(shots.length!==50||files.length!==47)throw Error('Expected 3 curated + 47 Craft screenshots');
+// Independent second wave: exact project identity, reviewed repository status,
+// pinned git source, source-reported repository license and original image bytes.
+// Images remain local/embedded and are never fetched by the GUI or CI.
+if(independent.schema!=='challenger-independent-media.v1' ||
+   selection.schema!=='challenger-native-independent-gallery-selection.v1' ||
+   !Array.isArray(selection.selected) || selection.selected.length!==14 ||
+   new Set(selection.selected.map(x=>x.key)).size!==14) {
+  throw Error('Unexpected independently reviewed native gallery selection');
+}
+const approvedRepoLicenses=new Set(['MIT','Apache-2.0','GPL-3.0','AGPL-3.0','LGPL-3.0','BSD-2-Clause']);
+function checkedIndependent(key,app,kind,index,x) {
+  if(!x || !['png','jpg'].includes(x.format) ||
+     !/^[0-9a-f]{64}$/.test(x.sha256) ||
+     !/^[0-9a-f]{40}$/.test(x.gitBlobSha) ||
+     !Number.isSafeInteger(x.bytes) || x.bytes<500 || x.bytes>2400000 ||
+     !/^[A-Za-z0-9 _@+./-]{1,230}\.(png|jpg)$/.test(x.path||'') ||
+     x.path.startsWith('/') || x.path.includes('..') || x.path.includes('\\')) {
+    throw Error('Unsafe independent media manifest: '+key+'/'+kind+'/'+index);
+  }
+  const expectedSource='https://github.com/'+app.repository+'/blob/'+app.commit+'/' +
+      x.path.split('/').map(encodeURIComponent).join('/');
+  if(x.source!==expectedSource)throw Error('Unpinned original media link: '+key+'/'+kind);
+  const local=''+(kind==='icon'?'icons/independent/'+key+'.'+x.format:
+      'screenshots/independent/'+key+'/'+index+'.'+x.format);
+  const full=join(here,'ui',local);
+  if(!existsSync(full))throw Error('Original independent image not embedded: '+local);
+  const data=readFileSync(full);
+  if(data.length!==x.bytes || sha(data)!==x.sha256) {
+    throw Error('Original independent image digest differs: '+local);
+  }
+  const pixels=pixelSize(data);
+  if(pixels.width!==x.width || pixels.height!==x.height ||
+     (kind==='screenshot' && (pixels.width<480 || pixels.height<230))) {
+    throw Error('Untrusted original image dimensions: '+local);
+  }
+  if(kind==='icon') {
+    icons.push({media:'independent-'+key,projectId:'curated:'+key,uiPath:local,
+      sourceUrl:x.source,sha256:x.sha256,license:app.license,bytes:x.bytes,...pixels});
+    files.push(local);
+  } else {
+    const caption=key+' · '+x.path.split('/').pop().replace(/\.[^.]+$/,'').replace(/[_-]/g,' ');
+    addShot('independent-'+key,index,full,{sha256:x.sha256,size:x.bytes,
+      license:app.license},local,x.source,caption);
+  }
+}
+for(const approved of selection.selected) {
+  const key=approved.key, app=independent.apps[key];
+  if(!/^[a-z][a-z0-9-]{1,79}$/.test(key) ||
+     !app || app.reviewStatus!=='repository-confirmed' ||
+     app.repository!==approved.repository || app.commit!==approved.commit ||
+     app.license!==approved.sourceReportedRepositoryLicense ||
+     !approvedRepoLicenses.has(app.license) ||
+     !/^[0-9a-f]{40}$/.test(app.commit) ||
+     !/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(app.repository) ||
+     app.screenshots.length!==approved.screenshotCount ||
+     Boolean(app.icon)!==approved.icon ||
+     (app.screenshots.length===0 && !app.icon)) {
+    throw Error('Unapproved source identity/rights/status: '+key);
+  }
+  for(let i=0;i<app.screenshots.length;i++) {
+    checkedIndependent(key,app,'screenshot',i,app.screenshots[i]);
+  }
+  if(app.icon)checkedIndependent(key,app,'icon',0,app.icon);
+}
+if(shots.length!==70 || files.length!==75 || icons.length!==8) {
+  throw Error('Expected 3 curated + 47 Craft + 20 independent screenshots and eight icons');
+}
 const firsts=shots.filter(s=>s.index===0);
 const q=s=>JSON.stringify(s);
 const lines=[
@@ -122,6 +191,12 @@ for(const s of shots) {
     '    Text { text: '+q(s.caption)+'; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }',
     '  }');
 }
+lines.push('}', '', 'export component ApprovedGalleryIcon inherits Rectangle {',
+  '  in property <string> media;',
+  '  background: transparent;');
+for(const icon of icons) {
+  lines.push('  if root.media == '+q(icon.media)+': Image { source: @image-url('+q(icon.uiPath)+'); width: parent.width; height: parent.height; image-fit: contain; }');
+}
 lines.push('}', '');
 const grouped=Object.groupBy?Object.groupBy(shots,s=>s.media):
   shots.reduce((o,s)=>{(o[s.media]??=[]).push(s);return o;},{});
@@ -138,15 +213,30 @@ rs.push('        _ => 0,', '    }', '}', '',
   '    match (media, index) {');
 for(const s of shots)rs.push('        ('+q(s.media)+', '+s.index+') => Some('+q(s.sourceUrl)+'),');
 rs.push('        _ => None,', '    }', '}', '',
+  'pub fn independent_media(id: &str, source: &str) -> Option<&\'static str> {',
+  '    match (id,source) {');
+for(const item of selection.selected) {
+  rs.push('        ('+q('curated:'+item.key)+', '+q('https://github.com/'+item.repository)+') => Some('+q('independent-'+item.key)+'),');
+}
+rs.push('        _ => None,', '    }', '}', '',
+  'pub fn has_independent_icon(media: &str) -> bool {',
+  '    matches!(media, '+icons.map(i=>q(i.media)).join(' | ')+')',
+  '}', '',
+  'pub fn has_icon(media: &str) -> bool {');
+const embeddedBefore=['dune3d','material-maker','compositor','kiri-moto','espocrm',
+  'docuseal','meshcentral','openhands','real-video-enhancer',
+  ...Object.keys(craft.apps).map(x=>'craft-'+x)];
+rs.push('    matches!(media, '+[...embeddedBefore,...icons.map(i=>i.media)].map(q).join(' | ')+')',
+  '}', '',
   '#[cfg(test)]',
   'mod tests {',
   '    use super::*;',
   '    #[test]',
-  '    fn pinned_gallery_has_exact_50_approved_frames_and_safe_sources() {',
+  '    fn pinned_gallery_has_exact_70_source_verified_frames_and_safe_sources() {',
   '        let all: Vec<(&str,i32)> = vec![');
 for(const [key,entries] of Object.entries(grouped))rs.push('            ('+q(key)+', '+entries.length+'),');
 rs.push('        ];',
-  '        assert_eq!(all.iter().map(|(_,n)| n).sum::<i32>(), 50);',
+  '        assert_eq!(all.iter().map(|(_,n)| n).sum::<i32>(), 70);',
   '        for (media,n) in all {',
   '            assert_eq!(count(media),n);',
   '            for index in 0..n {',
@@ -156,14 +246,50 @@ rs.push('        ];',
   '        }',
   '        assert_eq!(count("research:unverified"),0);',
   '        assert_eq!(source("craft-pdfcraft",99),None);',
+  '        assert_eq!(independent_media("curated:rustdesk","https://github.com/rustdesk/rustdesk"),Some("independent-rustdesk"));',
+  '        assert_eq!(independent_media("research:rustdesk","https://github.com/rustdesk/rustdesk"),None);',
+  '        assert_eq!(independent_media("curated:rustdesk","https://github.com/attacker/rustdesk"),None);',
+  '        assert!(!has_icon("independent-rustdesk"));',
+  '        assert!(has_icon("independent-godsvg"));',
+  '        assert!(!has_icon("independent-unknown"));',
   '    }',
   '}', '');
+const notice=[
+  '# Native independent project media: pinned source/rights record',
+  '',
+  'Developer preview. All original UI images and icons below are copied unmodified',
+  'from exact upstream repository commits, digest checked, and shown only for matching',
+  'reviewed catalog IDs and repository URLs. No project/brand endorsement or',
+  'installation permission is asserted. License labels are **repository-reported**:',
+  'they are NOT separate guarantees of rights in screenshots, trademarks or artwork.',
+  'Distribution beyond developer preview requires a separate license/attribution review.',
+  '',
+];
+for(const item of selection.selected) {
+  const all=[...shots.filter(x=>x.media==='independent-'+item.key),
+    ...icons.filter(x=>x.media==='independent-'+item.key)];
+  notice.push('## '+item.key,
+    '- Repository: https://github.com/'+item.repository,
+    '- Source commit: '+item.commit,
+    '- Source-reported repository license: '+item.sourceReportedRepositoryLicense,
+    '- Images: '+all.length+' pinned original file(s)');
+  for(const image of all) {
+    notice.push('- '+(image.index===undefined?'Icon':'Screenshot '+(image.index+1))+
+      ': '+image.sourceUrl+' (SHA-256 '+image.sha256+')');
+  }
+  notice.push('');
+}
+if(notice.at(-1)==='')notice.pop();
 const outputs=[
   [join(here,'ui','approved-gallery.slint'),lines.join('\n')],
   [join(here,'src','gallery.rs'),rs.join('\n')],
   [join(here,'ui','APPROVED_GALLERY_INDEX.json'),JSON.stringify({
     schema:'challenger-native-verified-gallery.v1',totalShots:shots.length,
-    projectsWithScreenshots:Object.keys(grouped).length,assets:shots},null,2)+'\n'],
+    projectsWithScreenshots:Object.keys(grouped).length,
+    totalIcons:22+icons.length,independentSelectedProjects:selection.selected.length,
+    independentSourceManifest:'independent-media.v1.json',
+    icons,assets:shots},null,2)+'\n'],
+  [join(here,'ui','INDEPENDENT_NATIVE_MEDIA_NOTICES.md'),notice.join('\n')+'\n'],
 ];
 for(const [filename,data] of outputs) {
   if(check) {
@@ -178,5 +304,5 @@ for(const [filename,data] of outputs) {
 }
 console.log('APPROVED_GALLERY_SYNC_PASS mode='+ (check?'check':'write')+
   ' projects='+Object.keys(grouped).length+' frames='+shots.length+
-  ' newNativeAssets='+files.length+
+  ' originalAssets='+files.length+' sourceReportedIcons='+(22+icons.length)+
   ' importedBytes='+files.reduce((n,p)=>n+readFileSync(join(here,'ui',p)).length,0));

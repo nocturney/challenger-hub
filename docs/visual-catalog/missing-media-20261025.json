@@ -5,13 +5,13 @@
     "managed": 14,
     "curated": 152,
     "research": 15,
-    "nativeIcons": 22,
+    "nativeIcons": 30,
     "sourceApprovedIconsNotYetEmbedded": 1,
-    "screenshotProjects": 16,
-    "screenshotFrames": 50,
-    "missingIcons": 159,
-    "missingScreenshots": 165,
-    "screenshotBytes": 8878287
+    "screenshotProjects": 29,
+    "screenshotFrames": 70,
+    "missingIcons": 151,
+    "missingScreenshots": 152,
+    "screenshotBytes": 15836310
   },
   "items": [
     {
@@ -73,7 +73,7 @@
     {
       "projectId": "curated:godsvg",
       "name": "GodSVG",
-      "iconStatus": "missing",
+      "iconStatus": "embedded",
       "missingScreenshot": true,
       "source": "https://github.com/MewPurPur/GodSVG",
       "kind": "curated"
@@ -92,14 +92,6 @@
       "iconStatus": "missing",
       "missingScreenshot": true,
       "source": "https://github.com/KDE/glaxnimate",
-      "kind": "curated"
-    },
-    {
-      "projectId": "curated:mfek-glif",
-      "name": "MFEKglif",
-      "iconStatus": "missing",
-      "missingScreenshot": true,
-      "source": "https://github.com/MFEK/glif",
       "kind": "curated"
     },
     {
@@ -154,7 +146,7 @@
       "projectId": "curated:pixieditor",
       "name": "PixiEditor",
       "iconStatus": "missing",
-      "missingScreenshot": true,
+      "missingScreenshot": false,
       "source": "https://github.com/PixiEditor/PixiEditor",
       "kind": "curated"
     },
@@ -164,14 +156,6 @@
       "iconStatus": "missing",
       "missingScreenshot": true,
       "source": "https://github.com/tannerhelland/PhotoDemon",
-      "kind": "curated"
-    },
-    {
-      "projectId": "curated:oak-video-editor",
-      "name": "Oak Video Editor",
-      "iconStatus": "missing",
-      "missingScreenshot": true,
-      "source": "https://github.com/OakVideoEditorCommunity/oak",
       "kind": "curated"
     },
     {
@@ -202,7 +186,7 @@
       "projectId": "curated:gyroflow",
       "name": "Gyroflow",
       "iconStatus": "missing",
-      "missingScreenshot": true,
+      "missingScreenshot": false,
       "source": "https://github.com/gyroflow/gyroflow",
       "kind": "curated"
     },
@@ -215,27 +199,11 @@
       "kind": "curated"
     },
     {
-      "projectId": "curated:helio",
-      "name": "Helio Sequencer",
-      "iconStatus": "missing",
-      "missingScreenshot": true,
-      "source": "https://github.com/helio-fm/helio-sequencer",
-      "kind": "curated"
-    },
-    {
       "projectId": "curated:cardinal",
       "name": "Cardinal",
       "iconStatus": "missing",
       "missingScreenshot": true,
       "source": "https://github.com/DISTRHO/Cardinal",
-      "kind": "curated"
-    },
-    {
-      "projectId": "curated:goxel",
-      "name": "Goxel",
-      "iconStatus": "missing",
-      "missingScreenshot": true,
-      "source": "https://github.com/guillaumechereau/goxel",
       "kind": "curated"
     },
     {
@@ -263,14 +231,6 @@
       "kind": "curated"
     },
     {
-      "projectId": "curated:mayo",
-      "name": "Mayo",
-      "iconStatus": "missing",
-      "missingScreenshot": true,
-      "source": "https://github.com/fougue/mayo",
-      "kind": "curated"
-    },
-    {
       "projectId": "curated:olive",
       "name": "Olive Editor",
       "iconStatus": "missing",
@@ -287,14 +247,6 @@
       "kind": "curated"
     },
     {
-      "projectId": "curated:frappe-crm",
-      "name": "Frappe CRM",
-      "iconStatus": "missing",
-      "missingScreenshot": true,
-      "source": "https://github.com/frappe/crm",
-      "kind": "curated"
-    },
-    {
       "projectId": "curated:carbon-erp",
       "name": "Carbon",
       "iconStatus": "missing",
@@ -308,14 +260,6 @@
       "iconStatus": "missing",
       "missingScreenshot": true,
       "source": "https://github.com/BLB3DPrinting/filaops",
-      "kind": "curated"
-    },
-    {
-      "projectId": "curated:inventree",
-      "name": "InvenTree",
-      "iconStatus": "missing",
-      "missingScreenshot": true,
-      "source": "https://github.com/inventree/InvenTree",
       "kind": "curated"
     },
     {
@@ -386,7 +330,7 @@
       "projectId": "curated:hatchet",
       "name": "Hatchet",
       "iconStatus": "missing",
-      "missingScreenshot": true,
+      "missingScreenshot": false,
       "source": "https://github.com/hatchet-dev/hatchet",
       "kind": "curated"
     },
@@ -498,7 +442,7 @@
       "projectId": "curated:paperless",
       "name": "Paperless-ngx",
       "iconStatus": "missing",
-      "missingScreenshot": true,
+      "missingScreenshot": false,
       "source": "https://github.com/paperless-ngx/paperless-ngx",
       "kind": "curated"
     },
@@ -514,7 +458,7 @@
       "projectId": "curated:rustdesk",
       "name": "RustDesk",
       "iconStatus": "missing",
-      "missingScreenshot": true,
+      "missingScreenshot": false,
       "source": "https://github.com/rustdesk/rustdesk",
       "kind": "curated"
     },
@@ -554,7 +498,7 @@
       "projectId": "curated:anythingllm",
       "name": "AnythingLLM",
       "iconStatus": "missing",
-      "missingScreenshot": true,
+      "missingScreenshot": false,
       "source": "https://github.com/Mintplex-Labs/anything-llm",
       "kind": "curated"
     },

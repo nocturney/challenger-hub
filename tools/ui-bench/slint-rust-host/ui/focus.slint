@@ -1,5 +1,5 @@
 import { AboutSlint, CheckBox, LineEdit, ListView, ScrollView } from "std-widgets.slint";
-import { ApprovedGalleryThumb, ApprovedGalleryShot } from "approved-gallery.slint";
+import { ApprovedGalleryThumb, ApprovedGalleryShot, ApprovedGalleryIcon } from "approved-gallery.slint";
 
 // This is the approved Focus/Orbit information architecture implemented in genuine
 // native Slint. The old Slint/Node experiment has a separate, unchanged UI.
@@ -20,6 +20,8 @@ export struct ProjectEntry {
     review-route: bool,
     media: string,
     has-preview: bool,
+    has-icon: bool,
+    has-independent-icon: bool,
     initial: string,
 }
 export struct ManagedEntry {
@@ -144,6 +146,7 @@ export component AppWindow inherits Window {
     in-out property <string> detail-media-caption: "";
     in-out property <int> detail-gallery-count: 0;
     in-out property <int> detail-gallery-index: 0;
+    in-out property <bool> detail-independent-icon: false;
     in-out property <string> detail-evidence: "";
     in-out property <string> install-project-id: "";
     in-out property <bool> detail-reviewable: false;
@@ -633,7 +636,10 @@ export component AppWindow inherits Window {
                                 source: @image-url("craft-figcraft-icon.png"); width: 32px; height: 32px;
                                 image-fit: contain; vertical-alignment: center;
                             }
-                            if project.media == "": Rectangle {
+                            if project.has-independent-icon: ApprovedGalleryIcon {
+                                media: project.media; width: 32px; height: 32px;
+                            }
+                            if !project.has-icon: Rectangle {
                                 width: 32px; height: 32px; border-radius: 7px; background: root.accent-bg;
                                 Text { text: project.initial; color: root.accent; font-size: 14px; font-weight: 800;
                                     horizontal-alignment: center; vertical-alignment: center; }
@@ -780,6 +786,9 @@ export component AppWindow inherits Window {
                     }
                     if root.detail-media == "craft-figcraft": Image {
                         source: @image-url("craft-figcraft-icon.png"); width: 58px; height: 58px; image-fit: contain;
+                    }
+                    if root.detail-independent-icon: ApprovedGalleryIcon {
+                        media: root.detail-media; width: 58px; height: 58px;
                     }
                     Text { text: root.detail-name; font-size: root.compact-layout ? 31px : 43px;
                         color: root.strong; font-weight: 800; }

@@ -51,6 +51,7 @@ cp "$repo/tools/preview-build/media-source/CRAFT_SUITE_MEDIA_NOTICES.md" "$app/C
 cp "$repo/tools/preview-build/media-source/THIRD_PARTY_MEDIA_NOTICES.md" "$app/Contents/Resources/media-notices/"
 cp "$repo/tools/preview-build/media-source/licenses/"*.txt "$app/Contents/Resources/media-notices/"
 cp "$here/ui/APPROVED_GALLERY_INDEX.json" "$app/Contents/Resources/media-notices/"
+cp "$here/ui/INDEPENDENT_NATIVE_MEDIA_NOTICES.md" "$app/Contents/Resources/media-notices/"
 
 cp "$here/../slint-node-bridge/sidecar.mjs" "$app/Contents/Resources/"
 cp "$here/../slint-node-bridge/live-catalog.mjs" "$app/Contents/Resources/"
