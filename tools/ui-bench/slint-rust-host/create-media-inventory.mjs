@@ -77,6 +77,7 @@ for(const p of snap.items) {
    projectId:p.id,name:p.name,kind:p.kind,sourceCategory:p.category,
    repository:p.source,sourceLicense:p.license||'Not reported',
    iconStatus:icon,screenshotCount:frames,
+   presentationMode:frames>0?'official':'identity',
    screenshotChecksums:assets.map(s=>s.sha256),
    screenshotSources:assets.map(s=>s.sourceUrl),
    screenshotSourceLicenses:assets.map(s=>s.license),
@@ -88,8 +89,8 @@ for(const p of snap.items) {
    embeddedIconSource:icons.get(media)?.sourceUrl||'',
    embeddedIconSha256:icons.get(media)?.sha256||'',
    featuredOnExplore:featured.has(p.id),
-   integration:frames?'Native Search thumbnail + Detail gallery':
-     icon==='embedded'?'Native icon only':'Neutral fallback',
+   integration:frames?'Original screenshot in Results and source-locked Detail gallery':
+     'Typography-only project identity in Results and Detail (official icon if approved)',
    installStatus:'Separate source-verified review required; catalog membership grants no install permission'
  });
 }
@@ -98,13 +99,17 @@ const counts={
  nativeIcons:rows.filter(r=>r.iconStatus==='embedded').length,
  sourceApprovedIconsNotYetEmbedded:rows.filter(r=>r.iconStatus==='source-approved-not-embedded').length,
  screenshotProjects:rows.filter(r=>r.screenshotCount>0).length,
+ officialPreviewProjects:rows.filter(r=>r.presentationMode==='official').length,
+ identityCardProjects:rows.filter(r=>r.presentationMode==='identity').length,
  screenshotFrames:rows.reduce((n,r)=>n+r.screenshotCount,0),
  missingIcons:rows.filter(r=>r.iconStatus!=='embedded').length,
  missingScreenshots:rows.filter(r=>r.screenshotCount===0).length,
  screenshotBytes:rows.reduce((n,r)=>n+r.screenshotBytes,0)
 };
 if(counts.nativeIcons!==30||counts.screenshotProjects!==29||counts.screenshotFrames!==70 ||
-   gallery.totalIcons!==30 || gallery.independentSelectedProjects!==14) {
+   gallery.totalIcons!==30 || gallery.independentSelectedProjects!==14 ||
+   counts.officialPreviewProjects!==29 || counts.identityCardProjects!==152 ||
+   counts.officialPreviewProjects+counts.identityCardProjects!==181) {
  throw Error('Coverage discrepancy; media identity or manifests changed: '+JSON.stringify(counts));
 }
 const report={
@@ -117,7 +122,7 @@ const report={
 const out=join(here,'qa-results');mkdirSync(out,{recursive:true});
 writeFileSync(join(out,'visual-media-inventory.json'),JSON.stringify(report,null,2)+'\n');
 const cols=['projectId','name','kind','sourceCategory','repository','sourceLicense',
- 'iconStatus','embeddedIconSource','embeddedIconSha256','screenshotCount','screenshotBytes',
+ 'iconStatus','embeddedIconSource','embeddedIconSha256','screenshotCount','screenshotBytes','presentationMode',
  'mediaLicense','mediaSourceReview','mediaRightsStatus','mediaSpecificRightsVerified','galleryMediaId','featuredOnExplore','integration'];
 const csv=x=>'"'+String(x??'').replaceAll('"','""')+'"';
 writeFileSync(join(out,'visual-media-inventory.csv'),

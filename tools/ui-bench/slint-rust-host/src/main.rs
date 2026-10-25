@@ -185,6 +185,12 @@ fn media_caption(id: &str) -> &'static str {
     }
 }
 
+// Exactly two honest presentation states; no simulated app images or
+// generic, invented brand icons. Official icons may accompany the identity.
+fn visual_mode(p: &Project) -> &'static str {
+    if gallery::count(media_id(p)) > 0 { "official" } else { "identity" }
+}
+
 fn entry(p: &Project, reviewable:bool) -> ProjectEntry {
     ProjectEntry {
         id: p.id.clone().into(),
@@ -198,9 +204,9 @@ fn entry(p: &Project, reviewable:bool) -> ProjectEntry {
         review_route: reviewable,
         media: media_id(p).into(),
         has_preview: gallery::count(media_id(p)) > 0,
+        visual_mode: visual_mode(p).into(),
         has_icon: gallery::has_icon(media_id(p)),
         has_independent_icon: gallery::has_independent_icon(media_id(p)),
-        initial: p.name.chars().next().unwrap_or('?').to_string().into(),
     }
 }
 
@@ -243,6 +249,7 @@ fn set_detail(ui: &AppWindow, project: Option<&Project>,review_routes:&HashSet<S
         ui.set_detail_release(fact(&p.release));
         ui.set_detail_evidence(p.evidence.clone().into());
         ui.set_detail_media(media_id(p).into());
+        ui.set_detail_visual_mode(visual_mode(p).into());
         ui.set_detail_media_caption(media_caption(media_id(p)).into());
         ui.set_detail_gallery_count(gallery::count(media_id(p)));
         ui.set_detail_gallery_index(0);
@@ -258,6 +265,7 @@ fn set_detail(ui: &AppWindow, project: Option<&Project>,review_routes:&HashSet<S
         ui.set_detail_name("".into());
         ui.set_detail_source("".into());
         ui.set_detail_media("".into());
+        ui.set_detail_visual_mode("identity".into());
         ui.set_detail_media_caption("".into());
         ui.set_detail_gallery_count(0);
         ui.set_detail_gallery_index(0);
@@ -1201,6 +1209,21 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             return Err("Goxel upstream gallery and icon QA route missing".into());
         }
     }
+    if args.iter().any(|a| a == "--qa-preview-profile-results") {
+        ui.invoke_search_submitted("Composa".into());
+        if ui.get_page() != "results" || ui.get_matching() == 0 {
+            return Err("Native factual identity results QA route missing".into());
+        }
+    }
+    if args.iter().any(|a| a == "--qa-preview-profile") {
+        ui.invoke_search_submitted("Composa".into());
+        ui.invoke_open_project(0);
+        if ui.get_page() != "detail" || ui.get_detail_name() != "Composa" ||
+            ui.get_detail_visual_mode() != "identity" ||
+            ui.get_detail_gallery_count() != 0 || ui.get_detail_has_icon() {
+            return Err("Factual project identity QA route missing".into());
+        }
+    }
     if args.iter().any(|a| a == "--qa-preview-pdfcraft") {
         ui.invoke_search_submitted("PdfCraft".into());
         ui.invoke_open_project(0);
@@ -1216,7 +1239,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "--qa-preview-activity-refresh", "--qa-preview-device",
         "--qa-preview-identity", "--qa-preview-install",
         "--qa-preview-pdfcraft", "--qa-preview-craft-results",
-        "--qa-preview-goxel"].contains(&a.as_str())) {
+        "--qa-preview-goxel", "--qa-preview-profile",
+        "--qa-preview-profile-results"].contains(&a.as_str())) {
         let weak = ui.as_weak();
         Timer::single_shot(Duration::from_secs(22), move || {
             if let Some(w) = weak.upgrade() { let _ = w.hide(); }
@@ -1342,7 +1366,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 w.invoke_search_submitted("Composa".into());
                 if w.get_page() != "results" || w.get_matching() == 0 { fail("home search navigation"); }
                 w.invoke_open_project(0);
-                if w.get_page() != "detail" || w.get_detail_name().is_empty() { fail("full page dossier"); }
+                if w.get_page() != "detail" || w.get_detail_name().is_empty() ||
+                    w.get_detail_visual_mode() != "identity" ||
+                    w.get_detail_gallery_count() != 0 {
+                    fail("source-backed identity dossier for a project without official media");
+                }
                 if w.get_install_ready() || w.get_install_busy() || w.get_install_approved() {
                     fail("Installer must not initialize automatically on dossier navigation");
                 }
@@ -1418,7 +1446,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 w.invoke_search_submitted("Dune 3D".into());
                 w.invoke_open_project(0);
                 if w.get_page() != "detail" || w.get_detail_media() != "dune3d" ||
-                    w.get_detail_gallery_count() != 1 {
+                    w.get_detail_gallery_count() != 1 ||
+                    w.get_detail_visual_mode() != "official" {
                     fail("source-verified Dune 3D screenshot");
                 }
                 w.invoke_navigate("home".into());
@@ -1464,8 +1493,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 w.invoke_search_submitted("OpenHands".into());
                 w.invoke_open_project(0);
                 if w.get_page() != "detail" || w.get_detail_media() != "openhands" ||
-                    w.get_detail_gallery_count() != 0 {
-                    fail("source-verified OpenHands icon and honest no-image fallback");
+                    w.get_detail_gallery_count() != 0 ||
+                    w.get_detail_visual_mode() != "identity" || !w.get_detail_has_icon() {
+                    fail("official OpenHands icon paired with factual identity dossier");
                 }
                 eprintln!("FOCUS_NATIVE_GUI_PASS {}", serde_json::json!({
                     "count": w.get_total(), "disciplines": 17,
@@ -1473,7 +1503,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     "history": "back+forward", "pageSize": 30,
                     "pageSizeVerified": 60, "reviewRouteCount": review_routes,
                     "reviewFilterVerified": true, "sourceScreenshots": 70,
-                    "screenshotProjects": 29, "approvedMediaIdentities": 36,
+                    "screenshotProjects": 29, "identityProfiles": 152,
+                    "visualModes": ["official", "identity"],
+                    "inventedGraphics": false, "approvedMediaIdentities": 36,
                     "sourceVerifiedNativeIcons": 30,
                     "multiFrameGalleryVerified": true, "darkMode": true,
                     "managedCoverage": w.get_managed_assessed(),
@@ -1546,13 +1578,16 @@ mod tests {
             latest_version:"".into(), update_hint:false
         };
         assert_eq!(media_id(&p), "dune3d");
+        assert_eq!(visual_mode(&p), "official");
         assert!(entry(&p,true).review_route);
         p.kind = "research".into();
         assert!(!entry(&p,false).review_route);
         assert_eq!(media_id(&p), "");
+        assert_eq!(visual_mode(&p), "identity");
         p.kind = "curated".into();
         p.source = "https://github.com/dune3d-fake/dune3d".into();
         assert_eq!(media_id(&p), "");
+        assert_eq!(visual_mode(&p), "identity");
 
         for (id, upstream, media) in [
             ("curated:compositor", "robbietilton/Compositor", "compositor"),

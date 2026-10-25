@@ -11,6 +11,8 @@
     "nativeIcons": 30,
     "sourceApprovedIconsNotYetEmbedded": 1,
     "screenshotProjects": 29,
+    "officialPreviewProjects": 29,
+    "identityCardProjects": 152,
     "screenshotFrames": 70,
     "missingIcons": 151,
     "missingScreenshots": 152,
@@ -26,6 +28,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "embedded",
       "screenshotCount": 3,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "00c043bcdd0684b6ed85cb15e4193609f0c35c213b93da96183761fff01f428e",
         "9088c8e1e29933fc3cac244a0b90d7bbddf6140920348143b16e2a9dfd694df0",
@@ -50,7 +53,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -62,6 +65,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "embedded",
       "screenshotCount": 4,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "deebebd10dd8778652fc9ce078265b45a02db1dbd282f289091878ebe39e5a06",
         "897da4c95267554e00aaf5a76b619af7a90b1662b2f44427f86e2f909125cea7",
@@ -89,7 +93,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -101,6 +105,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "embedded",
       "screenshotCount": 1,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "5db9cc3fa27500714346ab38ce7f88f63945b06229a8d3d4d4aa90f03214d4c9"
       ],
@@ -119,7 +124,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -131,6 +136,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "embedded",
       "screenshotCount": 4,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "2496ef17f7399739f08cc1ea1cf34e3046d7be928b29fc251fe3eb1931016367",
         "85883b3f6fa5239b77547d483d481e85123eccfaddc9de488285021272508f98",
@@ -158,7 +164,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -170,6 +176,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "embedded",
       "screenshotCount": 3,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "5c9a9a6ea3a77ece8e3a3ce49023b73cbb8ebeff222b3c666a12beaa764e9765",
         "fd26267469be6496074af83519353b20db20bce9815b3302c56632a31ce7678c",
@@ -194,7 +201,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -206,6 +213,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "embedded",
       "screenshotCount": 4,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "5c11125d9d7a7f4f700f63ad386ea3eae4bcb55035791bc5038a071c8fa935e0",
         "f3c17346b2c3286c35ccd8c04720f02e4be7ee971669de0b12ddb7bd6c2bfd64",
@@ -233,7 +241,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -245,6 +253,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "embedded",
       "screenshotCount": 4,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "9110e613d2d54f7a8f2ac851fc4e94dec4056e5b24cbe0a3c608614820b67844",
         "a89f1c5d850f51cda58acce5bcdd0a3505aa021ef7701e70ec92d79b0961e7a3",
@@ -272,7 +281,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -284,6 +293,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "embedded",
       "screenshotCount": 4,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "ecd261028d8837f7f7c013dd796d81ca7e89643bcfcbad3ab9fbfbe87ded04e3",
         "18fbd4931b2a8d01a88aef0d5d0837e3cdc12aa35f8529bedbb4a930565d47e5",
@@ -311,7 +321,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": true,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -323,6 +333,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "embedded",
       "screenshotCount": 4,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "67f2dc8a98b857348777993636e854ea94143c9a5fed63781727286f4fc20073",
         "385d8d22facf4f441623dc3eeba80c0ef7fd24a73798b949707f09c88be4cee7",
@@ -350,7 +361,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -362,6 +373,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "embedded",
       "screenshotCount": 4,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "ef7adc0f0d9a02aa77bdb4377aad15d339e73c252ebbdc989d92d913ea3bb335",
         "6149be9c15ddaf56976864adf9e2bae8f123209ebc483652638a653b8a9f7550",
@@ -389,7 +401,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -401,6 +413,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "embedded",
       "screenshotCount": 4,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "2282f344e6e91fd666d5c8fe69fb62f9439105ec9301573e088230b406837464",
         "159888ff7c3437f98598a2cc16eb25fd519c8f9ffa7afd77e085e60b1a5e9d8d",
@@ -428,7 +441,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -440,6 +453,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "embedded",
       "screenshotCount": 4,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "0adeb5e18705f85231bd4b42061d9b790eee95fe2dfe196e40d589561646b6f3",
         "ab128ead1436bb121861410bed48a81aae02bbfed5cea39998e8718abf22af15",
@@ -467,7 +481,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -479,6 +493,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -491,7 +506,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -503,6 +518,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "embedded",
       "screenshotCount": 4,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "792759196585886c7d73e137283037619bc9826e0186f2a63dea59f8a89e45d1",
         "41e8d992b80aebb047f329064c05f7125010e388940fd541d21535178683d964",
@@ -530,7 +546,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -542,6 +558,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "embedded",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -554,7 +571,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native icon only",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -566,6 +583,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -578,7 +596,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -590,6 +608,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -602,7 +621,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -614,6 +633,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "source-approved-not-embedded",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -626,7 +646,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -638,6 +658,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -650,7 +671,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -662,6 +683,7 @@
       "sourceLicense": "LGPL-2.1",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -674,7 +696,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -686,6 +708,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "embedded",
       "screenshotCount": 1,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "56f79318ff609044b6e6f3173c77cbb541a09475353f854b667cf99d7bf1c595"
       ],
@@ -704,7 +727,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": true,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -716,6 +739,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "embedded",
       "screenshotCount": 1,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "82914343db0a3af22f5b96f7b42e362f58f93f9c499b3fad48d182d9059e4f7c"
       ],
@@ -734,7 +758,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": true,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -746,6 +770,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "embedded",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -758,7 +783,7 @@
       "embeddedIconSource": "https://github.com/MewPurPur/GodSVG/blob/de273a028f2b604f5bfa210e029320c468c423e1/assets/logos/icon.png",
       "embeddedIconSha256": "28d5f232e6195a48e0b2a7e6e9259ced57b3b2a3caf46756f36c3bb00f1cabfc",
       "featuredOnExplore": false,
-      "integration": "Native icon only",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -770,6 +795,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -782,7 +808,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -794,6 +820,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -806,7 +833,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -818,6 +845,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "embedded",
       "screenshotCount": 2,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "6e61c1e35acaa17ce37a1d25e21b8dda284a11b7893472882b7c8bec19377f43",
         "0b407e9f4ae686f50a5e3dfaa788eb24d40a36b8aa5d7aa56c7df242489894dc"
@@ -839,7 +867,7 @@
       "embeddedIconSource": "https://github.com/MFEK/glif/blob/e7c24c5d77b768429b7c7f13605b080fd3f1ca98/resources/icon.png",
       "embeddedIconSha256": "fdb97aec7052535dac62984a71ed2cae594d4afae509175d4836751b132691af",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -851,6 +879,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -863,7 +892,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -875,6 +904,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -887,7 +917,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -899,6 +929,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -911,7 +942,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -923,6 +954,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -935,7 +967,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -947,6 +979,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "embedded",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -959,7 +992,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native icon only",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -971,6 +1004,7 @@
       "sourceLicense": "BSD-2-Clause",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -983,7 +1017,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -995,6 +1029,7 @@
       "sourceLicense": "LGPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 2,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "44351372087859d9f7b3af00871b381e0a4ef10400c9eb609a09cc98810451ac",
         "4555997b4ad655adccdbbf6beba46ad2ab67a1bddb02fe1a82ae557067cc3bb4"
@@ -1016,7 +1051,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1028,6 +1063,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1040,7 +1076,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1052,6 +1088,7 @@
       "sourceLicense": "AGPL-3.0",
       "iconStatus": "embedded",
       "screenshotCount": 1,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "c7ef740510585be4f19573e348595216f5d407328424c2b0faba532e654acd6b"
       ],
@@ -1070,7 +1107,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1082,6 +1119,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "embedded",
       "screenshotCount": 1,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "32d11c9847c192c4d94339b712a49f29c14bb954da13804efa313c9e1c7d6d9d"
       ],
@@ -1100,7 +1138,7 @@
       "embeddedIconSource": "https://github.com/OakVideoEditorCommunity/oak/blob/096b105a74802cedf657c7e07906cb0ca7f32146/assets/appicon/icon.png",
       "embeddedIconSha256": "7a9b317d563ebc9441031165a1514b7c693c3f26717b794bc61f9ed167930ed4",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1112,6 +1150,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1124,7 +1163,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1136,6 +1175,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1148,7 +1188,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1160,6 +1200,7 @@
       "sourceLicense": "GPL-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1172,7 +1213,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1184,6 +1225,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 1,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "b28384f66cd04f1090286bc7d8324db9c09ba6a88a432cab0a02509e01fee404"
       ],
@@ -1202,7 +1244,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1214,6 +1256,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1226,7 +1269,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1238,6 +1281,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "embedded",
       "screenshotCount": 1,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "5ae3c696e5ac83f07b6934cec5b458b4a98acdd76bc1a661fb36de8c1680b9d8"
       ],
@@ -1256,7 +1300,7 @@
       "embeddedIconSource": "https://github.com/helio-fm/helio-sequencer/blob/5a21fbc862af349234d51008f75844e943f80603/Projects/iOS/Helio/Images.xcassets/AppIcon.appiconset/Icon.png",
       "embeddedIconSha256": "b2f2c6502fc93551dbff151ecb3ce8d3efb8bbc5acc93751f817f238706dd2bc",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1268,6 +1312,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1280,7 +1325,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1292,6 +1337,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "embedded",
       "screenshotCount": 2,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "e5f6437763a52b6719be69458b8f2da668beea4f12d014599fb4e0da32b80aa9",
         "c4d4810f4767a14478ea6e30327a09ebbd0785e38ec3a55d85138a16959141ff"
@@ -1313,7 +1359,7 @@
       "embeddedIconSource": "https://github.com/guillaumechereau/goxel/blob/33be5c8ed826105ab35746f893065e9ef00d3134/osx/goxel/goxel/Assets.xcassets/AppIcon.appiconset/256.png",
       "embeddedIconSha256": "e6486695d7763bf83d399a55ed88141dc4e649ca4d00feb0d9d264da3ee1ae3c",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1325,6 +1371,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1337,7 +1384,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1349,6 +1396,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1361,7 +1409,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1373,6 +1421,7 @@
       "sourceLicense": "BSD-3-Clause",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1385,7 +1434,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1397,6 +1446,7 @@
       "sourceLicense": "BSD-2-Clause",
       "iconStatus": "embedded",
       "screenshotCount": 2,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "e96702406d0df0d8314d2775331b6b43c5f59691a7650f7ad2a3ec9bc128f5df",
         "aa071b784a784006794f9e611825eab2acabf9f538b84ffd1cd8898a2ebb32be"
@@ -1418,7 +1468,7 @@
       "embeddedIconSource": "https://github.com/fougue/mayo/blob/8e69135dd5259a6a2b77568fcf630f969f408762/images/appicon_128.png",
       "embeddedIconSha256": "746d84e2a27718c5abd22a0b44ab67351fd1a9d592dcb89246eb99166bad1d9f",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1430,6 +1480,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1442,7 +1493,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1454,6 +1505,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1466,7 +1518,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1478,6 +1530,7 @@
       "sourceLicense": "AGPL-3.0",
       "iconStatus": "embedded",
       "screenshotCount": 2,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "1260534916fdf69aafd92274fc5d982139bcca08240d648d0a1696d8577aa426",
         "8104e880b6f7fa97512a7924a16af22dca1b5697f5b7668204d7c078ec89e064"
@@ -1499,7 +1552,7 @@
       "embeddedIconSource": "https://github.com/frappe/crm/blob/85af16ce20325a3c91f8970a37c74adae377ac01/crm/public/images/logo.png",
       "embeddedIconSha256": "84c79bc789c8695d1a194ee420b6f7ebd66f19003e41b64c756168eab8550c90",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1511,6 +1564,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1523,7 +1577,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1535,6 +1589,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1547,7 +1602,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1559,6 +1614,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "embedded",
       "screenshotCount": 1,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "a601bc89bd9f6d69089fd01149ac085e74b1b8f09c620cc1e59ba8017c37360a"
       ],
@@ -1577,7 +1633,7 @@
       "embeddedIconSource": "https://github.com/inventree/InvenTree/blob/d11b74fd857a6ebf47658b707605a64a10be764f/docs/docs/assets/logo.png",
       "embeddedIconSha256": "4e882f8bfc2d21745038df8f9b4aec2240067558437f99dda274380847e48ef3",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1589,6 +1645,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1601,7 +1658,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1613,6 +1670,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1625,7 +1683,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1637,6 +1695,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1649,7 +1708,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1661,6 +1720,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1673,7 +1733,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1685,6 +1745,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1697,7 +1758,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1709,6 +1770,7 @@
       "sourceLicense": "AGPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1721,7 +1783,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1733,6 +1795,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1745,7 +1808,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1757,6 +1820,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1769,7 +1833,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1781,6 +1845,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 1,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "15db9c9d37363265619cde20a7fdfe80b34590f30f83eaac71289492cbd4f7fd"
       ],
@@ -1799,7 +1864,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1811,6 +1876,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1823,7 +1889,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1835,6 +1901,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1847,7 +1914,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1859,6 +1926,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1871,7 +1939,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1883,6 +1951,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1895,7 +1964,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1907,6 +1976,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1919,7 +1989,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1931,6 +2001,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1943,7 +2014,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1955,6 +2026,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1967,7 +2039,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -1979,6 +2051,7 @@
       "sourceLicense": "AGPL-3.0",
       "iconStatus": "embedded",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -1991,7 +2064,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native icon only",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2003,6 +2076,7 @@
       "sourceLicense": "AGPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2015,7 +2089,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2027,6 +2101,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2039,7 +2114,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2051,6 +2126,7 @@
       "sourceLicense": "AGPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2063,7 +2139,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2075,6 +2151,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2087,7 +2164,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2099,6 +2176,7 @@
       "sourceLicense": "AGPL-3.0",
       "iconStatus": "embedded",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2111,7 +2189,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native icon only",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2123,6 +2201,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 2,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "9f53ec3e80b49dbff2eeaeeb4e71efc7b53fc0001f1459e795e0ddf1c0ca8bc5",
         "612eaee59d04ff3dcc3f37aa0bb08c5cfc55d4c4b33860567daa9d788d3f1307"
@@ -2144,7 +2223,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2156,6 +2235,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "embedded",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2168,7 +2248,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native icon only",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2180,6 +2260,7 @@
       "sourceLicense": "AGPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 1,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "2a98a0c7921ce4ffe554d58d0c82724a01e475f29bd8edefaac03d19fc05f41b"
       ],
@@ -2198,7 +2279,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2210,6 +2291,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2222,7 +2304,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2234,6 +2316,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2246,7 +2329,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2258,6 +2341,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "embedded",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2270,7 +2354,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native icon only",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2282,6 +2366,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2294,7 +2379,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2306,6 +2391,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 2,
+      "presentationMode": "official",
       "screenshotChecksums": [
         "aabb65516366aeff2218549a14983787bb4662f6fa864c8cef67ee927980ec45",
         "a69c16cdf8a60e6fbf90be39e12e8ba4bf0bb8348d380c57b456c274821e6c13"
@@ -2327,7 +2413,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Native Search thumbnail + Detail gallery",
+      "integration": "Original screenshot in Results and source-locked Detail gallery",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2339,6 +2425,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2351,7 +2438,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2363,6 +2450,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2375,7 +2463,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2387,6 +2475,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2399,7 +2488,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2411,6 +2500,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2423,7 +2513,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2435,6 +2525,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2447,7 +2538,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2459,6 +2550,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2471,7 +2563,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2483,6 +2575,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2495,7 +2588,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2507,6 +2600,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2519,7 +2613,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2531,6 +2625,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2543,7 +2638,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2555,6 +2650,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2567,7 +2663,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2579,6 +2675,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2591,7 +2688,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2603,6 +2700,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2615,7 +2713,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2627,6 +2725,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2639,7 +2738,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2651,6 +2750,7 @@
       "sourceLicense": "GPL-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2663,7 +2763,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2675,6 +2775,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2687,7 +2788,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2699,6 +2800,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2711,7 +2813,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2723,6 +2825,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2735,7 +2838,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2747,6 +2850,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2759,7 +2863,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2771,6 +2875,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2783,7 +2888,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2795,6 +2900,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2807,7 +2913,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2819,6 +2925,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2831,7 +2938,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2843,6 +2950,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2855,7 +2963,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2867,6 +2975,7 @@
       "sourceLicense": "GPL-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2879,7 +2988,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2891,6 +3000,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2903,7 +3013,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2915,6 +3025,7 @@
       "sourceLicense": "LGPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2927,7 +3038,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2939,6 +3050,7 @@
       "sourceLicense": "AGPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2951,7 +3063,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2963,6 +3075,7 @@
       "sourceLicense": "AGPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2975,7 +3088,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -2987,6 +3100,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -2999,7 +3113,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3011,6 +3125,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3023,7 +3138,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3035,6 +3150,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3047,7 +3163,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3059,6 +3175,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3071,7 +3188,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3083,6 +3200,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3095,7 +3213,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3107,6 +3225,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3119,7 +3238,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3131,6 +3250,7 @@
       "sourceLicense": "GPL-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3143,7 +3263,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3155,6 +3275,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3167,7 +3288,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3179,6 +3300,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3191,7 +3313,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3203,6 +3325,7 @@
       "sourceLicense": "BSD-3-Clause",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3215,7 +3338,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3227,6 +3350,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3239,7 +3363,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3251,6 +3375,7 @@
       "sourceLicense": "AGPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3263,7 +3388,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3275,6 +3400,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3287,7 +3413,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3299,6 +3425,7 @@
       "sourceLicense": "BSD-3-Clause",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3311,7 +3438,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3323,6 +3450,7 @@
       "sourceLicense": "GPL-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3335,7 +3463,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3347,6 +3475,7 @@
       "sourceLicense": "GPL-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3359,7 +3488,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3371,6 +3500,7 @@
       "sourceLicense": "MPL-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3383,7 +3513,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3395,6 +3525,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3407,7 +3538,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3419,6 +3550,7 @@
       "sourceLicense": "AGPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3431,7 +3563,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3443,6 +3575,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3455,7 +3588,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3467,6 +3600,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3479,7 +3613,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3491,6 +3625,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3503,7 +3638,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3515,6 +3650,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3527,7 +3663,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3539,6 +3675,7 @@
       "sourceLicense": "GPL-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3551,7 +3688,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3563,6 +3700,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3575,7 +3713,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3587,6 +3725,7 @@
       "sourceLicense": "GPL-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3599,7 +3738,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3611,6 +3750,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3623,7 +3763,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3635,6 +3775,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3647,7 +3788,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3659,6 +3800,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3671,7 +3813,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3683,6 +3825,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3695,7 +3838,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3707,6 +3850,7 @@
       "sourceLicense": "AGPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3719,7 +3863,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3731,6 +3875,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3743,7 +3888,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3755,6 +3900,7 @@
       "sourceLicense": "AGPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3767,7 +3913,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3779,6 +3925,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3791,7 +3938,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3803,6 +3950,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3815,7 +3963,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3827,6 +3975,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3839,7 +3988,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3851,6 +4000,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3863,7 +4013,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3875,6 +4025,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3887,7 +4038,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3899,6 +4050,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3911,7 +4063,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3923,6 +4075,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3935,7 +4088,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3947,6 +4100,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3959,7 +4113,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3971,6 +4125,7 @@
       "sourceLicense": "AGPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -3983,7 +4138,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -3995,6 +4150,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4007,7 +4163,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4019,6 +4175,7 @@
       "sourceLicense": "AGPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4031,7 +4188,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4043,6 +4200,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4055,7 +4213,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4067,6 +4225,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4079,7 +4238,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4091,6 +4250,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4103,7 +4263,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4115,6 +4275,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4127,7 +4288,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4139,6 +4300,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4151,7 +4313,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4163,6 +4325,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4175,7 +4338,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4187,6 +4350,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4199,7 +4363,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4211,6 +4375,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4223,7 +4388,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4235,6 +4400,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4247,7 +4413,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4259,6 +4425,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4271,7 +4438,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4283,6 +4450,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4295,7 +4463,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4307,6 +4475,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4319,7 +4488,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4331,6 +4500,7 @@
       "sourceLicense": "LGPL-2.1",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4343,7 +4513,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4355,6 +4525,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4367,7 +4538,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4379,6 +4550,7 @@
       "sourceLicense": "AGPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4391,7 +4563,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4403,6 +4575,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4415,7 +4588,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4427,6 +4600,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4439,7 +4613,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4451,6 +4625,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4463,7 +4638,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4475,6 +4650,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4487,7 +4663,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4499,6 +4675,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4511,7 +4688,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4523,6 +4700,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4535,7 +4713,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4547,6 +4725,7 @@
       "sourceLicense": "Not reported",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4559,7 +4738,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4571,6 +4750,7 @@
       "sourceLicense": "AGPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4583,7 +4763,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4595,6 +4775,7 @@
       "sourceLicense": "MIT",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4607,7 +4788,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4619,6 +4800,7 @@
       "sourceLicense": "GPL-3.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4631,7 +4813,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     },
     {
@@ -4643,6 +4825,7 @@
       "sourceLicense": "Apache-2.0",
       "iconStatus": "missing",
       "screenshotCount": 0,
+      "presentationMode": "identity",
       "screenshotChecksums": [],
       "screenshotSources": [],
       "screenshotSourceLicenses": [],
@@ -4655,7 +4838,7 @@
       "embeddedIconSource": "",
       "embeddedIconSha256": "",
       "featuredOnExplore": false,
-      "integration": "Neutral fallback",
+      "integration": "Typography-only project identity in Results and Detail (official icon if approved)",
       "installStatus": "Separate source-verified review required; catalog membership grants no install permission"
     }
   ],

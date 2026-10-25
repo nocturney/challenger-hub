@@ -1,0 +1,132 @@
+// Factual, typography-only catalog identities. This intentionally contains NO
+// image, simulated application UI, illustration, icon, monogram or logo.
+// If official screenshots are unavailable, the catalog is still presentation-ready.
+export component IdentityTile inherits Rectangle {
+    in property <string> project-name;
+    in property <string> project-maker;
+    in property <string> project-domain;
+    in property <bool> dark: false;
+    background: root.dark ? #24352d : #eef4ed;
+    border-color: root.dark ? #496353 : #d3e1d3;
+    border-width: 1px;
+    border-radius: 8px;
+    VerticalLayout {
+        padding: 9px;
+        spacing: 4px;
+        Text {
+            text: "PROJECT PROFILE"; font-size: 9px; font-weight: 800;
+            color: root.dark ? #b7d6b9 : #47765a; overflow: elide;
+        }
+        Text {
+            text: root.project-name; font-size: 13px; font-weight: 800;
+            color: root.dark ? #eaf0e8 : #263a2e; overflow: elide;
+        }
+        Text {
+            text: root.project-domain; font-size: 10px;
+            color: root.dark ? #b0beb4 : #536758; overflow: elide;
+        }
+        Text {
+            text: root.project-maker; font-size: 10px;
+            color: root.dark ? #b0beb4 : #536758; overflow: elide;
+        }
+    }
+}
+
+export component IdentityDossier inherits Rectangle {
+    in property <string> project-name;
+    in property <string> project-maker;
+    in property <string> project-domain;
+    in property <string> project-platforms;
+    in property <string> project-kind;
+    in property <string> project-summary;
+    in property <string> project-source;
+    in property <bool> dark: false;
+    in property <bool> compact: false;
+    background: root.dark ? #1e2925 : #ffffff;
+    border-color: root.dark ? #3b4941 : #dfe7df;
+    border-width: 1px;
+    border-radius: 11px;
+    VerticalLayout {
+        padding: root.compact ? 18px : 23px;
+        spacing: root.compact ? 8px : 11px;
+        Text {
+            text: "PROJECT IDENTITY   /   CATALOG FACTS";
+            color: root.dark ? #b7d6b9 : #47765a;
+            font-size: 10px; font-weight: 800; overflow: elide;
+        }
+        Text {
+            text: root.project-name;
+            font-size: root.compact ? 29px : 38px; font-weight: 800;
+            color: root.dark ? #eaf0e8 : #263a2e; overflow: elide;
+            height: root.compact ? 39px : 49px;
+        }
+        Text {
+            text: root.project-summary; font-size: root.compact ? 12px : 13px;
+            height: root.compact ? 49px : 55px;
+            color: root.dark ? #b0beb4 : #536758;
+            wrap: word-wrap; overflow: elide;
+        }
+        Rectangle {
+            height: 1px;
+            background: root.dark ? #3b4941 : #dfe7df;
+        }
+        HorizontalLayout {
+            spacing: 15px;
+            VerticalLayout {
+                horizontal-stretch: 1; spacing: 6px;
+                Text {
+                    text: "CREATOR"; font-size: 9px; font-weight: 800;
+                    color: root.dark ? #8b9b91 : #5b6e60;
+                }
+                Text {
+                    text: root.project-maker; font-size: 12px; font-weight: 700;
+                    color: root.dark ? #eaf0e8 : #263a2e; overflow: elide;
+                }
+            }
+            VerticalLayout {
+                horizontal-stretch: 1; spacing: 6px;
+                Text {
+                    text: "DISCIPLINE"; font-size: 9px; font-weight: 800;
+                    color: root.dark ? #8b9b91 : #5b6e60;
+                }
+                Text {
+                    text: root.project-domain; font-size: 12px; font-weight: 700;
+                    color: root.dark ? #eaf0e8 : #263a2e; overflow: elide;
+                }
+            }
+        }
+        HorizontalLayout {
+            spacing: 15px;
+            VerticalLayout {
+                horizontal-stretch: 2; spacing: 6px;
+                Text {
+                    text: "PLATFORMS"; font-size: 9px; font-weight: 800;
+                    color: root.dark ? #8b9b91 : #5b6e60;
+                }
+                Text {
+                    text: root.project-platforms; font-size: 11px;
+                    color: root.dark ? #eaf0e8 : #263a2e; overflow: elide;
+                }
+            }
+            VerticalLayout {
+                horizontal-stretch: 1; spacing: 6px;
+                Text {
+                    text: "SOURCE CLASS"; font-size: 9px; font-weight: 800;
+                    color: root.dark ? #8b9b91 : #5b6e60;
+                }
+                Text {
+                    text: root.project-kind; font-size: 11px;
+                    color: root.dark ? #eaf0e8 : #263a2e; overflow: elide;
+                }
+            }
+        }
+        Text {
+            text: root.project-source; font-size: 10px;
+            color: root.dark ? #b0beb4 : #536758; overflow: elide;
+        }
+        Text {
+            text: "Factual project profile, not a software screenshot.";
+            font-size: 10px; color: root.dark ? #8b9b91 : #5b6e60;
+        }
+    }
+}

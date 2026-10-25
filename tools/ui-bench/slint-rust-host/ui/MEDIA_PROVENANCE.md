@@ -112,3 +112,17 @@ refuses public release when only attribution is known. This is deliberately not
 a claim that repository licenses, origin citations or modified UI layouts
 resolve third-party rights. The 152 no-screenshot catalog items remain
 available as text/metadata, without fabricated screenshots.
+
+
+## Strict visual presentation rule
+
+The UI displays one of two mutually exclusive states for each source-backed
+project: `official` only when the exact, approved original screenshot exists,
+or `identity` otherwise. Identity is pure typography over existing catalog
+facts; no generated/illustrated imagery, category motifs, fake icons, simulated
+screenshots or placeholder text are permitted. If an official icon exists but
+no screenshot, it stays official and accompanies the factual identity dossier.
+The search-results tile and detailed dossier are implemented in
+`identity-card.slint`; `verify-native-visual-policy.mjs` enforces the invariant
+in offline CI. Exact source attribution and public-release rights checks remain
+unchanged.

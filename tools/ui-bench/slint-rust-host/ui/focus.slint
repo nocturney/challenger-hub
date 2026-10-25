@@ -1,5 +1,6 @@
 import { AboutSlint, CheckBox, LineEdit, ListView, ScrollView } from "std-widgets.slint";
 import { ApprovedGalleryThumb, ApprovedGalleryShot, ApprovedGalleryIcon, ApprovedIconCredit } from "approved-gallery.slint";
+import { IdentityTile, IdentityDossier } from "identity-card.slint";
 
 // This is the approved Focus/Orbit information architecture implemented in genuine
 // native Slint. The old Slint/Node experiment has a separate, unchanged UI.
@@ -20,9 +21,9 @@ export struct ProjectEntry {
     review-route: bool,
     media: string,
     has-preview: bool,
+    visual-mode: string,
     has-icon: bool,
     has-independent-icon: bool,
-    initial: string,
 }
 export struct ManagedEntry {
     name: string,
@@ -143,6 +144,7 @@ export component AppWindow inherits Window {
     in-out property <string> detail-challenges: "";
     in-out property <string> detail-release: "";
     in-out property <string> detail-media: "";
+    in-out property <string> detail-visual-mode: "identity";
     in-out property <string> detail-media-caption: "";
     in-out property <int> detail-gallery-count: 0;
     in-out property <int> detail-gallery-index: 0;
@@ -511,7 +513,7 @@ export component AppWindow inherits Window {
                 height: 35px; background: root.muted-sheet; border-radius: 5px;
                 HorizontalLayout {
                     padding-left: 15px; padding-right: 15px; spacing: 13px;
-                    Text { text: "PROJECT / REAL PREVIEW"; font-size: 10px; font-weight: 800; color: root.subtle; horizontal-stretch: 3; vertical-alignment: center; }
+                    Text { text: "PROJECT / OFFICIAL MEDIA OR IDENTITY"; font-size: 10px; font-weight: 800; color: root.subtle; horizontal-stretch: 3; vertical-alignment: center; }
                     if root.show-extended-columns: Text { text: "DISCIPLINE"; font-size: 10px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
                     Text { text: "AVAILABLE NEXT STEP"; font-size: 10px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
                     if root.show-platforms: Text { text: "PLATFORMS (REPORTED)"; font-size: 10px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
@@ -532,7 +534,7 @@ export component AppWindow inherits Window {
             ListView {
                 vertical-stretch: 1;
                 for project[i] in root.entries : Rectangle {
-                    height: project.has-preview ? 118px : 86px; background: Math.mod(i, 2) == 0 ? root.sheet : root.canvas;
+                    height: 118px; background: Math.mod(i, 2) == 0 ? root.sheet : root.canvas;
                     border-color: row-focus.has-focus ? root.accent : root.line;
                     border-width: row-focus.has-focus ? 2px : 1px;
                     accessible-role: button;
@@ -543,23 +545,19 @@ export component AppWindow inherits Window {
                         padding-left: 15px; padding-right: 15px; spacing: 13px;
                         HorizontalLayout {
                             horizontal-stretch: 3; spacing: 9px;
-                            if project.has-preview: Rectangle {
+                            if project.visual-mode == "official": Rectangle {
                                 width: root.compact-layout ? 112px : 164px;
                                 height: root.compact-layout ? 72px : 91px;
                                 background: root.muted-sheet; border-radius: 7px;
                                 ApprovedGalleryThumb { media: project.media; width: parent.width; height: parent.height; }
                             }
-                            if !project.has-preview: Rectangle {
+                            if project.visual-mode == "identity": IdentityTile {
+                                project-name: project.name;
+                                project-maker: project.maker;
+                                project-domain: project.domain;
+                                dark: root.dark-mode;
                                 width: root.compact-layout ? 112px : 164px;
-                                height: root.compact-layout ? 66px : 72px;
-                                background: root.muted-sheet; border-radius: 7px;
-                                VerticalLayout {
-                                    padding: 9px; spacing: 4px;
-                                    Text { text: "NO VERIFIED IMAGE"; font-size: 9px; font-weight: 800;
-                                        color: root.subtle; horizontal-alignment: center; }
-                                    Text { text: project.domain; font-size: 10px; color: root.muted;
-                                        horizontal-alignment: center; overflow: elide; }
-                                }
+                                height: root.compact-layout ? 79px : 91px;
                             }
                             if project.media == "dune3d": Image {
                                 source: @image-url("dune3d.svg"); width: 32px; height: 32px;
@@ -652,17 +650,12 @@ export component AppWindow inherits Window {
                             if project.has-independent-icon: ApprovedGalleryIcon {
                                 media: project.media; width: 32px; height: 32px;
                             }
-                            if !project.has-icon: Rectangle {
-                                width: 32px; height: 32px; border-radius: 7px; background: root.accent-bg;
-                                Text { text: project.initial; color: root.accent; font-size: 14px; font-weight: 800;
-                                    horizontal-alignment: center; vertical-alignment: center; }
-                            }
                             VerticalLayout {
                                 spacing: 2px;
                                 Text { text: project.name; font-size: 14px; font-weight: 700; color: root.strong; overflow: elide; }
                                 Text { text: root.show-extended-columns ? project.maker : project.maker + "  ·  " + project.domain; font-size: 11px; color: root.subtle; overflow: elide; }
                                 Text { text: project.summary; font-size: 11px; color: root.muted;
-                                    height: project.has-preview ? 44px : 28px; wrap: word-wrap; overflow: elide; }
+                                    height: 44px; wrap: word-wrap; overflow: elide; }
                             }
                         }
                         if root.show-extended-columns: Text { text: project.domain; font-size: 11px; color: root.muted;
@@ -981,7 +974,19 @@ export component AppWindow inherits Window {
                     spacing: 20px;
                     VerticalLayout {
                         spacing: 18px; horizontal-stretch: 3;
-                        if root.detail-gallery-count > 0: Rectangle {
+                        if root.detail-visual-mode == "identity": IdentityDossier {
+                            project-name: root.detail-name;
+                            project-maker: root.detail-maker;
+                            project-domain: root.detail-domain;
+                            project-platforms: root.detail-platforms;
+                            project-kind: root.detail-kind;
+                            project-summary: root.detail-summary;
+                            project-source: root.detail-source;
+                            dark: root.dark-mode;
+                            compact: root.compact-layout;
+                            height: root.compact-layout ? 347px : 370px;
+                        }
+                        if root.detail-visual-mode == "official": Rectangle {
                             height: root.compact-layout ? 385px : 470px;
                             background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 11px;
                             VerticalLayout {
@@ -1046,16 +1051,6 @@ export component AppWindow inherits Window {
                                 padding: 18px; spacing: 11px;
                                 Text { text: "COMMERCIAL ALTERNATIVE / CHALLENGED SOFTWARE"; font-size: 10px; font-weight: 800; color: root.accent; }
                                 Text { text: root.detail-challenges; font-size: 13px; color: root.strong; wrap: word-wrap; }
-                            }
-                        }
-                        if root.detail-gallery-count == 0: Rectangle {
-                            height: 138px; background: root.muted-sheet; border-radius: 11px;
-                            VerticalLayout {
-                                padding: 18px; spacing: 10px;
-                                Text { text: "OFFICIAL INTERFACE PREVIEW"; font-size: 10px; font-weight: 800; color: root.subtle; }
-                                Text { text: "A source-verified screenshot is not available for this project. Its catalog data remains available.";
-                                    font-size: 12px; color: root.muted; wrap: word-wrap; }
-                                Text { text: "Only independently reviewed project imagery is displayed."; font-size: 10px; color: root.subtle; }
                             }
                         }
                     }

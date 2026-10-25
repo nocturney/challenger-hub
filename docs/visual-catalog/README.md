@@ -32,7 +32,7 @@ commit, digest and reported license.
   category, logo/preview coverage, source-reported licenses, manifest links,
   screenshot SHA-256, screenshot count, imported bytes and exact UI integration.
 - `missing-media-20261025.json`: actionable missing-media list, including one
-  source-approved icon not yet embedded, with neutral fallbacks otherwise.
+  source-approved icon not yet embedded; the product uses factual identity cards instead of image placeholders.
 - `source-category-coverage-20261025.{csv,json}`: derived source-category
   gap counts for planning the next coverage wave, not a quality ranking.
 - `ui/APPROVED_GALLERY_INDEX.json`: per-image original source link, license,
@@ -116,8 +116,9 @@ The offline `media-rights-gate.mjs developer` checks the ledger and exact pinned
 source identities on every build; `media-rights-gate.mjs public` currently
 fails deliberately until the distribution rights are independently verified.
 This does not block ongoing internal development. For publication, obtain
-specific grants or media licenses where required or omit those assets and use
-honest placeholders; do not replace legal evidence with an arbitrary credit.
+specific grants or media licenses where required; otherwise show the original
+project facts in a polished identity card, not an invented image. Do not replace
+legal evidence with an arbitrary credit.
 See the [Creative Commons BY 4.0 license](https://creativecommons.org/licenses/by/4.0/)
 for an example where attribution plus its stipulated conditions is sufficient
 for licensed copyright use. Neither a repository's existence nor a license name
@@ -128,9 +129,9 @@ alone proves that this CC BY permission applies to an image.
 The About screen exposes the media policy and explains the difference between
 source credit and media rights. Each screenshot's caption now includes its
 original source repository and the reported **repository** license; each
-embedded icon is credited in its project dossier. For the other 152 entries,
-Results uses a deliberately neutral **NO VERIFIED IMAGE** tile, rather than a
-fabricated screenshot, and Detail retains the honest empty-media state.
+embedded icon is credited in its project dossier. For the other 152 entries, the product now uses a real-data-only **PROJECT
+IDENTITY** tile in Results and a complete typographic identity dossier in
+Detail. No missing-image tile or faux screenshot remains in the native design.
 
 The developer package writer compares the SHA-256 of the embedded
 `MEDIA_CREDITS.md` and `MEDIA_CREDITS.json` against the approved generated
@@ -144,3 +145,55 @@ revealed the gallery navigation could slip below a standard-height window.
 Navigation controls now appear *above* the screenshot, so they remain
 immediately accessible while the full source credit can still be reached by
 scrolling. Window-targeted Mac capture, no screenshot reconstruction.
+
+
+## Final product visual policy — OFFICIAL or IDENTITY only
+
+The approved design has **exactly two states**, not three. This is an enforceable
+product policy, not a proposed style direction:
+
+1. **Official source imagery:** display original, source-pinned application
+   icons/screenshots with exact upstream identity, SHA-256 verification, source
+   attribution and the existing media-rights review status. Only authentic
+   application UI can appear in the screenshot/gallery area.
+2. **Project Identity:** if there is no approved authentic screenshot, render
+   a cohesive typographic card containing only existing project name, creator,
+   discipline, platform, source classification, summary and verified source URL.
+   An independently source-verified official icon can accompany the identity,
+   but no substitute monogram or synthetic icon is created. This is presented
+   as a real catalog profile, **never as a screenshot**.
+
+**Explicitly prohibited:** Crafted/Studio Previews, decorative/synthetic category
+images, illustrative mock UIs, AI-generated screenshots, synthetic brand marks,
+invented product icons, and empty/missing-media error tiles in primary views.
+No generic art should be generated merely to make a project look visual.
+
+Implementation: `tools/ui-bench/slint-rust-host/ui/identity-card.slint` and the
+single Rust `visual_mode()` decision. The same two modes power Results and
+Detail; the source snapshot remains **181 factual records**. Current coverage
+is **29 Official** (70 original screenshots) and **152 Identity**, with 30
+source-verified official icons (these may appear alongside either view).
+The `verify-native-visual-policy.mjs` CI gate checks the two-mode contract,
+absence of generated imagery, genuine image-source coverage and 181/181
+presentation routing, and deliberately fails if the mapping becomes stale.
+
+This change does not claim image/trademark redistribution rights are settled;
+Developer Preview stays separate from public-release licensing approval.
+
+### Real Mac visual acceptance — identity cards
+
+These two images were captured from a running Rust/Slint desktop window against
+the genuine read-only Preview12 catalog, not generated or composited graphics.
+The source-backed example is `curated:composa`, which has neither an embedded
+official application icon nor a source-verified screenshot. The visual design
+still provides a complete, factual and accessible product presentation.
+
+![Composa real-data-only identity card in Search Results](qa-macos/06-composa-identity-results.png)
+
+![Composa detailed typographic project identity dossier](qa-macos/05-composa-identity-dossier.png)
+
+The labels and content come from the actual catalog fields (not fabricated
+software capabilities). Source citations and license notices for official
+assets remain unchanged; adding the identity state does not grant any new
+installation or third-party redistribution rights. Mac source-backed smoke and
+native resizing at 820/1180px passed with both presentation modes active.
