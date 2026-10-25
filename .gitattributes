@@ -14,3 +14,7 @@
 
 tools/preview-build/media-source/assets/** -text
 tools/preview-build/media-source/licenses/*.txt -text
+
+# Preserve byte-for-byte source-verified Slint SVG images on Windows checkout.
+# Git autocrlf would otherwise change their SHA-256 and invalidate provenance.
+tools/ui-bench/slint-rust-host/ui/*.svg -text

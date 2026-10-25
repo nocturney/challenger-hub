@@ -1,0 +1,15 @@
+{
+  "name": "challenger-slint-node-live-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Isolated read-only live Challenger Node backend + Slint native renderer experiment",
+  "scripts": {
+    "smoke": "node bridge.mjs --smoke",
+    "start": "node bridge.mjs",
+    "test": "node --test bridge.test.mjs"
+  },
+  "dependencies": {
+    "slint-ui": "1.18.1"
+  }
+}

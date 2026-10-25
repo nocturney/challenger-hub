@@ -2,6 +2,7 @@
 Private, versioned source for Challenger Hub: a localhost desktop catalog of independent software alternatives, on Windows and macOS.
 
 ## Status
+- **Native Rust/Slint developer preview (integration):** Windows, macOS and Linux CI coverage, source-vetted catalog, accessible preferences and manual-only checks. This is source integration, **not a production deployment or public distribution approval**. See docs/integrations/native-preview12-20261025.md.
 - **UI v2.6.0:** contextual discovery hero, daily project spotlight, rotating competitor-based suggestions and readable non-truncated competitor names. Independently QA-tested on Windows and macOS on 2026-10-10.
 - **Backend health versions:** Windows and macOS report 2.5.7. Their source-scanner implementations still differ (Windows has a bounded Atom-prefix optimization); scanner parity requires a separate reviewed deployment. The 2.5.9 UI rollout did not modify API/scanner/installer runtime.
 - **Catalog:** 12 Craft applications + 152 independent projects (164 entries); the 73 newly imported research candidates are explicitly unverified and have no installer approval.

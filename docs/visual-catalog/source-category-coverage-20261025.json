@@ -1,0 +1,637 @@
+{
+  "schema": "challenger-native-visual-category-coverage.v1",
+  "categories": [
+    {
+      "sourceCategory": "Engineering and manufacturing",
+      "totalProjects": 16,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 16,
+      "missingIcons": 16
+    },
+    {
+      "sourceCategory": "Security and identity",
+      "totalProjects": 13,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 13,
+      "missingIcons": 13
+    },
+    {
+      "sourceCategory": "Data and BI",
+      "totalProjects": 12,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 12,
+      "missingIcons": 12
+    },
+    {
+      "sourceCategory": "Science and GIS",
+      "totalProjects": 10,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 10,
+      "missingIcons": 10
+    },
+    {
+      "sourceCategory": "Business and legal",
+      "totalProjects": 8,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 8,
+      "missingIcons": 8
+    },
+    {
+      "sourceCategory": "Live production",
+      "totalProjects": 8,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 8,
+      "missingIcons": 8
+    },
+    {
+      "sourceCategory": "3D & Manufacturing",
+      "totalProjects": 6,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 6,
+      "missingIcons": 6
+    },
+    {
+      "sourceCategory": "Audio & music",
+      "totalProjects": 5,
+      "projectsWithScreenshots": 1,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 4,
+      "missingIcons": 4
+    },
+    {
+      "sourceCategory": "Image editing",
+      "totalProjects": 4,
+      "projectsWithScreenshots": 1,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 3,
+      "missingIcons": 3
+    },
+    {
+      "sourceCategory": "Audio and music",
+      "totalProjects": 3,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 3,
+      "missingIcons": 3
+    },
+    {
+      "sourceCategory": "Developer & Automation",
+      "totalProjects": 3,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 3,
+      "missingIcons": 3
+    },
+    {
+      "sourceCategory": "Game creation",
+      "totalProjects": 3,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 3,
+      "missingIcons": 3
+    },
+    {
+      "sourceCategory": "Vector animation",
+      "totalProjects": 3,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 3,
+      "missingIcons": 3
+    },
+    {
+      "sourceCategory": "Workflow automation",
+      "totalProjects": 3,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 3,
+      "missingIcons": 3
+    },
+    {
+      "sourceCategory": "CAD & engineering",
+      "totalProjects": 4,
+      "projectsWithScreenshots": 2,
+      "projectsWithIcons": 2,
+      "missingScreenshots": 2,
+      "missingIcons": 2
+    },
+    {
+      "sourceCategory": "Video editing",
+      "totalProjects": 3,
+      "projectsWithScreenshots": 1,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 2,
+      "missingIcons": 2
+    },
+    {
+      "sourceCategory": "AI agents & workflows",
+      "totalProjects": 2,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 2,
+      "missingIcons": 2
+    },
+    {
+      "sourceCategory": "AI gateways",
+      "totalProjects": 2,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 2,
+      "missingIcons": 2
+    },
+    {
+      "sourceCategory": "Design & Imaging",
+      "totalProjects": 2,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 2,
+      "missingIcons": 2
+    },
+    {
+      "sourceCategory": "Knowledge & collaboration",
+      "totalProjects": 2,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 2,
+      "missingIcons": 2
+    },
+    {
+      "sourceCategory": "Vector & UI design",
+      "totalProjects": 2,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 2,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "Video & Animation",
+      "totalProjects": 2,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 2,
+      "missingIcons": 2
+    },
+    {
+      "sourceCategory": "3D materials",
+      "totalProjects": 2,
+      "projectsWithScreenshots": 1,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "AI assistants",
+      "totalProjects": 2,
+      "projectsWithScreenshots": 1,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 2
+    },
+    {
+      "sourceCategory": "CRM",
+      "totalProjects": 2,
+      "projectsWithScreenshots": 1,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "Motion graphics",
+      "totalProjects": 2,
+      "projectsWithScreenshots": 1,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "New discoveries",
+      "totalProjects": 2,
+      "projectsWithScreenshots": 1,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "2D character rigging",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "3D mesh processing",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "3D print farm ERP",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "3D scanning & point clouds",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "3D viewers & conversion",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "Accounting",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "Agent app builder",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "Agent credentials",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "Agent frameworks",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "Agent memory",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "Agent runtime",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "Agent security",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "AI & Agents",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "AI coding agents",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 1,
+      "missingIcons": 0
+    },
+    {
+      "sourceCategory": "AI gateway",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "AI observability",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "API development",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "Audio, nodes & compositing",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "Code editors",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "CRM & sales",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 1,
+      "missingIcons": 0
+    },
+    {
+      "sourceCategory": "Electronics & PCB",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "ERP",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "eSign & documents",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 1,
+      "missingIcons": 0
+    },
+    {
+      "sourceCategory": "Headless data platform",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "Internal app builder",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "Knowledge graph memory",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "Manufacturing & CAM",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 1,
+      "missingIcons": 0
+    },
+    {
+      "sourceCategory": "Manufacturing ERP",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "No-code business apps",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "No-code database",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "Office & Productivity",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "Project management",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "RAG platform",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "Remote IT management",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 1,
+      "missingIcons": 0
+    },
+    {
+      "sourceCategory": "Social media management",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "Workflow engine",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 0,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 1,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "Documents",
+      "totalProjects": 2,
+      "projectsWithScreenshots": 2,
+      "projectsWithIcons": 2,
+      "missingScreenshots": 0,
+      "missingIcons": 0
+    },
+    {
+      "sourceCategory": "Photography",
+      "totalProjects": 2,
+      "projectsWithScreenshots": 2,
+      "projectsWithIcons": 2,
+      "missingScreenshots": 0,
+      "missingIcons": 0
+    },
+    {
+      "sourceCategory": "Video post-production",
+      "totalProjects": 2,
+      "projectsWithScreenshots": 2,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 0,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "3D voxel modeling",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 1,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 0,
+      "missingIcons": 0
+    },
+    {
+      "sourceCategory": "Audio",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 1,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 0,
+      "missingIcons": 0
+    },
+    {
+      "sourceCategory": "CAD",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 1,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 0,
+      "missingIcons": 0
+    },
+    {
+      "sourceCategory": "Document management",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 1,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 0,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "Fonts & typography",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 1,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 0,
+      "missingIcons": 0
+    },
+    {
+      "sourceCategory": "Inventory management",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 1,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 0,
+      "missingIcons": 0
+    },
+    {
+      "sourceCategory": "Presentations",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 1,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 0,
+      "missingIcons": 0
+    },
+    {
+      "sourceCategory": "Publishing",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 1,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 0,
+      "missingIcons": 0
+    },
+    {
+      "sourceCategory": "Remote desktop",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 1,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 0,
+      "missingIcons": 1
+    },
+    {
+      "sourceCategory": "Spreadsheets",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 1,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 0,
+      "missingIcons": 0
+    },
+    {
+      "sourceCategory": "Vector design",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 1,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 0,
+      "missingIcons": 0
+    },
+    {
+      "sourceCategory": "Video",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 1,
+      "projectsWithIcons": 1,
+      "missingScreenshots": 0,
+      "missingIcons": 0
+    },
+    {
+      "sourceCategory": "Workflow orchestration",
+      "totalProjects": 1,
+      "projectsWithScreenshots": 1,
+      "projectsWithIcons": 0,
+      "missingScreenshots": 0,
+      "missingIcons": 1
+    }
+  ]
+}

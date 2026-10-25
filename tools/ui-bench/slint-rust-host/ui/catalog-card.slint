@@ -1,0 +1,145 @@
+import { TextScale } from "text-scale.slint";
+import { ApprovedGalleryThumb } from "approved-gallery.slint";
+import { IdentityTile } from "identity-card.slint";
+import { QuietPremium } from "quiet-premium.slint";
+
+// Presentation is always an authentic upstream screenshot or factual identity.
+component CardMedia inherits Rectangle {
+    in property <string> project-media;
+    in property <string> project-mode;
+    in property <string> project-name;
+    in property <string> project-maker;
+    in property <string> project-domain;
+    in property <bool> dark;
+    in property <bool> high-contrast: false;
+    background: root.high-contrast ? (root.dark ? #101a12 : #ffffff)
+        : (root.dark ? #25352a : #eef4ee);
+    border-radius: QuietPremium.media-radius;
+    clip: true;
+    if root.project-mode == "official": ApprovedGalleryThumb {
+        media: root.project-media; width: parent.width; height: parent.height;
+    }
+    if root.project-mode == "identity": IdentityTile {
+        project-name: root.project-name;
+        project-maker: root.project-maker;
+        project-domain: root.project-domain;
+        dark: root.dark;
+        high-contrast: root.high-contrast;
+        width: parent.width; height: parent.height;
+    }
+}
+
+export component CatalogProductCard inherits Rectangle {
+    in property <string> project-name;
+    in property <string> project-maker;
+    in property <string> project-domain;
+    in property <string> project-summary;
+    in property <string> project-platforms;
+    in property <string> project-media;
+    in property <string> project-mode;
+    in property <bool> wide: false;
+    in property <bool> compact: false;
+    in property <bool> dark: false;
+    in property <bool> highlighted: false;
+    in property <bool> hovered: false;
+    in property <bool> pressed: false;
+    in property <bool> reduced-motion: false;
+    in property <bool> high-contrast: false;
+
+    property <bool> active: root.highlighted || root.hovered || root.pressed;
+    background: root.high-contrast ? (root.dark ? #101b13 : #ffffff) : root.pressed
+        ? (root.dark ? QuietPremium.dark-pressed : QuietPremium.light-pressed)
+        : (root.active
+            ? (root.dark ? QuietPremium.dark-hover : QuietPremium.light-hover)
+            : (root.dark ? #202b24 : #ffffff));
+    border-color: root.high-contrast ? (root.dark ? #c9f4d1 : #244a30) : root.highlighted
+        ? (root.dark ? #e8a64f : #47765a)
+        : (root.active
+            ? (root.dark ? QuietPremium.dark-outline : QuietPremium.light-outline)
+            : (root.dark ? #425348 : #dce7dc));
+    border-width: root.high-contrast ? 2px : (root.highlighted ? 2px : 1px);
+    border-radius: QuietPremium.card-radius;
+    // Shadow is allocated only on the interacted card; scrolling remains flat/cheap.
+    drop-shadow-blur: root.active ? 11px : 0px;
+    drop-shadow-offset-y: root.active ? 3px : 0px;
+    drop-shadow-color: root.active
+        ? (root.dark ? QuietPremium.dark-shadow : QuietPremium.light-shadow)
+        : transparent;
+    animate background, border-color {
+        duration: QuietPremium.hover-motion;
+        easing: ease-out;
+        enabled: !root.reduced-motion;
+    }
+
+    if !root.wide: VerticalLayout {
+        padding: 13px; spacing: 8px;
+        CardMedia {
+            height: 147px;
+            project-media: root.project-media;
+            project-mode: root.project-mode;
+            project-name: root.project-name;
+            project-maker: root.project-maker;
+            project-domain: root.project-domain;
+            dark: root.dark;
+            high-contrast: root.high-contrast;
+        }
+        Text { text: root.project-name; font-size: (17px) * TextScale.factor; font-weight: 800;
+            color: root.dark ? #f3f7f2 : #253a2d; overflow: elide; }
+        Text { text: root.project-maker + "  ·  " + root.project-domain; font-size: (11px) * TextScale.factor;
+            color: root.dark ? #b0beb4 : #536758; overflow: elide; }
+        Text { text: root.project-summary; font-size: (12px) * TextScale.factor;
+            color: root.dark ? #d1d9cf : #4b5d50;
+            height: 39px; wrap: word-wrap; overflow: elide; }
+    }
+
+    if root.wide: HorizontalLayout {
+        padding: 12px; spacing: root.compact ? 12px : 17px;
+        CardMedia {
+            width: root.compact ? 177px : 232px;
+            project-media: root.project-media;
+            project-mode: root.project-mode;
+            project-name: root.project-name;
+            project-maker: root.project-maker;
+            project-domain: root.project-domain;
+            dark: root.dark;
+            high-contrast: root.high-contrast;
+        }
+        VerticalLayout {
+            padding-top: 3px; padding-bottom: 3px; spacing: 8px;
+            HorizontalLayout {
+                spacing: 12px;
+                Text { text: root.project-name; font-size: (root.compact ? 17px : 19px) * TextScale.factor;
+                    font-weight: 800; color: root.dark ? #f3f7f2 : #253a2d;
+                    overflow: elide; horizontal-stretch: 1; }
+                Rectangle {
+                    width: root.compact ? 112px : 154px; height: 24px;
+                    border-radius: 12px;
+                    background: root.dark ? #314638 : #eaf2e8;
+                    Text { text: root.project-domain; font-size: (10px) * TextScale.factor;
+                        font-weight: 700; color: root.dark ? #c0ddc3 : #47765a;
+                        horizontal-alignment: center; vertical-alignment: center;
+                        overflow: elide; }
+                }
+            }
+            Text { text: "By " + root.project-maker; font-size: (11px) * TextScale.factor;
+                color: root.dark ? #b0beb4 : #536758; overflow: elide; }
+            Text { text: root.project-summary; font-size: (12px) * TextScale.factor;
+                color: root.dark ? #d1d9cf : #4b5d50;
+                height: 41px; wrap: word-wrap; overflow: elide; }
+            HorizontalLayout {
+                spacing: 10px;
+                Text { text: root.project-platforms; font-size: (10px) * TextScale.factor;
+                    color: root.dark ? #b0beb4 : #536758;
+                    horizontal-stretch: 1; vertical-alignment: center; overflow: elide; }
+                Rectangle {
+                    width: root.compact ? 103px : 127px; height: 30px;
+                    border-radius: QuietPremium.control-radius;
+                    background: root.dark ? #37533d : #e6f1e6;
+                    Text { text: "View details  ↗"; font-size: (11px) * TextScale.factor; font-weight: 800;
+                        color: root.dark ? #d3e7d1 : #356648;
+                        horizontal-alignment: center; vertical-alignment: center; }
+                }
+            }
+        }
+    }
+}
