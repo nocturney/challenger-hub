@@ -43,3 +43,19 @@ release or constitute full visual QA on every OS / screen size.
 17 disciplines, then the remaining 165 projects without screenshots. New
 assets must pass exact identity, source provenance, rights/attribution, SHA-256,
 size/dimensions and genuine OS visual QA before inclusion.
+
+## Real Mac Slint window QA, 25 Oct 2026
+
+The following are **native window-targeted captures** from the running
+Rust/Slint preview on MacMiniOffice2. No full-desktop/user windows, AI mockups
+or browser captures were included. They show the real read-only Preview12
+catalog, source-verified thumbnails and the four-frame PdfCraft gallery.
+
+![Authentic Craft screenshots and responsive results, native Mac](qa-macos/01-verified-results.png)
+
+![PdfCraft official UI screenshot, gallery 1 of 4, native Mac](qa-macos/02-pdfcraft-gallery.png)
+
+The Results screenshot follows the responsive column adjustment: the verified
+image remains prominent and the tool/discipline source facts remain legible
+at a normal Mac preview window width. This is visual evidence for Mac only;
+interactive Windows/Linux layout still requires platform-specific acceptance.

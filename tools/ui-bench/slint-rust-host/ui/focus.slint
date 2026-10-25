@@ -200,12 +200,14 @@ export component AppWindow inherits Window {
     property <bool> compact-layout: false;
     property <bool> compact-navigation: false;
     property <bool> show-extended-columns: true;
+    property <bool> show-platforms: false;
     property <bool> spacious-layout: true;
     property <bool> over-950: true;
     changed width => {
         root.compact-layout = root.width < 950px;
         root.compact-navigation = root.width < 980px;
-        root.show-extended-columns = root.width > 980px;
+        root.show-extended-columns = root.width > 1280px;
+        root.show-platforms = root.width > 1550px;
         root.spacious-layout = root.width > 1050px;
         root.over-950 = root.width > 950px;
     }
@@ -506,9 +508,9 @@ export component AppWindow inherits Window {
                 HorizontalLayout {
                     padding-left: 15px; padding-right: 15px; spacing: 13px;
                     Text { text: "PROJECT / REAL PREVIEW"; font-size: 10px; font-weight: 800; color: root.subtle; horizontal-stretch: 3; vertical-alignment: center; }
-                    if !root.compact-layout: Text { text: "DISCIPLINE"; font-size: 10px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
+                    if root.show-extended-columns: Text { text: "DISCIPLINE"; font-size: 10px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
                     Text { text: "AVAILABLE NEXT STEP"; font-size: 10px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
-                    if root.show-extended-columns: Text { text: "PLATFORMS (REPORTED)"; font-size: 10px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
+                    if root.show-platforms: Text { text: "PLATFORMS (REPORTED)"; font-size: 10px; font-weight: 800; color: root.subtle; horizontal-stretch: 2; vertical-alignment: center; }
                 }
             }
             if root.matching == 0: Rectangle {
@@ -538,7 +540,7 @@ export component AppWindow inherits Window {
                         HorizontalLayout {
                             horizontal-stretch: 3; spacing: 9px;
                             if project.has-preview: Rectangle {
-                                width: root.compact-layout ? 112px : 148px;
+                                width: root.compact-layout ? 112px : 164px;
                                 height: root.compact-layout ? 72px : 91px;
                                 background: root.muted-sheet; border-radius: 7px;
                                 ApprovedGalleryThumb { media: project.media; width: parent.width; height: parent.height; }
@@ -639,12 +641,12 @@ export component AppWindow inherits Window {
                             VerticalLayout {
                                 spacing: 2px;
                                 Text { text: project.name; font-size: 14px; font-weight: 700; color: root.strong; overflow: elide; }
-                                Text { text: project.maker; font-size: 11px; color: root.subtle; overflow: elide; }
+                                Text { text: root.show-extended-columns ? project.maker : project.maker + "  ·  " + project.domain; font-size: 11px; color: root.subtle; overflow: elide; }
                                 Text { text: project.summary; font-size: 11px; color: root.muted;
                                     height: project.has-preview ? 44px : 28px; wrap: word-wrap; overflow: elide; }
                             }
                         }
-                        if !root.compact-layout: Text { text: project.domain; font-size: 11px; color: root.muted;
+                        if root.show-extended-columns: Text { text: project.domain; font-size: 11px; color: root.muted;
                             horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
                         VerticalLayout {
                             horizontal-stretch: 2; spacing: 4px;
@@ -655,7 +657,7 @@ export component AppWindow inherits Window {
                             Text { text: project.status; font-size: 10px; color: root.subtle;
                                 overflow: elide; }
                         }
-                        if root.show-extended-columns: Text { text: project.platforms; font-size: 10px; color: root.muted;
+                        if root.show-platforms: Text { text: project.platforms; font-size: 10px; color: root.muted;
                             horizontal-stretch: 2; vertical-alignment: center; overflow: elide; }
                     }
                     TouchArea { clicked => { root.open-project(i); } }
