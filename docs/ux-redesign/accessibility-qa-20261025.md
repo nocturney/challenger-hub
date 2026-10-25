@@ -17,24 +17,38 @@ Stacked on Draft PR #33, not merged or released.
   failure; do not ignore it because CI passed.
 - Direct bundled sidecar read on the warmed cache returned 181 records in
   **4,530 ms**; an immediate subsequent native GUI smoke passed in **5,264 ms**.
-  This strongly suggests first-run OS/extraction overhead, but does not
-  conclusively attribute the cause. The Windows outer guard is extended to
-  **40 seconds**, still bounded, with existing process-tree kill and 12-second
-  in-engine health deadline unchanged. Verify the change on a new cold
-  Windows package before declaring resolved.
+  The revised Windows outer guard is **40 seconds**, while the inner health
+  deadline and process-tree cleanup remain bounded. On the new GitHub-built
+  portable ZIP for commit `a1f0985`, the first extracted launch produced
+  `FOCUS_NATIVE_GUI_PASS` with `startToReadyMs=5289`: no cold timeout
+  recurred. Its PowerShell wrapper erroneously treated that PASS message on
+  stderr as terminating, so the wrapper exited 1; a separate native launch
+  using `Start-Process` exited **0** with `startToReadyMs=5186`.
+  This is successful functional acceptance, not an OS cold-start benchmark.
 - Desktop Commander terminal executes under Windows **Session 0**. An
   ephemeral, explicitly named Task Scheduler QA action under the already
   logged-in Chris user, with `InteractiveToken` (Session 1), exposed the
   actual UI Automation tree. The task was subsequently deleted. It neither
   installed software nor wrote to application preferences.
-- **UI Automation (old PR #33 artifact):** 90 elements were found, including
-  focusable search, navigation, preference sections, System/Reduce/Allow,
-  On/Off and Close. On this older artifact the choices were still buttons;
-  the revised draft makes them real, checkable/checked radio buttons.
-  **Re-run UIA on the updated artifact**; do not retroactively report that
-  the new semantics passed.
-- **Real Windows input:** Ctrl+, opened Preferences, and Escape dismissed it.
-  Both were confirmed by the UI Automation tree with the window foregrounded.
+- **UI Automation (previous artifact):** 90 elements exposed and keyboard
+  focus confirmed for search, navigation and preferences; choices were Buttons.
+- **UI Automation (new artifact):** the verified ZIP SHA-256
+  `2f8d4889dae80b1ec92aef3606264c2418bd85a3b7cafe255f35137c8b5d98a4`
+  belonged to PR head `a1f0985`. In Session 1, the fixed readiness-aware
+  harness returned **98 UIA elements, 12 native RadioButtons** and
+  `verified=true`, including three text-scale radio options.
+  Earlier false-negative reports were due to sampling before the popup
+  existed, not to missing roles. UIA returned `IsKeyboardFocusable=false`
+  for individual radio nodes; actual Tab key events nevertheless focused
+  them in order. Screen-reader behavior still needs spoken-output validation.
+- **Real Windows input:** Ctrl+, opened Preferences, Escape dismissed it,
+  and Tab traversed the home controls and modal RadioButtons without leaving
+  the popup. The new artifact's actual 150% text-size selection persisted
+  `text_scale=150`; Reset preferences restored 100% in isolated APPDATA.
+  Dark -> Light -> System and reset were likewise confirmed on the prior
+  binary. No real user preferences were changed; temporary QA tasks removed.
+- **CI:** https://github.com/nocturney/challenger-hub/actions/runs/40185574642
+  completed successfully on Windows, macOS and Ubuntu.
 
 The reproducible interactive QA harness is
 `tools/ui-bench/slint-rust-host/qa/windows-accessibility.ps1`.
@@ -76,16 +90,16 @@ speech remain separate release acceptance criteria.
 
 ## Remaining pre-merge evidence
 
-1. Windows UIA rerun on the newly compiled radio/text-scale artifact (should
-   expose radio roles, checked values and focusability), Windows native
-   UI smoke/resize and the extended cold-start case.
-2. Mac and Windows resized/native visual QA at 100/125/150, including
-   ensuring no hidden settings control or clipped labels.
-3. Actual Narrator / NVDA and VoiceOver spoken output, live keyboard traversal,
-   200%-zoom/RTL/IME acceptance with a real interactive accessibility session.
-   UI Automation properties alone **cannot prove** that spoken presentation is
-   understandable.
-4. Media rights, signing and public release approval are independently blocked.
+1. Actual **Narrator/NVDA and VoiceOver spoken-output** checks, including
+   announcement of each radio choice's selection state. UIA metadata
+   and Tab order alone cannot prove understandable screen-reader speech;
+   macOS accessibility permission is not available to the current tool.
+2. **200% text enlargement**, thorough RTL/IME input composition, live
+   OS-theme updates, and complete DPI/window-size visual QA.
+3. Investigation of Slint radio nodes reporting
+   `IsKeyboardFocusable=false` despite successful physical Tab focus.
+4. Media redistribution rights, publisher signing and user release approval
+   remain separately blocked.
 
 All tests are developer-preview read-only actions except the deliberately
 isolated, user-triggered preference storage QA. No merge, launch, installs

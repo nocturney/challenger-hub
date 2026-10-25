@@ -89,12 +89,26 @@ width in both appearances, popup open/dismiss, keyboard navigation and
 reduced-motion/high-contrast visual QA; Node release fixtures and integration
 checks. On the real Windows Chris desktop, a verified portable PR #33
 artifact passed native GUI smoke after warm-up, and UI Automation confirmed
-focusable controls, Ctrl+, to open Preferences and Escape to close it. The
-first *cold* launch timed out and requires retesting with the revised bounded
-Windows sidecar timeout. See [Windows and accessibility evidence](accessibility-qa-20261025.md).
+focusable controls, Ctrl+, to open Preferences and Escape to close it.
+The prior artifact's first cold launch timed out at 22 seconds. A newly
+verified portable artifact with the bounded 40-second Windows guard produced
+`FOCUS_NATIVE_GUI_PASS` after extraction; a separate native run exited 0.
+New Session-1 Windows UI Automation exposed 98 elements and 12 RadioButtons;
+actual Tab focus, 150% choice/save and reset to 100% passed.
+See [Windows and accessibility evidence](accessibility-qa-20261025.md).
 
-Still necessary before production: a screen-reader speech walkthrough in
-Narrator/NVDA and VoiceOver, 200% text enlargement and clipping QA, RTL/IME,
-live OS theme switching (currently read at launch/selection), Windows UIA
-revalidation on the updated radio-role build, media rights, publisher signing
-and explicit user UX acceptance. These must not be presented as complete.
+Still necessary before production: real Narrator/NVDA and VoiceOver spoken
+screen-reader checks, 200% text enlargement, RTL/IME, macOS AX permission
+and Command+, validation, wider DPI/accessibility coverage, media rights,
+publisher signing and user UX acceptance. These have **not** been
+represented as complete.
+
+## Latest CI and real-device acceptance
+
+- Last application commit `a1f0985` passed Windows 2022, macOS 15 and
+  Ubuntu 24.04 CI: https://github.com/nocturney/challenger-hub/actions/runs/40185574642
+- The optional Windows UIA harness now waits for the popup before checking
+  the RadioButton tree, preventing a premature false-negative.
+- On the actual Windows Chris desktop: 12 RadioButtons, correct keyboard
+  Tab focus sequence, Ctrl+Comma/Escape, 150% saved text scale and reset
+  to 100% in isolated APPDATA; real user preferences remained unchanged.

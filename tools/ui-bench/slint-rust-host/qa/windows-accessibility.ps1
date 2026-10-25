@@ -55,8 +55,25 @@ try {
     $info.escapeCloses=-not (UIANames $window).Contains('Make Challenger yours.')
     if(-not $info.escapeCloses){throw 'Escape did not close Preferences'}
   } else {
-    $nodes=$window.FindAll([System.Windows.Automation.TreeScope]::Descendants,
-      [System.Windows.Automation.Condition]::TrueCondition)
+    # Native backend startup and popup attachment are asynchronous. Do not
+    # claim missing accessible controls from a snapshot taken before it opens.
+    $ready=$false
+    for($attempt=0;$attempt -lt 45;$attempt++){
+      $nodes=$window.FindAll([System.Windows.Automation.TreeScope]::Descendants,
+        [System.Windows.Automation.Condition]::TrueCondition)
+      $seen=New-Object 'System.Collections.Generic.HashSet[string]'
+      foreach($node in $nodes){
+        try {
+          if($node.Current.ControlType -eq [System.Windows.Automation.ControlType]::RadioButton){
+            [void]$seen.Add($node.Current.Name)
+          }
+        } catch {}
+      }
+      if($seen.Contains('Accessibility') -and $seen.Contains('150%') -and
+         $seen.Contains('Reduce') -and $seen.Contains('Allow')){$ready=$true;break}
+      Start-Sleep -Milliseconds 250
+    }
+    if(-not $ready){throw 'Native Preferences accessibility popup did not become ready'}
     $info.elementCount=$nodes.Count
     $radios=New-Object 'System.Collections.Generic.List[string]'
     $focus=New-Object 'System.Collections.Generic.List[string]'
