@@ -90,7 +90,7 @@ try {
     $info.radioChoices=$radios.ToArray()
     $info.keyboardFocusable=$focus.Count
     if($nodes.Count -lt 50){throw 'Incomplete UIA tree'}
-    foreach($name in @('Accessibility','System','Reduce','Allow','Off','On')){
+    foreach($name in @('Accessibility','System','Reduce','Allow','Off','On','100%','125%','150%','175%','200%')){
       if(-not ($radios -contains $name)){throw ('Missing accessible radio: '+$name)}
     }
     if(-not ($focus -contains 'Search software catalog')){throw 'Search is not focusable'}

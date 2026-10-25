@@ -28,7 +28,7 @@ impl Preferences {
         self.schema == SCHEMA
             && ["system", "light", "dark"].contains(&self.appearance.as_str())
             && ["system", "reduce", "full"].contains(&self.motion.as_str())
-            && [100,125,150].contains(&self.text_scale)
+            && [100,125,150,175,200].contains(&self.text_scale)
     }
 
     pub fn dark_mode(&self) -> bool {
@@ -140,6 +140,7 @@ mod tests {
         assert!(!p.high_contrast);
         assert_eq!(p.text_scale, 100);
         assert!(!Preferences { text_scale: 400, ..p.clone() }.valid());
+        for text_scale in [100,125,150,175,200] { assert!(Preferences { text_scale, ..p.clone() }.valid()); }
         assert_eq!(p.motion, "system");
         assert_eq!(p.appearance, "system");
         assert!(!Preferences { appearance: "violet".into(), ..p.clone() }.valid());
