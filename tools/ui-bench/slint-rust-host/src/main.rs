@@ -318,7 +318,19 @@ fn update_device_panels(ui: &AppWindow, state: &State) {
     )));
 }
 
+// The first strong letter, rather than the app's English locale, decides the
+// reading edge for a mixed-script search. The original UTF-8 query is untouched.
+fn query_starts_rtl(query: &str) -> bool {
+    for c in query.chars() {
+        let code=c as u32;
+        if matches!(code, 0x0590..=0x08FF | 0xFB1D..=0xFEFC) { return true; }
+        if c.is_alphabetic() { return false; }
+    }
+    false
+}
+
 fn update_os_device_panel(ui: &AppWindow, state: &State) {
+    ui.set_device_query_rtl(query_starts_rtl(&state.device_query));
     ui.set_device_query(state.device_query.clone().into());
     ui.set_device_error(state.device_error.as_deref().unwrap_or("").into());
     if let Some(snapshot) = &state.device_snapshot {
@@ -401,6 +413,7 @@ fn redraw(ui: &AppWindow, state: &mut State) {
     ui.set_page(route.page.into());
     ui.set_selected_domain(route.domain.clone().into());
     ui.set_selected_domain_label(domain_label(&route.domain).into());
+    ui.set_query_rtl(query_starts_rtl(&route.query));
     ui.set_query(route.query.into());
     ui.set_can_back(state.cursor > 0);
     ui.set_can_forward(state.cursor + 1 < state.history.len());
@@ -1834,13 +1847,24 @@ mod tests {
         assert!(focus.contains("root.change-text-scale(150)"));
         assert!(focus.contains("root.change-text-scale(175)"));
         assert!(focus.contains("root.change-text-scale(200)"));
-        assert!(focus.contains("root.text-scale-percent >= 175 ? (root.compact-layout ? 320px : 310px)"));
-        assert_eq!(focus.matches("horizontal-alignment: start; input-type: search;").count(),3);
+        assert!(focus.contains("root.text-scale-percent >= 175 ? (root.compact-layout ? 300px : 310px)"));
+        assert_eq!(focus.matches("input-type: search;").count(),3);
+        assert_eq!(focus.matches("horizontal-alignment: root.query-rtl ? right : start;").count(),2);
+        assert!(focus.contains("horizontal-alignment: root.device-query-rtl ? right : start;"));
         assert!(focus.contains("ScrollView {"), "Scaled preferences must scroll");
         assert!(focus.contains("default-font-size: 13px * TextScale.factor;"));
         assert!(focus.contains("root.text-scale-percent >= 125 ? \"Home\""));
         assert_eq!(focus.matches("LineEdit { font-size: 13px * TextScale.factor;").count(),3,
             "Native input text must also follow the chosen text size");
+    }
+
+    #[test]
+    fn mixed_script_search_respects_first_strong_direction_without_mutating_text() {
+        assert!(query_starts_rtl("תכנון CAD 123 אבג"));
+        assert!(query_starts_rtl("123 عَرَبِيّ CAD"));
+        assert!(!query_starts_rtl("CAD תכנון 123"));
+        assert!(!query_starts_rtl("abc123"));
+        assert!(!query_starts_rtl("123 ..."));
     }
 
     #[test]

@@ -176,6 +176,9 @@ export component AppWindow inherits Window {
     in-out property <int> text-scale-percent: 100;
     changed text-scale-percent => {
         TextScale.factor = root.text-scale-percent / 100.0;
+        // At 175%+ reflow even a wide window into the compact product layout.
+        root.compact-layout = root.width < 950px || root.text-scale-percent >= 175;
+        root.compact-navigation = root.width < 980px || root.text-scale-percent >= 175;
     }
     in-out property <string> preferences-section: "appearance";
     in-out property <string> preferences-status: "";
@@ -186,6 +189,7 @@ export component AppWindow inherits Window {
     in-out property <bool> can-forward: false;
     in-out property <bool> refreshing: false;
     in-out property <string> query: "";
+    in-out property <bool> query-rtl: false;
     in-out property <string> selected-domain: "all";
     in-out property <string> selected-domain-label: "All software";
     in-out property <[Discipline]> disciplines-left;
@@ -217,6 +221,7 @@ export component AppWindow inherits Window {
     in-out property <string> device-scope: "Not inspected";
     in-out property <string> device-status: "not-read";
     in-out property <string> device-query: "";
+    in-out property <bool> device-query-rtl: false;
     in-out property <bool> device-truncated: false;
     in-out property <bool> device-reading: false;
     in-out property <string> device-error: "";
@@ -314,8 +319,8 @@ export component AppWindow inherits Window {
     property <bool> spacious-layout: true;
     property <bool> over-950: true;
     changed width => {
-        root.compact-layout = root.width < 950px;
-        root.compact-navigation = root.width < 980px;
+        root.compact-layout = root.width < 950px || root.text-scale-percent >= 175;
+        root.compact-navigation = root.width < 980px || root.text-scale-percent >= 175;
         root.show-extended-columns = root.width > 1280px;
         root.show-platforms = root.width > 1550px;
         root.spacious-layout = root.width > 1050px;
@@ -489,7 +494,7 @@ export component AppWindow inherits Window {
                 HorizontalLayout {
                     spacing: 11px;
                     LineEdit { font-size: 13px * TextScale.factor;
-                        horizontal-alignment: start; input-type: search;
+                        horizontal-alignment: root.query-rtl ? right : start; input-type: search;
                         horizontal-stretch: 1; height: 54px;
                         text: root.query;
                         placeholder-text: "Search software, categories or capabilities…";
@@ -642,7 +647,9 @@ export component AppWindow inherits Window {
         if root.page == "results": VerticalLayout {
             padding-left: root.compact-layout ? 25px : 48px;
             padding-right: root.compact-layout ? 25px : 48px;
-            padding-top: 18px; padding-bottom: 17px; spacing: 13px;
+            padding-top: root.text-scale-percent >= 175 ? 10px : 18px;
+            padding-bottom: root.text-scale-percent >= 175 ? 8px : 17px;
+            spacing: root.text-scale-percent >= 175 ? 7px : 13px;
             HorizontalLayout {
                 spacing: 9px;
                 Rectangle {
@@ -669,8 +676,8 @@ export component AppWindow inherits Window {
                 }
             }
             Text { text: root.selected-domain == "all" ? "Discover software" : root.selected-domain-label;
-                color: root.strong; font-size: (root.compact-layout ? 27px : 32px) * TextScale.factor; font-weight: 800; }
-            Text { text: root.selected-domain == "all" ?
+                color: root.strong; font-size: (root.text-scale-percent >= 175 ? 23px : (root.compact-layout ? 27px : 32px)) * TextScale.factor; font-weight: 800; }
+            if root.text-scale-percent < 175: Text { text: root.selected-domain == "all" ?
                     "Explore real projects and find the tools that fit your workflow." :
                     "Browse source-linked projects in this field. Open any card to learn more.";
                 color: root.muted; font-size: (12px) * TextScale.factor; }
@@ -688,7 +695,7 @@ export component AppWindow inherits Window {
                         vertical-alignment: center; }
                 }
                 LineEdit { font-size: 13px * TextScale.factor;
-                    horizontal-alignment: start; input-type: search;
+                    horizontal-alignment: root.query-rtl ? right : start; input-type: search;
                     horizontal-stretch: 1; height: root.text-scale-percent >= 175 ? 64px : 52px; text: root.query;
                     placeholder-text: "Search software, tasks or categories...";
                     accessible-label: "Search software catalog";
@@ -697,7 +704,7 @@ export component AppWindow inherits Window {
                 }
             }
             HorizontalLayout {
-                height: root.text-scale-percent >= 175 ? 55px : 41px; spacing: 9px;
+                height: root.text-scale-percent >= 175 ? 46px : 41px; spacing: 9px;
                 CheckBox { text: "Release review available (" + root.review-route-count + ")";
                     checked: root.review-only; font-size: (11px) * TextScale.factor; font-weight: 650;
                     toggled => { root.toggle-review-only(); } }
@@ -722,7 +729,7 @@ export component AppWindow inherits Window {
             ListView {
                 vertical-stretch: 1;
                 for project[i] in root.entries: Rectangle {
-                    height: root.text-scale-percent >= 175 ? (root.compact-layout ? 320px : 310px) : (root.compact-layout ? 181px : 189px); background: transparent;
+                    height: root.text-scale-percent >= 175 ? (root.compact-layout ? 300px : 310px) : (root.compact-layout ? 181px : 189px); background: transparent;
                     HorizontalLayout {
                         Rectangle {
                             height: parent.height - 10px; horizontal-stretch: 1;
@@ -1401,7 +1408,7 @@ export component AppWindow inherits Window {
                             Text { text: "FILTER"; font-size: (10px) * TextScale.factor; font-weight: 800; color: root.accent;
                                 vertical-alignment: center; }
                             LineEdit { font-size: 13px * TextScale.factor;
-                                horizontal-alignment: start; input-type: search;
+                                horizontal-alignment: root.device-query-rtl ? right : start; input-type: search;
                                 horizontal-stretch: 1; height: root.text-scale-percent >= 175 ? 50px : 35px;
                                 text: root.device-query;
                                 placeholder-text: "Name or registered identifier…";
@@ -1598,7 +1605,7 @@ export component AppWindow inherits Window {
         }
 
         Rectangle {
-            height: root.text-scale-percent >= 175 ? 52px : 40px; background: root.sheet; border-color: root.line; border-width: 1px;
+            height: root.text-scale-percent >= 175 ? 44px : 40px; background: root.sheet; border-color: root.line; border-width: 1px;
             HorizontalLayout {
                 padding-left: root.compact-layout ? 22px : 38px;
                 padding-right: root.compact-layout ? 22px : 38px;
