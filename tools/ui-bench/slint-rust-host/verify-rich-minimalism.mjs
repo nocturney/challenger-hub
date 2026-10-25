@@ -38,4 +38,24 @@ requireGate(card.includes('ApprovedGalleryThumb') && card.includes('IdentityTile
     'Card media must be official or factual identity only');
 requireGate(!/Image\s*\{|@image-url|monogram|mockup/i.test(identity),
     'Identity artwork policy regression');
-console.log('RICH_MINIMALISM_GATE_PASS tokens=shared hover=on focus=preserved motion=guarded media=truthful');
+// Layout regressions: Search must never be a bordered field inside a second field.
+const home = focus.split('// DISCOVER / HOME:')[1]?.split('// Product-first browse:')[0] ?? '';
+const browse = focus.split('// Product-first browse:')[1]?.split('// A full-page dossier,')[0] ?? '';
+requireGate(home.includes('LineEdit {') && browse.includes('LineEdit {'),
+    'Both Discover and Browse must have a native search input');
+requireGate(!home.includes('Text { text: "SEARCH"') &&
+    !browse.includes('Text { text: "SEARCH"'),
+    'The nested search-label overlay was reintroduced');
+requireGate(browse.includes('SEARCH SOFTWARE') &&
+    browse.indexOf('SEARCH SOFTWARE') < browse.indexOf('LineEdit {') &&
+    browse.includes('root.matching + " results"'),
+    'Browse search label, input and results must align');
+for (const fragment of ['padding-top: root.compact-layout ? 11px : 14px',
+    'padding-left: root.compact-navigation ? 22px : 48px',
+    'height: root.compact-layout ? 32px : 40px']) {
+    requireGate(focus.includes(fragment), 'Brand header inset missing: ' + fragment);
+}
+requireGate(host.includes('--qa-preview-compact-results') &&
+    host.includes('--qa-preview-dark-results'),
+    'Native compact/dark layout QA routes missing');
+console.log('RICH_MINIMALISM_GATE_PASS tokens=shared hover=on focus=preserved motion=guarded media=truthful search=aligned brand=inset');

@@ -1284,15 +1284,25 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             return Err("PdfCraft verified gallery QA route missing".into());
         }
     }
-    if args.iter().any(|a| a == "--qa-preview-craft-results") {
+    if args.iter().any(|a| ["--qa-preview-craft-results",
+        "--qa-preview-compact-results", "--qa-preview-dark-results"]
+        .contains(&a.as_str())) {
         ui.invoke_search_submitted("Craft".into());
+    }
+    if args.iter().any(|a| a == "--qa-preview-compact-results") {
+        // A stable 820px QA screenshot, without racing the timed resize test.
+        ui.window().set_size(slint::LogicalSize::new(820.0, 650.0));
+    }
+    if args.iter().any(|a| a == "--qa-preview-dark-results") {
+        ui.set_dark_mode(true);
     }
     if args.iter().any(|a| ["--qa-preview-results", "--qa-preview-dune",
         "--qa-preview-library", "--qa-preview-activity",
         "--qa-preview-activity-refresh", "--qa-preview-device",
         "--qa-preview-identity", "--qa-preview-install",
         "--qa-preview-pdfcraft", "--qa-preview-craft-results",
-        "--qa-preview-goxel", "--qa-preview-profile",
+        "--qa-preview-compact-results", "--qa-preview-dark-results",
+        "--qa-preview-home", "--qa-preview-goxel", "--qa-preview-profile",
         "--qa-preview-profile-results"].contains(&a.as_str())) {
         let weak = ui.as_weak();
         Timer::single_shot(Duration::from_secs(22), move || {

@@ -82,3 +82,36 @@ which attribution and a source-reported repository license alone do not grant.
 Real native Mac and Windows visual acceptance, full keyboard/RTL/IME and
 accessibility review, repeatable performance profile, grid exploration in a
 separate isolated experiment, rights review and final user approval.
+
+
+## Visual review follow-up: header and search alignment
+
+User feedback identified two precise composition issues: search appeared to be
+offset within a second frame; the brand icon/name touched the top-left of the
+native header. Both came from layout construction, not the catalog backend.
+
+- **Discover search:** a single 54px native \`LineEdit\` and matching Find tools
+  action now sit side by side, with no extra border around the field. Existing
+  search edit/Enter/button callbacks remain unchanged.
+- **Browse search:** its own 52px native input starts on the same horizontal
+  guide as the product cards. "Search software" and the live result count occupy
+  a slim row **above**, rather than inside or beside, the input.
+- **Brand alignment:** explicit 14px top/bottom and 48px left inset at wide
+  widths, 11px top/bottom and 22px left inset on compact windows. The
+  brand-name/tagline stack has explicit height; navigation remains responsive.
+- **Verification:** a dedicated local source gate checks both search layouts and
+  header insets. The added \`--qa-preview-home\`,
+  \`--qa-preview-compact-results\` and \`--qa-preview-dark-results\` routes
+  are QA-only, read-only and self-closing.
+
+Actual native window screenshots (not image mockups):
+
+- [Discover search and brand alignment](qa-quiet-premium-macos/04-home-search-header.png)
+- [Browse search and brand alignment](qa-quiet-premium-macos/05-browse-search-header.png)
+- [Browse at 820px wide](qa-quiet-premium-macos/06-browse-compact-820.png)
+- [Browse with dark mode enabled](qa-quiet-premium-macos/07-browse-dark.png)
+
+The dark screenshot also surfaces a **pre-existing low-contrast native CheckBox
+label** beside the release-review filter; correcting global widget theme
+integration is a separate accessibility issue, not part of this focused
+search/header alignment change.
