@@ -24,6 +24,8 @@ if(independent.schema!=='challenger-independent-media.v1' ||
 }
 const auditedById=new Map(selected.selected.map(x=>['curated:'+x.key,x]));
 const gallery=JSON.parse(readFileSync(join(here,'ui','APPROVED_GALLERY_INDEX.json'),'utf8'));
+const credits=JSON.parse(readFileSync(join(here,'ui','MEDIA_CREDITS.json'),'utf8'));
+if(credits.schema!=='challenger-native-media-attribution.v1' || credits.totals.sourceVerifiedAssets!==100)throw Error('Missing image rights ledger');
 const rows=[], missing=[];
 const byMedia=Map.groupBy?Map.groupBy(gallery.assets,a=>a.media):
   gallery.assets.reduce((m,a)=>{m.set(a.media,[...(m.get(a.media)||[]),a]);return m;},new Map());
@@ -81,6 +83,8 @@ for(const p of snap.items) {
    screenshotBytes:assets.reduce((sum,s)=>sum+s.bytes,0),
    mediaLicense:mediaLicense||'Not established',galleryMediaId:media,
    mediaSourceReview:sourceStatus,
+   mediaSpecificRightsVerified:false,
+   mediaRightsStatus:(frames||icon==='embedded')?'Source verified; reproduction/trademark permission not independently confirmed':'No embedded media to clear',
    embeddedIconSource:icons.get(media)?.sourceUrl||'',
    embeddedIconSha256:icons.get(media)?.sha256||'',
    featuredOnExplore:featured.has(p.id),
@@ -114,7 +118,7 @@ const out=join(here,'qa-results');mkdirSync(out,{recursive:true});
 writeFileSync(join(out,'visual-media-inventory.json'),JSON.stringify(report,null,2)+'\n');
 const cols=['projectId','name','kind','sourceCategory','repository','sourceLicense',
  'iconStatus','embeddedIconSource','embeddedIconSha256','screenshotCount','screenshotBytes',
- 'mediaLicense','mediaSourceReview','galleryMediaId','featuredOnExplore','integration'];
+ 'mediaLicense','mediaSourceReview','mediaRightsStatus','mediaSpecificRightsVerified','galleryMediaId','featuredOnExplore','integration'];
 const csv=x=>'"'+String(x??'').replaceAll('"','""')+'"';
 writeFileSync(join(out,'visual-media-inventory.csv'),
   [cols.map(csv).join(','),...rows.map(r=>cols.map(c=>csv(r[c])).join(','))].join('\n')+'\n');

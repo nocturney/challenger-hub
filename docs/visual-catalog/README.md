@@ -95,3 +95,52 @@ The source-category gap inventory reports 16 engineering/manufacturing,
 13 security/identity, 12 data/BI and 10 science/GIS records without verified
 native screenshots. These are source-reported categories rather than the UI's
 canonical 17-domain grouping; the counts are a coverage planning aid.
+
+## Source credits, attribution and redistribution policy
+
+The native UI now displays exact upstream repository attribution beside every
+pinned screenshot and alongside every embedded official product icon. A
+machine-readable, complete ledger of **100 images** is provided in
+[`media-credits-20261025.json`](media-credits-20261025.json) and a readable
+source-by-source credits file is available as
+[`media-credits-20261025.md`](media-credits-20261025.md). The same credits files
+are included in macOS and Windows portable developer packages.
+
+**Giving credit is not the same as having permission.** Source-reported project
+licenses are not automatically a license to redistribute screenshots,
+third-party content or trademarks. This inventory separates byte-exact
+provenance from copyright/trademark permission (the latter is not independently
+verified). Credits must not imply upstream endorsement.
+
+The offline `media-rights-gate.mjs developer` checks the ledger and exact pinned
+source identities on every build; `media-rights-gate.mjs public` currently
+fails deliberately until the distribution rights are independently verified.
+This does not block ongoing internal development. For publication, obtain
+specific grants or media licenses where required or omit those assets and use
+honest placeholders; do not replace legal evidence with an arbitrary credit.
+See the [Creative Commons BY 4.0 license](https://creativecommons.org/licenses/by/4.0/)
+for an example where attribution plus its stipulated conditions is sufficient
+for licensed copyright use. Neither a repository's existence nor a license name
+alone proves that this CC BY permission applies to an image.
+
+### Native attribution QA
+
+The About screen exposes the media policy and explains the difference between
+source credit and media rights. Each screenshot's caption now includes its
+original source repository and the reported **repository** license; each
+embedded icon is credited in its project dossier. For the other 152 entries,
+Results uses a deliberately neutral **NO VERIFIED IMAGE** tile, rather than a
+fabricated screenshot, and Detail retains the honest empty-media state.
+
+The developer package writer compares the SHA-256 of the embedded
+`MEDIA_CREDITS.md` and `MEDIA_CREDITS.json` against the approved generated
+files before writing the artifact manifest. CI also checks that a simulated
+public release is rejected until media-specific rights are reviewed.
+
+![Visible original-source credits and gallery navigation on the actual Mac window](qa-macos/04-goxel-credits-navigation.png)
+
+After the attribution text increased the native dossier height, visual QA
+revealed the gallery navigation could slip below a standard-height window.
+Navigation controls now appear *above* the screenshot, so they remain
+immediately accessible while the full source credit can still be reached by
+scrolling. Window-targeted Mac capture, no screenshot reconstruction.

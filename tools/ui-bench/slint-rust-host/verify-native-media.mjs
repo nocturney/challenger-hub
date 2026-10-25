@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Offline provenance gate: only approved, checksum-matched upstream media enters Slint.
 import { createHash } from 'node:crypto';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { readFileSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -68,4 +68,12 @@ if (brandDigest !== 'a22b1ff013ed293120921ce77c6e15fc51982adb103c7d7ecdde240a6b5
 // This runs offline and never replaces checked-in images.
 execFileSync(process.execPath, [join(here,'sync-approved-gallery.mjs'),'--check'],
     {stdio:'inherit', timeout:30000});
+execFileSync(process.execPath, [join(here,'media-rights-gate.mjs'),'developer'],
+    {stdio:'inherit',timeout:30000});
+const publicAttempt=spawnSync(process.execPath,[join(here,'media-rights-gate.mjs'),'public'],
+    {encoding:'utf8',timeout:30000});
+if(publicAttempt.status===0 || !String(publicAttempt.stderr).includes('PUBLIC_MEDIA_RELEASE_BLOCKED')) {
+  throw Error('Public distribution rights gate did not fail closed');
+}
+console.log('NATIVE_PUBLIC_MEDIA_RELEASE_BLOCK_PASS thirdPartyAssets=100');
 console.log('NATIVE_MEDIA_PROVENANCE_PASS verifiedProjects=36 nativeIcons=30 approvedScreenshots=70 screenshotProjects=29 source=offline-pinned-manifests');

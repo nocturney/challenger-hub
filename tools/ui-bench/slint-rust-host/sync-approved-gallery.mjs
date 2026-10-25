@@ -166,6 +166,101 @@ for(const approved of selection.selected) {
 if(shots.length!==70 || files.length!==75 || icons.length!==8) {
   throw Error('Expected 3 curated + 47 Craft + 20 independent screenshots and eight icons');
 }
+// Credits are provenance, NOT a copyright or trademark permission certificate.
+// Explicitly keep clearance unresolved until actual media rights are reviewed.
+function sourceRepository(url) {
+  const u=new URL(url);
+  if(u.protocol!=='https:' ||
+     !['github.com','raw.githubusercontent.com'].includes(u.hostname) ||
+     u.username || u.password || u.port)throw Error('Untrusted media source URL: '+url);
+  const segments=u.pathname.split('/').filter(Boolean);
+  if(segments.length<4 || (u.hostname==='github.com' && segments[2]!=='blob')) {
+    throw Error('Source URL lacks an original repo + revision/path: '+url);
+  }
+  return segments[0]+'/'+segments[1];
+}
+const embeddedCuratedIconIds=new Set(['dune3d','material-maker','compositor','kiri-moto',
+  'espocrm','docuseal','meshcentral','openhands','real-video-enhancer']);
+const iconCredits=[];
+for(const [key,m] of Object.entries(curated.projects)) {
+  if(!embeddedCuratedIconIds.has(key))continue;
+  const icon=m.icon;
+  if(!icon || icon.status!=='approved')throw Error('Embedded curated icon provenance missing '+key);
+  if(m.repo!==icon.repository || !/^[0-9a-f]{64}$/.test(icon.sha256) ||
+     !icon.licenseSpdx || !icon.source)throw Error('Untrusted curated icon credit '+key);
+  const sourceRepo=sourceRepository(icon.source);
+  if(sourceRepo!==m.repo)throw Error('Curated icon source mismatch '+key);
+  iconCredits.push({media:key,projectId:'curated:'+key,assetKind:'icon',
+    sourceRepository:sourceRepo,sourceUrl:icon.source,
+    repositoryReportedLicense:icon.licenseSpdx,sha256:icon.sha256,
+    mediaSpecificPermission:'unverified',trademarkPermission:'unverified'});
+}
+for(const [key,app] of Object.entries(craft.apps)) {
+  const icon=app.icon;
+  if(!icon?.source || !icon?.license || !/^[0-9a-f]{64}$/.test(icon.sha256)) {
+    throw Error('Missing Craft image credits: '+key);
+  }
+  iconCredits.push({media:'craft-'+key,projectId:'managed:'+key,assetKind:'icon',
+    sourceRepository:sourceRepository(icon.source),sourceUrl:icon.source,
+    repositoryReportedLicense:icon.license,sha256:icon.sha256,
+    mediaSpecificPermission:'unverified',trademarkPermission:'unverified'});
+}
+for(const icon of icons) {
+  iconCredits.push({media:icon.media,projectId:icon.projectId,assetKind:'icon',
+    sourceRepository:sourceRepository(icon.sourceUrl),sourceUrl:icon.sourceUrl,
+    repositoryReportedLicense:icon.license,sha256:icon.sha256,
+    mediaSpecificPermission:'unverified',trademarkPermission:'unverified'});
+}
+const screenshotCredits=shots.map(s=>({
+  media:s.media,index:s.index,assetKind:'screenshot',
+  sourceRepository:sourceRepository(s.sourceUrl),sourceUrl:s.sourceUrl,
+  repositoryReportedLicense:s.license,sha256:s.sha256,
+  mediaSpecificPermission:'unverified',trademarkPermission:'not-evaluated',
+}));
+if(iconCredits.length!==30 || screenshotCredits.length!==70 ||
+   new Set(iconCredits.map(i=>i.media)).size!==30) {
+  throw Error('Media credit coverage must equal 30 icon identities and 70 frames');
+}
+const allCredits=[...screenshotCredits,...iconCredits];
+for(const i of allCredits) {
+  if(!i.sourceRepository || !i.sourceUrl || !i.repositoryReportedLicense ||
+      i.mediaSpecificPermission!=='unverified' || !/^[0-9a-f]{64}$/.test(i.sha256)) {
+    throw Error('Media attribution is incomplete or misleading: '+i.media);
+  }
+}
+const creditsDocument={
+  schema:'challenger-native-media-attribution.v1',
+  policy:'Credit is source attribution, not permission to copy, redistribute or use a trademark.',
+  copyrightClearance:'not-independently-verified',
+  thirdPartyMediaPublicReleaseApproved:false,
+  entries:allCredits,
+  totals:{screenshots:screenshotCredits.length,icons:iconCredits.length,
+    sourceVerifiedAssets:allCredits.length,
+    mediaSpecificPermissionConfirmed:allCredits.filter(x=>x.mediaSpecificPermission==='confirmed').length},
+};
+const creditLines=[
+ '# Challenger Native Preview — Image and icon credits',
+ '',
+ 'Developer preview. Credits identify the original source, but **attribution alone',
+ 'is not a copyright permission or trademark license**. The repository-reported',
+ 'license below might cover source code without independently licensing all',
+ 'images, artwork, third-party content or logos. Public redistributors must',
+ 'review each medium and applicable notices or obtain specific permission.',
+ 'No project is represented as endorsing Challenger Hub.',
+ '',
+ 'Gallery source links always point to the original GitHub asset; embedded',
+ 'screenshots and icons are byte-exact, and checked against the SHA-256 below.',
+ '',
+];
+for(const entry of allCredits) {
+  creditLines.push('- '+entry.assetKind+' | '+entry.media+
+    (Number.isSafeInteger(entry.index)?' / frame '+(entry.index+1):'')+
+    ' | source: '+entry.sourceRepository+
+    ' | repository-reported license: '+entry.repositoryReportedLicense+
+    ' | media/trademark permission: NOT VERIFIED'+
+    ' | SHA-256: '+entry.sha256+
+    ' | original: '+entry.sourceUrl);
+}
 const firsts=shots.filter(s=>s.index===0);
 const q=s=>JSON.stringify(s);
 const lines=[
@@ -188,7 +283,9 @@ for(const s of shots) {
   lines.push('  if root.media == '+q(s.media)+' && root.index == '+s.index+': VerticalLayout {',
     '    spacing: 7px;',
     '    Image { source: @image-url('+q(s.uiPath)+'); image-fit: contain; vertical-stretch: 1; }',
-    '    Text { text: '+q(s.caption)+'; color: root.caption-color; font-size: 11px; height: 25px; overflow: elide; }',
+    '    Text { text: '+q(s.caption)+'; color: root.caption-color; font-size: 11px; height: 20px; overflow: elide; }',
+    '    Text { text: '+q('Source: '+sourceRepository(s.sourceUrl)+'  ·  Repository license reported: '+s.license)+'; color: root.caption-color; font-size: 10px; height: 18px; overflow: elide; }',
+    '    Text { text: "Credit is not a separate image rights grant. No endorsement claimed."; color: root.caption-color; font-size: 10px; height: 19px; overflow: elide; }',
     '  }');
 }
 lines.push('}', '', 'export component ApprovedGalleryIcon inherits Rectangle {',
@@ -196,6 +293,16 @@ lines.push('}', '', 'export component ApprovedGalleryIcon inherits Rectangle {',
   '  background: transparent;');
 for(const icon of icons) {
   lines.push('  if root.media == '+q(icon.media)+': Image { source: @image-url('+q(icon.uiPath)+'); width: parent.width; height: parent.height; image-fit: contain; }');
+}
+lines.push('}', '', 'export component ApprovedIconCredit inherits Rectangle {',
+  '  in property <string> media;',
+  '  in property <color> caption-color;',
+  '  background: transparent;');
+for(const icon of iconCredits) {
+  lines.push('  if root.media == '+q(icon.media)+': Text { text: '+
+    q('Icon: '+icon.sourceRepository+' · repo license reported: '+
+      icon.repositoryReportedLicense+' · logo rights separate')+
+    '; color: root.caption-color; font-size: 10px; overflow: elide; }');
 }
 lines.push('}', '');
 const grouped=Object.groupBy?Object.groupBy(shots,s=>s.media):
@@ -223,8 +330,7 @@ rs.push('        _ => None,', '    }', '}', '',
   '    matches!(media, '+icons.map(i=>q(i.media)).join(' | ')+')',
   '}', '',
   'pub fn has_icon(media: &str) -> bool {');
-const embeddedBefore=['dune3d','material-maker','compositor','kiri-moto','espocrm',
-  'docuseal','meshcentral','openhands','real-video-enhancer',
+const embeddedBefore=[...embeddedCuratedIconIds,
   ...Object.keys(craft.apps).map(x=>'craft-'+x)];
 rs.push('    matches!(media, '+[...embeddedBefore,...icons.map(i=>i.media)].map(q).join(' | ')+')',
   '}', '',
@@ -290,6 +396,8 @@ const outputs=[
     independentSourceManifest:'independent-media.v1.json',
     icons,assets:shots},null,2)+'\n'],
   [join(here,'ui','INDEPENDENT_NATIVE_MEDIA_NOTICES.md'),notice.join('\n')+'\n'],
+  [join(here,'ui','MEDIA_CREDITS.json'),JSON.stringify(creditsDocument,null,2)+'\n'],
+  [join(here,'ui','MEDIA_CREDITS.md'),creditLines.join('\n')+'\n'],
 ];
 for(const [filename,data] of outputs) {
   if(check) {

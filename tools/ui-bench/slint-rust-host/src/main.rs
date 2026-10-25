@@ -247,6 +247,7 @@ fn set_detail(ui: &AppWindow, project: Option<&Project>,review_routes:&HashSet<S
         ui.set_detail_gallery_count(gallery::count(media_id(p)));
         ui.set_detail_gallery_index(0);
         ui.set_detail_independent_icon(gallery::has_independent_icon(media_id(p)));
+        ui.set_detail_has_icon(gallery::has_icon(media_id(p)));
     } else {
         ui.set_detail_reviewable(false);
         ui.set_install_project_id("".into());
@@ -261,6 +262,7 @@ fn set_detail(ui: &AppWindow, project: Option<&Project>,review_routes:&HashSet<S
         ui.set_detail_gallery_count(0);
         ui.set_detail_gallery_index(0);
         ui.set_detail_independent_icon(false);
+        ui.set_detail_has_icon(false);
     }
 }
 

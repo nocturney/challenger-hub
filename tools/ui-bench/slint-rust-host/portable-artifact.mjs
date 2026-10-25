@@ -62,6 +62,23 @@ async function main() {
   const noticePath = platform.startsWith('macos-')
     ? join(here, 'dist', 'ChallengerHubNativePreview.app', 'Contents', 'Resources', 'NODE_LICENSE.txt')
     : join(here, 'dist', 'ChallengerHubNativePreview-Win', 'resources', 'NODE_LICENSE.txt');
+  // Source credit is required in every portable developer artifact.
+  // A public release cannot be authorized by mere attribution alone.
+  execFileSync(process.execPath, [join(here,'media-rights-gate.mjs'),
+    process.env.CHALLENGER_PUBLIC_RELEASE === 'true' ? 'public' : 'developer'],
+    {stdio:'inherit',timeout:30000});
+  const creditManifest = JSON.parse(readFileSync(join(here,'ui','MEDIA_CREDITS.json'),'utf8'));
+  const nativeResources = platform.startsWith('macos-')
+    ? join(here,'dist','ChallengerHubNativePreview.app','Contents','Resources')
+    : join(here,'dist','ChallengerHubNativePreview-Win','resources');
+  for(const file of ['MEDIA_CREDITS.json','MEDIA_CREDITS.md']) {
+    const expected = readFileSync(join(here,'ui',file));
+    const embedded = readFileSync(join(nativeResources,'media-notices',file));
+    if(createHash('sha256').update(expected).digest('hex') !==
+       createHash('sha256').update(embedded).digest('hex')) {
+      throw Error('Portable developer package omits or alters image attribution: '+file);
+    }
+  }
   const nodeVersion = execFileSync(nodePath, ['--version'],
     { encoding: 'utf8' }).trim();
   if (nodeVersion !== 'v24.22.1' || statSync(noticePath).size < 150000) {
@@ -98,7 +115,9 @@ async function main() {
     macOSSigning: platform.startsWith('macos-') ? 'ad-hoc; not notarized' : 'not applicable',
     windowsSigning: platform === 'windows-x64' ? 'unsigned developer preview' : 'not applicable',
     noUserInstallation: true,
-    publicRelease: false
+    publicRelease: false,
+    mediaCreditsVerified: creditManifest.totals.sourceVerifiedAssets,
+    publicMediaRightsCleared: creditManifest.thirdPartyMediaPublicReleaseApproved
   };
   writeFileSync(join(stage, 'BUILD_INFO.json'), JSON.stringify(manifest, null, 2) + '\n',
     { encoding: 'utf8', flag: 'wx' });
@@ -125,6 +144,8 @@ async function main() {
     'Windows: unsigned; operating system trust warnings may occur.',
     'Do not disable Gatekeeper, SmartScreen, or other security protections automatically.',
     'The repository is public; these temporary Actions artifacts must not contain secrets.',
+    'Image credits and original links are bundled under resources/media-notices.',
+    'Upstream repository licenses are reported; artwork/trademark permission is not automatically granted.',
     'Do not redistribute this developer preview as a public, production-ready installer.',
     ''
   ].join('\n');

@@ -1,5 +1,5 @@
 import { AboutSlint, CheckBox, LineEdit, ListView, ScrollView } from "std-widgets.slint";
-import { ApprovedGalleryThumb, ApprovedGalleryShot, ApprovedGalleryIcon } from "approved-gallery.slint";
+import { ApprovedGalleryThumb, ApprovedGalleryShot, ApprovedGalleryIcon, ApprovedIconCredit } from "approved-gallery.slint";
 
 // This is the approved Focus/Orbit information architecture implemented in genuine
 // native Slint. The old Slint/Node experiment has a separate, unchanged UI.
@@ -147,6 +147,7 @@ export component AppWindow inherits Window {
     in-out property <int> detail-gallery-count: 0;
     in-out property <int> detail-gallery-index: 0;
     in-out property <bool> detail-independent-icon: false;
+    in-out property <bool> detail-has-icon: false;
     in-out property <string> detail-evidence: "";
     in-out property <string> install-project-id: "";
     in-out property <bool> detail-reviewable: false;
@@ -548,6 +549,18 @@ export component AppWindow inherits Window {
                                 background: root.muted-sheet; border-radius: 7px;
                                 ApprovedGalleryThumb { media: project.media; width: parent.width; height: parent.height; }
                             }
+                            if !project.has-preview: Rectangle {
+                                width: root.compact-layout ? 112px : 164px;
+                                height: root.compact-layout ? 66px : 72px;
+                                background: root.muted-sheet; border-radius: 7px;
+                                VerticalLayout {
+                                    padding: 9px; spacing: 4px;
+                                    Text { text: "NO VERIFIED IMAGE"; font-size: 9px; font-weight: 800;
+                                        color: root.subtle; horizontal-alignment: center; }
+                                    Text { text: project.domain; font-size: 10px; color: root.muted;
+                                        horizontal-alignment: center; overflow: elide; }
+                                }
+                            }
                             if project.media == "dune3d": Image {
                                 source: @image-url("dune3d.svg"); width: 32px; height: 32px;
                                 image-fit: contain; vertical-alignment: center;
@@ -794,6 +807,9 @@ export component AppWindow inherits Window {
                         color: root.strong; font-weight: 800; }
                 }
                 Text { text: root.detail-summary; font-size: 14px; color: root.muted; wrap: word-wrap; }
+                if root.detail-has-icon: ApprovedIconCredit {
+                    media: root.detail-media; caption-color: root.subtle; height: 16px;
+                }
                 Rectangle { height: 1px; background: root.line; }
                 if root.detail-reviewable: Rectangle {
                     height: root.install-ready ? 336px :
@@ -966,18 +982,12 @@ export component AppWindow inherits Window {
                     VerticalLayout {
                         spacing: 18px; horizontal-stretch: 3;
                         if root.detail-gallery-count > 0: Rectangle {
-                            height: root.compact-layout ? 343px : 430px;
+                            height: root.compact-layout ? 385px : 470px;
                             background: root.sheet; border-color: root.line; border-width: 1px; border-radius: 11px;
                             VerticalLayout {
                                 padding: 13px; spacing: 8px;
                                 Text { text: "REAL INTERFACE  /  CHECKSUM-VERIFIED SOURCE";
                                     font-size: 10px; font-weight: 800; color: root.accent; }
-                                ApprovedGalleryShot {
-                                    media: root.detail-media;
-                                    index: root.detail-gallery-index;
-                                    caption-color: root.subtle;
-                                    height: root.compact-layout ? 245px : 325px;
-                                }
                                 HorizontalLayout {
                                     spacing: 10px;
                                     Rectangle {
@@ -1013,6 +1023,12 @@ export component AppWindow inherits Window {
                                             action-label: "Next authentic interface screenshot";
                                             activated => { root.detail-gallery-index += 1; } }
                                     }
+                                }
+                                ApprovedGalleryShot {
+                                    media: root.detail-media;
+                                    index: root.detail-gallery-index;
+                                    caption-color: root.subtle;
+                                    height: root.compact-layout ? 285px : 365px;
                                 }
                             }
                         }
@@ -1372,6 +1388,21 @@ export component AppWindow inherits Window {
                         Text { text: "FRAMEWORK ATTRIBUTION"; color: root.strong;
                             font-size: 12px; font-weight: 700; }
                         AboutSlint { height: 130px; }
+                    }
+                }
+                Rectangle {
+                    height: 148px; background: root.sheet; border-color: root.line;
+                    border-width: 1px; border-radius: 12px;
+                    VerticalLayout {
+                        padding: 18px; spacing: 8px;
+                        Text { text: "IMAGE CREDITS  /  THIRD-PARTY RIGHTS";
+                            color: root.strong; font-size: 12px; font-weight: 700; }
+                        Text { text: "70 original screenshots and 30 official source icons. Exact credits are shown in each project dossier.";
+                            font-size: 12px; color: root.muted; wrap: word-wrap; }
+                        Text { text: "Full original links, SHA-256 and reported repository licenses are packaged in media-notices/MEDIA_CREDITS.md.";
+                            font-size: 11px; color: root.muted; wrap: word-wrap; }
+                        Text { text: "Giving credit does not itself license images, artwork or trademarks. No upstream endorsement is implied.";
+                            font-size: 11px; color: root.accent; wrap: word-wrap; }
                     }
                 }
                 Text { text: "This developer preview is not a signed or notarized public release.";

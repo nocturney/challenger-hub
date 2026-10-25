@@ -95,3 +95,20 @@ artwork or trademark redistribution grant. The generated
 reported repository license metadata. Public distribution must remain blocked
 pending a separate legal/license audit. Preview packaging carries this notice,
 but cannot be assumed legally cleared for release solely from this review.
+
+## In-app source credit and publication guard
+
+The generator `sync-approved-gallery.mjs` now derives visible, source-specific
+attribution for every one of the 70 screenshot frames and 30 embedded official
+icons. It records the upstream repository URL, source-reported repository
+license, original content SHA-256 and explicitly unresolved media/mark rights.
+The notice appears directly in native details, with an exact original source
+link for each displayed screenshot. The complete generated JSON/Markdown
+credit ledger is bundled with the native developer-preview packages.
+
+`media-rights-gate.mjs` is executed by the offline native media verifier and
+portable CI manifest generator. It refuses missing/malformed credits and
+refuses public release when only attribution is known. This is deliberately not
+a claim that repository licenses, origin citations or modified UI layouts
+resolve third-party rights. The 152 no-screenshot catalog items remain
+available as text/metadata, without fabricated screenshots.
