@@ -167,7 +167,9 @@ const outputs=[
 ];
 for(const [filename,data] of outputs) {
   if(check) {
-    if(!existsSync(filename)||readFileSync(filename,'utf8')!==data) {
+    // Git on Windows may check out generated text as CRLF; normalize only text.
+    // All original/embedded binary screenshots still require byte-exact SHA-256.
+    if(!existsSync(filename)||readFileSync(filename,'utf8').replace(/\r\n/g,'\n')!==data) {
       throw Error('Generated media index changed or missing: '+filename);
     }
   } else {
