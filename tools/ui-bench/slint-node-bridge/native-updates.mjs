@@ -3,8 +3,8 @@
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 
-const BASE = 'https://github.com/nocturney/challenger-hub';
-const API = 'https://api.github.com/repos/nocturney/challenger-hub/releases?per_page=10';
+const BASE = 'https://github.com/velvet-workspace/challenger-hub';
+const API = 'https://api.github.com/repos/velvet-workspace/challenger-hub/releases?per_page=10';
 const MAX_BYTES = 2_000_000;
 export const SCHEMA = 'challenger.native.updates.v1';
 const TAG = /^native-v(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;

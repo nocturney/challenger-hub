@@ -3,8 +3,8 @@
 const fs=require('node:fs'),path=require('node:path');
 const {promisify}=require('node:util'),{execFile}=require('node:child_process');
 const run=promisify(execFile);
-const OFFICIAL='https://github.com/nocturney/challenger-hub';
-const API='https://api.github.com/repos/nocturney/challenger-hub/releases?per_page=30';
+const OFFICIAL='https://github.com/velvet-workspace/challenger-hub';
+const API='https://api.github.com/repos/velvet-workspace/challenger-hub/releases?per_page=30';
 const TAG=/^v4\.0\.0-orbit-preview\.(\d{1,3})$/;
 const MB=1024*1024,CACHE_MS=30*60*1000;
 function localVersion(root){
@@ -42,7 +42,7 @@ function makeUpdateChecker({root,fetcher,cli='gh',clock=()=>Date.now(),intervalM
  async function fetchReleases(){
   if(fetcher)return fetcher();
   try{
-   const {stdout}=await run(cli,['api','/repos/nocturney/challenger-hub/releases?per_page=30',
+   const {stdout}=await run(cli,['api','/repos/velvet-workspace/challenger-hub/releases?per_page=30',
     '-H','Accept: application/vnd.github+json'],{windowsHide:true,timeout:19000,maxBuffer:7*MB});
    return JSON.parse(stdout);
   }catch(_){ /* Authenticated GitHub CLI optional on end-user machines. */ }

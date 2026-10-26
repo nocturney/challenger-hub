@@ -3,7 +3,7 @@ const {test}=require('node:test'),assert=require('node:assert/strict'),
  fs=require('node:fs'),os=require('node:os'),path=require('node:path');
 const {localVersion,vettedReleases,makeUpdateChecker}=require('../hub-updates');
 const media=require('../repository-media');
-const official='https://github.com/nocturney/challenger-hub/releases';
+const official='https://github.com/velvet-workspace/challenger-hub/releases';
 function release(n,change={}){
  const tag='v4.0.0-orbit-preview.'+n;
  return {tag_name:tag,draft:false,prerelease:true,published_at:'2026-10-23T15:00:00Z',assets:[{
@@ -18,6 +18,12 @@ test('self-update only trusts exact official preview release assets and checked 
  assert.equal(found[0].preview,12);assert.equal(found[1].preview,7);
  assert.equal(found.length,2);
  assert.equal(found[0].downloadUrl,official+'/download/v4.0.0-orbit-preview.12/ChallengerFocusDesktopPreview12.exe');
+});
+test('migrated legacy preview rejects old-owner assets while preserving manual-only update checks',()=>{
+  const correct=release(12),old=release(12);
+  old.assets=[{...old.assets[0],browser_download_url:old.assets[0].browser_download_url.replace('velvet-workspace/challenger-hub','nocturney/challenger-hub')}];
+  assert.equal(vettedReleases([old]).length,0);
+  assert.equal(vettedReleases([correct]).length,1);
 });
 test('installed Hub version comes from embedded runtime manifest, not old backend internal version',async()=>{
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'hub-version-'));

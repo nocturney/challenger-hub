@@ -42,4 +42,4 @@ These branches diverged and must not be blindly merged or force-updated. Always 
 - Accessibility principle: **maximum practical accessibility, minimum bureaucracy**. Fix real defects; unverified optional screen-reader/IME certifications are not automatic beta blockers. Do not advertise formal certification.
 - Security Actions in `main` are manual; native PR CI has its own path-limited trigger. Git pushes do not deploy user applications.
 
-See [Operations and rollback](docs/OPERATIONS.md), [native architecture](tools/ui-bench/slint-rust-host/README.md), [integration boundaries](docs/integrations/native-preview12-20261025.md), and [media provenance](tools/ui-bench/slint-rust-host/ui/MEDIA_PROVENANCE.md).
+See [native beta versioning and QA-only rollback](docs/releases/NATIVE_BETA_VERSION_ROLLBACK.md), [Operations and rollback](docs/OPERATIONS.md), [native architecture](tools/ui-bench/slint-rust-host/README.md), [integration boundaries](docs/integrations/native-preview12-20261025.md), and [media provenance](tools/ui-bench/slint-rust-host/ui/MEDIA_PROVENANCE.md).

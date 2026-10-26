@@ -21,6 +21,8 @@ The selected application is native Rust/Slint over the read-only Preview12 Node 
 | Live app installation | Windows: `D:\Velvet\Installers\CraftSuite\Center`; macOS: `~/Library/Application Support/OfficeOps/CraftSuite/Center`. Files exist but no deployed native version was established by this audit. | **NO DEPLOYMENT** |
 | Security/usage budget | Security workflows on `main` are manual. Native PR CI can trigger for selected source changes; no automatic install/publish. | VERIFIED policy |
 
+For practical local QA version selection and tested pointer rollback, see [Native beta versioning and manual rollback](NATIVE_BETA_VERSION_ROLLBACK.md). The selector changes only isolated QA pointers and does not update or roll back a production installation.
+
 ## QA procedure — no production mutation
 
 Use a dedicated worktree and its approved development toolchain. Keep the source scanner disabled and the user installation profile isolated.
