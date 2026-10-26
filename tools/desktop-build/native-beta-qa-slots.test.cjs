@@ -10,7 +10,12 @@ const SHA='1234567890abcdef1234567890abcdef12345678';
 const repo='velvet-workspace/challenger-hub';
 let base,root;
 function setup() {
-  base=fs.mkdtempSync(path.join(fs.realpathSync(os.tmpdir()),'challenger-beta-unit-'));
+  // SYSTEM Session 0 can resolve os.tmpdir() into C:\Windows\Temp.
+  // Preserve system path refusal; keep tests in the isolated checkout instead.
+  const systemTemp=fs.realpathSync(os.tmpdir());
+  const fixtureParent=/(?:^|[\\/])Windows(?:[\\/]|$)/i.test(systemTemp)
+    ? path.resolve(__dirname,'..','..') : systemTemp;
+  base=fs.mkdtempSync(path.join(fixtureParent,'challenger-beta-unit-'));
   root=path.join(base,'Challenger-Beta-Slots-unit');
   slots.initialize(root);
 }
