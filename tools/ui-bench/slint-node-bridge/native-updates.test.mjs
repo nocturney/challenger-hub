@@ -5,7 +5,7 @@ const digest='sha256:'+'a'.repeat(64);
 function release(tag='native-v0.2.0',name='ChallengerHubNativePreview-macOS-arm64.zip',extra={}) {
   return {tag_name:tag, draft:false,
     assets:[{name,size:20000000,digest,
-      browser_download_url:'https://github.com/nocturney/challenger-hub/releases/download/'+tag+'/'+name}],
+      browser_download_url:'https://github.com/velvet-workspace/challenger-hub/releases/download/'+tag+'/'+name}],
     ...extra};
 }
 test('native version and architecture mapping are allowlisted',()=>{
@@ -28,8 +28,20 @@ test('verified matching asset and digest are mandatory, never install',async()=>
   assert.equal(result.status,'available');
   assert.equal(result.releaseVersion,'0.2.0');
   assert.equal(result.automaticInstallation,false);
-  assert.equal(result.releaseUrl,'https://github.com/nocturney/challenger-hub/releases/tag/native-v0.2.0');
+  assert.equal(result.releaseUrl,'https://github.com/velvet-workspace/challenger-hub/releases/tag/native-v0.2.0');
   assert.equal(selectRelease([valid],{...opts,version:'0.3.0'}).status,'current');
+});
+test('post-migration release checks reject old-owner URL and trust the new organization only',async()=>{
+  const canonical=release('native-v0.2.0');
+  const wrong={...canonical,assets:[{...canonical.assets[0],
+    browser_download_url:canonical.assets[0].browser_download_url.replace('velvet-workspace/challenger-hub','nocturney/challenger-hub')}]};
+  const opts={platform:'darwin',arch:'arm64',version:'0.1.0'};
+  assert.equal(selectRelease([wrong],opts).status,'not-published');
+  const result=await manualCheck({...opts,fetcher:async()=>[canonical]});
+  assert.equal(result.status,'available');
+  assert.equal(result.source,'https://github.com/velvet-workspace/challenger-hub/releases');
+  assert.equal(result.releaseUrl,'https://github.com/velvet-workspace/challenger-hub/releases/tag/native-v0.2.0');
+  assert.equal(result.automaticInstallation,false);
 });
 test('offline or invalid response gives explicit error, not a false current claim',async()=>{
   assert.equal((await manualCheck({fetcher:async()=>{throw Error('offline')}})).status,'error');

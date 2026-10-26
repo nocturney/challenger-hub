@@ -15,7 +15,7 @@ const stem='Challenger-FocusOrbit-PREVIEW-4.0.0-orbit.'+preview;
 const root=path.join(base,'Center',stem),zip=path.join(base,'Center',stem+
  (process.platform==='win32'?'-Windows.zip':'-macOS.zip'));
 const version='4.0.0-orbit.preview.'+preview,tag='v4.0.0-orbit-preview.'+preview;
-const repo='nocturney/challenger-hub';
+const repo='velvet-workspace/challenger-hub';
 const source=path.resolve(__dirname,'..','..');
 const sha=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 function file(name){return fs.readFileSync(path.join(root,name))}

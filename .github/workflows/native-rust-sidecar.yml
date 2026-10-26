@@ -8,6 +8,11 @@ on:
       - "tools/ui-bench/slint-node-bridge/**"
       - "tools/desktop-build/seeds/managed-catalog.preview10.json"
       - "tools/desktop-build/seeds/catalog-candidates.preview10.json"
+      - "tools/desktop-build/native-beta-qa-slots.cjs"
+      - "tools/desktop-build/native-beta-qa-slots.test.cjs"
+      - "hub-updates.js"
+      - "tests/focus-hub-selfupdate-media.test.cjs"
+      - "tools/preview-build/release-preview.cjs"
   workflow_dispatch:
 # A newer PR commit supersedes older CI; manual QA runs are never auto-canceled.
 concurrency:
@@ -45,6 +50,14 @@ jobs:
           $parseErrors = $null
           [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path 'tools/ui-bench/slint-rust-host/package-windows.ps1').Path, [ref]$tokens, [ref]$parseErrors) | Out-Null
           if ($parseErrors.Count -gt 0) { throw ("Packaging PowerShell syntax: " + (($parseErrors | ForEach-Object { $_.Message }) -join "; ")) }
+      - name: Parse manual logged-in Windows GUI acceptance harness (do not execute in runner)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path 'tools/ui-bench/slint-rust-host/qa/windows-real-session-acceptance.ps1').Path, [ref]$tokens, [ref]$errors) | Out-Null
+          if ($errors.Count -gt 0) { throw ("User-session QA PowerShell syntax: " + (($errors | ForEach-Object { $_.Message }) -join "; ")) }
       - name: Linux native Slint development libraries
         if: runner.os == 'Linux'
         run: |
@@ -60,6 +73,8 @@ jobs:
         run: cargo test --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked
       - name: Native bridge plus explicit install-policy security regressions
         run: node --test tools/ui-bench/slint-node-bridge/bridge.test.mjs tools/ui-bench/slint-node-bridge/install-bridge.test.mjs tools/ui-bench/slint-node-bridge/native-updates.test.mjs
+      - name: Migrated update-channel and isolated beta slot rollback regressions
+        run: node --test tests/focus-hub-selfupdate-media.test.cjs tools/desktop-build/native-beta-qa-slots.test.cjs
       - name: Real Node backend / 181-record IPC acceptance
         run: cargo run --manifest-path tools/ui-bench/slint-rust-host/Cargo.toml --locked -- --check-backend-only
       - name: Native OS registration evidence (explicit read, no installation)

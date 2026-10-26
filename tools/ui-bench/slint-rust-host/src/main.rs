@@ -648,7 +648,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let state = Rc::clone(&state); let weak = ui.as_weak();
         move |domain| if let Some(w) = weak.upgrade() {
             let domain = domain.to_string();
-            if DOMAINS.iter().any(|(id,_)| *id == domain) {
+            // "Browse all" is a valid scope even though it is not a source
+            // category in DOMAINS. Recheck the allowlist for other inputs.
+            if domain == "all" || DOMAINS.iter().any(|(id,_)| *id == domain) {
                 let mut state = state.borrow_mut();
                 state.push(Route::results(&domain, ""));
                 redraw(&w, &mut state);
@@ -797,7 +799,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     });
     ui.on_open_native_release_page(|| {
-        if let Err(e)=webbrowser::open("https://github.com/nocturney/challenger-hub/releases") {
+        if let Err(e)=webbrowser::open("https://github.com/velvet-workspace/challenger-hub/releases") {
             eprintln!("NATIVE_RELEASE_PAGE_OPEN_FAILED {e}");
         }
     });
@@ -1636,6 +1638,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 if w.get_page() != "results" { fail("back to results"); }
                 w.invoke_go_forward();
                 if w.get_page() != "detail" { fail("native forward navigation"); }
+                w.invoke_navigate("home".into());
+                w.invoke_open_discipline("all".into());
+                if w.get_page() != "results" || w.get_matching() != 181 {
+                    fail("Browse all must navigate to the full source-linked catalog");
+                }
                 w.invoke_navigate("home".into());
                 w.invoke_open_discipline("3D & Manufacturing".into());
                 if w.get_page() != "results" || w.get_matching() == 0 { fail("discipline mapping"); }
