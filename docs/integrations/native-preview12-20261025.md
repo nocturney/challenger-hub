@@ -73,7 +73,6 @@ Electron/Tauri UI benchmark projects via #26 and #27.
 
 ## Still gated before public release
 
-Human review of actual VoiceOver / Narrator / NVDA speech, 200% text
-scaling / RTL / IME / varied-DPI behavior, official asset rights,
-publisher signing / notarization, native update channel and explicit
-go-live approval. Unverified source entries have **no installer grant**.
+Before a PUBLIC BINARY RELEASE: clear individual rights to redistribute third-party imagery/trademarks (or replace such assets with neutral placeholders), complete Windows publisher signing, Mac Developer ID/notarization, update-channel integrity review and explicit go-live approval. Unverified research entries have NO installer grant.
+
+Native 100–200% text scaling, responsive layouts and mixed Hebrew/English source alignment were implemented and exercised later in PR #37; real Windows Narrator Speech Recap announced two buttons. Full VoiceOver/NVDA and OS IME composition are not certified, but absent a material reproduced defect they are not automatic blockers of an isolated developer beta. See the current native beta readiness document.
