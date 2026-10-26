@@ -1,39 +1,45 @@
 # Challenger Hub
-Private, versioned source for Challenger Hub: a localhost desktop catalog of independent software alternatives, on Windows and macOS.
 
-## Status
-- **Native Rust/Slint developer preview (integration):** Windows, macOS and Linux CI coverage, source-vetted catalog, accessible preferences and manual-only checks. This is source integration, **not a production deployment or public distribution approval**. See docs/integrations/native-preview12-20261025.md.
-- **UI v2.6.0:** contextual discovery hero, daily project spotlight, rotating competitor-based suggestions and readable non-truncated competitor names. Independently QA-tested on Windows and macOS on 2026-10-10.
-- **Backend health versions:** Windows and macOS report 2.5.7. Their source-scanner implementations still differ (Windows has a bounded Atom-prefix optimization); scanner parity requires a separate reviewed deployment. The 2.5.9 UI rollout did not modify API/scanner/installer runtime.
-- **Catalog:** 12 Craft applications + 152 independent projects (164 entries); the 73 newly imported research candidates are explicitly unverified and have no installer approval.
-- **Source checks:** all 164 entries use one equal-priority queue and a 12-hour cadence.
-- **Mirrors:** GitHub Atom plus specifically verified GitLab, KDE Invent and Codeberg sources.
-- Runtime remains separate from this repository; Git pushes do not deploy automatically.
+**Public source repository:** [velvet-workspace/challenger-hub](https://github.com/velvet-workspace/challenger-hub). Challenger Hub is a localhost desktop catalog for independent software alternatives. Public source availability does **not** authorize third-party media redistribution or software installation.
 
-## Components
-- server.js: localhost control API and release integrity gate.
-- app.js, ux-experience.js, style.css, index.html: responsive catalog UI.
-- challenger-core.js, challengers.json, sources.json: curated catalog metadata.
-- Install-Challenger.js, adapters.json, portable-assets.json: sensitive installation boundary.
-- official-icons.json, local-icons/, brand-icon.png: creator-confirmed artwork.
-- platform/windows and platform/macos: launch/native wrapper source, never compiled binaries.
-- platform/shared/Resolve-CraftRelease.js and platform/windows/Install-CraftSuite.ps1 / Install-WordCraft-Portable.ps1: vetted installer source; 2026-10-10 PowerShell exit-code repair and official Atom fallback; see docs/INSTALLER_VERIFICATION_HOTFIX_2026-10-10.md.
-- shader-bundle.js includes licensed third-party code; see THIRD_PARTY_NOTICES.md.
+## Current source status — 26 October 2026
+
+- **`main`:** reviewed legacy localhost catalog/server source with the 2.7.0 Explore/Catalog workspace UI and manual security workflows. A merge does not establish what version runs on a particular workstation.
+- **`release/preview11-modern-app`:** the selected **native Rust/Slint desktop** implementation, using a bounded, read-only Node/Preview12 sidecar. It is a separate development branch, not an automatic deployment to `main` or a user computer. Its native catalog has **181 source-linked entries: 14 managed tools, 152 curated sources and 15 research-only candidates**. Research entries do not grant installer authority.
+- **Native QA:** the [PR #37 cross-platform run](https://github.com/velvet-workspace/challenger-hub/actions/runs/40208345814) passed on Windows, macOS and Ubuntu. Native text enlargement up to 200%, real-window responsive layout, keyboard access, high contrast and Hebrew/English query handling have been tested. A Narrator Speech Recap confirmed two spoken button labels; this does **not** claim complete VoiceOver, NVDA, IME or accessibility certification.
+- **Operator Scout:** a manual, read-only research CLI; it cannot promote catalog entries, run installations, schedule jobs, start a daemon or publish results.
+- **Beta candidate:** developer-only, portable packages and reproducible test paths exist. Public Windows signing, macOS notarization and third-party media/trademark redistribution clearance are **not complete**. See [Native beta readiness](docs/releases/NATIVE_BETA_READINESS_2026-10-26.md).
 
 ## Development
-Commands: node --check server.js; node --check app.js; node --check challenger-core.js;
-node --test tests/*.test.js (when tests are present).
-Run staging with CHALLENGER_DISABLE_SCAN=1 and CRAFT_CENTER_PORT=17876; on Windows set environment variables through PowerShell.
-Never execute deployment jobs or install unverified research-only software during tests.
 
-## Git branches
-main contains the reviewed production catalog/server/scanner source (2.5.7), Operations UX 2.5.9 and contextual discovery UI 2.6.0. Competitor names are readable, daily picks rotate deterministically and the hero reflects the current user context. See docs/DISCOVERY_UI_2.6.0.md and docs/OPERATIONS_UI_2.5.9.md.
-develop is the integration branch for upcoming changes; never deploy an untested commit.
-Private repository: https://github.com/nocturney/challenger-hub
+Work only in an isolated checkout. Never update a running installed app by pulling Git over the production directory. Builds, green CI, Git merges, developer QA artifacts and deployments are distinct facts.
 
-## Security
-- Never commit local install records, release caches, authentication, signed binaries or system backups.
-- A new upstream Git tag or mirror signal is not package validation.
-- Installation requires explicitly vetted packages, platform/adapter approval and SHA-256 verification.
-- CI workflow is manual to avoid unexpected hosted build charges.
-See docs/OPERATIONS.md.
+```sh
+node tools/desktop-build/build-runtime.cjs 12
+cd tools/ui-bench/slint-rust-host
+cargo test --locked
+cargo run --locked -- --check-backend-only
+cargo run --locked -- --smoke
+cargo run --locked -- --qa-resize
+```
+
+Native developer package recipes: [macOS](tools/ui-bench/slint-rust-host/package-macos.sh) and [Windows](tools/ui-bench/slint-rust-host/package-windows.ps1). These are QA packages, **not public installers**.
+
+## Branch boundaries
+
+| Branch | Purpose | Deployment |
+| --- | --- | --- |
+| `main` | Legacy reviewed localhost catalog/server, manual security workflows | Separately approved only |
+| `release/preview11-modern-app` | Selected native Rust/Slint UI and source-verified Preview12 runtime | Developer beta QA only |
+
+These branches diverged and must not be blindly merged or force-updated. Always check live host-specific runtime receipts before describing a production version.
+
+## Safety, accessibility and rights
+
+- No automatic installs, third-party product promotions, public releases or new metered API calls.
+- Installer actions require a vetted adapter, exact package/source digest, explicit operator consent and verified outcome.
+- Genuine project screenshots have pinned source, digest and on-screen credits. **Attribution alone does not settle media/trademark redistribution rights**; public release remains fail-closed.
+- Accessibility principle: **maximum practical accessibility, minimum bureaucracy**. Fix real defects; unverified optional screen-reader/IME certifications are not automatic beta blockers. Do not advertise formal certification.
+- Security Actions in `main` are manual; native PR CI has its own path-limited trigger. Git pushes do not deploy user applications.
+
+See [Operations and rollback](docs/OPERATIONS.md), [native architecture](tools/ui-bench/slint-rust-host/README.md), [integration boundaries](docs/integrations/native-preview12-20261025.md), and [media provenance](tools/ui-bench/slint-rust-host/ui/MEDIA_PROVENANCE.md).

@@ -81,7 +81,7 @@ Extract the Actions artifact once; it contains a platform ZIP,
 **inner** ZIP checksum before extraction and, optionally, the signed GitHub
 artifact provenance with:
 
-    gh attestation verify <inner-archive.zip> --repo nocturney/challenger-hub
+    gh attestation verify <inner-archive.zip> --repo velvet-workspace/challenger-hub
 
 Build metadata identifies both the CI checkout commit and the PR head SHA,
 because pull-request workflows normally checkout a synthetic GitHub merge
@@ -95,7 +95,7 @@ This repository is public, so **do not put secrets or private customer data in
 CI artifacts**. GitHub Actions may require signing in to download artifacts.
 A manual \`workflow_dispatch\` is configured, but GitHub requires workflows to
 exist on the default branch before displaying the normal manual Run button;
-while PR #28 is unmerged, use its normal PR-triggered CI run for these files.
+the native workflow currently lives on the development branch; use a reviewed PR-triggered CI run or an allowed manual workflow entry rather than a production deployment.
 Windows SmartScreen and macOS Gatekeeper may warn about development builds;
 do not bypass security features by automation. Public distribution still needs
 an independent authorization/licensing review and approved signing.
