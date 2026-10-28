@@ -34,3 +34,6 @@ Sources-v*/
 Catalog-v*/
 .local/
 *rollback*.json
+
+# Derived Graphify index (never commit generated graphs)
+graphify-out/
