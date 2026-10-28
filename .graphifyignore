@@ -1,0 +1,4 @@
+# Graphify: AST-only relevant project source; generated/minified bundle creates noise.
+graphify-out/
+shader-bundle.js
+**/*.min.js
