@@ -1428,7 +1428,12 @@ function wireEvents(){
    }
  });
 }
+function syncAboutVersion(){
+ const target=$('aboutVersionNumber');
+ if(target)target.textContent=document.documentElement.dataset.appVersion||'';
+}
 function start(){
+ syncAboutVersion();
  $('sortSelect').value=ui.sort;
  document.documentElement.lang='en';document.documentElement.dir='ltr';
  wireEvents();initializeWorkspaceNavigation();resetInspector();window.ChallengerUX?.initialize();applyLanguage();setView(ui.view);poll();

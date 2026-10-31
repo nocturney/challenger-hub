@@ -72,3 +72,12 @@ test('modal Inspector keeps keyboard focus inside the dialog (#41)',()=>{
  const close=source('function closeDetail(restoreFocus=true){','function ');
  assert.match(close,/restoreFocus&&repo/);
 });
+
+test('About dialog version is bound to the single declared app version (#42)',()=>{
+ const about=html.slice(html.indexOf('<dialog id="aboutDialog"'),html.indexOf('</dialog>',html.indexOf('<dialog id="aboutDialog"')));
+ assert.match(about,/id="aboutVersionNumber"/);
+ assert.doesNotMatch(about,/\d+\.\d+\.\d+/,'About must not carry a hard-coded version literal');
+ const fn=source('function syncAboutVersion(){','function start(){');
+ assert.match(fn,/document\.documentElement\.dataset\.appVersion/);
+ assert.match(source('function start(){','document.addEventListener(\'DOMContentLoaded\''),/syncAboutVersion\(\)/);
+});
