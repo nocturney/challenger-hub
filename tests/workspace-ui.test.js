@@ -61,3 +61,14 @@ test('mobile controls keep intrinsic widths contained without document overflow'
  assert.match(css,/\.tabbar \.filter-chips\{width:100%!important;overflow-x:auto!important/);
  assert.match(css,/@media\(max-width:380px\)/);
 });
+test('modal Inspector keeps keyboard focus inside the dialog (#41)',()=>{
+ const fn=source('function trapDetailFocus(e){','function closeDetail(restoreFocus=true){');
+ assert.match(fn,/getAttribute\('aria-modal'\)!=='true'/);
+ assert.match(fn,/e\.shiftKey&&active===first/);
+ assert.match(fn,/!e\.shiftKey&&active===last/);
+ assert.match(fn,/!panel\.contains\(active\)/);
+ assert.match(fn,/e\.preventDefault\(\)/);
+ assert.match(app,/if\(e\.key==='Tab'&&trapDetailFocus\(e\)\)return;/);
+ const close=source('function closeDetail(restoreFocus=true){','function ');
+ assert.match(close,/restoreFocus&&repo/);
+});
