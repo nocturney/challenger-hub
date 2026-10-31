@@ -885,6 +885,22 @@ function selectApp(repo,openOnMobile=true){
  renderCards(true);renderDetail(true,true);
  $('closeDetail').focus({preventScroll:true});
 }
+function detailFocusables(panel){
+ return [...panel.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')]
+   .filter(el=>!el.closest('[hidden],[aria-hidden="true"]')&&el.getClientRects().length>0);
+}
+function trapDetailFocus(e){
+ const panel=$('detailPanel');
+ if(!panel||panel.getAttribute('aria-modal')!=='true'||panel.getAttribute('aria-hidden')==='true')return false;
+ if(document.querySelector('dialog[open]'))return false;
+ const items=detailFocusables(panel);
+ if(!items.length){e.preventDefault();panel.focus?.();return true}
+ const first=items[0],last=items[items.length-1],active=document.activeElement;
+ if(!panel.contains(active)){e.preventDefault();(e.shiftKey?last:first).focus();return true}
+ if(e.shiftKey&&active===first){e.preventDefault();last.focus();return true}
+ if(!e.shiftKey&&active===last){e.preventDefault();first.focus();return true}
+ return false;
+}
 function closeDetail(restoreFocus=true){
  const repo=ui.selectedRepo;
  const wasOpen=document.body.classList.contains('detail-open')||!!repo;
@@ -1402,6 +1418,7 @@ function wireEvents(){
  $('mobileClose').addEventListener('click',()=>document.body.classList.remove('mobile-nav-open'));
  $('sidebarScrim').addEventListener('click',()=>document.body.classList.remove('mobile-nav-open'));
  document.addEventListener('keydown',e=>{
+   if(e.key==='Tab'&&trapDetailFocus(e))return;
    const mod=(e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k';
    if(mod){e.preventDefault();$('searchInput').focus();$('searchInput').select();return}
    if(e.key==='Escape'){
