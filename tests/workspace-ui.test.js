@@ -61,3 +61,11 @@ test('mobile controls keep intrinsic widths contained without document overflow'
  assert.match(css,/\.tabbar \.filter-chips\{width:100%!important;overflow-x:auto!important/);
  assert.match(css,/@media\(max-width:380px\)/);
 });
+test('About dialog version is bound to the single declared app version (#42)',()=>{
+ const about=html.slice(html.indexOf('<dialog id="aboutDialog"'),html.indexOf('</dialog>',html.indexOf('<dialog id="aboutDialog"')));
+ assert.match(about,/id="aboutVersionNumber"/);
+ assert.doesNotMatch(about,/\d+\.\d+\.\d+/,'About must not carry a hard-coded version literal');
+ const fn=source('function syncAboutVersion(){','function start(){');
+ assert.match(fn,/document\.documentElement\.dataset\.appVersion/);
+ assert.match(source('function start(){','document.addEventListener(\'DOMContentLoaded\''),/syncAboutVersion\(\)/);
+});
